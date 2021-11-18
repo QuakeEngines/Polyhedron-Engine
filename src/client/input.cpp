@@ -373,38 +373,38 @@ void CL_FinalizeCmd(void)
 
 static inline qboolean ready_to_send(void)
 {
-    unsigned msec;
+    uint32_t msec;
 
     if (cl.sendPacketNow) {
-        Com_DPrintf("NET: if cl.sendPacketNow\n");
+        Com_DDDPrintf("NET: if cl.sendPacketNow\n");
         return true;
     }
     if (cls.netChannel->message.currentSize || cls.netChannel->reliableAckPending) {
-        Com_DPrintf("NET: if cls.netChannel->message.currentSize[%i] || cls.netChannel->reliableAckPending[%i]\n", cls.netChannel->message.currentSize, cls.netChannel->reliableAckPending);
+        Com_DDDPrintf("NET: if cls.netChannel->message.currentSize[%i] || cls.netChannel->reliableAckPending[%i]\n", cls.netChannel->message.currentSize, cls.netChannel->reliableAckPending);
         return true;
     }
     if (!cl_maxpackets->integer) {
-        Com_DPrintf("NET: if !cl_maxpackets->integer - return true\n");
+        Com_DDDPrintf("NET: if !cl_maxpackets->integer - return true\n");
         return true;
     }
 
     // Used to be 10, but since we upgrade the base framerate.... 
     if (cl_maxpackets->integer < BASE_FRAMERATE) {
         Cvar_Set("cl_maxpackets", std::to_string(BASE_FRAMERATE).c_str());
-        Com_DPrintf("NET: cl_maxpackets->integer[%i] < BASE_FRAMERATE[%i]\n", cl_maxpackets->integer, BASE_FRAMERATE);
+        Com_DDDPrintf("NET: cl_maxpackets->integer[%i] < BASE_FRAMERATE[%i]\n", cl_maxpackets->integer, BASE_FRAMERATE);
     }
 
     msec = 1000 / cl_maxpackets->integer;
     if (msec) {
-        int oldmsec = msec;
+        int32_t oldmsec = msec;
         msec = 100 / (100 / msec);
-        Com_DPrintf("NET: if msec { oldmsec[%i], msec[%i] return true\n", oldmsec, msec);
+        Com_DDDPrintf("NET: if msec { oldmsec[%i], msec[%i] return true\n", oldmsec, msec);
     }
     if (cls.realtime - cl.lastTransmitTime < msec) {
-        Com_DPrintf("cls.realtime[%i], cls.lastTransmitTime[%ui], msec[%i] return falses\n", cls.realtime, cl.lastTransmitTime, msec);
+        Com_DDDPrintf("cls.realtime[%i], cls.lastTransmitTime[%ui], msec[%i] return falses\n", cls.realtime, cl.lastTransmitTime, msec);
         return false;
     } else {
-        Com_DPrintf("cls.realtime[%i], cls.lastTransmitTime[%ui], msec[%i] return true;\n", cls.realtime, cl.lastTransmitTime, msec);
+        Com_DDDPrintf("cls.realtime[%i], cls.lastTransmitTime[%ui], msec[%i] return true;\n", cls.realtime, cl.lastTransmitTime, msec);
     }
 
     return true;

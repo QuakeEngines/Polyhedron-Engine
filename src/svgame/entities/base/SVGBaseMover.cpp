@@ -19,22 +19,6 @@
 // Constructor/Deconstructor.
 SVGBaseMover::SVGBaseMover(Entity* svEntity) : SVGBaseTrigger(svEntity) {
 	//
-	// All callback functions best be nullptr.
-	//
-	//thinkFunction = nullptr;
-
-
-	//
-	// Set all entity pointer references to nullptr.
-	//
-	//activatorEntity = nullptr;
-	//enemyEntity = nullptr;
-	//groundEntity = nullptr;
-	//oldEnemyEntity = nullptr;
-	//teamChainEntity = nullptr;
-	//teamMasterEntity = nullptr;
-
-	//
 	// Default values for members.
 	//
 	acceleration = 0;
@@ -47,65 +31,55 @@ SVGBaseMover::~SVGBaseMover() {
 
 }
 
+//---------------------------------------------------------
+// 
 // Interface functions. 
 //
+//---------------------------------------------------------
 //===============
 // SVGBaseMover::Precache
 //
 //===============
-//
 void SVGBaseMover::Precache() {
 	Base::Precache();
 }
 
-//
 //===============
 // SVGBaseMover::Spawn
 //
 //===============
-//
 void SVGBaseMover::Spawn() {
 	Base::Spawn();
-
-
 }
 
-//
 //===============
 // SVGBaseMover::Respawn
 // 
 //===============
-//
 void SVGBaseMover::Respawn() {
 	Base::Respawn();
 }
 
-//
 //===============
 // SVGBaseMover::PostSpawn
 // 
 //===============
-//
 void SVGBaseMover::PostSpawn() {
 	Base::PostSpawn();
 }
 
-//
 //===============
 // SVGBaseMover::Think
 //
 //===============
-//
 void SVGBaseMover::Think() {
 	Base::Think();
 }
 
-//
 //===============
 // SVGBaseMover::SpawnKey
 //
 //===============
-//
 void SVGBaseMover::SpawnKey(const std::string& key, const std::string& value) {
 	if (key == "wait") {
 		ParseFloatKeyValue(key, value, waitTime);
@@ -116,12 +90,10 @@ void SVGBaseMover::SpawnKey(const std::string& key, const std::string& value) {
 	}
 }
 
-//
 //===============
 // SVGBaseMover::SetMoveDirection
 //
 //===============
-//
 void SVGBaseMover::SetMoveDirection(const vec3_t& angles) {
 	const vec3_t VEC_UP = { 0, -1, 0 };
 	const vec3_t MOVEDIR_UP = { 0, 0, 1 };

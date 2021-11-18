@@ -147,7 +147,7 @@ void TriggerMultiple::Trigger(SVGBaseEntity *activator) {
 		// called while looping through area links...
 		SetTouchCallback(nullptr);
 		SetNextThinkTime(level.time + FRAMETIME);
-		SetThinkCallback(&TriggerMultiple::SVGBaseEntityThinkFree);
+		SetThinkCallback(&TriggerMultiple::SVGBaseEntityThinkRemove);
 	}
 }
 

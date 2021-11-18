@@ -8,8 +8,7 @@
 // one way or the other :)
 //
 */
-#ifndef __SVGAME_ENTITIES_BASE_SVGBASEENTITY_H__
-#define __SVGAME_ENTITIES_BASE_SVGBASEENTITY_H__
+#pragma once
 
 // It makes sense to include TypeInfo in SVGBaseEntity.h, 
 // because this class absolutely requires it
@@ -17,9 +16,11 @@
 
 class SVGBaseEntity {
 public:
+    //------------------------------------------------------------
     //
-    // Function pointers for actual callbacks.
+    // Dispatch Callback Function Pointers.
     //
+    //------------------------------------------------------------
     using ThinkCallbackPointer      = void(SVGBaseEntity::*)(void);
     using UseCallbackPointer        = void(SVGBaseEntity::*)(SVGBaseEntity* other, SVGBaseEntity* activator);
     using TouchCallbackPointer      = void(SVGBaseEntity::*)(SVGBaseEntity* self, SVGBaseEntity* other, cplane_t* plane, csurface_t* surf);
@@ -27,13 +28,20 @@ public:
     using TakeDamageCallbackPointer = void(SVGBaseEntity::*)(SVGBaseEntity* other, float kick, int32_t damage);
     using DieCallbackPointer        = void(SVGBaseEntity::*)(SVGBaseEntity* inflictor, SVGBaseEntity* attacker, int damage, const vec3_t& point);
 
+    //------------------------------------------------------------
     //
-    // Constructor/Deconstructor.
+    // Construct/Destructor.
     //
+    //------------------------------------------------------------
     SVGBaseEntity(Entity* svEntity);
     virtual ~SVGBaseEntity();
 
-    // Runtime type information
+
+    //------------------------------------------------------------
+    //
+    // Runtime Type Information.
+    //
+    //------------------------------------------------------------
     DefineTopAbstractClass( SVGBaseEntity );
 
     // Checks if this entity class is exactly the given class
@@ -50,9 +58,11 @@ public:
         return GetTypeInfo()->IsSubclassOf( entityClass::ClassInfo );
     }
 
+    //------------------------------------------------------------
     //
-    // Interface functions.
+    // Interface Functions.
     //
+    //------------------------------------------------------------
     virtual void Precache();    // Precaches data.
     virtual void Spawn();       // Spawns the entity.
     virtual void Respawn();     // Respawns the entity.
@@ -61,63 +71,69 @@ public:
 
     virtual void SpawnKey(const std::string& key, const std::string& value); // Called for each key:value when parsing the entity dictionary.
 
+    //------------------------------------------------------------
     //
-    // Callback functions.
+    // Dispatch Callback Functions.
+    //
+    //------------------------------------------------------------
     // // Admer: these should all be prefixed with Dispatch
     void Use(SVGBaseEntity* other, SVGBaseEntity* activator);
     void Die(SVGBaseEntity* inflictor, SVGBaseEntity* attacker, int damage, const vec3_t& point);
     void Blocked(SVGBaseEntity* other);
     void Touch(SVGBaseEntity* self, SVGBaseEntity* other, cplane_t* plane, csurface_t* surf);
     void TakeDamage(SVGBaseEntity* other, float kick, int32_t damage);
-
-    //
-    // Entity interaction functions
-    //
     
+
+    //------------------------------------------------------------
+    //
+    // Entity interaction functions.
+    //
+    //------------------------------------------------------------
     //  Calls Use on this entity's targets, and deletes its killtargets if any
     //  @param activatorOverride: if nullptr, the entity's own activator is used and if the entity's own activator is nullptr, then this entity itself is the activator
     void UseTargets( SVGBaseEntity* activatorOverride = nullptr );
 
+
+    //------------------------------------------------------------
     //
-    // Entity Get Functions.
+    // Getters.
     //
-    // @returns The entity's center in world coordinates
+    //------------------------------------------------------------
+    // @returns The entity's center in world coordinates.
     inline vec3_t GetAbsoluteCenter(){
         return vec3_scale( GetAbsoluteMax() + GetAbsoluteMin(), 0.5f );
     }
 
-    // Return the bounding box absolute 'min' value.
+    // @returns The entity's mins in world coordinates.
     inline const vec3_t& GetAbsoluteMin() {
         return serverEntity->absMin;
     }
-
-    // Return the bounding box absolute 'max' value.
+    // @returns The entity's maxs in world coordinates.
     inline const vec3_t& GetAbsoluteMax() {
         return serverEntity->absMax;
     }
-    // Placeholder, implemented by SVGBaseMover, and derivates of that class.
-    virtual inline float GetAcceleration() {
-        return 0.f;
-    }
-    // Get the activator of this entity
+
+    // @returns The entity which activated this entity. (If any)
     inline SVGBaseEntity* GetActivator() {
         return activator;
     }
-    // Return the 'angles' value.
+    
+    // @returns The angles of where this entity is pointing at.
     inline const vec3_t& GetAngles() {
         return serverEntity->state.angles;
     }
 
-    // Return the 'angularVelocity' value.
+    // @returns The current angular velocity of where this entity is pointing at.
     inline const vec3_t& GetAngularVelocity() {
         return angularVelocity;
     }
-    // @returns The local center
+
+    // @returns The local center of the bounding box.s
     inline vec3_t GetCenter() {
         return vec3_scale( GetMaxs() + GetMins(), 0.5f );
     }
 
-    // Return the 'className' value.
+    // @returns The entity's classname. Example: info_player_start
     inline const char* GetClassName() {
         return serverEntity->className;
     }
@@ -127,89 +143,84 @@ public:
         serverEntity->className = className;
     }
 
-    // Return the 'client' pointer.
+    // @returns A pointer to the client belonging to this entity. (If any.)
     gclient_s* GetClient() {
         return serverEntity->client;
     }
 
-    // Return the 'clipmask' value.
+    // @returns the entity's current Clipping Mask.
     inline const int32_t GetClipMask() {
         return serverEntity->clipMask;
     }
 
-    // Return the 'damage' value.
+    // @returns The damage this entity will give if messed with. 
+    // an example could be if an entity gets stuck between a platform and a wall.
     inline const int32_t GetDamage() {
         return damage;
     }
 
-    // Get the 'deadFlag' value.
+    // @returns The current state of this entity's 'deadness'.
     inline const int32_t GetDeadFlag() {
         return deadFlag;
     }
-    // Placeholder, implemented by SVGBaseMover, and derivates of that class.
-    virtual inline float GetDeceleration() {
-        return 0.f;
-    }
-    // Return the 'delay' value.
+
+    // @returns The delay before executing a trigger action.s
     inline const float &GetDelayTime() {
         return delayTime;
     }
 
-    // Return the 'effects' value.
+    // @returns The effects of this entity.
     inline const uint32_t GetEffects() {
         return serverEntity->state.effects;
     }
 
-    // Return the 'enemyPtr' entity pointer.
+    // @returns The enemy entity pointer (if any.)
     inline SVGBaseEntity* GetEnemy() {
         return enemyEntity;
     }
 
-    // Placeholder, implemented by SVGBaseMover, and derivates of that class.
-    virtual inline const vec3_t& GetEndPosition() {
-        return vec3_zero();
-    }
 
-    // Returns a reference to the 'entityDictionary'.
+    // @returns a reference to the 'entityDictionary'.
     virtual inline EntityDictionary &GetEntityDictionary() {
         return serverEntity->entityDictionary;
     }
 
-    // Return the 'eventID' value.
+    // @returns the current entity EventID, these are reset each frame.
     inline const uint8_t GetEventID() {
         return serverEntity->state.eventID;
     }
 
-    // Return the 'flags' value.
+    // @returns The entity's general flags, coming from the EntityFlags enum.
     inline const int32_t GetFlags() {
         return flags;
     }
 
-    // Return the 'frame' value.
+    // @returns The current animation frame of the entity.
     inline const int32_t GetFrame() {
         return serverEntity->state.frame;
     }
 
-    // Return the 'gravity' value.
+    // @returns The entity's own gravity.
     inline const float GetGravity() {
         return gravity;
     }
 
-    // Return the 'groundEntitPtr' entity.
+    // @returns The ground entity (if any).
     inline SVGBaseEntity* GetGroundEntity() {
         return groundEntity;
     }
 
-    // Return the 'groundEntityLinkCount' value.
+    // @returns The entity's ground linkcount.s
     inline int32_t GetGroundEntityLinkCount() {
         return groundEntityLinkCount;
     }
 
-    // Return the 'health' value.
+    // @returns The entity's health.
     inline const int32_t GetHealth() {
         return health;
     }
 
+    // @returns The ideal yaw to use for this entity.
     inline const float GetIdealYawAngle() {
         return idealYawAngle;
     }
@@ -358,14 +369,7 @@ public:
     inline const int32_t GetSpawnFlags() {
         return spawnFlags;
     }
-    // Placeholder, implemented by SVGBaseMover, and derivates of that class.
-    virtual inline float GetSpeed() {
-        return 0.f;
-    }
-    // Placeholder, implemented by SVGBaseMover, and derivates of that class.
-    virtual inline const vec3_t& GetStartPosition() {
-        return vec3_zero();
-    }
+
     // Return a reference to the serverEntity its state.
     inline const EntityState& GetState() {
         return serverEntity->state;
@@ -438,9 +442,11 @@ public:
         return yawSpeed;
     }
 
+    //------------------------------------------------------------
     //
-    // Entity Set Functions.
-    //  
+    // Setters.
+    //
+    //------------------------------------------------------------
     // Return the bounding box absolute 'min' value.
     inline void SetAbsoluteMin(const vec3_t &absMin) {
         serverEntity->absMin = absMin;
@@ -743,10 +749,32 @@ public:
         this->yawSpeed = yawSpeed;
     }
 
-    //
+    //------------------------------------------------------------
+    // Placeholders for SVGBaseMover and derivates of that class.
+    //------------------------------------------------------------
+    virtual inline float GetAcceleration() {
+        return 0.f;
+    }
+    virtual inline float GetDeceleration() {
+        return 0.f;
+    }
+    virtual inline float GetSpeed() {
+        return 0.f;
+    }
+    virtual inline const vec3_t& GetStartPosition() {
+        return vec3_zero();
+    }
+    virtual inline const vec3_t& GetEndPosition() {
+        return vec3_zero();
+    }
+
+
+    //------------------------------------------------------------
+    // 
     // General Entity Functions.
-    //
-    // Link entity to world for collision testing using gi.LinkEntity.
+    // 
+    //------------------------------------------------------------
+    // Link entity to the world for collision testing.
     void LinkEntity();
     
     // Marks the entity to be removed in the next server frame
@@ -768,20 +796,21 @@ public:
     }
 
 protected:
-    //
+    //------------------------------------------------------------
+    // 
     // Entity Dictionary Value Parsing functions.
     // 
-    // When successful they return true, false otherwise.
-    // 
+    // All return true on success and will have set the parsed
+    // value on the referenced variale. Otherwise, it'll pick a 
+    // default, usually 0, 0.f, "", or vec3_zero()
+    //------------------------------------------------------------
     qboolean ParseFloatKeyValue(const std::string& key, const std::string& value, float& floatNumber);
     qboolean ParseIntegerKeyValue(const std::string& key, const std::string& value, int32_t& integerNumber);
     qboolean ParseUnsignedIntegerKeyValue(const std::string& key, const std::string& value, uint32_t& unsignedIntegerNumber);
     qboolean ParseStringKeyValue(const std::string& key, const std::string& value, std::string& stringValue);
     qboolean ParseVector3KeyValue(const std::string& key, const std::string& value, vec3_t& vectorValue);
 
-    //
-    // The actual entity this class is a member of.
-    //
+    // The actual server entity this class is a member of.
     Entity *serverEntity;
 
     //
@@ -968,9 +997,7 @@ public:
     //
     // Callback implementations that can be set by all child entities.
     //
-    void SVGBaseEntityThinkFree(void);
+    void SVGBaseEntityThinkRemove(void);
     // "No" thinking
     void SVGBaseEntityThinkNull() { }
 };
-
-#endif // __SVGAME_ENTITIES_BASE_CBASEENTITY_H__

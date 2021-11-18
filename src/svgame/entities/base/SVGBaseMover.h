@@ -88,55 +88,57 @@ public:
     //
     // Get/Set
     //
-    // Return the 'acceleration' float value.
+    // @returns The current acceleration.
     inline float GetAcceleration() override {
         return acceleration;
     }
-    // Return the 'deceleration' float value.
+    // @returns The current deceleration.
     inline float GetDeceleration() override {
         return deceleration;
     }
-    // Return the 'speed' float value.
+    // @returns The current speed.
     inline float GetSpeed() override {
         return speed;
     }
-    // Return the 'endPosition' vec3_t value.
+    // @returns The meant to become end position.
     const inline vec3_t& GetEndPosition() override {
         return endPosition;
     }
-    // Return the 'startPosition' vec3_t value.
+    // @returns The start position.
     const inline vec3_t& GetStartPosition() override {
         return startPosition;
     }
-    // Gets the lip
+    // @returns The lip (left-over bit after moving.)
     const inline float& GetLip() {
         return lip;
     }
 
+    //-----------------------------------------------------
     //
-    // Entity Set Functions.
+    // Set Functions.
     //
-    // Set the 'acceleration' float value.
+    //-----------------------------------------------------
+    // @set The acceleration.
     inline void SetAcceleration(const float& acceleration) {
         this->acceleration = acceleration;
     }
-    // Set the 'deceleration' float value.
+    // @set the Deceleration.
     inline void SetDeceleration(const float& deceleration) {
         this->deceleration = deceleration;
     }
-    // Set the 'speed' float value.
+    // @set The speed.
     inline void SetSpeed(const float &speed) {
         this->speed = speed;
     }
-    // Set the 'endPosition' vec3_t value.
+    // @set the (wished for) end position.
     inline void SetEndPosition(const vec3_t& endPosition) {
         this->endPosition = endPosition;
     }
-    // Set the 'startPosition' vec3_t value.
+    // @set the start position.
     inline void SetStartPosition(const vec3_t& startPosition) {
         this->startPosition = startPosition;
     }
-    // Sets the lip
+    // @set the lip.
     inline void SetLip( const float& lip ) {
         this->lip = lip;
     }
@@ -203,20 +205,6 @@ protected:
     // Entity pointers.
     // 
 
-
-public:
-
-
-protected:
-    //
-    // Callback function pointers.
-    //
-    //ThinkCallbackPointer        thinkFunction;
-    //UseCallbackPointer          useFunction;
-    //TouchCallbackPointer        touchFunction;
-    //BlockedCallbackPointer      blockedFunction;
-    //TakeDamageCallbackPointer   takeDamageFunction;
-    //DieCallbackPointer          dieFunction;
 };
 
 #endif // __SVGAME_ENTITIES_BASE_CBASEENTITY_H__

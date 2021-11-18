@@ -375,7 +375,7 @@ void MiscServerModel::MiscServerModelDie(SVGBaseEntity* inflictor, SVGBaseEntity
     SetNextThinkTime(level.time + 1 * FRAMETIME);
 
     // Set think function.
-    SetThinkCallback(&MiscServerModel::SVGBaseEntityThinkFree);
+    SetThinkCallback(&MiscServerModel::SVGBaseEntityThinkRemove);
 }
 //
 ////

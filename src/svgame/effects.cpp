@@ -99,7 +99,7 @@ void SVG_ThrowGib(SVGBaseEntity*self, const char *gibname, int damage, int type)
     gibClassEntity->SetAngularVelocity(angularVelocity);
 
     // Setup the Gib think function and its think time.
-    gibClassEntity->SetThinkCallback(&SVGBaseEntity::SVGBaseEntityThinkFree);
+    gibClassEntity->SetThinkCallback(&SVGBaseEntity::SVGBaseEntityThinkRemove);
     gibClassEntity->SetNextThinkTime(level.time + 10 + random() * 10);
 
     // Link entity into the world.
@@ -201,7 +201,7 @@ void SVG_ThrowDebris(SVGBaseEntity *self, const char *modelname, float speed, co
     chunkEntity->SetAngularVelocity(angularVelocity);
 
     // Set up the thinking machine.
-    chunkEntity->SetThinkCallback(&SVGBaseEntity::SVGBaseEntityThinkFree);
+    chunkEntity->SetThinkCallback(&SVGBaseEntity::SVGBaseEntityThinkRemove);
     chunkEntity->SetNextThinkTime(level.time + 5 + random() * 5);
 
     // Setup the other properties.

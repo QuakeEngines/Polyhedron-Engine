@@ -150,7 +150,7 @@ void GibEntity::GibEntityThink() {
 
     // Play frames for these meshes, cut the crap at frame 10.
     if (GetFrame() == 10) {
-        SetThinkCallback(&SVGBaseEntity::SVGBaseEntityThinkFree);
+        SetThinkCallback(&SVGBaseEntity::SVGBaseEntityThinkRemove);
         SetNextThinkTime(level.time + 8 + random() * 10);
     }
 }

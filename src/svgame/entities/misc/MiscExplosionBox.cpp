@@ -302,7 +302,7 @@ void MiscExplosionBox::MiscExplosionBoxExplode(void)
 
     // Ensure we have no more think callback pointer set when this entity has "died"
     SetNextThinkTime(level.time + 1 * FRAMETIME);
-    SetThinkCallback(&MiscExplosionBox::SVGBaseEntityThinkFree);
+    SetThinkCallback(&MiscExplosionBox::SVGBaseEntityThinkRemove);
 }
 
 //

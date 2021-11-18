@@ -565,7 +565,7 @@ void SVGBaseEntity::Remove()
 //
 //
 //
-void SVGBaseEntity::SVGBaseEntityThinkFree(void) {
+void SVGBaseEntity::SVGBaseEntityThinkRemove(void) {
 	//SVG_FreeEntity(serverEntity);
 	Remove();
 }
