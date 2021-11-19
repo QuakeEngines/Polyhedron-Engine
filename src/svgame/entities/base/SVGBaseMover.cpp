@@ -17,7 +17,7 @@
 #include "SVGBaseMover.h"
 
 // Constructor/Deconstructor.
-SVGBaseMover::SVGBaseMover(Entity* svEntity) : SVGBaseTrigger(svEntity) {
+SVGBaseMover::SVGBaseMover(ServerEntity* svServerEntity) : SVGBaseTrigger(svServerEntity) {
 	//
 	// Default values for members.
 	//
@@ -121,7 +121,7 @@ void SVGBaseMover::SetMoveDirection(const vec3_t& angles) {
 	// Admer: is this really intended? Some entities may control their angle
 	// and align it directly with the movement direction.
 	// I suggest we add a bool parameter to this method, 'resetAngles',
-	// which will zero the entity's angles if true
+	// which will zero the ServerEntity's angles if true
 	SetAngles(vec3_zero());
 }
 
@@ -215,7 +215,7 @@ void SVGBaseMover::BrushMoveCalc( const vec3_t& destination, PushMoveEndFunction
 	mi.OnEndFunction = function;
 
 	if ( AreSame( mi.speed, mi.acceleration ) && AreSame( mi.speed, mi.deceleration ) ) {
-		if ( level.currentEntity == ((GetFlags() & EntityFlags::TeamSlave) ? GetTeamMasterEntity() : this) ) {
+		if ( level.currentServerEntity == ((GetFlags() & ServerEntityFlags::TeamSlave) ? GetTeamMasterServerEntity() : this) ) {
 			BrushMoveBegin();
 		} else {
 			SetThinkCallback( &SVGBaseMover::BrushMoveBegin );
@@ -235,7 +235,7 @@ void SVGBaseMover::BrushMoveCalc( const vec3_t& destination, PushMoveEndFunction
 //===============
 void SVGBaseMover::BrushAngleMoveDone() {
 	SetAngularVelocity( vec3_zero() );
-	moveInfo.OnEndFunction( GetServerEntity() );
+	moveInfo.OnEndFunction( GetServerServerEntity() );
 }
 
 //===============
@@ -300,7 +300,7 @@ void SVGBaseMover::BrushAngleMoveCalc( PushMoveEndFunction* function ) {
 	SetAngularVelocity( vec3_zero() );
 	moveInfo.OnEndFunction = function;
 
-	if ( level.currentEntity == ((GetFlags() & EntityFlags::TeamSlave) ? GetTeamMasterEntity() : this) ) {
+	if ( level.currentServerEntity == ((GetFlags() & ServerEntityFlags::TeamSlave) ? GetTeamMasterServerEntity() : this) ) {
 		BrushAngleMoveBegin();
 	} else {
 		SetThinkCallback( &SVGBaseMover::BrushAngleMoveBegin );

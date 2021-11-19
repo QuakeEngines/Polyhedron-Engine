@@ -16,8 +16,8 @@
 //===============
 // TargetEarthquake::ctor
 //===============
-TargetEarthquake::TargetEarthquake( Entity* entity )
-	: Base( entity ) {
+TargetEarthquake::TargetEarthquake( ServerEntity* ServerEntity )
+	: Base( ServerEntity ) {
 
 }
 
@@ -29,7 +29,7 @@ void TargetEarthquake::Spawn() {
         gi.DPrintf( "Untargeted target_earthquake at %s\n", vec3_to_cstr( GetOrigin() ) );
     }
 
-    SetServerFlags( EntityServerFlags::NoClient );
+    SetServerFlags( ServerEntityServerFlags::NoClient );
     SetThinkCallback( &TargetEarthquake::QuakeThink );
     SetUseCallback( &TargetEarthquake::QuakeUse );
 
@@ -69,18 +69,18 @@ void TargetEarthquake::QuakeThink() {
         lastQuakeTime = level.time + 0.5f;
     }
 
-    for ( auto * entity : g_baseEntities
-         | bef::Standard | bef::HasClient | bef::HasGroundEntity ) 
+    for ( auto * ServerEntity : g_baseEntities
+         | bef::Standard | bef::HasClient | bef::HasGroundServerEntity ) 
     {
-        entity->SetGroundEntity( nullptr );
+        ServerEntity->SetGroundServerEntity( nullptr );
         vec3_t newVelocity{
             crandom() * 150.0f,
             crandom() * 150.0f,
-            severity * (100.0f / entity->GetMass())
+            severity * (100.0f / ServerEntity->GetMass())
         };
 
-        newVelocity += entity->GetVelocity();
-        entity->SetVelocity( newVelocity );
+        newVelocity += ServerEntity->GetVelocity();
+        ServerEntity->SetVelocity( newVelocity );
     }
 
     if ( level.time < timeStamp ) {

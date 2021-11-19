@@ -19,7 +19,7 @@
 #include "../trigger/TriggerDelayedUse.h"
 
 // Constructor/Deconstructor.
-SVGBaseTrigger::SVGBaseTrigger(Entity* svEntity) : SVGBaseEntity(svEntity) {
+SVGBaseTrigger::SVGBaseTrigger(ServerEntity* svServerEntity) : SVGBaseEntity(svServerEntity) {
 	//
 	// All callback functions best be nullptr.
 	//
@@ -27,15 +27,15 @@ SVGBaseTrigger::SVGBaseTrigger(Entity* svEntity) : SVGBaseEntity(svEntity) {
 
 
 	//
-	// Set all entity pointer references to nullptr.
+	// Set all ServerEntity pointer references to nullptr.
 	//
-	activatorEntity = nullptr;
-	//activatorEntity = nullptr;
-	//enemyEntity = nullptr;
-	//groundEntity = nullptr;
-	//oldEnemyEntity = nullptr;
-	//teamChainEntity = nullptr;
-	//teamMasterEntity = nullptr;
+	activatorServerEntity = nullptr;
+	//activatorServerEntity = nullptr;
+	//enemyServerEntity = nullptr;
+	//groundServerEntity = nullptr;
+	//oldEnemyServerEntity = nullptr;
+	//teamChainServerEntity = nullptr;
+	//teamMasterServerEntity = nullptr;
 
 	//
 	// Default values for members.
@@ -48,7 +48,7 @@ SVGBaseTrigger::SVGBaseTrigger(Entity* svEntity) : SVGBaseEntity(svEntity) {
 	//velocity = vec3_zero();
 	//angularVelocity = vec3_zero();
 	//mass = 0;
-	//groundEntityLinkCount = 0;
+	//groundServerEntityLinkCount = 0;
 	//health = 0;
 	//maxHealth = 0;
 	//deadFlag = DEAD_NO;
@@ -119,7 +119,7 @@ void SVGBaseTrigger::InitBrushTrigger() {
 	SetMoveType(MoveType::None);
 	SetSolid(Solid::Trigger);
 	
-	SetServerFlags(EntityServerFlags::NoClient);
+	SetServerFlags(ServerEntityServerFlags::NoClient);
 }
 
 //
@@ -137,7 +137,7 @@ void SVGBaseTrigger::InitPointTrigger() {
 	SetSolid(Solid::Trigger);
 
 	// Ensure we got the proper no client flags.
-	SetServerFlags(EntityServerFlags::NoClient);
+	SetServerFlags(ServerEntityServerFlags::NoClient);
 }
 
 //
@@ -168,10 +168,10 @@ void SVGBaseTrigger::SpawnKey(const std::string& key, const std::string& value) 
 //===============
 // SVGBaseTrigger::UseTargets
 //
-// The activator is the entity who is initiating the firing. If not set as
-// a function argument, it will use whichever is set in the entity itself.
+// The activator is the ServerEntity who is initiating the firing. If not set as
+// a function argument, it will use whichever is set in the ServerEntity itself.
 //
-// If self.delay is set, a DelayedUse entity will be created that will actually
+// If self.delay is set, a DelayedUse ServerEntity will be created that will actually
 // do the SUB_UseTargets after that many seconds have passed.
 //
 // Centerprints any self.message to the activator.
@@ -185,8 +185,8 @@ void SVGBaseTrigger::UseTargets(SVGBaseEntity* activator) {
 	// Check for a delay
 	//
     if (GetDelayTime()) {
-		// Create a temporary DelayedTrigger entity, to fire at a latter time.
-	    SVGBaseTrigger *triggerDelay = SVG_CreateClassEntity<TriggerDelayedUse>();
+		// Create a temporary DelayedTrigger ServerEntity, to fire at a latter time.
+	    SVGBaseTrigger *triggerDelay = SVG_CreateClassServerEntity<TriggerDelayedUse>();
 		if (!activator)
 			gi.DPrintf("TriggerDelayThink with no activator\n");
 		triggerDelay->SetActivator(activator);
@@ -203,7 +203,7 @@ void SVGBaseTrigger::UseTargets(SVGBaseEntity* activator) {
 	//
 	// Print the "message"
 	//
-	if (GetMessage().length() && !(activator->GetServerFlags() & EntityServerFlags::Monster)) {
+	if (GetMessage().length() && !(activator->GetServerFlags() & ServerEntityServerFlags::Monster)) {
 		// Fetch noise index.
 		int32_t noiseIndex = GetNoiseIndex();
 
@@ -222,21 +222,21 @@ void SVGBaseTrigger::UseTargets(SVGBaseEntity* activator) {
 	// Kill killtargets
 	//
 	if (GetKillTarget().length()) {
-		SVGBaseEntity* triggerEntity = nullptr;
+		SVGBaseEntity* triggerServerEntity = nullptr;
 
-		//while (triggerEntity = SVG_FindEntityByKeyValue("targetname", GetKillTarget(), triggerEntity))
-		// Loop over the total entity range, ensure that we're checking for the right filters.
-		for (auto* triggerEntity : GetBaseEntityRange<0, MAX_EDICTS>()
+		//while (triggerServerEntity = SVG_FindServerEntityByKeyValue("targetname", GetKillTarget(), triggerServerEntity))
+		// Loop over the total ServerEntity range, ensure that we're checking for the right filters.
+		for (auto* triggerServerEntity : GetBaseServerEntityRange<0, MAX_EDICTS>()
 			| bef::IsValidPointer
-			| bef::HasServerEntity
+			| bef::HasServerServerEntity
 			| bef::InUse
 			| bef::HasKeyValue("targetname", GetKillTarget())) {
 
 			// It is going to die, free it.
-			SVG_FreeEntity(triggerEntity->GetServerEntity());
+			SVG_FreeServerEntity(triggerServerEntity->GetServerServerEntity());
 
 			if (!IsInUse()) {
-				gi.DPrintf("entity was removed while using killtargets\n");
+				gi.DPrintf("ServerEntity was removed while using killtargets\n");
 				return;
 			}
 		}
@@ -246,29 +246,29 @@ void SVGBaseTrigger::UseTargets(SVGBaseEntity* activator) {
 	// Fire targets
 	//
 	if (GetTarget().length()) {
-		// Loop over the total entity range, ensure that we're checking for the right filters.
-		for (auto* triggerEntity : GetBaseEntityRange<0, MAX_EDICTS>()
+		// Loop over the total ServerEntity range, ensure that we're checking for the right filters.
+		for (auto* triggerServerEntity : GetBaseServerEntityRange<0, MAX_EDICTS>()
 			| bef::IsValidPointer
-			| bef::HasServerEntity
+			| bef::HasServerServerEntity
 			| bef::InUse
 			| bef::HasKeyValue("targetname", GetTarget())) {
 			
 			// Doors fire area portals in a special way. So we skip those.
-			if (triggerEntity->GetClassName() == "func_areaportal"
+			if (triggerServerEntity->GetClassName() == "func_areaportal"
 				&& (GetClassName() == "func_door" || GetClassName() == "func_door_rotating")) {
 				continue;
 			}
 
-			// Do not ALLOW an entity to use ITSELF. :)
-			if (triggerEntity == this) {
-				gi.DPrintf("WARNING: Entity #%i used itself.\n", GetServerEntity()->state.number);
+			// Do not ALLOW an ServerEntity to use ITSELF. :)
+			if (triggerServerEntity == this) {
+				gi.DPrintf("WARNING: ServerEntity #%i used itself.\n", GetServerServerEntity()->state.number);
 			} else {
-				triggerEntity->Use(this, activator);
+				triggerServerEntity->Use(this, activator);
 			}
 
 			// Make sure it is in use, if not, debug.
-			if (!triggerEntity->IsInUse()) {
-                gi.DPrintf("WARNING: Entity #%i was removed while using targets\n", GetServerEntity()->state.number);
+			if (!triggerServerEntity->IsInUse()) {
+                gi.DPrintf("WARNING: ServerEntity #%i was removed while using targets\n", GetServerServerEntity()->state.number);
                 return;
 			}
 		}

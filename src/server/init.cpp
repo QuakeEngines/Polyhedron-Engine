@@ -66,8 +66,8 @@ static void resolve_masters(void)
 #endif
 }
 
-// optionally load the entity string from external source
-static void override_entity_string(const char *server)
+// optionally load the ServerEntity string from external source
+static void override_ServerEntity_string(const char *server)
 {
     char *path = map_override_path->string;
     char buffer[MAX_QPATH], *str;
@@ -96,14 +96,14 @@ static void override_entity_string(const char *server)
         goto fail2;
     }
 
-    Com_Printf("Loaded entity string from %s\n", buffer);
-    sv.entityString = str;
+    Com_Printf("Loaded ServerEntity string from %s\n", buffer);
+    sv.ServerEntityString = str;
     return;
 
 fail2:
     SV_FreeFile(str);
 fail1:
-    Com_EPrintf("Couldn't load entity string from %s: %s\n",
+    Com_EPrintf("Couldn't load ServerEntity string from %s: %s\n",
                 buffer, Q_ErrorString(len));
 }
 
@@ -120,7 +120,7 @@ void SV_SpawnServer(MapCommand *cmd)
 {
     int         i;
     client_t    *client;
-    const char        *entityString;
+    const char        *ServerEntityString;
 
     SCR_BeginLoadingPlaque();           // for local system
     
@@ -148,7 +148,7 @@ void SV_SpawnServer(MapCommand *cmd)
 
     // free current level
     CM_FreeMap(&sv.cm);
-    SV_FreeFile(sv.entityString);
+    SV_FreeFile(sv.ServerEntityString);
 
     // wipe the entire per-level structure
     memset(&sv, 0, sizeof(sv));
@@ -160,8 +160,8 @@ void SV_SpawnServer(MapCommand *cmd)
         client->spawncount = sv.spawncount;
     }
 
-    // reset entity counter
-    svs.next_entity = 0;
+    // reset ServerEntity counter
+    svs.next_ServerEntity = 0;
 
     // save name for levels that don't set message
     Q_strlcpy(sv.configstrings[ConfigStrings::Name], cmd->server, MAX_QPATH);
@@ -177,7 +177,7 @@ void SV_SpawnServer(MapCommand *cmd)
     resolve_masters();
 
     if (cmd->serverState == ServerState::Game) {
-        override_entity_string(cmd->server);
+        override_ServerEntity_string(cmd->server);
 
         sv.cm = cmd->cm;
         sprintf(sv.configstrings[ConfigStrings::MapCheckSum], "%d", (int)sv.cm.cache->checksum);
@@ -188,11 +188,11 @@ void SV_SpawnServer(MapCommand *cmd)
             sprintf(sv.configstrings[ConfigStrings::Models+ 1 + i], "*%d", i);
         }
 
-        entityString = sv.entityString ? sv.entityString : sv.cm.cache->entityString;
+        ServerEntityString = sv.ServerEntityString ? sv.ServerEntityString : sv.cm.cache->ServerEntityString;
     } else {
         // no real map
         strcpy(sv.configstrings[ConfigStrings::MapCheckSum], "0");
-        entityString = ""; // C++20: Added cast.
+        ServerEntityString = ""; // C++20: Added cast.
     }
 
     //
@@ -218,11 +218,14 @@ void SV_SpawnServer(MapCommand *cmd)
     sv.serverState = ServerState::Loading;
 
     // load and spawn all other entities
-    ge->SpawnEntities(sv.name, entityString, cmd->spawnpoint);
+    ge->SpawnEntities(sv.name, ServerEntityString, cmd->spawnpoint);
 
-    // run two frames to allow everything to settle
-    ge->RunFrame(); sv.frameNumber++;
-    ge->RunFrame(); sv.frameNumber++;
+    // Run a few frames(BASE_HZ / 10) frames to allow everything to settle.
+    // Prevent input msec underflows for no good etc.
+    for (int i = 0; i < BASE_HZ / 10; i++) {
+        ge->RunFrame(); sv.frameNumber++;
+        ge->RunFrame(); sv.frameNumber++;
+    }
 
     // make sure maximumClients string is correct
     sprintf(sv.configstrings[ConfigStrings::MaxClients], "%d", sv_maxclients->integer);
@@ -340,7 +343,7 @@ If mvd_spawn is non-zero, load the built-in MVD game module.
 void SV_InitGame()
 {
     int     i, entnum;
-    Entity *ent;
+    ServerEntity *ent;
     client_t *client;
 
     if (svs.initialized) {
@@ -352,7 +355,7 @@ void SV_InitGame()
         SCR_BeginLoadingPlaque();
 
         CM_FreeMap(&sv.cm);
-        SV_FreeFile(sv.entityString);
+        SV_FreeFile(sv.ServerEntityString);
         memset(&sv, 0, sizeof(sv));
 
     }
@@ -399,7 +402,7 @@ void SV_InitGame()
     svs.client_pool = (client_t*)SV_Mallocz(sizeof(client_t) * sv_maxclients->integer); // CPP: Cast
 
     svs.num_entities = sv_maxclients->integer * UPDATE_BACKUP * MAX_PACKET_ENTITIES;
-    svs.entities = (PackedEntity*)SV_Mallocz(sizeof(PackedEntity) * svs.num_entities); // CPP: Cast
+    svs.entities = (PackedServerEntity*)SV_Mallocz(sizeof(PackedServerEntity) * svs.num_entities); // CPP: Cast
 
 
     Cvar_ClampInteger(sv_reserved_slots, 0, sv_maxclients->integer - 1);

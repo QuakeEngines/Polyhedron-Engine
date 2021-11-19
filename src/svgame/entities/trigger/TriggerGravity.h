@@ -3,7 +3,7 @@
 
 class TriggerGravity : public SVGBaseTrigger {
 public:
-	TriggerGravity( Entity* entity );
+	TriggerGravity( ServerEntity* ServerEntity );
 	virtual ~TriggerGravity() = default;
 
 	DefineMapClass( "trigger_gravity", TriggerGravity, SVGBaseTrigger );

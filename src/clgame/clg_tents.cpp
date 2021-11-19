@@ -130,7 +130,7 @@ static laser_t* CLG_AllocLaser(void)
 static void CLG_AddLasers(void)
 {
 	laser_t* l;
-	r_entity_t    ent;
+	r_ServerEntity_t    ent;
 	int         i;
 	int         time;
 
@@ -161,7 +161,7 @@ static void CLG_AddLasers(void)
 		VectorCopy(l->end, ent.oldorigin);
 		ent.frame = l->width;
 
-		V_AddEntity(&ent);
+		V_AddServerEntity(&ent);
 	}
 }
 
@@ -359,7 +359,7 @@ static void CLG_AddExplosionLight(explosion_t* ex, float phase)
 
 static void CLG_AddExplosions(void)
 {
-	r_entity_t* ent;
+	r_ServerEntity_t* ent;
 	int         i;
 	explosion_t* ex;
 	float       frac;
@@ -456,7 +456,7 @@ static void CLG_AddExplosions(void)
 			ent->oldframe = ex->baseFrame + f;
 			ent->backlerp = 1.0 - (frac - f);
 
-			V_AddEntity(ent);
+			V_AddServerEntity(ent);
 		}
 	}
 }
@@ -472,8 +472,8 @@ static void CLG_AddExplosions(void)
 #define MAX_BEAMS   32
 
 typedef struct {
-	int         entity;
-	int         dest_entity;
+	int         ServerEntity;
+	int         dest_ServerEntity;
 	qhandle_t   model;
 	int         endTime;
 	vec3_t      offset;
@@ -496,15 +496,15 @@ static void CLG_ParseBeam(qhandle_t model)
 
 	// override any beam with the same source AND destination entities
 	for (i = 0, b = clg_beams; i < MAX_BEAMS; i++, b++)
-		if (b->entity == teParameters.entity1 && b->dest_entity == teParameters.entity2)
+		if (b->ServerEntity == teParameters.ServerEntity1 && b->dest_ServerEntity == teParameters.ServerEntity2)
 			goto override;
 
 	// find a free beam
 	for (i = 0, b = clg_beams; i < MAX_BEAMS; i++, b++) {
 		if (!b->model || b->endTime < cl->time) {
 			override :
-				b->entity = teParameters.entity1;
-			b->dest_entity = teParameters.entity2;
+				b->ServerEntity = teParameters.ServerEntity1;
+			b->dest_ServerEntity = teParameters.ServerEntity2;
 			b->model = model;
 			b->endTime = cl->time + 200;
 			VectorCopy(teParameters.position1, b->start);
@@ -520,10 +520,10 @@ static void CLG_ParsePlayerBeam(qhandle_t model)
 	beam_t* b;
 	int     i;
 
-	// override any beam with the same entity
+	// override any beam with the same ServerEntity
 	for (i = 0, b = clg_playerbeams; i < MAX_BEAMS; i++, b++) {
-		if (b->entity == teParameters.entity1) {
-			b->entity = teParameters.entity1;
+		if (b->ServerEntity == teParameters.ServerEntity1) {
+			b->ServerEntity = teParameters.ServerEntity1;
 			b->model = model;
 			b->endTime = cl->time + 200;
 			VectorCopy(teParameters.position1, b->start);
@@ -536,7 +536,7 @@ static void CLG_ParsePlayerBeam(qhandle_t model)
 	// find a free beam
 	for (i = 0, b = clg_playerbeams; i < MAX_BEAMS; i++, b++) {
 		if (!b->model || b->endTime < cl->time) {
-			b->entity = teParameters.entity1;
+			b->ServerEntity = teParameters.ServerEntity1;
 			b->model = model;
 			b->endTime = cl->time + 100;     // PMM - this needs to be 100 to prevent multiple heatbeams
 			VectorCopy(teParameters.position1, b->start);
@@ -559,7 +559,7 @@ static void CLG_AddBeams(void)
 	beam_t* b;
 	vec3_t      dist, org;
 	float       d;
-	r_entity_t    ent;
+	r_ServerEntity_t    ent;
 	vec3_t      angles;
 	float       len, steps;
 	float       model_length;
@@ -570,8 +570,8 @@ static void CLG_AddBeams(void)
 			continue;
 
 		// if coming from the player, update the start position
-		if (b->entity == cl->frame.clientNumber + 1)
-			VectorAdd(cl->playerEntityOrigin, b->offset, org);
+		if (b->ServerEntity == cl->frame.clientNumber + 1)
+			VectorAdd(cl->playerServerEntityOrigin, b->offset, org);
 		else
 			VectorAdd(b->start, b->offset, org);
 
@@ -603,7 +603,7 @@ static void CLG_AddBeams(void)
 			ent.angles[0] = angles[0];
 			ent.angles[1] = angles[1];
 			ent.angles[2] = rand() % 360;
-			V_AddEntity(&ent);
+			V_AddServerEntity(&ent);
 			return;
 		}
 
@@ -621,7 +621,7 @@ static void CLG_AddBeams(void)
 				ent.angles[2] = rand() % 360;
 			}
 
-			V_AddEntity(&ent);
+			V_AddServerEntity(&ent);
 
 			for (j = 0; j < 3; j++)
 				org[j] += dist[j] * len;
@@ -642,7 +642,7 @@ static void CLG_AddPlayerBeams(void)
 	beam_t* b;
 	vec3_t      dist, org;
 	float       d;
-	r_entity_t    ent;
+	r_ServerEntity_t    ent;
 	vec3_t      angles;
 	float       len, steps;
 	int         frameNumber;
@@ -663,7 +663,7 @@ static void CLG_AddPlayerBeams(void)
 			continue;
 
 		// if coming from the player, update the start position
-		if (b->entity == cl->frame.clientNumber + 1) {
+		if (b->ServerEntity == cl->frame.clientNumber + 1) {
 			// set up gun position
 			ps = &cl->frame.playerState;
 			ops = &cl->oldframe.playerState;
@@ -743,7 +743,7 @@ static void CLG_AddPlayerBeams(void)
 		while (d > 0) {
 			VectorCopy(org, ent.origin);
 
-			V_AddEntity(&ent);
+			V_AddServerEntity(&ent);
 
 			for (j = 0; j < 3; j++)
 				org[j] += dist[j] * len;
@@ -801,8 +801,8 @@ static void CLG_ParseSteam(void)
 {
 	cl_sustain_t* s;
 
-	if (teParameters.entity1 == -1) {
-		CLG_ParticleSteamEffect(teParameters.position1, teParameters.dir, teParameters.color & 0xff, teParameters.count, teParameters.entity2);
+	if (teParameters.ServerEntity1 == -1) {
+		CLG_ParticleSteamEffect(teParameters.position1, teParameters.dir, teParameters.color & 0xff, teParameters.count, teParameters.ServerEntity2);
 		return;
 	}
 
@@ -810,12 +810,12 @@ static void CLG_ParseSteam(void)
 	if (!s)
 		return;
 
-	s->id = teParameters.entity1;
+	s->id = teParameters.ServerEntity1;
 	s->count = teParameters.count;
 	VectorCopy(teParameters.position1, s->org);
 	VectorCopy(teParameters.dir, s->dir);
 	s->color = teParameters.color & 0xff;
-	s->magnitude = teParameters.entity2;
+	s->magnitude = teParameters.ServerEntity2;
 	s->endTime = cl->time + teParameters.time;
 	s->Think = CLG_ParticleSteamEffect2;
 	s->thinkinterval = 100;
@@ -825,7 +825,7 @@ static void CLG_ParseSteam(void)
 //
 //=============================================================================
 //
-//	TEMP ENTITY MANAGEMENT
+//	TEMP ServerEntity MANAGEMENT
 //
 //=============================================================================
 //
@@ -970,20 +970,20 @@ static void dirtoangles(vec3_t angles)
 
 //
 //===============
-// CLG_ParseTempEntity
+// CLG_ParseTempServerEntity
 // 
-// Parses a temporary entity message and acts accordingly.
+// Parses a temporary ServerEntity message and acts accordingly.
 //===============
 //
 static const byte splash_color[] = { 0x00, 0xe0, 0xb0, 0x50, 0xd0, 0xe0, 0xe8 };
 
-void CLG_ParseTempEntity(void)
+void CLG_ParseTempServerEntity(void)
 {
 	explosion_t* ex;
 	int r;
 
 	switch (teParameters.type) {
-	case TempEntityEvent::Blood:          // bullet hitting flesh
+	case TempServerEntityEvent::Blood:          // bullet hitting flesh
 		if (!(cl_disable_particles->integer & NOPART_BLOOD))
 		{
 			// CL_ParticleEffect(teParameters.position1, teParameters.dir, 0xe8, 60);
@@ -991,18 +991,18 @@ void CLG_ParseTempEntity(void)
 		}
 		break;
 
-	case TempEntityEvent::Gunshot:            // bullet hitting wall
+	case TempServerEntityEvent::Gunshot:            // bullet hitting wall
 		CLG_ParticleEffect(teParameters.position1, teParameters.dir, 0, 40);
-	case TempEntityEvent::Shotgun:            // bullet hitting wall
+	case TempServerEntityEvent::Shotgun:            // bullet hitting wall
 		CLG_ParticleEffect(teParameters.position1, teParameters.dir, 0, 20);
 		CLG_SmokeAndFlash(teParameters.position1);
 		break;
 
-	case TempEntityEvent::Sparks:
-	case TempEntityEvent::BulletSparks:
+	case TempServerEntityEvent::Sparks:
+	case TempServerEntityEvent::BulletSparks:
 		CLG_ParticleEffect(teParameters.position1, teParameters.dir, 0xe0, 6);
 
-		if (teParameters.type != TempEntityEvent::Sparks) {
+		if (teParameters.type != TempServerEntityEvent::Sparks) {
 			CLG_SmokeAndFlash(teParameters.position1);
 
 			// impact sound
@@ -1016,7 +1016,7 @@ void CLG_ParseTempEntity(void)
 		}
 		break;
 
-	case TempEntityEvent::Splash:         // bullet hitting water
+	case TempServerEntityEvent::Splash:         // bullet hitting water
 		if (teParameters.color < 0 || teParameters.color > 6)
 			r = 0x00;
 		else
@@ -1034,8 +1034,8 @@ void CLG_ParseTempEntity(void)
 		}
 		break;
 
-	case TempEntityEvent::Blaster:            // blaster hitting wall
-	case TempEntityEvent::Flare:              // flare
+	case TempServerEntityEvent::Blaster:            // blaster hitting wall
+	case TempServerEntityEvent::Flare:              // flare
 		ex = CLG_AllocExplosion();
 		VectorCopy(teParameters.position1, ex->ent.origin);
 		dirtoangles(ex->ent.angles);
@@ -1043,12 +1043,12 @@ void CLG_ParseTempEntity(void)
 		ex->ent.flags = RenderEffects::FullBright | RenderEffects::Translucent;
 		ex->ent.tent_type = teParameters.type;
 		switch (teParameters.type) {
-			case TempEntityEvent::Blaster:
+			case TempServerEntityEvent::Blaster:
 				CLG_BlasterParticles(teParameters.position1, teParameters.dir);
 				ex->lightcolor[0] = 1;
 				ex->lightcolor[1] = 1;
 				break;
-			case TempEntityEvent::Flare:
+			case TempServerEntityEvent::Flare:
 				CLG_BlasterParticles2(teParameters.position1, teParameters.dir, 0xd0);
 				ex->lightcolor[0] = 1;
 				ex->lightcolor[1] = 1;
@@ -1060,7 +1060,7 @@ void CLG_ParseTempEntity(void)
 		ex->ent.model = cl_mod_explode;
 		ex->frames = 4;
 
-		if (teParameters.type != TempEntityEvent::Flare)
+		if (teParameters.type != TempServerEntityEvent::Flare)
 		{
 			clgi.S_StartSound(&teParameters.position1, 0, 0, cl_sfx_lashit, 1, ATTN_NORM, 0);
 		}
@@ -1068,11 +1068,11 @@ void CLG_ParseTempEntity(void)
 		{
 			// teParameters.count is set to 1 on the first tick of the flare, 0 afterwards
 			if (teParameters.count != 0)
-				clgi.S_StartSound(NULL, teParameters.entity1, 0, cl_sfx_flare, 0.5, ATTN_NORM, 0);
+				clgi.S_StartSound(NULL, teParameters.ServerEntity1, 0, cl_sfx_flare, 0.5, ATTN_NORM, 0);
 		}
 		break;
 
-	case TempEntityEvent::Explosion2:
+	case TempServerEntityEvent::Explosion2:
 		ex = CLG_PlainExplosion(false);
 		if (!cl_explosion_sprites->integer)
 		{
@@ -1083,58 +1083,58 @@ void CLG_ParseTempEntity(void)
 		clgi.S_StartSound(&teParameters.position1, 0, 0, cl_sfx_grenexp, 1, ATTN_NORM, 0);
 		break;
 
-	case TempEntityEvent::Explosion1:
+	case TempServerEntityEvent::Explosion1:
 		CLG_PlainExplosion(false);
 		CLG_ExplosionParticles(teParameters.position1);
 		clgi.S_StartSound(&teParameters.position1, 0, 0, cl_sfx_explosion, 1, ATTN_NORM, 0);
 		break;
 
-	case TempEntityEvent::NPExplosion1:
+	case TempServerEntityEvent::NPExplosion1:
 		CLG_PlainExplosion(false);
 		clgi.S_StartSound(&teParameters.position1, 0, 0, cl_sfx_explosion, 1, ATTN_NORM, 0);
 		break;
 
-	case TempEntityEvent::BigExplosion1:
+	case TempServerEntityEvent::BigExplosion1:
 		ex = CLG_PlainExplosion(true);
 		clgi.S_StartSound(&teParameters.position1, 0, 0, cl_sfx_explosion, 1, ATTN_NORM, 0);
 		break;
 
-	case TempEntityEvent::BubbleTrail:
+	case TempServerEntityEvent::BubbleTrail:
 		CLG_BubbleTrail(teParameters.position1, teParameters.position2);
 		break;
 
-	case TempEntityEvent::DebugTrail:
+	case TempServerEntityEvent::DebugTrail:
 		CLG_DebugTrail(teParameters.position1, teParameters.position2);
 		break;
 
-	case TempEntityEvent::PlainExplosion:
+	case TempServerEntityEvent::PlainExplosion:
 		CLG_PlainExplosion(false);
 		break;
 
-	case TempEntityEvent::ForceWall:
+	case TempServerEntityEvent::ForceWall:
 		CLG_ForceWall(teParameters.position1, teParameters.position2, teParameters.color);
 		break;
 
-	case TempEntityEvent::Steam:
+	case TempServerEntityEvent::Steam:
 		CLG_ParseSteam();
 		break;
 
-	case TempEntityEvent::BubbleTrail2:
+	case TempServerEntityEvent::BubbleTrail2:
 		CLG_BubbleTrail2(teParameters.position1, teParameters.position2, 8);
 		clgi.S_StartSound(&teParameters.position1, 0, 0, cl_sfx_lashit, 1, ATTN_NORM, 0);
 		break;
 
-	case TempEntityEvent::MoreBlood:
+	case TempServerEntityEvent::MoreBlood:
 		CLG_ParticleEffect(teParameters.position1, teParameters.dir, 0xe8, 250);
 		break;
 
-	case TempEntityEvent::ElectricSparks:
+	case TempServerEntityEvent::ElectricSparks:
 		CLG_ParticleEffect(teParameters.position1, teParameters.dir, 0x75, 40);
 		//FIXME : replace or remove this sound
 		clgi.S_StartSound(&teParameters.position1, 0, 0, cl_sfx_lashit, 1, ATTN_NORM, 0);
 		break;
 
-	case TempEntityEvent::TeleportEffect:
+	case TempServerEntityEvent::TeleportEffect:
 		CLG_TeleportParticles(teParameters.position1);
 		break;
 
@@ -1150,7 +1150,7 @@ void CLG_ParseTempEntity(void)
 // Registers all sounds used for temporary entities.
 //===============
 //
-void CLG_RegisterTempEntitySounds(void)
+void CLG_RegisterTempServerEntitySounds(void)
 {
 	int     i;
 	char    name[MAX_QPATH];
@@ -1186,12 +1186,12 @@ void CLG_RegisterTempEntitySounds(void)
 
 //
 //===============
-// CLG_RegisterTempEntityModels
+// CLG_RegisterTempServerEntityModels
 // 
 // Registers all models used for temporary entities.
 //===============
 //
-void CLG_RegisterTempEntityModels(void)
+void CLG_RegisterTempServerEntityModels(void)
 {
 	// Register FX models.
 	cl_mod_explode = clgi.R_RegisterModel("models/objects/explode/tris.md2");
@@ -1299,7 +1299,7 @@ void CLG_ClearTempEntities(void)
 //===============
 // CLG_InitTempEntities
 // 
-// Initialize temporary entity CVars.
+// Initialize temporary ServerEntity CVars.
 //===============
 //
 void CLG_InitTempEntities(void)

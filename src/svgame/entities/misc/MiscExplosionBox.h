@@ -15,7 +15,7 @@ class SVGBaseTrigger;
 class MiscExplosionBox : public SVGBaseTrigger {
 public:
     // Constructor/Deconstructor.
-    MiscExplosionBox(Entity* svEntity);
+    MiscExplosionBox(ServerEntity* svServerEntity);
     virtual ~MiscExplosionBox();
 
     DefineMapClass( "misc_explobox", MiscExplosionBox, SVGBaseTrigger );
@@ -24,10 +24,10 @@ public:
     // Interface functions. 
     //
     void Precache() override;    // Precaches data.
-    void Spawn() override;       // Spawns the entity.
-    void Respawn() override;     // Respawns the entity.
-    void PostSpawn() override;   // PostSpawning is for handling entity references, since they may not exist yet during a spawn period.
-    void Think() override;       // General entity thinking routine.
+    void Spawn() override;       // Spawns the ServerEntity.
+    void Respawn() override;     // Respawns the ServerEntity.
+    void PostSpawn() override;   // PostSpawning is for handling ServerEntity references, since they may not exist yet during a spawn period.
+    void Think() override;       // General ServerEntity thinking routine.
 
     //
     // Callback Functions.

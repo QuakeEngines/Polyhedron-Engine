@@ -11,11 +11,11 @@
 #include "../../utils.h"            // Util funcs.
 #include "../../physics/stepmove.h" // Stepmove funcs.
 
-// Server Game Base Entity.
+// Server Game Base ServerEntity.
 #include "../base/SVGBaseEntity.h"
 #include "../base/SVGBaseTrigger.h"
 
-// Misc Explosion Box Entity.
+// Misc Explosion Box ServerEntity.
 #include "MiscExplosionBox.h"
 
 
@@ -23,8 +23,8 @@
 //
 // Constructor/Deconstructor.
 //
-MiscExplosionBox::MiscExplosionBox(Entity* svEntity) 
-    : SVGBaseTrigger(svEntity) {
+MiscExplosionBox::MiscExplosionBox(ServerEntity* svServerEntity) 
+    : SVGBaseTrigger(svServerEntity) {
 
 }
 MiscExplosionBox::~MiscExplosionBox() {
@@ -74,7 +74,7 @@ void MiscExplosionBox::Spawn() {
     SetMoveType(MoveType::Step);
 
     // Since this is a "monster", after all...
-    SetFlags(EntityServerFlags::Monster);
+    SetFlags(ServerEntityServerFlags::Monster);
 
     // Set clip mask.
     SetClipMask(CONTENTS_MASK_MONSTERSOLID | CONTENTS_MASK_PLAYERSOLID);
@@ -94,8 +94,8 @@ void MiscExplosionBox::Spawn() {
         }
         );
 
-    SetFlags(EntityFlags::PowerArmor);
-    //SetFlags(EntityFlags::Swim);
+    SetFlags(ServerEntityFlags::PowerArmor);
+    //SetFlags(ServerEntityFlags::Swim);
     // Set default values in case we have none.
     if (!GetMass()) {
         SetMass(40);
@@ -107,7 +107,7 @@ void MiscExplosionBox::Spawn() {
         SetDamage(150);
     }
 
-    // Set entity to allow taking damage (can't explode otherwise.)
+    // Set ServerEntity to allow taking damage (can't explode otherwise.)
     SetTakeDamage(TakeDamage::Yes);
 
     // Setup our MiscExplosionBox callbacks.
@@ -119,8 +119,8 @@ void MiscExplosionBox::Spawn() {
     // Setup the next think time.
     SetNextThinkTime(level.time + 2.f * FRAMETIME);
 
-    // Link the entity to world, for collision testing.
-    LinkEntity();
+    // Link the ServerEntity to world, for collision testing.
+    LinkServerEntity();
 }
 
 //
@@ -163,7 +163,7 @@ void MiscExplosionBox::Think() {
 // ==============
 // MiscExplosionBox::ExplosionBoxUse
 // 
-// So that mappers can trigger this entity in order to blow it up
+// So that mappers can trigger this ServerEntity in order to blow it up
 // ==============
 void MiscExplosionBox::ExplosionBoxUse( SVGBaseEntity* caller, SVGBaseEntity* activator )
 {
@@ -197,7 +197,7 @@ void MiscExplosionBox::ExplosionBoxThink(void) {
     if (trace.fraction == 1 || trace.allSolid)
         return;
     ////
-    ////    // Set new entity origin.
+    ////    // Set new ServerEntity origin.
     SetOrigin(trace.endPosition);
     
     //    // Check for ground.
@@ -206,8 +206,8 @@ void MiscExplosionBox::ExplosionBoxThink(void) {
     //    // Setup its next think time, for a frame ahead.
     SetNextThinkTime(level.time + FRAMETIME);
 
-    //    // Link entity back in.
-    LinkEntity();
+    //    // Link ServerEntity back in.
+    LinkServerEntity();
     //
     //     //
     //
@@ -271,10 +271,10 @@ void MiscExplosionBox::MiscExplosionBoxExplode(void)
     // Reset origin to saved origin.
     SetOrigin(save);
 
-    // Depending on whether we have a ground entity or not, we determine which explosion to use.
-    if (GetGroundEntity()) {
-        gi.WriteByte(SVG_CMD_TEMP_ENTITY);
-        gi.WriteByte(TempEntityEvent::Explosion1);
+    // Depending on whether we have a ground ServerEntity or not, we determine which explosion to use.
+    if (GetGroundServerEntity()) {
+        gi.WriteByte(SVG_CMD_TEMP_ServerEntity);
+        gi.WriteByte(TempServerEntityEvent::Explosion1);
         gi.WriteVector3(GetOrigin());
         gi.Multicast(GetOrigin(), MultiCast::PHS);
 
@@ -286,8 +286,8 @@ void MiscExplosionBox::MiscExplosionBoxExplode(void)
         UseTargets(GetActivator());
         SetDelayTime(save);
     } else {
-        gi.WriteByte(SVG_CMD_TEMP_ENTITY);
-        gi.WriteByte(TempEntityEvent::Explosion2);
+        gi.WriteByte(SVG_CMD_TEMP_ServerEntity);
+        gi.WriteByte(TempServerEntityEvent::Explosion2);
         gi.WriteVector3(GetOrigin());
         gi.Multicast(GetOrigin(), MultiCast::PHS);
 
@@ -300,9 +300,8 @@ void MiscExplosionBox::MiscExplosionBoxExplode(void)
         SetDelayTime(save);
     }
 
-    // Ensure we have no more think callback pointer set when this entity has "died"
-    SetNextThinkTime(level.time + 1 * FRAMETIME);
-    SetThinkCallback(&MiscExplosionBox::SVGBaseEntityThinkRemove);
+    // Ensure we have no more think callback pointer set when this ServerEntity has "died"
+    Remove();
 }
 
 //
@@ -313,10 +312,10 @@ void MiscExplosionBox::MiscExplosionBoxExplode(void)
 //===============
 //
 void MiscExplosionBox::ExplosionBoxDie(SVGBaseEntity* inflictor, SVGBaseEntity* attacker, int damage, const vec3_t& point) {
-    // Entity is dying, it can't take any more damage.
+    // ServerEntity is dying, it can't take any more damage.
     SetTakeDamage(TakeDamage::Yes);
 
-    // Attacker becomes this entity its "activator".
+    // Attacker becomes this ServerEntity its "activator".
     if (attacker)
         SetActivator(attacker);
 
@@ -340,13 +339,13 @@ void MiscExplosionBox::ExplosionBoxTouch(SVGBaseEntity* self, SVGBaseEntity* oth
         return;
     if (!other)
         return;
-    // TODO: Move elsewhere in baseentity, I guess?
-    // Prevent this entity from touching itself.
+    // TODO: Move elsewhere in baseServerEntity, I guess?
+    // Prevent this ServerEntity from touching itself.
     if (this == other)
         return;
 
-    // Ground entity checks.
-    if ((!other->GetGroundEntity()) || (other->GetGroundEntity() == this))
+    // Ground ServerEntity checks.
+    if ((!other->GetGroundServerEntity()) || (other->GetGroundServerEntity() == this))
         return;
 
     // Calculate ratio to use.
@@ -360,7 +359,7 @@ void MiscExplosionBox::ExplosionBoxTouch(SVGBaseEntity* self, SVGBaseEntity* oth
 
     // Last but not least, move a step ahead.
     SVG_StepMove_Walk(this, yaw, 40 * ratio );
-    //gi.DPrintf("self: '%i' is TOUCHING other: '%i'\n", self->GetServerEntity()->state.number, other->GetServerEntity()->state.number);
+    //gi.DPrintf("self: '%i' is TOUCHING other: '%i'\n", self->GetServerServerEntity()->state.number, other->GetServerServerEntity()->state.number);
 }
 
 

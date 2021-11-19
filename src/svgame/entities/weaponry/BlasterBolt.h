@@ -14,7 +14,7 @@ class SVGBaseEntity;
 class BlasterBolt : public SVGBaseEntity {
 public:
     // Constructor/Deconstructor.
-    BlasterBolt(Entity* svEntity);
+    BlasterBolt(ServerEntity* svServerEntity);
     virtual ~BlasterBolt();
 
     DefineClass( BlasterBolt, SVGBaseEntity );
@@ -23,10 +23,10 @@ public:
     // Interface functions. 
     //
     void Precache() override;    // Precaches data.
-    void Spawn() override;       // Spawns the entity.
-    void Respawn() override;     // Respawns the entity.
-    void PostSpawn() override;   // PostSpawning is for handling entity references, since they may not exist yet during a spawn period.
-    void Think() override;       // General entity thinking routine.
+    void Spawn() override;       // Spawns the ServerEntity.
+    void Respawn() override;     // Respawns the ServerEntity.
+    void PostSpawn() override;   // PostSpawning is for handling ServerEntity references, since they may not exist yet during a spawn period.
+    void Think() override;       // General ServerEntity thinking routine.
 
     void SpawnKey(const std::string& key, const std::string& value)  override;
 

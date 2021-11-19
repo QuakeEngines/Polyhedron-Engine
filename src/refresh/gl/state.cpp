@@ -130,7 +130,7 @@ void GL_StateBits(glStateBits_t bits)
 
             qglTranslatef(scroll, 0, 0);
         } else {
-            qglLoadIdentity();
+            qglLoadIdServerEntity();
         }
 
         qglMatrixMode(GL_MODELVIEW);
@@ -276,7 +276,7 @@ void GL_Setup2D(void)
     }
 
     qglMatrixMode(GL_MODELVIEW);
-    qglLoadIdentity();
+    qglLoadIdServerEntity();
 }
 
 static void GL_Frustum(void)
@@ -412,7 +412,7 @@ void GL_SetDefaultState(void)
     }
 
     qglMatrixMode(GL_TEXTURE);
-    qglLoadIdentity();
+    qglLoadIdServerEntity();
     qglMatrixMode(GL_MODELVIEW);
 
     qglDisableClientState(GL_VERTEX_ARRAY);

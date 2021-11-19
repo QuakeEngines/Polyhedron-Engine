@@ -13,7 +13,7 @@
 
 class SVGBaseTrigger;
 
-using PushMoveEndFunction = void(Entity*);
+using PushMoveEndFunction = void(ServerEntity*);
 
 
 constexpr uint32_t PlatLowTrigger = 1U;
@@ -55,7 +55,7 @@ struct PushMoveInfo {
     float nextSpeed;
     float remainingDistance;
     float deceleratedDistance;
-    //void (*OnEndFunction)(Entity *);
+    //void (*OnEndFunction)(ServerEntity *);
     PushMoveEndFunction* OnEndFunction;
 };
 
@@ -64,7 +64,7 @@ public:
     //
     // Constructor/Deconstructor.
     //
-    SVGBaseMover(Entity* svEntity);
+    SVGBaseMover(ServerEntity* svServerEntity);
     virtual ~SVGBaseMover();
 
     DefineAbstractClass( SVGBaseMover, SVGBaseTrigger );
@@ -73,10 +73,10 @@ public:
     // Interface functions. 
     //
     virtual void Precache() override;    // Precaches data.
-    virtual void Spawn() override;       // Spawns the entity.
-    virtual void Respawn() override;     // Respawns the entity.
-    virtual void PostSpawn() override;   // PostSpawning is for handling entity references, since they may not exist yet during a spawn period.
-    virtual void Think() override;       // General entity thinking routine.
+    virtual void Spawn() override;       // Spawns the ServerEntity.
+    virtual void Respawn() override;     // Respawns the ServerEntity.
+    virtual void PostSpawn() override;   // PostSpawning is for handling ServerEntity references, since they may not exist yet during a spawn period.
+    virtual void Think() override;       // General ServerEntity thinking routine.
 
     virtual void SpawnKey(const std::string& key, const std::string& value)  override;
 
@@ -171,7 +171,7 @@ protected:
 protected:
 
     //
-    // Other base entity members. (These were old fields in edict_T back in the day.)
+    // Other base ServerEntity members. (These were old fields in edict_T back in the day.)
     //
     // The speed that this objects travels at.     
     float speed;
@@ -197,14 +197,14 @@ protected:
     // Message when triggered.
     //std::string messageStr;
 
-    // Master trigger entity.
+    // Master trigger ServerEntity.
     //std::string masterStr;
 
     // Timestamp that the trigger has been called at.
     //
-    // Entity pointers.
+    // ServerEntity pointers.
     // 
 
 };
 
-#endif // __SVGAME_ENTITIES_BASE_CBASEENTITY_H__
+#endif // __SVGAME_ENTITIES_BASE_CBASEServerEntity_H__

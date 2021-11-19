@@ -1077,10 +1077,10 @@ LOAD(Areas)
 
 LOAD(EntString)
 {
-    bsp->numentitychars = count;
-    bsp->entityString = (char*)ALLOC(count + 1); // CPP: Cast
-    memcpy(bsp->entityString, base, count);
-    bsp->entityString[count] = 0;
+    bsp->numServerEntitychars = count;
+    bsp->ServerEntityString = (char*)ALLOC(count + 1); // CPP: Cast
+    memcpy(bsp->ServerEntityString, base, count);
+    bsp->ServerEntityString[count] = 0;
 
     return Q_ERR_SUCCESS;
 }

@@ -79,8 +79,8 @@ static void fill_index_buffer(VkPtTransperancy& trans);
 
 // update
 static void write_particle_geometry(const float* view_matrix, const rparticle_t* particles, int particle_num);
-static void write_beam_geometry(const r_entity_t* entities, int entity_num);
-static void write_sprite_geometry(const float* view_matrix, const r_entity_t* entities, int entity_num);
+static void write_beam_geometry(const r_ServerEntity_t* entities, int ServerEntity_num);
+static void write_sprite_geometry(const float* view_matrix, const r_ServerEntity_t* entities, int ServerEntity_num);
 static void upload_geometry(VkCommandBuffer command_buffer);
 
 cvar_t* cvar_pt_particle_size = NULL;
@@ -165,14 +165,14 @@ void destroy_transparency()
 }
 
 void update_transparency(VkCommandBuffer command_buffer, const float* view_matrix,
-	const rparticle_t* particles, int particle_num, const r_entity_t* entities, int entity_num)
+	const rparticle_t* particles, int particle_num, const r_ServerEntity_t* entities, int ServerEntity_num)
 {
 	transparency.host_frame_index = (transparency.host_frame_index + 1) % transparency.host_buffered_frame_num;
 	particle_num = min(particle_num, TR_PARTICLE_MAX_NUM);
 
 	uint32_t beam_num = 0;
 	uint32_t sprite_num = 0;
-	for (int i = 0; i < entity_num; i++)
+	for (int i = 0; i < ServerEntity_num; i++)
 	{
 		if (entities[i].flags & RenderEffects::Beam)
 		{
@@ -208,8 +208,8 @@ void update_transparency(VkCommandBuffer command_buffer, const float* view_matri
 	if (particle_num > 0 || beam_num > 0 || sprite_num > 0)
 	{
 		write_particle_geometry(view_matrix, particles, particle_num);
-		write_beam_geometry(entities, entity_num);
-		write_sprite_geometry(view_matrix, entities, entity_num);
+		write_beam_geometry(entities, ServerEntity_num);
+		write_sprite_geometry(view_matrix, entities, ServerEntity_num);
 		upload_geometry(command_buffer);
 	}
 }
@@ -348,7 +348,7 @@ static void write_particle_geometry(const float* view_matrix, const rparticle_t*
 	}
 }
 
-static void write_beam_geometry(const r_entity_t* entities, int entity_num)
+static void write_beam_geometry(const r_ServerEntity_t* entities, int ServerEntity_num)
 {
 	const float hdr_factor = cvar_pt_particle_emissive->value;
 
@@ -362,12 +362,12 @@ static void write_beam_geometry(const r_entity_t* entities, int entity_num)
 	uint32_t* beam_infos = (uint32_t*)(transparency.host_buffer_shadow + transparency.beam_intersect_host_offset);
 	float* beam_colors = (float*)(transparency.host_buffer_shadow + transparency.beam_color_host_offset);
 
-	for (int i = 0; i < entity_num; i++)
+	for (int i = 0; i < ServerEntity_num; i++)
 	{
 		if ((entities[i].flags & RenderEffects::Beam) == 0)
 			continue;
 
-		const r_entity_t* beam = entities + i;
+		const r_ServerEntity_t* beam = entities + i;
 
 		// Adjust beam width. Default "narrow" beams have a width of 4, "fat" beams have 16.
 		if (beam->frame == 0)
@@ -452,8 +452,8 @@ static void write_beam_geometry(const r_entity_t* entities, int entity_num)
 
 static int compare_beams(const void* _a, const void* _b)
 {
-	const r_entity_t* a = (const r_entity_t*)*(void**)_a;
-	const r_entity_t* b = (const r_entity_t*)*(void**)_b;
+	const r_ServerEntity_t* a = (const r_ServerEntity_t*)*(void**)_a;
+	const r_ServerEntity_t* b = (const r_ServerEntity_t*)*(void**)_b;
 
 	if (a->origin[0] < b->origin[0]) return -1;
 	if (a->origin[0] > b->origin[0]) return 1;
@@ -554,7 +554,7 @@ qboolean vkpt_build_cylinder_light(light_poly_t* light_list, int* num_lights, in
 	return true;
 }
 
-void vkpt_build_beam_lights(light_poly_t* light_list, int* num_lights, int max_lights, bsp_t *bsp, r_entity_t* entities, int num_entites, float adapted_luminance)
+void vkpt_build_beam_lights(light_poly_t* light_list, int* num_lights, int max_lights, bsp_t *bsp, r_ServerEntity_t* entities, int num_entites, float adapted_luminance)
 {
 	const float hdr_factor = cvar_pt_beam_lights->value * adapted_luminance * 20.f;
 
@@ -563,7 +563,7 @@ void vkpt_build_beam_lights(light_poly_t* light_list, int* num_lights, int max_l
 
 	int num_beams = 0;
 
-	static r_entity_t* beams[MAX_BEAMS];
+	static r_ServerEntity_t* beams[MAX_BEAMS];
 
 	for (int i = 0; i < num_entites; i++)
 	{
@@ -577,14 +577,14 @@ void vkpt_build_beam_lights(light_poly_t* light_list, int* num_lights, int max_l
 	if (num_beams == 0)
 		return;
 
-	qsort(beams, num_beams, sizeof(r_entity_t*), compare_beams);
+	qsort(beams, num_beams, sizeof(r_ServerEntity_t*), compare_beams);
 
 	for (int i = 0; i < num_beams; i++)
 	{
 		if (*num_lights >= max_lights)
 			return;
 		
-		const r_entity_t* beam = beams[i];
+		const r_ServerEntity_t* beam = beams[i];
 
 		// Adjust beam width. Default "narrow" beams have a width of 4, "fat" beams have 16.
 		if (beam->frame == 0)
@@ -612,7 +612,7 @@ void vkpt_build_beam_lights(light_poly_t* light_list, int* num_lights, int max_l
 	}
 }
 
-static void write_sprite_geometry(const float* view_matrix, const r_entity_t* entities, int entity_num)
+static void write_sprite_geometry(const float* view_matrix, const r_ServerEntity_t* entities, int ServerEntity_num)
 {
 	if (transparency.sprite_num == 0)
 		return;
@@ -632,9 +632,9 @@ static void write_sprite_geometry(const float* view_matrix, const r_entity_t* en
 	uint32_t* sprite_info = (uint32_t*)(transparency.host_buffer_shadow + transparency.sprite_info_host_offset);
 
 	int sprite_count = 0;
-	for (int i = 0; i < entity_num; i++)
+	for (int i = 0; i < ServerEntity_num; i++)
 	{
-		const r_entity_t*e = entities + i;
+		const r_ServerEntity_t*e = entities + i;
 
 		if (e->model & 0x80000000)
 			continue;

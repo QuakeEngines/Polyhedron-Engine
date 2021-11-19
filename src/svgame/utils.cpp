@@ -46,7 +46,7 @@ vec3_t SVG_PlayerProjectSource(ServersClient* client, const vec3_t& point, const
 void Think_Delay(SVGBaseEntity *ent)
 {
     //UTIL_UseTargets(ent, ent->GetActivator());
-    //SVG_FreeEntity(ent->GetServerEntity());
+    //SVG_FreeServerEntity(ent->GetServerServerEntity());
 }
 
 
@@ -77,48 +77,48 @@ UTIL_TouchTriggers
 void UTIL_TouchTriggers(SVGBaseEntity *ent)
 {
     int         i, num;
-    Entity* serverEntity = ent->GetServerEntity();
-    Entity* touch[MAX_EDICTS], * hit;
+    ServerEntity* serverEntity = ent->GetServerServerEntity();
+    ServerEntity* touch[MAX_EDICTS], * hit;
 
     // dead things don't activate triggers!
-    if ((ent->GetClient() || (ent->GetServerFlags() & EntityServerFlags::Monster)) && (ent->GetHealth() <= 0))
+    if ((ent->GetClient() || (ent->GetServerFlags() & ServerEntityServerFlags::Monster)) && (ent->GetHealth() <= 0))
         return;
 
     num = gi.BoxEntities(ent->GetAbsoluteMin(), ent->GetAbsoluteMax(), touch
         , MAX_EDICTS, AREA_TRIGGERS);
 
-    // be careful, it is possible to have an entity in this
+    // be careful, it is possible to have an ServerEntity in this
     // list removed before we get to it (killtriggered)
     for (i = 0; i < num; i++) {
         hit = touch[i];
         if (!hit->inUse)
             continue;
 
-        if (!hit->classEntity)
+        if (!hit->classServerEntity)
             continue;
 
-        hit->classEntity->Touch(hit->classEntity, ent, NULL, NULL);
+        hit->classServerEntity->Touch(hit->classServerEntity, ent, NULL, NULL);
         //if (!hit->touch)
         //    continue;
         //hit->touch(hit, ent, NULL, NULL);
     }
     //// Dead things don't activate triggers!
-    //if ((ent->GetClient() || (ent->GetServerFlags() & EntityServerFlags::Monster)) && (ent->GetHealth() <= 0))
+    //if ((ent->GetClient() || (ent->GetServerFlags() & ServerEntityServerFlags::Monster)) && (ent->GetHealth() <= 0))
     //    return;
 
     //// Fetch the boxed entities.
     //std::vector<SVGBaseEntity*> touched = SVG_BoxEntities(ent->GetAbsoluteMin(), ent->GetAbsoluteMax(), MAX_EDICTS, AREA_TRIGGERS);
     //int32_t size = touched.size();
 
-    //// be careful, it is possible to have an entity in this
+    //// be careful, it is possible to have an ServerEntity in this
     //// list removed before we get to it (killtriggered)
-    //for (auto& touchedEntity : touched) {
-    //    if (!touchedEntity)
+    //for (auto& touchedServerEntity : touched) {
+    //    if (!touchedServerEntity)
     //        continue;
-    //    if (!touchedEntity->IsInUse())
+    //    if (!touchedServerEntity->IsInUse())
     //        continue;
 
-    //    touchedEntity->Touch(touchedEntity, ent, NULL, NULL);
+    //    touchedServerEntity->Touch(touchedServerEntity, ent, NULL, NULL);
     //}
 }
 
@@ -133,27 +133,27 @@ to force all entities it covers to immediately touch it
 void G_TouchSolids(SVGBaseEntity *ent)
 {
     int         i, num;
-    Entity* serverEntity = ent->GetServerEntity();
-    Entity* touch[MAX_EDICTS], * hit;
+    ServerEntity* serverEntity = ent->GetServerServerEntity();
+    ServerEntity* touch[MAX_EDICTS], * hit;
 
     // dead things don't activate triggers!
-    if ((ent->GetClient() || (ent->GetServerFlags() & EntityServerFlags::Monster)) && (ent->GetHealth() <= 0))
+    if ((ent->GetClient() || (ent->GetServerFlags() & ServerEntityServerFlags::Monster)) && (ent->GetHealth() <= 0))
         return;
 
     num = gi.BoxEntities(ent->GetAbsoluteMin(), ent->GetAbsoluteMax(), touch
         , MAX_EDICTS, AREA_SOLID);
 
-    // be careful, it is possible to have an entity in this
+    // be careful, it is possible to have an ServerEntity in this
     // list removed before we get to it (killtriggered)
     for (i = 0; i < num; i++) {
         hit = touch[i];
         if (!hit->inUse)
             continue;
 
-        if (!hit->classEntity)
+        if (!hit->classServerEntity)
             continue;
 
-        ent->Touch(ent, hit->classEntity, NULL, NULL);
+        ent->Touch(ent, hit->classServerEntity, NULL, NULL);
         //if (!hit->touch)
         //    continue;
         //hit->touch(hit, ent, NULL, NULL);
@@ -161,15 +161,15 @@ void G_TouchSolids(SVGBaseEntity *ent)
     //// Fetch the boxed entities.
     //std::vector<SVGBaseEntity*> touched = SVG_BoxEntities(ent->GetAbsoluteMin(), ent->GetAbsoluteMax(), MAX_EDICTS, AREA_SOLID);
 
-    //// be careful, it is possible to have an entity in this
+    //// be careful, it is possible to have an ServerEntity in this
     //// list removed before we get to it (killtriggered)
-    //for (auto& touchedEntity : touched) {
-    //    if (!touchedEntity)
+    //for (auto& touchedServerEntity : touched) {
+    //    if (!touchedServerEntity)
     //        continue;
-    //    if (!touchedEntity->IsInUse())
+    //    if (!touchedServerEntity->IsInUse())
     //        continue;
 
-    //    ent->Touch(touchedEntity, ent, NULL, NULL);
+    //    ent->Touch(touchedServerEntity, ent, NULL, NULL);
 
     //    if (!ent->IsInUse())
     //        break;
@@ -179,8 +179,8 @@ void G_TouchSolids(SVGBaseEntity *ent)
     //    hit = touch[i];
     //    if (!hit->inUse)
     //        continue;
-    //    if (ent->classEntity)
-    //        ent->classEntity->Touch((hit->classEntity ? hit->classEntity : nullptr), (ent->classEntity ? ent->classEntity : nullptr), NULL, NULL);
+    //    if (ent->classServerEntity)
+    //        ent->classServerEntity->Touch((hit->classServerEntity ? hit->classServerEntity : nullptr), (ent->classServerEntity ? ent->classServerEntity : nullptr), NULL, NULL);
     //    if (!ent->inUse)
     //        break;
     //}

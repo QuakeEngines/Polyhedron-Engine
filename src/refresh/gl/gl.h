@@ -67,7 +67,7 @@ typedef struct {
     GLuint          prognum_warp;
     GLuint          texnums[NUM_TEXNUMS];
     GLbitfield      stencil_buffer_bit;
-    float           entity_modulate;
+    float           ServerEntity_modulate;
     uint32_t        inverse_intensity_33;
     uint32_t        inverse_intensity_66;
     uint32_t        inverse_intensity_100;
@@ -88,7 +88,7 @@ typedef struct {
     int             viewcluster1;
     int             viewcluster2;
     cplane_t        frustumPlanes[4];
-    r_entity_t        *ent;
+    r_ServerEntity_t        *ent;
     qboolean        entrotated;
     vec3_t          entaxis[3];
     GLfloat         entmatrix[16];
@@ -127,7 +127,7 @@ extern glStatic_t gl_static;
 extern glConfig_t gl_config;
 extern glRefdef_t glr;
 
-extern r_entity_t gl_world;
+extern r_ServerEntity_t gl_world;
 
 typedef struct {
     int nodesVisible;
@@ -202,7 +202,7 @@ qboolean GL_AllocBlock(int width, int height, int *inUse,
                        int w, int h, int *s, int *t);
 
 void GL_MultMatrix(GLfloat *out, const GLfloat *a, const GLfloat *b);
-void GL_RotateForEntity(vec3_t origin, float scale);
+void GL_RotateForServerEntity(vec3_t origin, float scale);
 
 void QGL_ClearErrors(void);
 qboolean GL_ShowErrors(const char *func);

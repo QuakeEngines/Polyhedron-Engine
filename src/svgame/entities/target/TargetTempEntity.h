@@ -1,14 +1,14 @@
 
 #pragma once
 
-class TargetTempEntity : public SVGBaseEntity {
+class TargetTempServerEntity : public SVGBaseEntity {
 public:
-	TargetTempEntity( Entity* entity );
-	virtual ~TargetTempEntity() = default;
+	TargetTempServerEntity( ServerEntity* ServerEntity );
+	virtual ~TargetTempServerEntity() = default;
 
-	DefineMapClass( "target_temp_entity", TargetTempEntity, SVGBaseEntity );
+	DefineMapClass( "target_temp_ServerEntity", TargetTempServerEntity, SVGBaseEntity );
 
 	void Spawn() override;
 
-	void TempEntityUse( SVGBaseEntity* other, SVGBaseEntity* activator );
+	void TempServerEntityUse( SVGBaseEntity* other, SVGBaseEntity* activator );
 };

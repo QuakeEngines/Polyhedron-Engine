@@ -7,7 +7,7 @@ class SVGBaseMover;
 //===============
 class FuncDoor : public SVGBaseMover {
 public:
-    FuncDoor( Entity* entity );
+    FuncDoor( ServerEntity* ServerEntity );
     virtual ~FuncDoor() = default;
 
     DefineMapClass( "func_door", FuncDoor, SVGBaseMover );
@@ -46,8 +46,8 @@ protected:
 
     // These are leftovers from the legacy brush movement functions
     // Soon, we'll have a... better way... of doing this
-    static void OnDoorHitTop( Entity* self );
-    static void OnDoorHitBottom( Entity* self );
+    static void OnDoorHitTop( ServerEntity* self );
+    static void OnDoorHitBottom( ServerEntity* self );
 
     // Admer: some of these could be moved to SVGBaseMover
     void        CalculateMoveSpeed();

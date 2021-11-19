@@ -442,7 +442,7 @@ static void SV_DumpEnts_f(void)
     bsp_t *c = sv.cm.cache;
     char buffer[MAX_OSPATH];
 
-    if (!c || !c->entityString) {
+    if (!c || !c->ServerEntityString) {
         Com_Printf("No map loaded.\n");
         return;
     }
@@ -453,8 +453,8 @@ static void SV_DumpEnts_f(void)
     }
 
     if (FS_EasyWriteFile(buffer, sizeof(buffer), FS_MODE_WRITE,
-                         "maps/", Cmd_Argv(1), ".ent", c->entityString, c->numentitychars)) {
-        Com_Printf("Dumped entity string to %s\n", buffer);
+                         "maps/", Cmd_Argv(1), ".ent", c->ServerEntityString, c->numServerEntitychars)) {
+        Com_Printf("Dumped ServerEntity string to %s\n", buffer);
     }
 }
 

@@ -11,7 +11,7 @@
 #include "../entities.h"    // Entities.
 #include "../utils.h"       // Util funcs.
 
-// Server Game Base Entity.
+// Server Game Base ServerEntity.
 #include "../entities/base/SVGBaseEntity.h"
 #include "../entities/base/PlayerClient.h"
 
@@ -56,7 +56,7 @@ qboolean DeathMatchGameMode::CanDamage(SVGBaseEntity* target, SVGBaseEntity* inf
 // 
 // Called when a client is ready to be placed in the game after connecting.
 //===============
-void DeathMatchGameMode::ClientBegin(Entity* serverEntity) {
+void DeathMatchGameMode::ClientBegin(ServerEntity* serverEntity) {
     if (!serverEntity) {
         gi.DPrintf("ClientBegin executed with invalid (nullptr) serverEntity");
         return;
@@ -67,22 +67,22 @@ void DeathMatchGameMode::ClientBegin(Entity* serverEntity) {
         return;
     }
 
-    // Setup the client for the server entity.
+    // Setup the client for the server ServerEntity.
     serverEntity->client = game.clients + (serverEntity - g_entities - 1);
 
     // Initialize a clean serverEntity.
-    SVG_InitEntity(serverEntity);
+    SVG_InitServerEntity(serverEntity);
 
-    // Delete previous classentity, if existent (older client perhaps).
-    SVG_FreeClassEntity(serverEntity);
+    // Delete previous classServerEntity, if existent (older client perhaps).
+    SVG_FreeClassServerEntity(serverEntity);
 
-    // Recreate class PlayerClient entity.
-    serverEntity->classEntity = SVG_CreateClassEntity<PlayerClient>(serverEntity, false);
+    // Recreate class PlayerClient ServerEntity.
+    serverEntity->classServerEntity = SVG_CreateClassServerEntity<PlayerClient>(serverEntity, false);
 
     // Initialize client respawn data.
     InitializeClientRespawnData(serverEntity->client);
  
-    // Put into our server and blast away! (Takes care of spawning classEntity).
+    // Put into our server and blast away! (Takes care of spawning classServerEntity).
     PutClientInServer(serverEntity);
 
     if (level.intermission.time) {
@@ -100,7 +100,7 @@ void DeathMatchGameMode::ClientBegin(Entity* serverEntity) {
     ClientEndServerFrame(serverEntity);
 }
 
-void DeathMatchGameMode::PutClientInServer(Entity *ent) {
+void DeathMatchGameMode::PutClientInServer(ServerEntity *ent) {
     // Find a spawn point for this client to be "placed"/"put" at.
     vec3_t  mins = PM_MINS;
     vec3_t  maxs = PM_MAXS;
@@ -116,7 +116,7 @@ void DeathMatchGameMode::PutClientInServer(Entity *ent) {
 
     DefaultGameMode::SelectClientSpawnPoint(ent, spawnOrigin, spawnAngles, "info_player_deathmatch");
 
-    // Fetch the entity index, and the client right off the bat.
+    // Fetch the ServerEntity index, and the client right off the bat.
     int32_t index = ent - g_entities - 1;
     ServersClient* client = ent->client;
 
@@ -142,12 +142,12 @@ void DeathMatchGameMode::PutClientInServer(Entity *ent) {
         InitializeClientPersistentData(client);
     client->respawn = respawnData;
 
-    // Copy some data from the client to the entity
-    FetchClientEntityData(ent);
+    // Copy some data from the client to the ServerEntity
+    FetchClientServerEntityData(ent);
 
-    // clear entity values
-    PlayerClient* playerClient = (PlayerClient*)ent->classEntity;
-    playerClient->SetGroundEntity(nullptr);
+    // clear ServerEntity values
+    PlayerClient* playerClient = (PlayerClient*)ent->classServerEntity;
+    playerClient->SetGroundServerEntity(nullptr);
     playerClient->SetClient(&game.clients[index]);
     playerClient->SetTakeDamage(TakeDamage::Aim);
     playerClient->SetMoveType(MoveType::Walk);
@@ -164,8 +164,8 @@ void DeathMatchGameMode::PutClientInServer(Entity *ent) {
     /*ent->pain = player_pain;*/
     playerClient->SetWaterLevel(0);
     playerClient->SetWaterType(0);
-    playerClient->SetFlags(playerClient->GetFlags() & ~EntityFlags::NoKnockBack);
-    playerClient->SetServerFlags(playerClient->GetServerFlags() & ~EntityServerFlags::DeadMonster);
+    playerClient->SetFlags(playerClient->GetFlags() & ~ServerEntityFlags::NoKnockBack);
+    playerClient->SetServerFlags(playerClient->GetServerFlags() & ~ServerEntityServerFlags::DeadMonster);
     playerClient->SetMins(mins);
     playerClient->SetMaxs(maxs);
     playerClient->SetVelocity(vec3_zero());
@@ -189,7 +189,7 @@ void DeathMatchGameMode::PutClientInServer(Entity *ent) {
     // Set gun index to whichever was persistent in (if any) previous map.
     client->playerState.gunIndex = gi.ModelIndex(client->persistent.activeWeapon->viewModel);
 
-    // clear entity state values
+    // clear ServerEntity state values
     ent->state.effects = 0;
     ent->state.modelIndex = 255;        // will use the skin specified model
     ent->state.modelIndex2 = 255;       // custom gun model
@@ -199,7 +199,7 @@ void DeathMatchGameMode::PutClientInServer(Entity *ent) {
 
     ent->state.frame = 0;
     ent->state.origin = spawnOrigin;
-    ent->state.origin.z += 1;  // Mmake sure entity is off the ground
+    ent->state.origin.z += 1;  // Mmake sure ServerEntity is off the ground
 
                                // Set old Origin to current, because hell, we are here now spawning.
     ent->state.oldOrigin = ent->state.origin;
@@ -230,14 +230,14 @@ void DeathMatchGameMode::PutClientInServer(Entity *ent) {
         // No solid.
         ent->solid = Solid::Not;
 
-        // NoClient flag, aka, do not send this entity to other clients. It is invisible to them.
-        ent->serverFlags |= EntityServerFlags::NoClient;
+        // NoClient flag, aka, do not send this ServerEntity to other clients. It is invisible to them.
+        ent->serverFlags |= ServerEntityServerFlags::NoClient;
 
         // Obviously no gun index.
         ent->client->playerState.gunIndex = 0;
 
-        // Last but not least link our entity.
-        gi.LinkEntity(ent);
+        // Last but not least link our ServerEntity.
+        gi.LinkServerEntity(ent);
 
         return;
     } else {
@@ -248,7 +248,7 @@ void DeathMatchGameMode::PutClientInServer(Entity *ent) {
         // could't spawn in?
     }
 
-    gi.LinkEntity(ent);
+    gi.LinkServerEntity(ent);
 
     // force the current weapon up
     client->newWeapon = client->persistent.activeWeapon;
@@ -264,14 +264,14 @@ void DeathMatchGameMode::PutClientInServer(Entity *ent) {
 // This basically allows for the game to disable fetching user input that makes
 // our movement tick. And/or shoot weaponry while in intermission time.
 //===============
-void DeathMatchGameMode::ClientBeginServerFrame(Entity* serverEntity) {
+void DeathMatchGameMode::ClientBeginServerFrame(ServerEntity* serverEntity) {
     // Ensure we aren't in an intermission time.
     if (level.intermission.time)
         return;
 
     // Fetch the client.
     ServersClient* client = serverEntity->client;
-    PlayerClient* player = (PlayerClient*)serverEntity->classEntity;
+    PlayerClient* player = (PlayerClient*)serverEntity->classServerEntity;
     // This has to go ofc.... lol. What it simply does though, is determine whether there is 
     // a need to respawn as spectator.
     if (client->persistent.isSpectator != client->respawn.isSpectator &&
@@ -323,7 +323,7 @@ void DeathMatchGameMode::ClientBeginServerFrame(Entity* serverEntity) {
 // 
 //===============
 void DeathMatchGameMode::ClientUpdateObituary(SVGBaseEntity* self, SVGBaseEntity* inflictor, SVGBaseEntity* attacker) {
-    std::string message = ""; // String stating what happened to whichever entity. "suicides", "was squished" etc.
+    std::string message = ""; // String stating what happened to whichever ServerEntity. "suicides", "was squished" etc.
     std::string messageAddition = ""; // String stating what is additioned to it, "'s shrapnell" etc. Funny stuff.
 
     // No friendly fire in DeathMatch.
@@ -334,7 +334,7 @@ void DeathMatchGameMode::ClientUpdateObituary(SVGBaseEntity* self, SVGBaseEntity
     //qboolean friendlyFire = meansOfDeath & MeansOfDeath::FriendlyFire;
     qboolean friendlyFire = false;
     // Quickly remove it from meansOfDeath again, our bool is set. This prevents it from 
-    // sticking around when we process the next entity/client.
+    // sticking around when we process the next ServerEntity/client.
     int32_t finalMeansOfDeath = meansOfDeath;// &~MeansOfDeath::FriendlyFire; // Sum of things, final means of death.
 
     // Determine the means of death.
@@ -394,7 +394,7 @@ void DeathMatchGameMode::ClientUpdateObituary(SVGBaseEntity* self, SVGBaseEntity
         return;
     }
 
-    // Set 'self' its attacker entity pointer.
+    // Set 'self' its attacker ServerEntity pointer.
     self->SetEnemy(attacker);
 
     // If we have an attacker, and it IS a client...
@@ -451,7 +451,7 @@ void DeathMatchGameMode::ClientUpdateObituary(SVGBaseEntity* self, SVGBaseEntity
     }
 
     // Check for monster deaths here.
-    if (attacker->GetServerFlags() & EntityServerFlags::Monster) {
+    if (attacker->GetServerFlags() & ServerEntityServerFlags::Monster) {
         // Fill in message here
         // aka if (attacker->classname == "monster_1337h4x0r")
         // Then we do...
@@ -486,11 +486,11 @@ void DeathMatchGameMode::RespawnClient(PlayerClient* ent) {
     if (ent->GetMoveType() != MoveType::NoClip)
         SpawnClientCorpse(ent);
 
-    ent->SetServerFlags(ent->GetServerFlags() & ~EntityServerFlags::NoClient);
-    PutClientInServer(ent->GetServerEntity());
+    ent->SetServerFlags(ent->GetServerFlags() & ~ServerEntityServerFlags::NoClient);
+    PutClientInServer(ent->GetServerServerEntity());
 
     // add a teleportation effect
-    ent->SetEventID(EntityEvent::PlayerTeleport);
+    ent->SetEventID(ServerEntityEvent::PlayerTeleport);
 
     // hold in place briefly
     ServersClient* client = ent->GetClient();
@@ -511,11 +511,11 @@ void DeathMatchGameMode::RespawnSpectator(PlayerClient* ent) {
     if (ent->GetMoveType() != MoveType::NoClip)
         SpawnClientCorpse(ent);
 
-    ent->SetServerFlags(ent->GetServerFlags() & ~EntityServerFlags::NoClient);
-    PutClientInServer(ent->GetServerEntity());
+    ent->SetServerFlags(ent->GetServerFlags() & ~ServerEntityServerFlags::NoClient);
+    PutClientInServer(ent->GetServerServerEntity());
 
     // add a teleportation effect
-    ent->SetEventID(EntityEvent::PlayerTeleport);
+    ent->SetEventID(ServerEntityEvent::PlayerTeleport);
 
     // hold in place briefly
     ServersClient* client = ent->GetClient();

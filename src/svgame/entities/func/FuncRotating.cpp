@@ -20,8 +20,8 @@
 //===============
 // FuncRotating::ctor
 //===============
-FuncRotating::FuncRotating( Entity* entity )
-	: Base( entity ) {
+FuncRotating::FuncRotating( ServerEntity* ServerEntity )
+	: Base( ServerEntity ) {
 }
 
 //===============
@@ -62,13 +62,13 @@ void FuncRotating::Spawn() {
 	}
 
 	if ( GetSpawnFlags() & SF_Animated ) {
-		serverEntity->state.effects |= EntityEffectType::AnimCycleAll2hz;
+		serverEntity->state.effects |= ServerEntityEffectType::AnimCycleAll2hz;
 	} else if ( GetSpawnFlags() & SF_AnimatedFast ) {
-		serverEntity->state.effects |= EntityEffectType::AnimCycleAll30hz;
+		serverEntity->state.effects |= ServerEntityEffectType::AnimCycleAll30hz;
 	}
 
 	SetModel( GetModel() );
-	LinkEntity();
+	LinkServerEntity();
 }
 
 //===============

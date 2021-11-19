@@ -16,7 +16,7 @@
 #include "../trigger/TriggerDelayedUse.h"
 
 // Constructor/Deconstructor.
-SVGBaseEntity::SVGBaseEntity(Entity* svEntity) : serverEntity(svEntity) {
+SVGBaseEntity::SVGBaseEntity(ServerEntity* svServerEntity) : serverEntity(svServerEntity) {
 	//
 	// All callback functions best be nullptr.
 	//
@@ -28,13 +28,13 @@ SVGBaseEntity::SVGBaseEntity(Entity* svEntity) : serverEntity(svEntity) {
 	dieFunction = nullptr;
 
 	//
-	// Set all entity pointer references to nullptr.
+	// Set all ServerEntity pointer references to nullptr.
 	//
-	enemyEntity = nullptr;
-	groundEntity = nullptr;
-	oldEnemyEntity = nullptr;
-	teamChainEntity = nullptr;
-	teamMasterEntity = nullptr;
+	enemyServerEntity = nullptr;
+	groundServerEntity = nullptr;
+	oldEnemyServerEntity = nullptr;
+	teamChainServerEntity = nullptr;
+	teamMasterServerEntity = nullptr;
 
 	//
 	// Default values for members.
@@ -53,13 +53,16 @@ SVGBaseEntity::SVGBaseEntity(Entity* svEntity) : serverEntity(svEntity) {
 	gravity = 1.f;
 	yawSpeed = 0.f;
 	idealYawAngle = 0.f;
-	groundEntityLinkCount = 0;
+	groundServerEntityLinkCount = 0;
 	health = 0;
 	maxHealth = 0;
 	deadFlag = DEAD_NO;
+
+	// Set the server entity to be in use.
+	serverEntity = svServerEntity;
 }
 SVGBaseEntity::~SVGBaseEntity() {
-
+	svServerEntity->inUse = false;
 }
 
 // Interface functions. 
@@ -67,7 +70,7 @@ SVGBaseEntity::~SVGBaseEntity() {
 //===============
 // SVGBaseEntity::Precache
 //
-// This function is used to load all entity data with.
+// This function is used to load all ServerEntity data with.
 //===============
 //
 void SVGBaseEntity::Precache() {
@@ -78,8 +81,8 @@ void SVGBaseEntity::Precache() {
 //===============
 // SVGBaseEntity::Spawn
 //
-// This function can be overrided, to allow for entity spawning.
-// Setup the basic entity properties here.
+// This function can be overrided, to allow for ServerEntity spawning.
+// Setup the basic ServerEntity properties here.
 //===============
 //
 void SVGBaseEntity::Spawn() {
@@ -93,8 +96,8 @@ void SVGBaseEntity::Spawn() {
 //===============
 // SVGBaseEntity::Respawn
 //
-// This function can be overrided, to allow for entity respawning.
-// Setup the basic entity properties here.
+// This function can be overrided, to allow for ServerEntity respawning.
+// Setup the basic ServerEntity properties here.
 //===============
 //
 void SVGBaseEntity::Respawn() {
@@ -105,7 +108,7 @@ void SVGBaseEntity::Respawn() {
 //===============
 // SVGBaseEntity::PostSpawn
 //
-// This function can be overrided, to allow for entity post spawning.
+// This function can be overrided, to allow for ServerEntity post spawning.
 // An example of that could be finding targetnames for certain target
 // trigger settings, etc.
 //===============
@@ -118,7 +121,7 @@ void SVGBaseEntity::PostSpawn() {
 //===============
 // SVGBaseEntity::Think
 //
-// This function can be overrided, to allow for custom entity thinking.
+// This function can be overrided, to allow for custom ServerEntity thinking.
 // By default it only executes the 'Think' callback in case we have any set.
 //===============
 //
@@ -215,7 +218,7 @@ qboolean SVGBaseEntity::ParseVector3KeyValue(const std::string& key, const std::
 //===============
 // SVGBaseEntity::SpawnKey
 //
-// This function can be overrided, to allow for custom entity key:value parsing.
+// This function can be overrided, to allow for custom ServerEntity key:value parsing.
 //===============
 //
 void SVGBaseEntity::SpawnKey(const std::string& key, const std::string& value) {
@@ -348,7 +351,7 @@ void SVGBaseEntity::SpawnKey(const std::string& key, const std::string& value) {
 		// Set SpawnFlags.
 		SetSpawnFlags(parsedSpawnFlags);
 	} else {
-		gi.DPrintf("Entity ID: %i - classname: %s has unknown Key/Value['%s','%s']\n", GetServerEntity()->state.number, GetServerEntity()->className, key.c_str(), value.c_str());
+		gi.DPrintf("ServerEntity ID: %i - classname: %s has unknown Key/Value['%s','%s']\n", GetServerServerEntity()->state.number, GetServerServerEntity()->className, key.c_str(), value.c_str());
 	}
 }
 
@@ -435,7 +438,7 @@ void SVGBaseEntity::Touch(SVGBaseEntity* self, SVGBaseEntity* other, cplane_t* p
 //===============
 // SVGBaseEntity::UseTargets
 // 
-// Calls Use on this entity's targets, as well as killtargets
+// Calls Use on this ServerEntity's targets, as well as killtargets
 //===============
 void SVGBaseEntity::UseTargets( SVGBaseEntity* activatorOverride )
 {
@@ -449,13 +452,13 @@ void SVGBaseEntity::UseTargets( SVGBaseEntity* activatorOverride )
 		activatorOverride = this;
 	}
 
-	// Create a temporary DelayedUse entity in case this entity has a trigger delay
+	// Create a temporary DelayedUse ServerEntity in case this ServerEntity has a trigger delay
 	if ( GetDelayTime() )
 	{
 		// This is all very lengthy. I'd rather have a static method in TriggerDelayedUse that
-		// allocates one such entity and accepts activator, message, target etc. as parameters
+		// allocates one such ServerEntity and accepts activator, message, target etc. as parameters
 		// Something like 'TriggerDelayedUse::Schedule( GetTarget(), GetKillTarget(), activatorOverride, GetMessage(), GetDelayTime() );'
-		SVGBaseTrigger* triggerDelay = SVG_CreateClassEntity<TriggerDelayedUse>();
+		SVGBaseTrigger* triggerDelay = SVG_CreateClassServerEntity<TriggerDelayedUse>();
 		triggerDelay->SetActivator( activatorOverride );
 		triggerDelay->SetMessage( GetMessage() );
 		triggerDelay->SetTarget( GetTarget() );
@@ -467,7 +470,7 @@ void SVGBaseEntity::UseTargets( SVGBaseEntity* activatorOverride )
 	}
 
 	// Print the "message"
-	if ( GetMessage().length() && !(activator->GetServerFlags() & EntityServerFlags::Monster) ) 
+	if ( GetMessage().length() && !(activator->GetServerFlags() & ServerEntityServerFlags::Monster) ) 
 	{
 		// Get the message sound
 		int32_t messageSound = GetNoiseIndex();
@@ -490,14 +493,14 @@ void SVGBaseEntity::UseTargets( SVGBaseEntity* activatorOverride )
 	if ( GetKillTarget().length() )
 	{
 		SVGBaseEntity* victim = nullptr;
-		while ( victim = SVG_FindEntityByKeyValue( "targetname", GetKillTarget(), victim ) )
+		while ( victim = SVG_FindServerEntityByKeyValue( "targetname", GetKillTarget(), victim ) )
 		{	// It is going to die, free it.
-			SVG_FreeEntity( victim->GetServerEntity() );
+			SVG_FreeServerEntity( victim->GetServerServerEntity() );
 		}
 
 		if ( !IsInUse() ) 
 		{
-			gi.DPrintf( "entity was removed while using killtargets\n" );
+			gi.DPrintf( "ServerEntity was removed while using killtargets\n" );
 			return;
 		}
 	}
@@ -505,29 +508,29 @@ void SVGBaseEntity::UseTargets( SVGBaseEntity* activatorOverride )
 	// Actually fire the targets
 	if ( GetTarget().length() ) 
 	{
-		SVGBaseEntity* targetEntity = nullptr;
-		while ( (targetEntity = SVG_FindEntityByKeyValue( "targetname", GetTarget(), targetEntity )) )
+		SVGBaseEntity* targetServerEntity = nullptr;
+		while ( (targetServerEntity = SVG_FindServerEntityByKeyValue( "targetname", GetTarget(), targetServerEntity )) )
 		{
 			// Doors fire area portals in a special way, so skip those
-			if ( targetEntity->GetClassName() == "func_areaportal"
+			if ( targetServerEntity->GetClassName() == "func_areaportal"
 				 && (GetClassName() == "func_door" || GetClassName() == "func_door_rotating") ) 
 			{
 				continue;
 			}
 
-			if ( targetEntity == this ) 
+			if ( targetServerEntity == this ) 
 			{
-				gi.DPrintf( "WARNING: Entity #%i used itself.\n", GetServerEntity()->state.number );
+				gi.DPrintf( "WARNING: ServerEntity #%i used itself.\n", GetServerServerEntity()->state.number );
 			}
 			else 
 			{
-				targetEntity->Use( this, activatorOverride );
+				targetServerEntity->Use( this, activatorOverride );
 			}
 
 			// Make sure it is in use
-			if ( !targetEntity->IsInUse() ) 
+			if ( !targetServerEntity->IsInUse() ) 
 			{
-				gi.DPrintf( "WARNING: Entity #%i was removed while using targets\n", GetServerEntity()->state.number );
+				gi.DPrintf( "WARNING: ServerEntity #%i was removed while using targets\n", GetServerServerEntity()->state.number );
 				return;
 			}
 		}
@@ -536,22 +539,22 @@ void SVGBaseEntity::UseTargets( SVGBaseEntity* activatorOverride )
 
 //
 //===============
-// SVGBaseEntity::LinkEntity
+// SVGBaseEntity::LinkServerEntity
 //
-// Link entity to world for collision testing using gi.LinkEntity.
+// Link ServerEntity to world for collision testing using gi.LinkServerEntity.
 //===============
 //
-void SVGBaseEntity::LinkEntity() {
-	gi.LinkEntity(serverEntity);
+void SVGBaseEntity::LinkServerEntity() {
+	gi.LinkServerEntity(serverEntity);
 }
 
 //===============
-// SVGBaseEntity::UnlinkEntity
+// SVGBaseEntity::UnlinkServerEntity
 //
 // 
 //===============
-void SVGBaseEntity::UnlinkEntity() {
-	gi.UnlinkEntity(serverEntity);
+void SVGBaseEntity::UnlinkServerEntity() {
+	gi.UnlinkServerEntity(serverEntity);
 }
 
 //===============
@@ -559,13 +562,14 @@ void SVGBaseEntity::UnlinkEntity() {
 //===============
 void SVGBaseEntity::Remove()
 {
-	serverEntity->serverFlags |= EntityServerFlags::Remove;
+	serverEntity->serverFlags |= ServerEntityServerFlags::Remove;
 }
 
-//
-//
-//
-void SVGBaseEntity::SVGBaseEntityThinkRemove(void) {
-	//SVG_FreeEntity(serverEntity);
+//===============
+// SVGBaseEntity::SVGBaseServerEntityThinkRemove
+// 
+// Can be utilized to have it be removed at the next moment of thinking.
+//===============
+void SVGBaseEntity::SVGBaseServerEntityThinkRemove(void) {
 	Remove();
 }

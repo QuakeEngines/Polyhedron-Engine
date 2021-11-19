@@ -28,7 +28,7 @@ LIST_DECL(sv_filterlist);
 LIST_DECL(sv_clientlist);   // linked list of non-free clients
 
 client_t    *sv_client;         // current client
-Entity      *sv_player;         // current client edict
+ServerEntity      *sv_player;         // current client edict
 
 qboolean    sv_pending_autosave = 0;
 
@@ -130,11 +130,11 @@ void SV_CleanClient(client_t *client)
         client->versionString = NULL;
     }
 
-    // free entityBaselines allocated for this client
+    // free ServerEntityBaselines allocated for this client
     for (i = 0; i < SV_BASELINES_CHUNKS; i++) {
-        if (client->entityBaselines[i]) {
-            Z_Free(client->entityBaselines[i]);
-            client->entityBaselines[i] = NULL;
+        if (client->ServerEntityBaselines[i]) {
+            Z_Free(client->ServerEntityBaselines[i]);
+            client->ServerEntityBaselines[i] = NULL;
         }
     }
 }
@@ -914,7 +914,7 @@ static client_t *find_client_slot(conn_params_t *params)
 
 static void init_pmove_and_es_flags(client_t *newcl)
 {
-    newcl->esFlags = (EntityStateMessageFlags)(newcl->esFlags | MSG_ES_BEAMORIGIN); // CPP: Cast bitflag
+    newcl->esFlags = (ServerEntityStateMessageFlags)(newcl->esFlags | MSG_ES_BEAMORIGIN); // CPP: Cast bitflag
 }
 
 static void send_connect_packet(client_t *newcl, int nctype)
@@ -996,7 +996,7 @@ static void SVC_DirectConnect(void)
     newcl->gamedir = fs_game->string;
     newcl->mapName = sv.name;
     newcl->configstrings = (char *)sv.configstrings;
-    newcl->pool = (EntityPool*)&ge->entities; // N&C: Edict_pool_t change
+    newcl->pool = (ServerEntityPool*)&ge->entities; // N&C: Edict_pool_t change
     newcl->cm = &sv.cm;
     newcl->spawncount = sv.spawncount;
     newcl->maximumClients = sv_maxclients->integer;
@@ -1536,7 +1536,7 @@ player processing happens outside RunWorldFrame
 */
 static void SV_PrepWorldFrame(void)
 {
-    Entity    *ent;
+    ServerEntity    *ent;
     int        i;
 
     sv.tracecount = 0;
@@ -2090,7 +2090,7 @@ void SV_Shutdown(const char *finalmsg, ErrorType type)
 
     // free current level
     CM_FreeMap(&sv.cm);
-    SV_FreeFile(sv.entityString);
+    SV_FreeFile(sv.ServerEntityString);
     memset(&sv, 0, sizeof(sv));
 
     // free server static data

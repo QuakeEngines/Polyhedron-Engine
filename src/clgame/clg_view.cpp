@@ -56,19 +56,19 @@ static cvar_t* cl_adjustfov;
 
 //
 //===============
-// V_AddEntity
+// V_AddServerEntity
 // 
-// [Opted for adding V_AddEntity to CG Module for customizability reasons.]
-// Add the entity to the current scene frame.
+// [Opted for adding V_AddServerEntity to CG Module for customizability reasons.]
+// Add the ServerEntity to the current scene frame.
 //===============
 //
-void V_AddEntity(r_entity_t *ent)
+void V_AddServerEntity(r_ServerEntity_t *ent)
 {
     // Ensure we aren't exceeding boundary limits.
     if (view.num_entities >= MAX_ENTITIES)
         return;
 
-    // Copy entity over into the current scene frame list.
+    // Copy ServerEntity over into the current scene frame list.
     view.entities[view.num_entities++] = *ent;
 }
 
@@ -174,7 +174,7 @@ void V_Init(void)
     cl_show_lights      = clgi.Cvar_Get("cl_show_lights", "0", 0);
 #endif
     cl_add_particles    = clgi.Cvar_Get("cl_particles", "1", 0);
-    cl_add_entities     = clgi.Cvar_Get("cl_entities", "1", 0);
+    cl_add_entities     = clgi.Cvar_Get("clientEntities", "1", 0);
     cl_add_blend        = clgi.Cvar_Get("cl_blend", "1", 0);
     //cl_add_blend->changed = cl_add_blend_changed;
 
@@ -294,7 +294,7 @@ static void CLG_SetupThirdPersionView(void)
     VectorMA(cl->refdef.vieworg, -range * fscale, cl->v_forward, cl->refdef.vieworg);
     VectorMA(cl->refdef.vieworg, -range * rscale, cl->v_right, cl->refdef.vieworg);
 
-    clgi.CM_BoxTrace(&trace, cl->playerEntityOrigin, cl->refdef.vieworg,
+    clgi.CM_BoxTrace(&trace, cl->playerServerEntityOrigin, cl->refdef.vieworg,
         mins, maxs, cl->bsp->nodes, CONTENTS_MASK_SOLID);
     if (trace.fraction != 1.0f) {
         VectorCopy(trace.endPosition, cl->refdef.vieworg);
@@ -318,7 +318,7 @@ static void CLG_SetupThirdPersionView(void)
 //
 void CLG_FinishViewValues(void)
 {
-    cl_entity_t* ent;
+    clientServerEntity* ent;
 
     if (cl_player_model->integer != CL_PLAYER_MODEL_THIRD_PERSON)
         goto first;

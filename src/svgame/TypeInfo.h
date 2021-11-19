@@ -2,8 +2,10 @@
 
 #include <string>
 
-class SVGBaseEntity;
-typedef entity_s Entity;
+//class SVGBaseEntity;
+//class ServerEntity;
+#include "shared/entities/ServerEntity.h"
+#include "entities/base/SVGBaseEntity.h"
 
 //===============
 // A static counter, used by TypeInfo to get compile-time IDs
@@ -26,7 +28,7 @@ private:
 	size_t localID; 
 };
 
-using EntityAllocatorFn = SVGBaseEntity* ( Entity* );
+using ServerEntityAllocatorFn = SVGBaseEntity* ( ServerEntity* );
 
 //===============
 // TypeInfo, a system for getting runtime information about classes
@@ -43,9 +45,9 @@ public:
 	};
 
 public:
-	TypeInfo( const char* mapClassName, const char* entClassName, const char* superClassName, uint8_t flags, EntityAllocatorFn entityAllocator )
+	TypeInfo( const char* mapClassName, const char* entClassName, const char* superClassName, uint8_t flags, ServerEntityAllocatorFn ServerEntityAllocator )
 		: mapClass( mapClassName ), className( entClassName ), superName( superClassName ), typeFlags( flags ) {
-		AllocateInstance = entityAllocator;
+		AllocateInstance = ServerEntityAllocator;
 		prev = head;
 		head = this;
 
@@ -53,16 +55,16 @@ public:
 		super = GetInfoByName( superClassName );
 	}
 
-	// This will be used to allocate instances of each entity class
+	// This will be used to allocate instances of each ServerEntity class
 	// In theory, multiple map classnames can allocate one C++ class
-	EntityAllocatorFn* AllocateInstance;
+	ServerEntityAllocatorFn* AllocateInstance;
 
-	// Is this entity of this specific class?
+	// Is this ServerEntity of this specific class?
 	bool IsClass( const TypeInfo& eci ) const {
 		return classInfoID.GetID() == eci.classInfoID.GetID();
 	}
 
-	// Is this entity a subclass of this class?
+	// Is this ServerEntity a subclass of this class?
 	bool IsSubclassOf( const TypeInfo& eci ) const {
 		if ( nullptr == super )
 			return false;
@@ -148,7 +150,7 @@ public:
 // ========================================================================
 
 // Declares and initialises the type information for a class 
-// @param mapClassName - the map classname of this entity, used during entity spawning 
+// @param mapClassName - the map classname of this ServerEntity, used during ServerEntity spawning 
 // @param className - the internal C++ class name 
 #define __DeclareTypeInfo( mapClassName, className, superClass, typeFlags, allocatorFunction )	\
 virtual inline TypeInfo* GetTypeInfo() const {					\
@@ -170,13 +172,13 @@ __DeclareTypeInfo( #className, #className, #superClass, TypeInfo::TypeFlag_Abstr
 
 // Declares and initialises the type information for this class, so it can be spawned in a map. 
 // NOTE: multiple inheritance not supported
-// @param mapClassName (string) - the map classname of this entity, used during entity spawning
+// @param mapClassName (string) - the map classname of this ServerEntity, used during ServerEntity spawning
 // @param className (symbol) - the internal C++ class name
-// @param superClass (symbol) - the class this entity class inherits from
+// @param superClass (symbol) - the class this ServerEntity class inherits from
 #define DefineMapClass( mapClassName, className, superClass )	\
 using Base = superClass;										\
-static SVGBaseEntity* AllocateInstance( Entity* entity ) {		\
-	return new className( entity );								\
+static SVGBaseEntity* AllocateInstance( ServerEntity* ServerEntity ) {		\
+	return new className( ServerEntity );								\
 }																\
 __DeclareTypeInfo( mapClassName, #className, #superClass, TypeInfo::TypeFlag_MapSpawn, &className::AllocateInstance );
 
@@ -191,10 +193,10 @@ __DeclareTypeInfo( mapClassName, #className, #superClass, TypeInfo::TypeFlag_Map
 // Declares and initialises the type information for this class 
 // NOTE: multiple inheritance not supported
 // @param className (symbol) - the internal C++ class name
-// @param superClass (symbol) - the class this entity class inherits from
+// @param superClass (symbol) - the class this ServerEntity class inherits from
 #define DefineClass( className, superClass )					\
 using Base = superClass;										\
-static SVGBaseEntity* AllocateInstance( Entity* entity ) {		\
-	return new className( entity );								\
+static SVGBaseEntity* AllocateInstance( ServerEntity* ServerEntity ) {		\
+	return new className( ServerEntity );								\
 }																\
 __DeclareTypeInfo( #className, #className, #superClass, TypeInfo::TypeFlag_None, &className::AllocateInstance );

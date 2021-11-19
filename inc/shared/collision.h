@@ -1,6 +1,7 @@
-// License here.
-#ifndef __SHARED__COLLISION_H__
-#define __SHARED__COLLISION_H__
+#pragma once
+
+#include <shared/entities/Server/ServerEntity.h>
+
 
 //-----------------
 // Brush content Flags.
@@ -20,7 +21,7 @@ static constexpr int32_t CONTENTS_AREAPORTAL    = 0x8000;
 static constexpr int32_t CONTENTS_PLAYERCLIP    = 0x10000;
 static constexpr int32_t CONTENTS_MONSTERCLIP   = 0x20000;
 
-static constexpr int32_t CONTENTS_ORIGIN        = 0x1000000;   // Removed before bsping an entity
+static constexpr int32_t CONTENTS_ORIGIN        = 0x1000000;   // Removed before bsping an ServerEntity
 static constexpr int32_t CONTENTS_MONSTER       = 0x2000000;   // Should never be on a brush, only in game
 static constexpr int32_t CONTENTS_DEADMONSTER   = 0x4000000;
 static constexpr int32_t CONTENTS_DETAIL        = 0x8000000;   // Brushes to be added after vis leafs
@@ -83,7 +84,7 @@ typedef struct csurface_s {
 // BSP planes they intersect.This is the basis for all collision detection
 // within Quake.
 //-----------------
-typedef struct {
+struct trace_t {
     // If true, the trace startedand ended within the same solid.
     qboolean    allSolid;
     // If true, the trace started within a solid, but exited it.
@@ -97,19 +98,17 @@ typedef struct {
 
     // The impacted plane, or empty.Note that a copy of the plane is
     // returned, rather than a pointer.This is because the plane may belong to
-    // an inline BSP model or the box hull of a solid entity, in which case it must
-    // be transformed by the entity's current position.
+    // an inline BSP model or the box hull of a solid ServerEntity, in which case it must
+    // be transformed by the ServerEntity's current position.
     cplane_t    plane;
     // The impacted surface, or `NULL`.
     csurface_t* surface;
     // The contents mask of the impacted brush, or 0.
     int         contents;
 
-    // The impacted entity, or `NULL`.
-    struct entity_s* ent;   // Not set by CM_*() functions
+    // The impacted ServerEntity, or `NULL`.
+    ServerEntity* ent;   // Not set by CM_*() functions
 
     // N&C: Custom added.
     vec3_t		offsets[8];	// [signbits][x] = either size[0][x] or size[1][x]
-} trace_t;
-
-#endif // __SHARED__COLLISION_H__
+} ;

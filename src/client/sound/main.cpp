@@ -700,7 +700,7 @@ channel_t *S_PickChannel(int entnum, int entchannel)
             if (entchannel == 256 && ch->sfx) {
                 return NULL; // channel 256 never overrides
             }
-            // always override sound from same entity
+            // always override sound from same ServerEntity
             first_to_die = ch_idx;
             break;
         }
@@ -794,7 +794,7 @@ static void S_Spatialize(channel_t *ch)
 {
     vec3_t      origin;
 
-    // anything coming from the view entity will always be full volume
+    // anything coming from the view ServerEntity will always be full volume
     if (ch->entnum == -1 || ch->entnum == listener_entnum) {
         ch->leftvol = ch->master_vol * 255;
         ch->rightvol = ch->master_vol * 255;
@@ -804,7 +804,7 @@ static void S_Spatialize(channel_t *ch)
     if (ch->fixed_origin) {
         VectorCopy(ch->origin, origin);
     } else {
-        origin = CL_GetEntitySoundOrigin(ch->entnum);
+        origin = CL_GetServerEntitySoundOrigin(ch->entnum);
     }
 
     S_SpatializeOrigin(origin, ch->master_vol, ch->dist_mult, &ch->leftvol, &ch->rightvol);
@@ -921,7 +921,7 @@ void S_IssuePlaysound(playsound_t *ps)
 S_StartSound
 
 Validates the parms and ques the sound up
-if pos is NULL, the sound will be dynamically sourced from the entity
+if pos is NULL, the sound will be dynamically sourced from the ServerEntity
 Entchannel 0 will never override a playing sound
 ====================
 */
@@ -1002,11 +1002,11 @@ void S_ParseStartSound(void)
 
 #ifdef _DEBUG
     if (developer->integer && !(snd.flags & SND_POS))
-        CL_CheckEntityPresent(snd.entity, "sound");
+        CL_CheckServerEntityPresent(snd.ServerEntity, "sound");
 #endif
 
     S_StartSound((snd.flags & SND_POS) ? &snd.pos : NULL,
-                 snd.entity, snd.channel, handle,
+                 snd.ServerEntity, snd.channel, handle,
                  snd.volume, snd.attenuation, snd.timeofs);
 }
 
@@ -1077,11 +1077,11 @@ void S_BuildSoundList(int *sounds)
 {
     int         i;
     int         num;
-    EntityState  *ent;
+    ServerEntityState  *ent;
 
     for (i = 0; i < cl.frame.numEntities; i++) {
-        num = (cl.frame.firstEntity + i) & PARSE_ENTITIES_MASK;
-        ent = &cl.entityStates[num];
+        num = (cl.frame.firstServerEntity + i) & PARSE_ENTITIES_MASK;
+        ent = &cl.ServerEntityStates[num];
         if (s_ambient->integer == 2 && !ent->modelIndex) {
             sounds[i] = 0;
         } else if (s_ambient->integer == 3 && ent->number != listener_entnum) {
@@ -1112,7 +1112,7 @@ static void S_AddLoopSounds(void)
     sfx_t       *sfx;
     sfxcache_t  *sc;
     int         num;
-    EntityState  *ent;
+    ServerEntityState  *ent;
     vec3_t      origin;
 
     if (cls.connectionState != ClientConnectionState::Active || !s_active || sv_paused->integer || !s_ambient->integer) {
@@ -1132,11 +1132,11 @@ static void S_AddLoopSounds(void)
         if (!sc)
             continue;
 
-        num = (cl.frame.firstEntity + i) & PARSE_ENTITIES_MASK;
-        ent = &cl.entityStates[num];
+        num = (cl.frame.firstServerEntity + i) & PARSE_ENTITIES_MASK;
+        ent = &cl.ServerEntityStates[num];
 
         // find the total contribution of all sounds of this type
-        origin = CL_GetEntitySoundOrigin(ent->number);
+        origin = CL_GetServerEntitySoundOrigin(ent->number);
         S_SpatializeOrigin(origin, 1.0, SOUND_LOOPATTENUATE,
                            &left_total, &right_total);
         for (j = i + 1; j < cl.frame.numEntities; j++) {
@@ -1144,10 +1144,10 @@ static void S_AddLoopSounds(void)
                 continue;
             sounds[j] = 0;  // don't check this again later
 
-            num = (cl.frame.firstEntity + j) & PARSE_ENTITIES_MASK;
-            ent = &cl.entityStates[num];
+            num = (cl.frame.firstServerEntity + j) & PARSE_ENTITIES_MASK;
+            ent = &cl.ServerEntityStates[num];
 
-            origin = CL_GetEntitySoundOrigin(ent->number);
+            origin = CL_GetServerEntitySoundOrigin(ent->number);
             S_SpatializeOrigin(origin, 1.0, SOUND_LOOPATTENUATE,
                                &left, &right);
             left_total += left;
@@ -1208,7 +1208,7 @@ void S_Update(void)
         return;
     }
 
-    // set listener entity number
+    // set listener ServerEntity number
     // other parameters should be already set up by CL_UpdateOrigin
     if (cl.clientNumber == -1 || cl.frame.clientNumber == CLIENTNUM_NONE) {
         listener_entnum = -1;

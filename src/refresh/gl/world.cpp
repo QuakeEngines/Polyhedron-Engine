@@ -78,7 +78,7 @@ static qboolean _GL_LightPoint(const vec3_t &start, vec3_t &color)
     int             i, index;
     lightpoint_t    pt;
     vec3_t          end, mins, maxs;
-    r_entity_t        *ent;
+    r_ServerEntity_t        *ent;
     mmodel_t        *model;
     //vec_t           *angles;
     vec3_t          *angles;
@@ -99,7 +99,7 @@ static qboolean _GL_LightPoint(const vec3_t &start, vec3_t &color)
         ent = &glr.fd.entities[i];
         index = ent->model;
         if (!(index & 0x80000000))
-            break;  // BSP models are at the start of entity array
+            break;  // BSP models are at the start of ServerEntity array
 
         index = ~index;
         if (index < 1 || index >= bsp->nummodels)
@@ -248,7 +248,7 @@ void GL_LightPoint(const vec3_t &origin, vec3_t &color)
 
     if (gl_doublelight_entities->integer) {
         // apply modulate twice to mimic original ref_gl behavior
-        VectorScale(color, gl_static.entity_modulate, color);
+        VectorScale(color, gl_static.ServerEntity_modulate, color);
     }
 }
 
@@ -362,7 +362,7 @@ void GL_DrawBspModel(mmodel_t *model)
     vec3_t bounds[2];
     vec_t dot;
     vec3_t transformed, temp;
-    r_entity_t *ent = glr.ent;
+    r_ServerEntity_t *ent = glr.ent;
     glCullResult_t cull;
 
     if (!model->numfaces)
@@ -400,7 +400,7 @@ void GL_DrawBspModel(mmodel_t *model)
 
     GL_TransformLights(model);
 
-    GL_RotateForEntity(ent->origin, 1.f);
+    GL_RotateForServerEntity(ent->origin, 1.f);
 
     GL_BindArrays();
 

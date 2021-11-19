@@ -44,11 +44,11 @@ solid_edge items only clip against bsp models.
 
 //
 //===============
-// SVG_TestEntityPosition
+// SVG_TestServerEntityPosition
 //
 //===============
 //
-SVGBaseEntity *SVG_TestEntityPosition(SVGBaseEntity *ent)
+SVGBaseEntity *SVG_TestServerEntityPosition(SVGBaseEntity *ent)
 {
     SVGTrace trace;
     int     mask;
@@ -71,7 +71,7 @@ SVGBaseEntity *SVG_TestEntityPosition(SVGBaseEntity *ent)
 //===============
 // SVG_BoundVelocity
 //
-// Keeps an entity its velocity within max boundaries. (-sv_maxvelocity, sv_maxvelocity)
+// Keeps an ServerEntity its velocity within max boundaries. (-sv_maxvelocity, sv_maxvelocity)
 //===============
 //
 void SVG_BoundVelocity(SVGBaseEntity *ent)
@@ -90,7 +90,7 @@ void SVG_BoundVelocity(SVGBaseEntity *ent)
 //===============
 // SVG_RunThink
 //
-// Runs entity thinking code for this frame if necessary
+// Runs ServerEntity thinking code for this frame if necessary
 //===============
 //
 qboolean SVG_RunThink(SVGBaseEntity *ent)
@@ -109,10 +109,10 @@ qboolean SVG_RunThink(SVGBaseEntity *ent)
     if ( !ent->HasThinkCallback() ) {
         // Write the index, programmers may look at that thing first
         std::string errorString = "";
-        if (ent->GetServerEntity()) {
-            errorString += "entity (index " + std::to_string(ent->GetNumber());
+        if (ent->GetServerServerEntity()) {
+            errorString += "ServerEntity (index " + std::to_string(ent->GetNumber());
         } else {
-            errorString += "entity has no ServerEntity ";
+            errorString += "ServerEntity has no ServerEntity ";
         }
 
         // Write the targetname as well, if it exists
@@ -249,7 +249,7 @@ int SVG_FlyMove(SVGBaseEntity *ent, float time, int mask)
 
     time_left = time;
 
-    ent->SetGroundEntity(nullptr);
+    ent->SetGroundServerEntity(nullptr);
     for (bumpcount = 0 ; bumpcount < numbumps ; bumpcount++) {
         //for (i = 0 ; i < 3 ; i++)
         //    end[i] = ent->state.origin[i] + time_left * ent->velocity[i];
@@ -258,7 +258,7 @@ int SVG_FlyMove(SVGBaseEntity *ent, float time, int mask)
         trace = SVG_Trace(ent->GetOrigin(), ent->GetMins(), ent->GetMaxs(), end, ent, mask);
 
         if (trace.allSolid) {
-            // entity is trapped in another solid
+            // ServerEntity is trapped in another solid
             ent->SetVelocity(vec3_zero());
             return 3;
         }
@@ -278,8 +278,8 @@ int SVG_FlyMove(SVGBaseEntity *ent, float time, int mask)
         if (trace.plane.normal[2] > 0.7) {
             Blocked |= 1;       // floor
             if (hit->GetSolid() == Solid::BSP) {
-                ent->SetGroundEntity(hit);
-                ent->SetGroundEntityLinkCount(hit->GetLinkCount());
+                ent->SetGroundServerEntity(hit);
+                ent->SetGroundServerEntityLinkCount(hit->GetLinkCount());
             }
         }
         if (!trace.plane.normal[2]) {
@@ -365,7 +365,7 @@ void SVG_AddGravity(SVGBaseEntity *ent)
     // Apply gravity.
     velocity.z -= ent->GetGravity() * sv_gravity->value * FRAMETIME;
 
-    // Apply new velocity to entity.
+    // Apply new velocity to ServerEntity.
     ent->SetVelocity(velocity);
 }
 
@@ -379,12 +379,12 @@ void SVG_AddGravity(SVGBaseEntity *ent)
 
 //
 //===============
-// SVG_PushEntity
+// SVG_PushServerEntity
 //
 // Does not change the entities velocity at all
 //===============
 //
-SVGTrace SVG_PushEntity(SVGBaseEntity *ent, vec3_t push)
+SVGTrace SVG_PushServerEntity(SVGBaseEntity *ent, vec3_t push)
 {
     SVGTrace trace;
     int     mask;
@@ -404,16 +404,16 @@ retry:
     trace = SVG_Trace(start, ent->GetMins(), ent->GetMaxs(), end, ent, mask);
 
     ent->SetOrigin(trace.endPosition);
-    ent->LinkEntity();
+    ent->LinkServerEntity();
 
     if (trace.fraction != 1.0) {
         SVG_Impact(ent, &trace);
 
-        // if the pushed entity went away and the pusher is still there
+        // if the pushed ServerEntity went away and the pusher is still there
         if (!trace.ent->IsInUse() && ent->IsInUse()) {
             // move the pusher back and try again
             ent->SetOrigin(start);
-            ent->LinkEntity();
+            ent->LinkServerEntity();
             goto retry;
         }
     }
@@ -477,11 +477,11 @@ qboolean SVG_Push(SVGBaseEntity *pusher, vec3_t move, vec3_t amove)
 // move the pusher to it's final position
     pusher->SetOrigin(pusher->GetOrigin() + move);
     pusher->SetAngles(pusher->GetAngles() + amove);
-    pusher->LinkEntity();
+    pusher->LinkServerEntity();
 
 // see if any solid entities are inside the final position
     for (e = 1; e < globals.numberOfEntities; e++) {
-        // Fetch the base entity and ensure it is valid.
+        // Fetch the base ServerEntity and ensure it is valid.
         check = g_baseEntities[e];
 
         if (!check)
@@ -502,11 +502,11 @@ qboolean SVG_Push(SVGBaseEntity *pusher, vec3_t move, vec3_t amove)
             || moveType == MoveType::Spectator)
             continue;
 
-        if (!check->GetServerEntity()->area.prev)
+        if (!check->GetServerServerEntity()->area.prev)
             continue;       // not linked in anywhere
 
-        // if the entity is standing on the pusher, it will definitely be moved
-        if (check->GetGroundEntity() != pusher) {
+        // if the ServerEntity is standing on the pusher, it will definitely be moved
+        if (check->GetGroundServerEntity() != pusher) {
             // see if the ent needs to be tested
             if (absMin[0] >= maxs[0]
                 || absMin[1] >= maxs[1]
@@ -517,13 +517,13 @@ qboolean SVG_Push(SVGBaseEntity *pusher, vec3_t move, vec3_t amove)
                 continue;
 
             // see if the ent's bbox is inside the pusher's final position
-            if (!SVG_TestEntityPosition(check))
+            if (!SVG_TestServerEntityPosition(check))
                 continue;
             
         }
 
-        if ((pusher->GetMoveType() == MoveType::Push) || (check->GetGroundEntity() == pusher)) {
-            // move this entity
+        if ((pusher->GetMoveType() == MoveType::Push) || (check->GetGroundServerEntity() == pusher)) {
+            // move this ServerEntity
             pushed_p->ent = check;
             pushed_p->origin = check->GetOrigin();  //VectorCopy(check->state.origin, pushed_p->origin);
             pushed_p->angles = check->GetAngles(); //VectorCopy(check->state.angles, pushed_p->angles);
@@ -533,7 +533,7 @@ qboolean SVG_Push(SVGBaseEntity *pusher, vec3_t move, vec3_t amove)
 #endif
             pushed_p++;
 
-            // try moving the contacted entity
+            // try moving the contacted ServerEntity
             check->SetOrigin(check->GetOrigin() + move);
 #if USE_SMOOTH_DELTA_ANGLES
             if (check->GetClient()) {
@@ -552,13 +552,13 @@ qboolean SVG_Push(SVGBaseEntity *pusher, vec3_t move, vec3_t amove)
             check->SetOrigin(check->GetOrigin() + move2);//VectorAdd(check->state.origin, move2, check->state.origin);
 
             // may have pushed them off an edge
-            if (check->GetGroundEntity() != pusher)
-                check->SetGroundEntity(nullptr);
+            if (check->GetGroundServerEntity() != pusher)
+                check->SetGroundServerEntity(nullptr);
 
-            block = SVG_TestEntityPosition(check);
+            block = SVG_TestServerEntityPosition(check);
             if (!block) {
                 // pushed ok
-                check->LinkEntity();
+                check->LinkServerEntity();
                 // impact?
                 continue;
             }
@@ -567,7 +567,7 @@ qboolean SVG_Push(SVGBaseEntity *pusher, vec3_t move, vec3_t amove)
             // this is only relevent for riding entities, not pushed
             // FIXME: this doesn't acount for rotation
             check->SetOrigin(check->GetOrigin() - move);//check->state.origin -= move;
-            block = SVG_TestEntityPosition(check);
+            block = SVG_TestServerEntityPosition(check);
             if (!block) {
                 pushed_p--;
                 continue;
@@ -578,7 +578,7 @@ qboolean SVG_Push(SVGBaseEntity *pusher, vec3_t move, vec3_t amove)
         obstacle = check;
 
         // move back any entities we already moved
-        // go backwards, so if the same entity was pushed
+        // go backwards, so if the same ServerEntity was pushed
         // twice, it goes back to the original position
         for (p = pushed_p - 1 ; p >= pushed ; p--) {
             p->ent->SetOrigin(p->origin);
@@ -588,7 +588,7 @@ qboolean SVG_Push(SVGBaseEntity *pusher, vec3_t move, vec3_t amove)
                 p->ent->GetClient()->playerState.pmove.deltaAngles[vec3_t::Yaw] = p->deltaYaw;
             }
 #endif
-            p->ent->LinkEntity();
+            p->ent->LinkServerEntity();
         }
         return false;
     }
@@ -616,7 +616,7 @@ void SVG_Physics_Pusher(SVGBaseEntity *ent)
     SVGBaseEntity     *part, *mv;
 
     // if not a team captain, so movement will be handled elsewhere
-    if (ent->GetFlags() & EntityFlags::TeamSlave)
+    if (ent->GetFlags() & ServerEntityFlags::TeamSlave)
         return;
 
     // make sure all team slaves can move before commiting
@@ -624,7 +624,7 @@ void SVG_Physics_Pusher(SVGBaseEntity *ent)
     // if the move is Blocked, all moved objects will be backed out
 //retry:
     pushed_p = pushed;
-    for (part = ent ; part ; part = part->GetTeamChainEntity()) {
+    for (part = ent ; part ; part = part->GetTeamChainServerEntity()) {
         // Fetch pusher part, its Velocity.
         vec3_t partVelocity = part->GetVelocity();
 
@@ -647,7 +647,7 @@ void SVG_Physics_Pusher(SVGBaseEntity *ent)
 
     if (part) {
         // the move failed, bump all nextThinkTime times and back out moves
-        for (mv = ent ; mv ; mv = mv->GetTeamChainEntity()) {
+        for (mv = ent ; mv ; mv = mv->GetTeamChainServerEntity()) {
             if (mv->GetNextThinkTime() > 0)
                 mv->SetNextThinkTime(mv->GetNextThinkTime() + FRAMETIME);
         }
@@ -661,13 +661,13 @@ void SVG_Physics_Pusher(SVGBaseEntity *ent)
         //if (part->Blocked)
         //    part->Blocked(part, obstacle);
 #if 0
-        // if the pushed entity went away and the pusher is still there
+        // if the pushed ServerEntity went away and the pusher is still there
         if (!obstacle->inUse && part->inUse)
             goto retry;
 #endif
     } else {
         // the move succeeded, so call all Think functions
-        for (part = ent ; part ; part = part->GetTeamChainEntity()) {
+        for (part = ent ; part ; part = part->GetTeamChainServerEntity()) {
             SVG_RunThink(part);
         }
     }
@@ -705,7 +705,7 @@ void SVG_Physics_Noclip(SVGBaseEntity *ent)
     ent->SetAngles(vec3_fmaf(ent->GetAngles(), FRAMETIME, ent->GetAngularVelocity()));
     ent->SetOrigin(vec3_fmaf(ent->GetOrigin(), FRAMETIME, ent->GetVelocity()));
 
-    ent->LinkEntity();
+    ent->LinkServerEntity();
 }
 
 //
@@ -732,23 +732,23 @@ void SVG_Physics_Toss(SVGBaseEntity *ent)
         return;
 
     // If not a team captain, so movement will be handled elsewhere
-    if (ent->GetFlags() & EntityFlags::TeamSlave)
+    if (ent->GetFlags() & ServerEntityFlags::TeamSlave)
         return;
 
     // IF we're moving up, we know we're not on-ground, that's for sure :)
     if (ent->GetVelocity().z > 0) {
-        ent->SetGroundEntity(nullptr);
+        ent->SetGroundServerEntity(nullptr);
     }
 
-    // Check for the groundEntity going away
-    if (ent->GetGroundEntity()) {
-        if (!ent->GetGroundEntity()->IsInUse()) {
-            ent->SetGroundEntity(nullptr);
+    // Check for the groundServerEntity going away
+    if (ent->GetGroundServerEntity()) {
+        if (!ent->GetGroundServerEntity()->IsInUse()) {
+            ent->SetGroundServerEntity(nullptr);
         }
     }
 
     // If onground, return without moving
-    if (ent->GetGroundEntity()) {
+    if (ent->GetGroundServerEntity()) {
         return;
     }
 
@@ -768,7 +768,7 @@ void SVG_Physics_Toss(SVGBaseEntity *ent)
 
     // Move origin
     vec3_t move = vec3_scale(ent->GetVelocity(), FRAMETIME);
-    SVGTrace trace = SVG_PushEntity(ent, move);
+    SVGTrace trace = SVG_PushServerEntity(ent, move);
     if (!ent->IsInUse())
         return;
 
@@ -786,8 +786,8 @@ void SVG_Physics_Toss(SVGBaseEntity *ent)
         // Stop if on ground
         if (trace.plane.normal[2] > 0.7f) {
             if (ent->GetVelocity().z < 60.f || ent->GetMoveType() != MoveType::Bounce) {
-                ent->SetGroundEntity(trace.ent);
-                ent->SetGroundEntityLinkCount(trace.ent->GetLinkCount());
+                ent->SetGroundServerEntity(trace.ent);
+                ent->SetGroundServerEntityLinkCount(trace.ent->GetLinkCount());
                 ent->SetVelocity(vec3_zero());
                 ent->SetAngularVelocity(vec3_zero());
             }
@@ -815,10 +815,10 @@ void SVG_Physics_Toss(SVGBaseEntity *ent)
         gi.PositionedSound(ent->GetOrigin(), g_entities, CHAN_AUTO, gi.SoundIndex("misc/h2ohit1.wav"), 1, 1, 0);
 
     // Move teamslaves
-    for (SVGBaseEntity *slave = ent->GetTeamChainEntity(); slave; slave = slave->GetTeamChainEntity()) {
+    for (SVGBaseEntity *slave = ent->GetTeamChainServerEntity(); slave; slave = slave->GetTeamChainServerEntity()) {
         // Set origin and link them in.
         slave->SetOrigin(ent->GetOrigin());
-        slave->LinkEntity();
+        slave->LinkServerEntity();
     }
 }
 
@@ -875,7 +875,7 @@ void SVG_AddRotationalFriction(SVGBaseEntity *ent)
 //===============
 // SVG_Physics_Step
 //
-// Monsters freefall when they don't have a ground entity, otherwise
+// Monsters freefall when they don't have a ground ServerEntity, otherwise
 // all movement is done with discrete steps.
 //
 // This is also used for objects that have become still on the ground, but
@@ -888,17 +888,17 @@ void SVG_Physics_Step(SVGBaseEntity *ent)
     // Stores whether to play a "surface hit" sound.
     qboolean    hitSound = false;
 
-    // If we have no ground entity.
-    if (!ent->GetGroundEntity()) {
+    // If we have no ground ServerEntity.
+    if (!ent->GetGroundServerEntity()) {
         // Ensure we check if we aren't on one in this frame already.
         SVG_StepMove_CheckGround(ent);
     }
 
-    // Fetch ground entity pointer. (This can be the newly found entity ofc.)
-    SVGBaseEntity* groundEntity = ent->GetGroundEntity();
+    // Fetch ground ServerEntity pointer. (This can be the newly found ServerEntity ofc.)
+    SVGBaseEntity* groundServerEntity = ent->GetGroundServerEntity();
 
-    // Store whether we had a ground entity at all.
-    qboolean wasOnGround = (groundEntity ? true : false);
+    // Store whether we had a ground ServerEntity at all.
+    qboolean wasOnGround = (groundServerEntity ? true : false);
 
     // Bound our velocity within sv_maxvelocity limits.
     SVG_BoundVelocity(ent);
@@ -917,9 +917,9 @@ void SVG_Physics_Step(SVGBaseEntity *ent)
     // - Swimming monsters who are in the water
     if (!wasOnGround) {
         // If it is not a flying monster, we are done.
-        if (!(ent->GetFlags() & EntityFlags::Fly)) {
+        if (!(ent->GetFlags() & ServerEntityFlags::Fly)) {
             // In case the swim mosnter is not in water...
-            if (!((ent->GetFlags() & EntityFlags::Swim) && (ent->GetWaterLevel() > 2))) {
+            if (!((ent->GetFlags() & ServerEntityFlags::Swim) && (ent->GetWaterLevel() > 2))) {
                 // Determine whether to play a "hit sound".
                 if (ent->GetVelocity().z < sv_gravity->value * -0.1) {
                     hitSound = true;
@@ -934,7 +934,7 @@ void SVG_Physics_Step(SVGBaseEntity *ent)
     }
 
     // Friction for flying monsters that have been given vertical velocity
-    if ((ent->GetFlags() & EntityFlags::Fly) && (ent->GetVelocity().z != 0)) {
+    if ((ent->GetFlags() & ServerEntityFlags::Fly) && (ent->GetVelocity().z != 0)) {
         float speed = std::fabsf(ent->GetVelocity().z);
         float control = speed < STEPMOVE_STOPSPEED ? STEPMOVE_STOPSPEED : speed;
         float friction = STEPMOVE_FRICTION / 3;
@@ -947,7 +947,7 @@ void SVG_Physics_Step(SVGBaseEntity *ent)
     }
 
     // Friction for flying monsters that have been given vertical velocity
-    if ((ent->GetFlags() & EntityFlags::Swim) && (ent->GetVelocity().z != 0)) {
+    if ((ent->GetFlags() & ServerEntityFlags::Swim) && (ent->GetVelocity().z != 0)) {
         float speed = std::fabsf(ent->GetVelocity().z);
         float control = speed < STEPMOVE_STOPSPEED ? STEPMOVE_STOPSPEED : speed;
         float newSpeed = speed - (FRAMETIME * control * STEPMOVE_WATERFRICTION * ent->GetWaterLevel());
@@ -962,7 +962,7 @@ void SVG_Physics_Step(SVGBaseEntity *ent)
     if (ent->GetVelocity().z || ent->GetVelocity().y || ent->GetVelocity().x) {
         // apply friction
         // let dead monsters who aren't completely onground slide
-        if ((wasOnGround) || (ent->GetFlags() & (EntityFlags::Swim | EntityFlags::Fly)))
+        if ((wasOnGround) || (ent->GetFlags() & (ServerEntityFlags::Swim | ServerEntityFlags::Fly)))
             if (!(ent->GetHealth() <= 0.0)) {
                 vec3_t vel = ent->GetVelocity();
                 float speed = std::sqrtf(vel[0] * vel[0] + vel[1] * vel[1]);
@@ -987,22 +987,22 @@ void SVG_Physics_Step(SVGBaseEntity *ent)
         int32_t mask = CONTENTS_MASK_SOLID;
 
         // In case of a monster, monstersolid.
-        if (ent->GetServerFlags() & EntityServerFlags::Monster)
+        if (ent->GetServerFlags() & ServerEntityServerFlags::Monster)
             mask = CONTENTS_MASK_MONSTERSOLID;
         
         // Execute "FlyMove", essentially also our water move.
         SVG_FlyMove(ent, FRAMETIME, mask);
 
-        // Link entity back for collision, and execute a check for touching triggers.
-        ent->LinkEntity();
+        // Link ServerEntity back for collision, and execute a check for touching triggers.
+        ent->LinkServerEntity();
         UTIL_TouchTriggers(ent);
 
-        // Can't continue if this entity wasn't in use.
+        // Can't continue if this ServerEntity wasn't in use.
         if (!ent->IsInUse())
             return;
 
         // Check for whether to play a land sound.
-        if (ent->GetGroundEntity()) {
+        if (ent->GetGroundServerEntity()) {
             if (!wasOnGround) {
                 if (hitSound) {
                     SVG_Sound(ent, 0, gi.SoundIndex("world/land.wav"), 1, 1, 0);
@@ -1011,7 +1011,7 @@ void SVG_Physics_Step(SVGBaseEntity *ent)
         }
     }
 
-    // Last but not least, give the entity a chance to think for this frame.
+    // Last but not least, give the ServerEntity a chance to think for this frame.
     SVG_RunThink(ent);
 }
 
@@ -1019,12 +1019,12 @@ void SVG_Physics_Step(SVGBaseEntity *ent)
 
 //
 //===============
-// SVG_RunEntity
+// SVG_RunServerEntity
 //
 // Determines what kind of run/thinking method to execute.
 //===============
 //
-void SVG_RunEntity(SVGBaseEntity *ent)
+void SVG_RunServerEntity(SVGBaseEntity *ent)
 {
     //if (ent->PreThink)
     //    ent->PreThink(ent);

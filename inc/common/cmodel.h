@@ -41,7 +41,7 @@ typedef struct {
 
     int         CM_NumClusters(cm_t *cm);
     int         CM_NumInlineModels(cm_t *cm);
-    char        *CM_EntityString(cm_t *cm);
+    char        *CM_ServerEntityString(cm_t *cm);
     mnode_t     *CM_NodeNum(cm_t *cm, int number);
     mleaf_t     *CM_LeafNum(cm_t *cm, int number);
 
@@ -65,7 +65,7 @@ typedef struct {
                                     const vec3_t &mins, const vec3_t &maxs,
                                     mnode_t * headNode, int brushmask,
                                     const vec3_t &origin, const vec3_t &angles);
-    void        CM_ClipEntity(trace_t *dst, const trace_t *src, struct entity_s *ent);
+    void        CM_ClipServerEntity(trace_t *dst, const trace_t *src, struct ServerEntity_s *ent);
 
     // call with topnode set to the headNode, returns with topnode
     // set to the first node that splits the box

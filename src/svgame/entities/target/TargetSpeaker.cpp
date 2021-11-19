@@ -16,8 +16,8 @@
 //===============
 // TargetSpeaker::ctor
 //===============
-TargetSpeaker::TargetSpeaker( Entity* entity )
-	: Base( entity ) {
+TargetSpeaker::TargetSpeaker( ServerEntity* ServerEntity )
+	: Base( ServerEntity ) {
 }
 
 //===============
@@ -46,9 +46,9 @@ void TargetSpeaker::Spawn() {
 
     SetUseCallback( &TargetSpeaker::SpeakerUse );
 
-    // Must link the entity so we get areas and clusters so
+    // Must link the ServerEntity so we get areas and clusters so
     // the server can determine who to send updates to
-    LinkEntity();
+    LinkServerEntity();
 }
 
 //===============
@@ -80,7 +80,7 @@ void TargetSpeaker::SpeakerUse( SVGBaseEntity* other, SVGBaseEntity* activator )
         if ( GetSpawnFlags() & SF_Reliable ) {
             channel |= CHAN_RELIABLE;
         }
-        // Use a positioned_sound, because this entity won't normally be
+        // Use a positioned_sound, because this ServerEntity won't normally be
         // sent to any clients because it is invisible
         gi.PositionedSound( GetOrigin(), serverEntity, channel, GetNoiseIndex(), volume, attenuation, 0.0f );
     }

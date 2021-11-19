@@ -60,10 +60,10 @@ void CLG_ParseInventory(void)
 //===============
 // CLG_ParseInventory
 // 
-// Parse the temporary entity server message that keeps us up to date about
+// Parse the temporary ServerEntity server message that keeps us up to date about
 // the particles, explosions, and alike on the server side.
 //
-// The teParameters variable is prepared for the CLG_ParseTempEntity function.
+// The teParameters variable is prepared for the CLG_ParseTempServerEntity function.
 //===============
 //
 void CLG_ParseTempEntitiesPacket(void)
@@ -71,61 +71,61 @@ void CLG_ParseTempEntitiesPacket(void)
     teParameters.type = clgi.MSG_ReadByte();
 
     switch (teParameters.type) {
-    case TempEntityEvent::Blaster:
-    case TempEntityEvent::Gunshot:
-    case TempEntityEvent::Shotgun:
-    case TempEntityEvent::Blood:
-    case TempEntityEvent::MoreBlood:
-    case TempEntityEvent::Sparks:
-    case TempEntityEvent::BulletSparks:
-    case TempEntityEvent::ElectricSparks:
+    case TempServerEntityEvent::Blaster:
+    case TempServerEntityEvent::Gunshot:
+    case TempServerEntityEvent::Shotgun:
+    case TempServerEntityEvent::Blood:
+    case TempServerEntityEvent::MoreBlood:
+    case TempServerEntityEvent::Sparks:
+    case TempServerEntityEvent::BulletSparks:
+    case TempServerEntityEvent::ElectricSparks:
         teParameters.position1 = clgi.MSG_ReadVector3();
         teParameters.dir = clgi.MSG_ReadVector3();
         break;
 
-    case TempEntityEvent::Splash:
+    case TempServerEntityEvent::Splash:
         teParameters.count = clgi.MSG_ReadByte();
         teParameters.position1 = clgi.MSG_ReadVector3();
         teParameters.dir = clgi.MSG_ReadVector3();
         teParameters.color = clgi.MSG_ReadByte();
         break;
 
-    case TempEntityEvent::DebugTrail:
-    case TempEntityEvent::BubbleTrail:
-    case TempEntityEvent::BubbleTrail2:
+    case TempServerEntityEvent::DebugTrail:
+    case TempServerEntityEvent::BubbleTrail:
+    case TempServerEntityEvent::BubbleTrail2:
         teParameters.position1 = clgi.MSG_ReadVector3();
         teParameters.position2 = clgi.MSG_ReadVector3();
         break;
 
-    case TempEntityEvent::Explosion2:
-    case TempEntityEvent::Explosion1:
-    case TempEntityEvent::NPExplosion1:
-    case TempEntityEvent::BigExplosion1:
-    case TempEntityEvent::PlainExplosion:
-    case TempEntityEvent::TeleportEffect:
+    case TempServerEntityEvent::Explosion2:
+    case TempServerEntityEvent::Explosion1:
+    case TempServerEntityEvent::NPExplosion1:
+    case TempServerEntityEvent::BigExplosion1:
+    case TempServerEntityEvent::PlainExplosion:
+    case TempServerEntityEvent::TeleportEffect:
         teParameters.position1 = clgi.MSG_ReadVector3();
         break;
 
-    case TempEntityEvent::ForceWall:
+    case TempServerEntityEvent::ForceWall:
         teParameters.position1 = clgi.MSG_ReadVector3();
         teParameters.position2 = clgi.MSG_ReadVector3();
         teParameters.color = clgi.MSG_ReadByte();
         break;
 
-    case TempEntityEvent::Steam:
-        teParameters.entity1 = clgi.MSG_ReadShort();
+    case TempServerEntityEvent::Steam:
+        teParameters.ServerEntity1 = clgi.MSG_ReadShort();
         teParameters.count = clgi.MSG_ReadByte();
         teParameters.position1 = clgi.MSG_ReadVector3();
         teParameters.dir = clgi.MSG_ReadVector3();
         teParameters.color = clgi.MSG_ReadByte();
-        teParameters.entity2 = clgi.MSG_ReadShort();
-        if (teParameters.entity1 != -1) {
+        teParameters.ServerEntity2 = clgi.MSG_ReadShort();
+        if (teParameters.ServerEntity1 != -1) {
             teParameters.time = clgi.MSG_ReadLong();
         }
         break;
 
-    case TempEntityEvent::Flare:
-        teParameters.entity1 = clgi.MSG_ReadShort();
+    case TempServerEntityEvent::Flare:
+        teParameters.ServerEntity1 = clgi.MSG_ReadShort();
         teParameters.count = clgi.MSG_ReadByte();
         teParameters.position1 = clgi.MSG_ReadVector3();
         teParameters.dir = clgi.MSG_ReadVector3();
@@ -148,16 +148,16 @@ void CLG_ParseTempEntitiesPacket(void)
 //
 void CLG_ParseMuzzleFlashPacket(int mask)
 {
-    int entity, weapon;
+    int ServerEntity, weapon;
 
-    entity = clgi.MSG_ReadShort();
-    if (entity < 1 || entity >= MAX_EDICTS)
-        Com_Error(ERR_DROP, "%s: bad entity", __func__);
+    ServerEntity = clgi.MSG_ReadShort();
+    if (ServerEntity < 1 || ServerEntity >= MAX_EDICTS)
+        Com_Error(ERR_DROP, "%s: bad ServerEntity", __func__);
 
     weapon = clgi.MSG_ReadByte();
     mzParameters.silenced = weapon & mask;
     mzParameters.weapon = weapon & ~mask;
-    mzParameters.entity = entity;
+    mzParameters.ServerEntity = ServerEntity;
 }
 
 //
@@ -356,9 +356,9 @@ void CLG_ParseCenterPrint(void)
 //            break;
 //
 //        // Client temporary entities. (Particles, etc.)
-//        case SVG_CMD_TEMP_ENTITY:
+//        case SVG_CMD_TEMP_ServerEntity:
 //            CLG_ParseTempEntitiesPacket();
-//            CLG_ParseTempEntity();
+//            CLG_ParseTempServerEntity();
 //            return true;
 //        break;
 //
@@ -368,7 +368,7 @@ void CLG_ParseCenterPrint(void)
 //            CLG_MuzzleFlash();
 //            return true;
 //        break;
-//        // Entity Muzzle Flash.
+//        // ServerEntity Muzzle Flash.
 //        case SVG_CMD_MUZZLEFLASH2:
 //            CLG_ParseMuzzleFlashPacket(0);
 //            CLG_MuzzleFlash2();

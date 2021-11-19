@@ -78,7 +78,7 @@ typedef struct channel_s {
     vec_t       dist_mult;      // distance multiplier (attenuation/clipK)
     float       master_vol;     // 0.0-1.0 master volume
     qboolean    fixed_origin;   // use origin instead of fetching entnum's origin
-    qboolean    autosound;      // from an entity->sound, cleared each frame
+    qboolean    autosound;      // from an ServerEntity->sound, cleared each frame
 #if USE_OPENAL
     int         autoframe;
     int         srcnum;

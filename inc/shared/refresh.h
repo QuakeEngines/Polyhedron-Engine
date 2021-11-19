@@ -64,24 +64,24 @@ typedef struct refresh_geometry_s {
 } refresh_geometry_t;
 
 
-typedef struct r_entity_s {
+typedef struct r_ServerEntity_s {
     //
     // Model.
     //
-    qhandle_t           model;   // The entity model - opaque type outside refresh
-    vec3_t              angles;  // The entity angles.
+    qhandle_t           model;   // The ServerEntity model - opaque type outside refresh
+    vec3_t              angles;  // The ServerEntity angles.
 
     //
     // Most recent data
     //
-    vec3_t              origin;  // The entity origin -  also used as RenderEffects::Beam's "from"
-    int                 frame;   // The entity frame - also used as RenderEffects::Beam's diameter
+    vec3_t              origin;  // The ServerEntity origin -  also used as RenderEffects::Beam's "from"
+    int                 frame;   // The ServerEntity frame - also used as RenderEffects::Beam's diameter
 
     //
     // Previous data for lerping
     //
-    vec3_t              oldorigin;  // The old entity origin - also used as RenderEffects::Beam's "to"
-    int                 oldframe;   // The old entity frame.
+    vec3_t              oldorigin;  // The old ServerEntity origin - also used as RenderEffects::Beam's "to"
+    int                 oldframe;   // The old ServerEntity frame.
 
     //
     // Misc.
@@ -96,12 +96,12 @@ typedef struct r_entity_s {
     qhandle_t           skin;       // NULL for inline skin
     int                 flags;      // Flags.
 
-    int                 id;         // Entity ID.
+    int                 id;         // ServerEntity ID.
 
-	int                 tent_type;  // Temporary Entity Type.
+	int                 tent_type;  // Temporary ServerEntity Type.
 
-	float               scale;      // Entity Scale.
-} r_entity_t;
+	float               scale;      // ServerEntity Scale.
+} r_ServerEntity_t;
 
 typedef struct dlight_s {
     vec3_t  origin;
@@ -168,7 +168,7 @@ typedef struct refdef_s {
     lightstyle_t    *lightstyles;   // [MAX_LIGHTSTYLES]
 
     int         num_entities;
-    r_entity_t    *entities;
+    r_ServerEntity_t    *entities;
 
     int         num_dlights;
     rdlight_t    *dlights;

@@ -34,7 +34,7 @@ struct mat3_t {
 	//-----------------
 	// Default.
 	mat3_t() {
-		// Set to identity by default.
+		// Set to idServerEntity by default.
 		rowA = vec3_t{ 1.f, 0.f, 0.f };
 		rowB = vec3_t{ 0.f, 1.f, 0.f };
 		rowC = vec3_t{ 0.f, 0.f, 1.f };
@@ -91,12 +91,12 @@ struct mat3_t {
 
 //
 //===============
-// matrix3_identity
+// matrix3_idServerEntity
 // 
-// Returns an identity matrix
+// Returns an idServerEntity matrix
 //===============
 //
-static inline mat3_t matrix3_identity() {
+static inline mat3_t matrix3_idServerEntity() {
 	mat3_t m = {
 		{1, 0, 0},
 		{0, 1, 0},
@@ -152,7 +152,7 @@ static inline vec3_t matrix3_transform_vector(const mat3_t &m, const vec3_t &v) 
 
 //
 //===============
-// matrix3_identity
+// matrix3_idServerEntity
 // 
 // Returns a transosed variant of matrix 'in'
 //===============

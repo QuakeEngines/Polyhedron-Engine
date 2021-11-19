@@ -26,7 +26,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #endif
 
 // CPP: WATISDEZE: Declared here, C didn't require it somehow...
-vec3_t CL_GetEntitySoundVelocity(int ent);
+vec3_t CL_GetServerEntitySoundVelocity(int ent);
 void AL_InitUnderwaterFilter(void);
 
 #define AL_METER_OF_Q2_UNIT 0.0315f
@@ -836,7 +836,7 @@ static void AL_Spatialize(channel_t *ch)
 	float final;
 	qboolean sourceoccluded = false;
 
-	// anything coming from the view entity will always be full volume
+	// anything coming from the view ServerEntity will always be full volume
 	// no attenuation = no spatialization
 	if (ch->entnum == -1 || ch->entnum == listener_entnum || !ch->dist_mult) {
 		VectorCopy(listener_origin, origin);
@@ -845,11 +845,11 @@ static void AL_Spatialize(channel_t *ch)
 		VectorCopy(ch->origin, origin);
 	}
 	else {
-		origin = CL_GetEntitySoundOrigin(ch->entnum);
+		origin = CL_GetServerEntitySoundOrigin(ch->entnum);
 	}
 
 	if (s_doppler->value) {
-		velocity = CL_GetEntitySoundVelocity(ch->entnum);
+		velocity = CL_GetServerEntitySoundVelocity(ch->entnum);
 		VectorScale(velocity, AL_METER_OF_Q2_UNIT, velocity);
 		qalSource3f(ch->srcnum, AL_VELOCITY, AL_UnpackVector(velocity));
 	}
@@ -997,7 +997,7 @@ static void AL_AddLoopSounds(void)
 	sfx_t       *sfx;
 	sfxcache_t  *sc;
 	int         num;
-	EntityState  *ent;
+	ServerEntityState  *ent;
 	vec3_t      origin;
 	float       dist;
 
@@ -1018,8 +1018,8 @@ static void AL_AddLoopSounds(void)
 		if (!sc)
 			continue;
 
-		num = (cl.frame.firstEntity + i) & PARSE_ENTITIES_MASK;
-		ent = &cl.entityStates[num];
+		num = (cl.frame.firstServerEntity + i) & PARSE_ENTITIES_MASK;
+		ent = &cl.ServerEntityStates[num];
 
 		ch = AL_FindLoopingSound(ent->number, sfx);
 		if (ch) {
@@ -1029,7 +1029,7 @@ static void AL_AddLoopSounds(void)
 		}
 
 		// check attenuation before playing the sound
-		origin = CL_GetEntitySoundOrigin(ent->number);
+		origin = CL_GetServerEntitySoundOrigin(ent->number);
 		VectorSubtract(origin, listener_origin, origin);
 		dist = VectorNormalize(origin);
 		dist = (dist - SOUND_FULLVOLUME) * SOUND_LOOPATTENUATE;
@@ -1386,7 +1386,7 @@ AL_RawSamplesVoice(int samples, int rate, int width, int channels,
 	if (s_doppler->value) {
 		vec3_t velocity;
 
-		velocity = CL_GetEntitySoundVelocity(listener_entnum);
+		velocity = CL_GetServerEntitySoundVelocity(listener_entnum);
 		VectorScale(velocity, AL_METER_OF_Q2_UNIT, velocity);
 		qalSource3f(voiceSource, AL_VELOCITY, AL_UnpackVector(velocity));
 	}

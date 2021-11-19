@@ -15,7 +15,7 @@ public:
     //
     // Constructor/Deconstructor.
     //
-    TriggerOnce(Entity* svEntity);
+    TriggerOnce(ServerEntity* svServerEntity);
     virtual ~TriggerOnce();
 
     DefineMapClass( "trigger_once", TriggerOnce, TriggerMultiple );
@@ -24,10 +24,10 @@ public:
     // Interface functions. 
     //
     void Precache() override;    // Precaches data.
-    void Spawn() override;       // Spawns the entity.
-    void Respawn() override;     // Respawns the entity.
-    void PostSpawn() override;   // PostSpawning is for handling entity references, since they may not exist yet during a spawn period.
-    void Think() override;       // General entity thinking routine.
+    void Spawn() override;       // Spawns the ServerEntity.
+    void Respawn() override;     // Respawns the ServerEntity.
+    void PostSpawn() override;   // PostSpawning is for handling ServerEntity references, since they may not exist yet during a spawn period.
+    void Think() override;       // General ServerEntity thinking routine.
 
     void SpawnKey(const std::string& key, const std::string& value)  override;
 
@@ -52,13 +52,13 @@ protected:
     void Trigger(SVGBaseEntity* activator);
 
     //
-    // Other base entity members. (These were old fields in edict_T back in the day.)
+    // Other base ServerEntity members. (These were old fields in edict_T back in the day.)
     //
-    // The time this entity has last been hurting anyone else. It is used for the slow damage flag.
+    // The time this ServerEntity has last been hurting anyone else. It is used for the slow damage flag.
     //float lastHurtTime;
 
     //
-    // Entity pointers.
+    // ServerEntity pointers.
     // 
 
 public:

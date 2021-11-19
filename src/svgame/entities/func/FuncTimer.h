@@ -5,14 +5,14 @@ class SVGBaseEntity;
 //=============================================
 // FuncTimer
 // 
-// A utility entity for mappers, that triggers its targets
+// A utility ServerEntity for mappers, that triggers its targets
 // every "wait" seconds + "random" if specified.
 // 
 // NOTE: pausetime is currently always 0
 //=============================================
 class FuncTimer : public SVGBaseEntity {
 public:
-	FuncTimer( Entity* entity );
+	FuncTimer( ServerEntity* ServerEntity );
 	virtual ~FuncTimer() = default;
 
 	DefineMapClass( "func_timer", FuncTimer, SVGBaseEntity );

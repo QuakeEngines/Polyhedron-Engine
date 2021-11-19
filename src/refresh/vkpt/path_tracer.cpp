@@ -733,7 +733,7 @@ VkResult
 vkpt_pt_create_all_dynamic(
 	VkCommandBuffer cmd_buf,
 	int idx, 
-	const EntityUploadInfo* upload_info)
+	const ServerEntityUploadInfo* upload_info)
 {
 	scratch_buf_ptr = 0;
 

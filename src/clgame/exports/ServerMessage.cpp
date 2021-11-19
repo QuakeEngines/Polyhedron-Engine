@@ -132,9 +132,9 @@ qboolean ClientGameServerMessage::ParseMessage(int32_t serverCommand) {
         break;
 
         // Client temporary entities. (Particles, etc.)
-    case SVG_CMD_TEMP_ENTITY:
+    case SVG_CMD_TEMP_ServerEntity:
         CLG_ParseTempEntitiesPacket();
-        CLG_ParseTempEntity();
+        CLG_ParseTempServerEntity();
         return true;
         break;
 
@@ -144,7 +144,7 @@ qboolean ClientGameServerMessage::ParseMessage(int32_t serverCommand) {
         CLG_MuzzleFlash();
         return true;
         break;
-        // Entity Muzzle Flash.
+        // ServerEntity Muzzle Flash.
     case SVG_CMD_MUZZLEFLASH2:
         CLG_ParseMuzzleFlashPacket(0);
         CLG_MuzzleFlash2();

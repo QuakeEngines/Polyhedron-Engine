@@ -4,7 +4,7 @@
 //
 // Light.h
 //
-// Light entity definition.
+// Light ServerEntity definition.
 //
 */
 #ifndef __SVGAME_ENTITIES_LIGHT_H__
@@ -20,7 +20,7 @@ enum LightState : uint32_t {
 class Light : public SVGBaseTrigger {
 public:
     // Constructor/Deconstructor.
-    Light(Entity* svEntity);
+    Light(ServerEntity* svServerEntity);
     virtual ~Light();
 
     DefineMapClass( "light", Light, SVGBaseTrigger );
@@ -29,9 +29,9 @@ public:
     // Interface functions. 
     //
     void Precache() override;    // Precaches data.
-    void Spawn() override;       // Spawns the entity.
-    void PostSpawn() override;   // PostSpawning is for handling entity references, since they may not exist yet during a spawn period.
-    void Think() override;       // General entity thinking routine.
+    void Spawn() override;       // Spawns the ServerEntity.
+    void PostSpawn() override;   // PostSpawning is for handling ServerEntity references, since they may not exist yet during a spawn period.
+    void Think() override;       // General ServerEntity thinking routine.
 
     void SpawnKey(const std::string& key, const std::string& value) override;
 
@@ -58,37 +58,6 @@ private:
 
     // Light State flags. (Is it currently off, or triggered?)
     uint32_t lightState;
-};
-
-
-#pragma once
-
-class SVGBaseEntity;
-
-class PathCorner : public SVGBaseEntity {
-public:
-    PathCorner(Entity* entity);
-    virtual ~PathCorner() = default;
-
-    DefineMapClass("path_corner", PathCorner, SVGBaseEntity);
-
-    const vec3_t	BboxSize = vec3_t(8.0f, 8.0f, 8.0f);
-
-    // Spawnflags
-    static constexpr int32_t SF_Teleport = 1 << 0;
-
-    void			Spawn() override;
-    void			SpawnKey(const std::string& key, const std::string& value) override;
-
-    // For AI
-    virtual void	OnReachedCorner(SVGBaseEntity* traveler);
-
-    inline const char* GetPathTarget() override {
-        return pathTarget.c_str();
-    }
-
-private:
-    std::string		pathTarget;
 };
 
 #endif // __SVGAME_ENTITIES_LIGHT_H__

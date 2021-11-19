@@ -862,7 +862,7 @@ void CLG_IonripperTrail(vec3_t start, vec3_t ent)
 CLG_TrapParticles
 ===============
 */
-void CLG_TrapParticles(r_entity_t* ent)
+void CLG_TrapParticles(r_ServerEntity_t* ent)
 {
     vec3_t      move;
     vec3_t      vec;

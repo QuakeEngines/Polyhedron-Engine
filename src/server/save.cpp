@@ -467,7 +467,7 @@ int SV_NoSaveGames(void)
 void SV_AutoSaveBegin(MapCommand *cmd)
 {
     byte        bitmap[MAX_CLIENTS / CHAR_BIT];
-    Entity     *ent;
+    ServerEntity     *ent;
     int         i;
 
     // check for clearing the current savegame

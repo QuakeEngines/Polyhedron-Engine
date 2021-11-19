@@ -172,7 +172,7 @@ void GL_DrawBeams(void)
     vec_t length;
     int numverts;
     int numindices;
-    r_entity_t *ent;
+    r_ServerEntity_t *ent;
     int i;
 
     if (!glr.num_beams) {

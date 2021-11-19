@@ -20,13 +20,13 @@
 // 
 
 // Constructor/Deconstructor.
-TriggerOnce::TriggerOnce(Entity* svEntity) : TriggerMultiple(svEntity) {
+TriggerOnce::TriggerOnce(ServerEntity* svServerEntity) : TriggerMultiple(svServerEntity) {
 	//
 	// All callback functions best be nullptr.
 	//
 
 	//
-	// Set all entity pointer references to nullptr.
+	// Set all ServerEntity pointer references to nullptr.
 	//
 
 	//
@@ -141,7 +141,7 @@ void TriggerOnce::TriggerOnceTouch(SVGBaseEntity* self, SVGBaseEntity* other, cp
 	if (other->GetClient()) {
 		if (GetSpawnFlags() & 2)
 			return;
-	} else if (other->GetServerFlags() & EntityServerFlags::Monster) {
+	} else if (other->GetServerFlags() & ServerEntityServerFlags::Monster) {
 		if (!(GetSpawnFlags() & 1))
 			return;
 	} else {
@@ -188,6 +188,6 @@ void TriggerOnce::TriggerOnceEnable(SVGBaseEntity* other, SVGBaseEntity* activat
 	// Set the new use function, to be its default.
 	SetUseCallback(&TriggerOnce::TriggerOnceUse);
 
-	// Since we changed the solid, relink the entity.
-	LinkEntity();
+	// Since we changed the solid, relink the ServerEntity.
+	LinkServerEntity();
 }

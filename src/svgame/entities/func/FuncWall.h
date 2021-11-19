@@ -3,7 +3,7 @@
 
 class FuncWall : public SVGBaseEntity {
 public:
-	FuncWall( Entity* entity );
+	FuncWall( ServerEntity* ServerEntity );
 	virtual ~FuncWall() = default;
 
 	DefineMapClass( "func_wall", FuncWall, SVGBaseEntity );

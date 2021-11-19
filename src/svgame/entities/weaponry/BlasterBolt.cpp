@@ -19,8 +19,8 @@
 #include "BlasterBolt.h"
 
 // Constructor/Deconstructor.
-BlasterBolt::BlasterBolt(Entity* svEntity) 
-    : SVGBaseEntity(svEntity) {
+BlasterBolt::BlasterBolt(ServerEntity* svServerEntity) 
+    : SVGBaseEntity(svServerEntity) {
 
 }
 BlasterBolt::~BlasterBolt() {
@@ -119,7 +119,7 @@ void BlasterBolt::BlasterBoltTouch(SVGBaseEntity* self, SVGBaseEntity* other, cp
         SVG_PlayerNoise(self->GetOwner(), self->GetOrigin(), PNOISE_IMPACT);
     }
 
-    // Does the other entity take damage?
+    // Does the other ServerEntity take damage?
     if (other->GetTakeDamage()) {
         // Determine its means of death.
         int32_t meansOfDeath = MeansOfDeath::Blaster;
@@ -134,8 +134,8 @@ void BlasterBolt::BlasterBoltTouch(SVGBaseEntity* self, SVGBaseEntity* other, cp
         }
 
     } else {
-        gi.WriteByte(SVG_CMD_TEMP_ENTITY);
-        gi.WriteByte(TempEntityEvent::Blaster);
+        gi.WriteByte(SVG_CMD_TEMP_ServerEntity);
+        gi.WriteByte(TempServerEntityEvent::Blaster);
         gi.WriteVector3(self->GetOrigin());
 
         if (!plane) {
@@ -148,6 +148,6 @@ void BlasterBolt::BlasterBoltTouch(SVGBaseEntity* self, SVGBaseEntity* other, cp
         gi.Multicast(origin, MultiCast::PVS);
     }
 
-    // Queue the entity for removal. 
+    // Queue the ServerEntity for removal. 
     Remove();
 }

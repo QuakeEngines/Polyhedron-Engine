@@ -19,13 +19,13 @@
 // 
 
 // Constructor/Deconstructor.
-TriggerMultiple::TriggerMultiple(Entity* svEntity) : SVGBaseTrigger(svEntity) {
+TriggerMultiple::TriggerMultiple(ServerEntity* svServerEntity) : SVGBaseTrigger(svServerEntity) {
 	//
 	// All callback functions best be nullptr.
 	//
 
 	//
-	// Set all entity pointer references to nullptr.
+	// Set all ServerEntity pointer references to nullptr.
 	//
 
 	//
@@ -76,13 +76,13 @@ void TriggerMultiple::Spawn() {
 	//self->noiseIndex = gi.SoundIndex("world/electro.wav");
 	SetTouchCallback(&TriggerMultiple::TriggerMultipleTouch);
 
-	// In case the entity can be "used", set it to hurt those who use it as well.
+	// In case the ServerEntity can be "used", set it to hurt those who use it as well.
 	SetUseCallback(&TriggerMultiple::TriggerMultipleUse);
 
 	// Default to 0.
 	SetNextThinkTime(0);
 
-	LinkEntity();
+	LinkServerEntity();
 }
 
 //
@@ -147,7 +147,7 @@ void TriggerMultiple::Trigger(SVGBaseEntity *activator) {
 		// called while looping through area links...
 		SetTouchCallback(nullptr);
 		SetNextThinkTime(level.time + FRAMETIME);
-		SetThinkCallback(&TriggerMultiple::SVGBaseEntityThinkRemove);
+		SetThinkCallback(&TriggerMultiple::SVGBaseServerEntityThinkRemove);
 	}
 }
 
@@ -177,7 +177,7 @@ void TriggerMultiple::TriggerMultipleTouch(SVGBaseEntity* self, SVGBaseEntity* o
 	if (other->GetClient()) {
 	    if (GetSpawnFlags() & 2)
 	        return;
-	} else if (other->GetServerFlags() & EntityServerFlags::Monster) {
+	} else if (other->GetServerFlags() & ServerEntityServerFlags::Monster) {
 	    if (!(GetSpawnFlags() & 1))
 	        return;
 	} else {
@@ -224,6 +224,6 @@ void TriggerMultiple::TriggerMultipleEnable(SVGBaseEntity* other, SVGBaseEntity*
 	// Set the new use function, to be its default.
 	SetUseCallback(&TriggerMultiple::TriggerMultipleUse);
 
-	// Since we changed the solid, relink the entity.
-	LinkEntity();
+	// Since we changed the solid, relink the ServerEntity.
+	LinkServerEntity();
 }

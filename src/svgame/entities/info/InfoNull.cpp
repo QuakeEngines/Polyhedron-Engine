@@ -13,7 +13,7 @@
 
 #include "../base/SVGBaseEntity.h"
 
-// This entity never spawns, and as such, no edicts will be wasted on it during spawn time
+// This ServerEntity never spawns, and as such, no edicts will be wasted on it during spawn time
 class InfoNull : public SVGBaseEntity
 {
 public:

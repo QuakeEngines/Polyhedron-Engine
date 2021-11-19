@@ -126,15 +126,15 @@ void ClientGameExports::ClientUpdateOrigin() {
     // Calculate new client forward, right, and up vectors.
     vec3_vectors(cl->refdef.viewAngles, &cl->v_forward, &cl->v_right, &cl->v_up);
 
-    // Setup player entity origin and angles accordingly to update the client's listener origins with.
-    cl->playerEntityOrigin = cl->refdef.vieworg;
-    cl->playerEntityAngles = cl->refdef.viewAngles;
+    // Setup player ServerEntity origin and angles accordingly to update the client's listener origins with.
+    cl->playerServerEntityOrigin = cl->refdef.vieworg;
+    cl->playerServerEntityAngles = cl->refdef.viewAngles;
 
-    if (cl->playerEntityAngles[vec3_t::Pitch] > 180) {
-        cl->playerEntityAngles[vec3_t::Pitch] -= 360;
+    if (cl->playerServerEntityAngles[vec3_t::Pitch] > 180) {
+        cl->playerServerEntityAngles[vec3_t::Pitch] -= 360;
     }
 
-    cl->playerEntityAngles[vec3_t::Pitch] = cl->playerEntityAngles[vec3_t::Pitch] / 3;
+    cl->playerServerEntityAngles[vec3_t::Pitch] = cl->playerServerEntityAngles[vec3_t::Pitch] / 3;
 
 
     // Update the client's listener origin values.

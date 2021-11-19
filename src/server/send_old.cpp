@@ -310,7 +310,7 @@ void SV_Multicast(const vec3_t &origin, MultiCast to)
             //VectorMA(ps->viewOffset, 0.125f, ps->pmove.origin, org);
 #else
             // FIXME: for some strange reason, game code assumes the server
-            // uses entity origin for PVS/PHS culling, not the view origin
+            // uses ServerEntity origin for PVS/PHS culling, not the view origin
             VectorCopy(client->edict->state.origin, org);
 #endif
             leaf2 = CM_PointLeaf(&sv.cm, org);
@@ -497,8 +497,8 @@ overflowed:
     }
 }
 
-// check if this entity is present in current client frame
-static qboolean check_entity(client_t *client, int entnum)
+// check if this ServerEntity is present in current client frame
+static qboolean check_ServerEntity(client_t *client, int entnum)
 {
     ClientFrame *frame;
     unsigned i, j;
@@ -506,7 +506,7 @@ static qboolean check_entity(client_t *client, int entnum)
     frame = &client->frames[client->frameNumber & UPDATE_MASK];
 
     for (i = 0; i < frame->num_entities; i++) {
-        j = (frame->first_entity + i) % svs.num_entities;
+        j = (frame->first_ServerEntity + i) % svs.num_entities;
         if (svs.entities[j].number == entnum) {
             return true;
         }
@@ -524,10 +524,10 @@ static void emit_snd(client_t *client, MessagePacket *msg)
     flags = msg->flags;
 
     // check if position needs to be explicitly sent
-    if (!(flags & SND_POS) && !check_entity(client, entnum)) {
-        SV_DPrintf(0, "Forcing position on entity %d for %s\n",
+    if (!(flags & SND_POS) && !check_ServerEntity(client, entnum)) {
+        SV_DPrintf(0, "Forcing position on ServerEntity %d for %s\n",
                    entnum, client->name);
-        flags |= SND_POS;   // entity is not present in frame
+        flags |= SND_POS;   // ServerEntity is not present in frame
     }
 
     MSG_WriteByte(svc_sound);
@@ -647,7 +647,7 @@ static void repack_unreliables(client_t *client, size_t maximumSize)
 
     // temp entities first
     FOR_EACH_MSG_SAFE(&client->msg_unreliable_list) {
-        if (!msg->currentSize || msg->data[0] != SVG_CMD_TEMP_ENTITY) {
+        if (!msg->currentSize || msg->data[0] != SVG_CMD_TEMP_ServerEntity) {
             continue;
         }
         write_msg(client, msg, maximumSize);
@@ -657,7 +657,7 @@ static void repack_unreliables(client_t *client, size_t maximumSize)
         return;
     }
 
-    // then entity sounds
+    // then ServerEntity sounds
     FOR_EACH_MSG_SAFE(&client->msg_unreliable_list) {
         if (!msg->currentSize) {
             write_snd(client, msg, maximumSize);
@@ -706,7 +706,7 @@ static void write_datagram_old(client_t *client)
         }
     }
 
-    // send over all the relevant EntityState
+    // send over all the relevant ServerEntityState
     // and the PlayerState
     client->WriteFrame(client);
     if (msg_write.currentSize > maximumSize) {
@@ -717,7 +717,7 @@ static void write_datagram_old(client_t *client)
 
     // now write unreliable messages
     // it is necessary for this to be after the WriteFrame
-    // so that entity references will be current
+    // so that ServerEntity references will be current
     if (msg_write.currentSize + client->msg_unreliable_bytes > maximumSize) {
         // throw out some low priority effects
         repack_unreliables(client, maximumSize);
@@ -766,7 +766,7 @@ static void write_datagram_new(client_t *client)
 {
     size_t currentSize;
 
-    // send over all the relevant EntityState
+    // send over all the relevant ServerEntityState
     // and the PlayerState
     client->WriteFrame(client);
 
@@ -779,7 +779,7 @@ static void write_datagram_new(client_t *client)
     // now write unreliable messages
     // for this client out to the message
     // it is necessary for this to be after the WriteFrame
-    // so that entity references will be current
+    // so that ServerEntity references will be current
     if (msg_write.currentSize + client->msg_unreliable_bytes > msg_write.maximumSize) {
         Com_WPrintf("Dumping datagram for %s\n", client->name);
     } else {

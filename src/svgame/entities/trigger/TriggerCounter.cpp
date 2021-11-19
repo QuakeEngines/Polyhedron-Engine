@@ -17,8 +17,8 @@
 //===============
 // TriggerCounter::ctor
 //===============
-TriggerCounter::TriggerCounter( Entity* entity )
-	: Base( entity ) {
+TriggerCounter::TriggerCounter( ServerEntity* ServerEntity )
+	: Base( ServerEntity ) {
 
 }
 
@@ -56,15 +56,15 @@ void TriggerCounter::CounterUse( SVGBaseEntity* other, SVGBaseEntity* activator 
 
 	if ( count ) {
 		if ( !(GetSpawnFlags() & SF_NoMessage) ) {
-			gi.CenterPrintf( activator->GetServerEntity(), "%u more to go...", count );
-			gi.Sound( activator->GetServerEntity(), CHAN_AUTO, gi.SoundIndex( "misc/talk1.wav" ), 1.0f, ATTN_NORM, 0.0f );
+			gi.CenterPrintf( activator->GetServerServerEntity(), "%u more to go...", count );
+			gi.Sound( activator->GetServerServerEntity(), CHAN_AUTO, gi.SoundIndex( "misc/talk1.wav" ), 1.0f, ATTN_NORM, 0.0f );
 		}
 		return;
 	}
 
 	if ( !(GetSpawnFlags() & SF_NoMessage) ) {
-		gi.CenterPrintf( activator->GetServerEntity(), "Sequence completed!" );
-		gi.Sound( activator->GetServerEntity(), CHAN_AUTO, gi.SoundIndex( "misc/talk1.wav" ), 1.0f, ATTN_NORM, 0.0f );
+		gi.CenterPrintf( activator->GetServerServerEntity(), "Sequence completed!" );
+		gi.Sound( activator->GetServerServerEntity(), CHAN_AUTO, gi.SoundIndex( "misc/talk1.wav" ), 1.0f, ATTN_NORM, 0.0f );
 	}
 
 	this->activator = activator;

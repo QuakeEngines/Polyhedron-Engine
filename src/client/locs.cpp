@@ -184,7 +184,7 @@ void LOC_AddLocationsToScene(void)
     //location_t *loc, *nearest;
     //vec3_t dir;
     //float dist;
-    //r_entity_t ent;
+    //r_ServerEntity_t ent;
 
     //if (!loc_draw->integer) {
     //    return;
@@ -194,13 +194,13 @@ void LOC_AddLocationsToScene(void)
     //ent.model = R_RegisterModel("models/items/c_head/tris.md2");
     //ent.skin = R_RegisterSkin("models/items/c_head/skin.pcx");
 
-    //nearest = LOC_FindClosest(cl.playerEntityOrigin);
+    //nearest = LOC_FindClosest(cl.playerServerEntityOrigin);
     //if (!nearest) {
     //    return;
     //}
 
     //LIST_FOR_EACH(location_t, loc, &cl_locations, entry) {
-    //    VectorSubtract(cl.playerEntityOrigin, loc->origin, dir);
+    //    VectorSubtract(cl.playerServerEntityOrigin, loc->origin, dir);
     //    dist = VectorLength(dir);
 
     //    if (dist > loc_dist->integer) {
@@ -214,7 +214,7 @@ void LOC_AddLocationsToScene(void)
     //        V_AddLight(loc->origin, 200, 1, 1, 1);
     //    }
 
-    //    V_AddEntity(&ent);
+    //    V_AddServerEntity(&ent);
     //}
 }
 
@@ -233,7 +233,7 @@ static size_t LOC_Here_m(char *buffer, size_t size)
         return ret;
     }
 
-    loc = LOC_FindClosest(cl.playerEntityOrigin);
+    loc = LOC_FindClosest(cl.playerServerEntityOrigin);
     if (loc) {
         ret = Q_strlcpy(buffer, loc->name, size);
     }
@@ -258,8 +258,8 @@ static size_t LOC_There_m(char *buffer, size_t size)
         return ret;
     }
 
-    VectorMA(cl.playerEntityOrigin, 8192, cl.v_forward, pos);
-    CM_BoxTrace(&trace, cl.playerEntityOrigin, pos, vec3_zero(), vec3_zero(),
+    VectorMA(cl.playerServerEntityOrigin, 8192, cl.v_forward, pos);
+    CM_BoxTrace(&trace, cl.playerServerEntityOrigin, pos, vec3_zero(), vec3_zero(),
                 cl.bsp->nodes, CONTENTS_MASK_SOLID);
 
     loc = LOC_FindClosest(trace.endPosition);
@@ -285,7 +285,7 @@ static void LOC_Add_f(void)
     }
 
     loc = LOC_Alloc(Cmd_Args());
-    VectorCopy(cl.playerEntityOrigin, loc->origin);
+    VectorCopy(cl.playerServerEntityOrigin, loc->origin);
     List_Append(&cl_locations, &loc->entry);
 }
 
@@ -298,7 +298,7 @@ static void LOC_Delete_f(void)
         return;
     }
 
-    loc = LOC_FindClosest(cl.playerEntityOrigin);
+    loc = LOC_FindClosest(cl.playerServerEntityOrigin);
     if (!loc) {
         Com_Printf("No closest location.\n");
         return;
@@ -322,7 +322,7 @@ static void LOC_Update_f(void)
         return;
     }
 
-    oldloc = LOC_FindClosest(cl.playerEntityOrigin);
+    oldloc = LOC_FindClosest(cl.playerServerEntityOrigin);
     if (!oldloc) {
         Com_Printf("No closest location.\n");
         return;

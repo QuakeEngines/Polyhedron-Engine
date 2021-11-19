@@ -12,8 +12,8 @@
 //===============
 // PathCorner::ctor
 //===============
-PathCorner::PathCorner( Entity* entity )
-	: Base( entity ) {
+PathCorner::PathCorner( ServerEntity* ServerEntity )
+	: Base( ServerEntity ) {
 
 }
 
@@ -31,8 +31,8 @@ void PathCorner::Spawn() {
     SetSolid( Solid::Trigger );
     SetMaxs( BboxSize );
     SetMins( vec3_negate( BboxSize ) );
-    serverEntity->serverFlags |= EntityServerFlags::NoClient;
-    LinkEntity();
+    serverEntity->serverFlags |= ServerEntityServerFlags::NoClient;
+    LinkServerEntity();
 }
 
 //===============

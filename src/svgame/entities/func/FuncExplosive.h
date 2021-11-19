@@ -3,7 +3,7 @@
 
 class FuncExplosive : public SVGBaseEntity {
 public:
-	FuncExplosive( Entity* entity );
+	FuncExplosive( ServerEntity* ServerEntity );
 	virtual ~FuncExplosive() = default;
 
 	DefineMapClass( "func_explosive", FuncExplosive, SVGBaseEntity );

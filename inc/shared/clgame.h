@@ -88,7 +88,7 @@ extern "C" {
     //    //---------------------------------------------------------------------
     //    // Entities.
     //    //---------------------------------------------------------------------
-    //    void        (*EntityEvent) (int number);
+    //    void        (*ServerEntityEvent) (int number);
 
     //    //---------------------------------------------------------------------
     //    // 
@@ -267,7 +267,7 @@ extern "C" {
                                                 const vec3_t &mins, const vec3_t &maxs,
                                                 mnode_t * headNode, int brushmask,
                                                 const vec3_t &origin, const vec3_t &angles);
-        void        (*CM_ClipEntity) (trace_t* dst, const trace_t* src, struct entity_s* ent);
+        void        (*CM_ClipServerEntity) (trace_t* dst, const trace_t* src, struct ServerEntity_s* ent);
 
         //---------------------------------------------------------------------
         // Command
@@ -606,7 +606,7 @@ extern "C" {
         void            (*S_EndRegistration) (void);
 
         // Plays a sound at the given origin. If origin is NULL, the sound will
-        // be dynamically sourced from the entity.
+        // be dynamically sourced from the ServerEntity.
         void            (*S_StartSound)(const vec3_t *origin, int entnum, int entchannel,
                                        qhandle_t sfx, float fvol, float attenuation, float timeofs);
         // Plays a local 2D sound on entchannel 0.                               

@@ -45,12 +45,12 @@ void RmlUiRenderInterface::RenderGeometry(Rml::Vertex* vertices, int RMLUI_UNUSE
 {
 	RMLUI_UNUSED(num_vertices);
 
-	//qglLoadIdentity();
+	//qglLoadIdServerEntity();
 	//// Setup 2D rendering mode.
 	//qglViewport(0, 0, r_config.width, r_config.height);
 	//GL_Ortho(0, r_config.width, r_config.height, 0, -1, 1);
 	//qglMatrixMode(GL_MODELVIEW);
-	//qglLoadIdentity();
+	//qglLoadIdServerEntity();
 
 	//qglTranslatef(translation.x, translation.y, 0);
 
@@ -439,7 +439,7 @@ void RmlUiRenderInterface::SetTransform(const Rml::Matrix4f* transform)
 	//		qglLoadMatrixf(transform->Transpose().data());
 	//}
 	//else
-	//	qglLoadIdentity();
+	//	qglLoadIdServerEntity();
 }
 
 //

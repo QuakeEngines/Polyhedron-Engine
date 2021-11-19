@@ -544,7 +544,7 @@ static void SCR_DrawTurtle(void)
     }
     DF(FrameFlags::BadFrame)
     DF(FrameFlags::OldFrame)
-    DF(FrameFlags::OldEntity)
+    DF(FrameFlags::OldServerEntity)
     DF(FrameFlags::NoDeltaFrame)
 
 #undef DF

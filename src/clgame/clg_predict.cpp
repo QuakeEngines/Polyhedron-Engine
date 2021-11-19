@@ -82,7 +82,7 @@ static void CLG_ClipMoveToEntities(const vec3_t &start, const vec3_t &mins, cons
     int         i;
     trace_t     trace;
     mnode_t* headNode;
-    cl_entity_t* ent;
+    clientServerEntity* ent;
     mmodel_t* cmodel;
 
     for (i = 0; i < cl->numSolidEntities; i++) {
@@ -106,7 +106,7 @@ static void CLG_ClipMoveToEntities(const vec3_t &start, const vec3_t &mins, cons
             mins, maxs, headNode, CONTENTS_MASK_PLAYERSOLID,
             ent->current.origin, ent->current.angles);
 
-        clgi.CM_ClipEntity(tr, &trace, (struct entity_s*)ent);
+        clgi.CM_ClipServerEntity(tr, &trace, (struct ServerEntity_s*)ent);
     }
 }
 
@@ -122,7 +122,7 @@ trace_t q_gameabi CLG_Trace(const vec3_t &start, const vec3_t &mins, const vec3_
     // check against world
     clgi.CM_BoxTrace(&t, start, end, mins, maxs, cl->bsp->nodes, CONTENTS_MASK_PLAYERSOLID);
     if (t.fraction < 1.0)
-        t.ent = (struct entity_s*)1;
+        t.ent = (struct ServerEntity_s*)1;
 
     // check all other solid models
     CLG_ClipMoveToEntities(start, mins, maxs, end, &t);
@@ -133,7 +133,7 @@ trace_t q_gameabi CLG_Trace(const vec3_t &start, const vec3_t &mins, const vec3_
 int CLG_PointContents(const vec3_t &point)
 {
     int         i;
-    cl_entity_t* ent;
+    clientServerEntity* ent;
     mmodel_t* cmodel;
     int         contents;
 
@@ -213,8 +213,8 @@ int CLG_PointContents(const vec3_t &point)
 //    pm.Trace = CLG_Trace;
 //    pm.PointContents = CLG_PointContents;
 //    
-//    // Restore ground entity for this frame.
-//    pm.groundEntityPtr = cl->predictedState.groundEntityPtr;
+//    // Restore ground ServerEntity for this frame.
+//    pm.groundServerEntityPtr = cl->predictedState.groundServerEntityPtr;
 //
 //    // Copy current state to pmove
 //    pm.state = cl->frame.playerState.pmove;
@@ -268,5 +268,5 @@ int CLG_PointContents(const vec3_t &point)
 //    cl->predictedState.stepOffset = pm.state.stepOffset;
 //    cl->predictedState.viewAngles  = pm.viewAngles;
 //
-//    cl->predictedState.groundEntityPtr = pm.groundEntityPtr;
+//    cl->predictedState.groundServerEntityPtr = pm.groundServerEntityPtr;
 //}

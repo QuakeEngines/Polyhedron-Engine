@@ -17,7 +17,7 @@
 #define TRIGGERABLE 2
 
 // Constructor/Deconstructor.
-Light::Light(Entity* svEntity) : SVGBaseTrigger(svEntity) {
+Light::Light(ServerEntity* svServerEntity) : SVGBaseTrigger(svServerEntity) {
 
 }
 Light::~Light() {
@@ -36,7 +36,7 @@ void Light::Spawn() {
     // WatIsDeze: I think we want lights. This is for the old 1997/1998
     // no targeted lights in deathmatch, because they cause global messages
     //if (!self->targetName || deathmatch->value) {
-    //    SVG_FreeEntity(self);
+    //    SVG_FreeServerEntity(self);
     //    return;
     //}
 

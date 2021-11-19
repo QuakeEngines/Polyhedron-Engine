@@ -2,37 +2,37 @@
 // LICENSE HERE.
 
 //
-// GibEntity.h
+// GibServerEntity.h
 //
-// Base entity for gibs.
+// Base ServerEntity for gibs.
 //
 */
-#ifndef __SVGAME_ENTITIES_BASE_GIBENTITY_H__
-#define __SVGAME_ENTITIES_BASE_GIBENTITY_H__
+#ifndef __SVGAME_ENTITIES_BASE_GIBServerEntity_H__
+#define __SVGAME_ENTITIES_BASE_GIBServerEntity_H__
 
 class SVGBaseEntity;
 
-class GibEntity : public SVGBaseEntity {
+class GibServerEntity : public SVGBaseEntity {
 public:
     // Constructor/Deconstructor.
-    GibEntity(Entity* svEntity);
-    virtual ~GibEntity();
+    GibServerEntity(ServerEntity* svServerEntity);
+    virtual ~GibServerEntity();
 
-    DefineClass(GibEntity, SVGBaseEntity);
+    DefineClass(GibServerEntity, SVGBaseEntity);
 
     //
     // Interface functions. 
     //
     void Precache() override;    // Precaches data.
-    void Spawn() override;       // Spawns the entity.
-    void Respawn() override;     // Respawns the entity.
-    void PostSpawn() override;   // PostSpawning is for handling entity references, since they may not exist yet during a spawn period.
-    void Think() override;       // General entity thinking routine.
+    void Spawn() override;       // Spawns the ServerEntity.
+    void Respawn() override;     // Respawns the ServerEntity.
+    void PostSpawn() override;   // PostSpawning is for handling ServerEntity references, since they may not exist yet during a spawn period.
+    void Think() override;       // General ServerEntity thinking routine.
 
     void SpawnKey(const std::string& key, const std::string& value)  override;
 
     //
-    // GibEntity functions.
+    // GibServerEntity functions.
     // 
     // WID: These need more restructuring etc, rethinking. Doing a KISS rewrite atm ;-)
     // 
@@ -43,9 +43,9 @@ public:
     // Callback functions.
     //
     //
-    void GibEntityThink();
-    void GibEntityDie(SVGBaseEntity* inflictor, SVGBaseEntity* attacker, int damage, const vec3_t& point);
-    void GibEntityTouch(SVGBaseEntity* self, SVGBaseEntity* other, cplane_t* plane, csurface_t* surf);
+    void GibServerEntityThink();
+    void GibServerEntityDie(SVGBaseEntity* inflictor, SVGBaseEntity* attacker, int damage, const vec3_t& point);
+    void GibServerEntityTouch(SVGBaseEntity* self, SVGBaseEntity* other, cplane_t* plane, csurface_t* surf);
 
 protected:
 
@@ -53,4 +53,4 @@ private:
 
 };
 
-#endif // __SVGAME_ENTITIES_BASE_GIBENTITY_H__
+#endif // __SVGAME_ENTITIES_BASE_GIBServerEntity_H__

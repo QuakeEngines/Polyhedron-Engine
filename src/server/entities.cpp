@@ -31,19 +31,19 @@ Encode a client frame onto the network channel
 =============
 SV_EmitPacketEntities
 
-Writes a delta update of an PackedEntity list to the message.
+Writes a delta update of an PackedServerEntity list to the message.
 =============
 */
 static void SV_EmitPacketEntities(client_t         *client,
                                   ClientFrame   *from,
                                   ClientFrame   *to,
-                                  int              clientEntityNum)
+                                  int              clientServerEntityNum)
 {
-    PackedEntity *newent;
-    const PackedEntity *oldent;
+    PackedServerEntity *newent;
+    const PackedServerEntity *oldent;
     unsigned i, oldindex, newindex, from_num_entities;
     int oldnum, newnum;
-    EntityStateMessageFlags flags;
+    ServerEntityStateMessageFlags flags;
 
     if (!from)
         from_num_entities = 0;
@@ -57,7 +57,7 @@ static void SV_EmitPacketEntities(client_t         *client,
         if (newindex >= to->num_entities) {
             newnum = 9999;
         } else {
-            i = (to->first_entity + newindex) % svs.num_entities;
+            i = (to->first_ServerEntity + newindex) % svs.num_entities;
             newent = &svs.entities[i];
             newnum = newent->number;
         }
@@ -65,56 +65,56 @@ static void SV_EmitPacketEntities(client_t         *client,
         if (oldindex >= from_num_entities) {
             oldnum = 9999;
         } else {
-            i = (from->first_entity + oldindex) % svs.num_entities;
+            i = (from->first_ServerEntity + oldindex) % svs.num_entities;
             oldent = &svs.entities[i];
             oldnum = oldent->number;
         }
 
         if (newnum == oldnum) {
             // Delta update from old position. Because the force parm is false,
-            // this will not result in any bytes being emitted if the entity has
+            // this will not result in any bytes being emitted if the ServerEntity has
             // not changed at all. Note that players are always 'newentities',
             // this updates their oldOrigin always and prevents warping in case
             // of packet loss.
             flags = client->esFlags;
             if (newnum <= client->maximumClients) {
-                flags = (EntityStateMessageFlags)(flags | MSG_ES_NEWENTITY);
+                flags = (ServerEntityStateMessageFlags)(flags | MSG_ES_NEWServerEntity);
             }
-            if (newnum == clientEntityNum) {
-                flags = (EntityStateMessageFlags)(flags | MSG_ES_FIRSTPERSON);
+            if (newnum == clientServerEntityNum) {
+                flags = (ServerEntityStateMessageFlags)(flags | MSG_ES_FIRSTPERSON);
                 newent->origin = oldent->origin; // VectorCopy(oldent->origin, newent->origin);
                 newent->angles = oldent->angles; // VectorCopy(oldent->angles, newent->angles);
             }
 
-            MSG_WriteDeltaEntity(oldent, newent, flags);
+            MSG_WriteDeltaServerEntity(oldent, newent, flags);
             oldindex++;
             newindex++;
             continue;
         }
 
         if (newnum < oldnum) {
-            // this is a new entity, send it from the baseline
-            flags = (EntityStateMessageFlags)(client->esFlags | MSG_ES_FORCE | MSG_ES_NEWENTITY); // CPP: Cast
-            oldent = client->entityBaselines[newnum >> SV_BASELINES_SHIFT];
+            // this is a new ServerEntity, send it from the baseline
+            flags = (ServerEntityStateMessageFlags)(client->esFlags | MSG_ES_FORCE | MSG_ES_NEWServerEntity); // CPP: Cast
+            oldent = client->ServerEntityBaselines[newnum >> SV_BASELINES_SHIFT];
             if (oldent) {
                 oldent += (newnum & SV_BASELINES_MASK);
             } else {
-                oldent = &nullEntityState;
+                oldent = &nullServerEntityState;
             }
-            if (newnum == clientEntityNum) {
-                flags = (EntityStateMessageFlags)(flags | MSG_ES_FIRSTPERSON); // CPP: Cast flags |= MSG_ES_FIRSTPERSON;
+            if (newnum == clientServerEntityNum) {
+                flags = (ServerEntityStateMessageFlags)(flags | MSG_ES_FIRSTPERSON); // CPP: Cast flags |= MSG_ES_FIRSTPERSON;
                 newent->origin = oldent->origin; // VectorCopy(oldent->origin, newent->origin);
                 newent->angles = oldent->angles; // VectorCopy(oldent->angles, newent->angles);
             }
 
-            MSG_WriteDeltaEntity(oldent, newent, flags);
+            MSG_WriteDeltaServerEntity(oldent, newent, flags);
             newindex++;
             continue;
         }
 
         if (newnum > oldnum) {
-            // the old entity isn't present in the new message
-            MSG_WriteDeltaEntity(oldent, NULL, MSG_ES_FORCE);
+            // the old ServerEntity isn't present in the new message
+            MSG_WriteDeltaServerEntity(oldent, NULL, MSG_ES_FORCE);
             oldindex++;
             continue;
         }
@@ -149,7 +149,7 @@ static ClientFrame *get_last_frame(client_t *client)
         return NULL;
     }
 
-    if (svs.next_entity - frame->first_entity > svs.num_entities) {
+    if (svs.next_ServerEntity - frame->first_ServerEntity > svs.num_entities) {
         // but entities are too old
         Com_DPrintf("%s: delta request from out-of-date entities.\n", client->name);
         return NULL;
@@ -171,7 +171,7 @@ void SV_WriteFrameToClient(client_t *client) {
     int             delta, suppressed;
     byte            *b1, *b2;
     PlayerStateMessageFlags    psFlags;
-    int             clientEntityNum;
+    int             clientServerEntityNum;
 
     // this is the frame we are creating
     frame = &client->frames[client->frameNumber & UPDATE_MASK];
@@ -209,10 +209,10 @@ void SV_WriteFrameToClient(client_t *client) {
         psFlags = (PlayerStateMessageFlags)(psFlags | MSG_PS_IGNORE_DELTAANGLES);  // CPP: Cast
     }
 
-    // Fetch client entity number.
-    clientEntityNum = 0;
+    // Fetch client ServerEntity number.
+    clientServerEntityNum = 0;
     if (frame->playerState.pmove.type < EnginePlayerMoveType::Dead) {
-        clientEntityNum = frame->clientNumber + 1;
+        clientServerEntityNum = frame->clientNumber + 1;
     }
     suppressed = client->frameFlags;
 
@@ -237,7 +237,7 @@ void SV_WriteFrameToClient(client_t *client) {
     client->frameFlags = 0;
 
     // delta encode the entities
-    SV_EmitPacketEntities(client, oldframe, frame, clientEntityNum);
+    SV_EmitPacketEntities(client, oldframe, frame, clientServerEntityNum);
 }
 
 
@@ -261,12 +261,12 @@ void SV_BuildClientFrame(client_t *client)
 {
     int         e;
     vec3_t      org;
-    Entity     *ent;
-    Entity     *clent;
+    ServerEntity    *ent;
+    ServerEntity    *clent;
     ClientFrame  *frame;
-    PackedEntity *state;
+    PackedServerEntity *state;
     PlayerState  *ps;
-	EntityState  es;
+	ServerEntityState  es;
 	int         l;
     int         clientarea, clientcluster;
     mleaf_t     *leaf;
@@ -326,7 +326,7 @@ void SV_BuildClientFrame(client_t *client)
 
     // build up the list of visible entities
     frame->num_entities = 0;
-    frame->first_entity = svs.next_entity;
+    frame->first_ServerEntity = svs.next_ServerEntity;
 
     for (e = 1; e < client->pool->numberOfEntities; e++) {
         ent = EDICT_POOL(client, e);
@@ -337,7 +337,7 @@ void SV_BuildClientFrame(client_t *client)
         }
 
         // ignore ents without visible models
-        if (ent->serverFlags & EntityServerFlags::NoClient)
+        if (ent->serverFlags & ServerEntityServerFlags::NoClient)
             continue;
 
         // ignore ents without visible models unless they have an effect
@@ -345,7 +345,7 @@ void SV_BuildClientFrame(client_t *client)
             if (!ent->state.eventID) {
                 continue;
             }
-            if (ent->state.eventID = EntityEvent::Footstep) {
+            if (ent->state.eventID = ServerEntityEvent::Footstep) {
                 continue;
             }
         }
@@ -372,7 +372,7 @@ void SV_BuildClientFrame(client_t *client)
                         ent_visible = false;
                 }
                 else {
-                    if (cull_nonvisible_entities && !SV_EntityIsVisible(client->cm, ent, clientpvs)) {
+                    if (cull_nonvisible_entities && !SV_ServerEntityIsVisible(client->cm, ent, clientpvs)) {
                         ent_visible = false;
                     }
 
@@ -399,22 +399,22 @@ void SV_BuildClientFrame(client_t *client)
 			ent->state.number = e;
 		}
 
-		memcpy(&es, &ent->state, sizeof(EntityState));
+		memcpy(&es, &ent->state, sizeof(ServerEntityState));
 
 		if (!ent_visible) {
-			// if the entity is invisible, kill its sound
+			// if the ServerEntity is invisible, kill its sound
 			es.sound = 0;
 		}
 
         // add it to the circular client_entities array
-        state = &svs.entities[svs.next_entity % svs.num_entities];
-        MSG_PackEntity(state, &es);
+        state = &svs.entities[svs.next_ServerEntity % svs.num_entities];
+        MSG_PackServerEntity(state, &es);
 
-        if (ent->state.eventID = EntityEvent::Footstep) {
+        if (ent->state.eventID = ServerEntityEvent::Footstep) {
             ent->state.eventID = 0;
         }
 
-        // hide POV entity from renderer, unless this is player's own entity
+        // hide POV ServerEntity from renderer, unless this is player's own ServerEntity
         if (e == frame->clientNumber + 1 && ent != clent) {
             state->modelIndex = 0;
         }
@@ -427,7 +427,7 @@ void SV_BuildClientFrame(client_t *client)
             state->solid = sv.entities[e].solid32;
         }
 
-        svs.next_entity++;
+        svs.next_ServerEntity++;
 
         if (++frame->num_entities == MAX_PACKET_ENTITIES) {
             break;

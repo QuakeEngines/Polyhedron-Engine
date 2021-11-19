@@ -4,7 +4,7 @@ class SVGBaseEntity;
 
 class PathCorner : public SVGBaseEntity {
 public:
-	PathCorner( Entity* entity );
+	PathCorner( ServerEntity* ServerEntity );
 	virtual ~PathCorner() = default;
 
 	DefineMapClass( "path_corner", PathCorner, SVGBaseEntity );

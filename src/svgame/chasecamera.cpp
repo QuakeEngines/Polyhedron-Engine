@@ -24,7 +24,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 void SVG_UpdateChaseCam(PlayerClient *ent)
 {
     vec3_t o, ownerv, goal;
-    Entity *targ;
+    ServerEntity *targ;
     vec3_t forward, right;
     trace_t trace;
     int i;
@@ -33,7 +33,7 @@ void SVG_UpdateChaseCam(PlayerClient *ent)
     // is our chase target gone?
     if (!ent->GetClient()->chaseTarget->inUse
         || ent->GetClient()->chaseTarget->client->respawn.isSpectator) {
-        Entity *old = ent->GetClient()->chaseTarget;
+        ServerEntity *old = ent->GetClient()->chaseTarget;
         SVG_ChaseNext(ent);
         if (ent->GetClient()->chaseTarget == old) {
             ent->GetClient()->chaseTarget = NULL;
@@ -46,7 +46,7 @@ void SVG_UpdateChaseCam(PlayerClient *ent)
 
     VectorCopy(targ->state.origin, ownerv);
 
-    ownerv[2] += targ->classEntity->GetViewHeight();
+    ownerv[2] += targ->classServerEntity->GetViewHeight();
 
     VectorCopy(targ->client->aimAngles, angles);
     if (angles[vec3_t::Pitch] > 56)
@@ -59,7 +59,7 @@ void SVG_UpdateChaseCam(PlayerClient *ent)
         o[2] = targ->state.origin[2] + 20;
 
     // jump animation lifts
-    if (!targ->groundEntityPtr)
+    if (!targ->groundServerEntityPtr)
         o[2] += 16;
 
     trace = gi.Trace(ownerv, vec3_zero(), vec3_zero(), o, targ, CONTENTS_MASK_SOLID);
@@ -85,7 +85,7 @@ void SVG_UpdateChaseCam(PlayerClient *ent)
         goal[2] += 6;
     }
 
-    if (targ->classEntity->GetDeadFlag())
+    if (targ->classServerEntity->GetDeadFlag())
         ent->GetClient()->playerState.pmove.type = EnginePlayerMoveType::Dead;
     else
         ent->GetClient()->playerState.pmove.type = EnginePlayerMoveType::Freeze;
@@ -95,7 +95,7 @@ void SVG_UpdateChaseCam(PlayerClient *ent)
     for (i = 0; i < 3; i++)
         ent->GetClient()->playerState.pmove.deltaAngles[i] = targ->client->aimAngles[i] - ent->GetClient() ->respawn.commandViewAngles[i];
 
-    if (targ->classEntity->GetDeadFlag()) {
+    if (targ->classServerEntity->GetDeadFlag()) {
         ent->GetClient()->playerState.pmove.viewAngles[vec3_t::Roll] = 40;
         ent->GetClient()->playerState.pmove.viewAngles[vec3_t::Pitch] = -15;
         ent->GetClient()->playerState.pmove.viewAngles[vec3_t::Yaw] = targ->client->killerYaw;
@@ -106,13 +106,13 @@ void SVG_UpdateChaseCam(PlayerClient *ent)
 
     ent->SetViewHeight(0);
     ent->GetClient()->playerState.pmove.flags |= PMF_NO_PREDICTION;
-    ent->LinkEntity();
+    ent->LinkServerEntity();
 }
 
 void SVG_ChaseNext(PlayerClient *ent)
 {
     int i;
-    Entity *e;
+    ServerEntity *e;
     ServersClient* client = ent->GetClient();
 
     if (!client->chaseTarget)
@@ -137,8 +137,8 @@ void SVG_ChaseNext(PlayerClient *ent)
 void SVG_ChasePrev(PlayerClient*ent)
 {
     int i;
-    Entity *e;
-    ServersClient* client = ent->GetClient();
+    ServerEntity *e;
+    ServerClient* client = ent->GetClient();
 
     if (!client->chaseTarget)
         return;
@@ -162,7 +162,7 @@ void SVG_ChasePrev(PlayerClient*ent)
 void SVG_GetChaseTarget(PlayerClient *ent)
 {
     int i;
-    Entity *other;
+    ServerEntity *other;
     ServersClient* client = ent->GetClient();
 
     for (i = 1; i <= maximumClients->value; i++) {
@@ -174,6 +174,6 @@ void SVG_GetChaseTarget(PlayerClient *ent)
             return;
         }
     }
-    gi.CenterPrintf(ent->GetServerEntity(), "No other players to chase.");
+    gi.CenterPrintf(ent->GetServerServerEntity(), "No other players to chase.");
 }
 

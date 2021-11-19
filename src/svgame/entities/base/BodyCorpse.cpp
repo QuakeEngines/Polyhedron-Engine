@@ -19,8 +19,8 @@
 #include "BodyCorpse.h"
 
 // Constructor/Deconstructor.
-BodyCorpse::BodyCorpse(Entity* svEntity)
-    : SVGBaseEntity(svEntity) {
+BodyCorpse::BodyCorpse(ServerEntity* svServerEntity)
+    : Base(svServerEntity) {
 
 }
 BodyCorpse::~BodyCorpse() {
@@ -130,9 +130,11 @@ void BodyCorpse::BodyCorpseDie(SVGBaseEntity* inflictor, SVGBaseEntity* attacker
 
 
     // Set the ehrm.. think free thing.
-    //SetThinkCallback(&SVGBaseEntity::SVGBaseEntityThinkRemove);
-    //SetNextThinkTime(level.time + FRAMETIME);
-    // Remove body.
+    // Remove body by making it invisible. (Its slot will later on be re-used.
     SetModelIndex(0);
+
+    // So don't do:
+    //SetThinkCallback(&SVGBaseEntity::SVGBaseServerEntityThinkRemove);
+    //SetNextThinkTime(level.time + FRAMETIME);
     //Remove();
 }

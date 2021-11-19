@@ -17,8 +17,8 @@
 //===============
 // TriggerGravity::ctor
 //===============
-TriggerGravity::TriggerGravity( Entity* entity )
-	: Base( entity ) {
+TriggerGravity::TriggerGravity( ServerEntity* ServerEntity )
+	: Base( ServerEntity ) {
 
 }
 

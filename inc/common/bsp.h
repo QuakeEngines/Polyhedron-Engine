@@ -266,8 +266,8 @@ typedef struct bsp_s {
     int             visrowsize;
     dvis_t          *vis;
 
-    int             numentitychars;
-    char            *entityString;
+    int             numServerEntitychars;
+    char            *ServerEntityString;
 
     int             numareas;
     marea_t         *areas;

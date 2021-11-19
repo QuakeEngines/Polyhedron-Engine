@@ -18,8 +18,8 @@
 //===============
 // TriggerPush::ctor
 //===============
-TriggerPush::TriggerPush( Entity* entity )
-	: Base( entity ) {
+TriggerPush::TriggerPush( ServerEntity* ServerEntity )
+	: Base( ServerEntity ) {
 
 }
 
@@ -33,7 +33,7 @@ void TriggerPush::Spawn() {
 
 	InitBrushTrigger();
 	SetTouchCallback( &TriggerPush::PushTouch );
-	LinkEntity();
+	LinkServerEntity();
 }
 
 //===============

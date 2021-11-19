@@ -11,7 +11,7 @@ class SVGBaseEntity;
 //=============================================
 class FuncAreaportal : public SVGBaseEntity {
 public:
-	FuncAreaportal( Entity* entity );
+	FuncAreaportal( ServerEntity* ServerEntity );
 	virtual ~FuncAreaportal() = default;
 
 	DefineMapClass( "func_areaportal", FuncAreaportal, SVGBaseEntity );

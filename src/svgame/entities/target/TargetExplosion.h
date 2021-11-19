@@ -3,7 +3,7 @@
 
 class TargetExplosion : public SVGBaseEntity {
 public:
-	TargetExplosion( Entity* entity );
+	TargetExplosion( ServerEntity* ServerEntity );
 	virtual ~TargetExplosion() = default;
 	
 	DefineMapClass( "target_explosion", TargetExplosion, SVGBaseEntity );

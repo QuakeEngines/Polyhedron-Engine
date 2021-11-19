@@ -56,14 +56,14 @@ struct ServerState {
 };
 
 //-----------------
-// EntityState->event values
+// ServerEntityState->event values
 // 
-// Entity events are for effects that take place relative to an existing 
+// ServerEntity events are for effects that take place relative to an existing 
 // entities origin. Very network efficient.
 // 
 // All muzzle flashes really should be converted to events...
 //-----------------
-struct EntityEvent {
+struct ServerEntityEvent {
     static constexpr int32_t None = 0;
     static constexpr int32_t ItemRespawn = 1;
     static constexpr int32_t Footstep = 2;
@@ -75,12 +75,12 @@ struct EntityEvent {
 };
 
 //-----------------
-// EntityState is the information conveyed from the server
+// ServerEntityState is the information conveyed from the server
 // in an update message about entities that the client will
 // need to render in some way
 //-----------------
-struct EntityState {
-    int32_t number;         // Entity index
+struct ServerEntityState {
+    int32_t number;         // ServerEntity index
 
     vec3_t origin;
     vec3_t angles;
@@ -93,7 +93,7 @@ struct EntityState {
     int32_t renderEffects;
     int32_t solid;          // For client side prediction, 8*(bits 0-4) is x/y radius
                             // 8*(bits 5-9) is z down distance, 8(bits10-15) is z up
-                            // gi.LinkEntity sets this properly
+                            // gi.LinkServerEntity sets this properly
     int32_t sound;          // For looping sounds, to guarantee shutoff
     int32_t eventID;        // Impulse events -- muzzle flashes, footsteps, etc
                             // events only go out for a single frame, they

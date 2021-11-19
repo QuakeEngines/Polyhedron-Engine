@@ -84,8 +84,8 @@ void ClientGamePrediction::PredictMovement(uint32_t acknowledgedCommandIndex, ui
     pm.Trace = CLG_Trace;
     pm.PointContents = CLG_PointContents;
 
-    // Restore ground entity for this frame.
-    pm.groundEntityPtr = cl->predictedState.groundEntityPtr;
+    // Restore ground ServerEntity for this frame.
+    pm.groundServerEntityPtr = cl->predictedState.groundServerEntityPtr;
 
     // Copy current state to pmove
     pm.state = cl->frame.playerState.pmove;
@@ -139,7 +139,7 @@ void ClientGamePrediction::PredictMovement(uint32_t acknowledgedCommandIndex, ui
     cl->predictedState.stepOffset = pm.state.stepOffset;
     cl->predictedState.viewAngles = pm.viewAngles;
 
-    cl->predictedState.groundEntityPtr = pm.groundEntityPtr;
+    cl->predictedState.groundServerEntityPtr = pm.groundServerEntityPtr;
 }
 
 //

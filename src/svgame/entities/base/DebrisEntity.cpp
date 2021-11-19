@@ -2,7 +2,7 @@
 // LICENSE HERE.
 
 //
-// DebrisEntity.cpp
+// DebrisServerEntity.cpp
 //
 //
 */
@@ -16,14 +16,14 @@
 
 // Class Entities.
 #include "../base/SVGBaseEntity.h"
-#include "DebrisEntity.h"
+#include "DebrisServerEntity.h"
 
 // Constructor/Deconstructor.
-DebrisEntity::DebrisEntity(Entity* svEntity)
-    : SVGBaseEntity(svEntity) {
+DebrisServerEntity::DebrisServerEntity(ServerEntity* svServerEntity)
+    : SVGBaseEntity(svServerEntity) {
 
 }
-DebrisEntity::~DebrisEntity() {
+DebrisServerEntity::~DebrisServerEntity() {
 
 }
 
@@ -33,7 +33,7 @@ DebrisEntity::~DebrisEntity() {
 //
 //===============
 //
-void DebrisEntity::Precache() {
+void DebrisServerEntity::Precache() {
     Base::Precache();
 }
 
@@ -43,58 +43,58 @@ void DebrisEntity::Precache() {
 //
 //===============
 //
-void DebrisEntity::Spawn() {
+void DebrisServerEntity::Spawn() {
     // Spawn.
     Base::Spawn();
 }
 
 //
 //===============
-// DebrisEntity::Respawn
+// DebrisServerEntity::Respawn
 //
 //===============
 //
-void DebrisEntity::Respawn() {
+void DebrisServerEntity::Respawn() {
     Base::Respawn();
 }
 
 //
 //===============
-// DebrisEntity::PostSpawn
+// DebrisServerEntity::PostSpawn
 //
 //===============
 //
-void DebrisEntity::PostSpawn() {
+void DebrisServerEntity::PostSpawn() {
     Base::PostSpawn();
 }
 
 //
 //===============
-// DebrisEntity::Think
+// DebrisServerEntity::Think
 //
 //===============
 //
-void DebrisEntity::Think() {
+void DebrisServerEntity::Think() {
     // Parent class Think.
     Base::Think();
 }
 
 //===============
-// DebrisEntity::SpawnKey
+// DebrisServerEntity::SpawnKey
 //
-// DebrisEntity spawn key handling.
+// DebrisServerEntity spawn key handling.
 //===============
-void DebrisEntity::SpawnKey(const std::string& key, const std::string& value) {
+void DebrisServerEntity::SpawnKey(const std::string& key, const std::string& value) {
     // Parent class spawnkey.
     Base::SpawnKey(key, value);
 }
 
 //===============
-// DebrisEntity::DebrisEntityDie
+// DebrisServerEntity::DebrisServerEntityDie
 //
 // Spawn gibs to make things gore like :P
 //===============
-void DebrisEntity::DebrisEntityDie(SVGBaseEntity* inflictor, SVGBaseEntity* attacker, int damage, const vec3_t& point) {
+void DebrisServerEntity::DebrisServerEntityDie(SVGBaseEntity* inflictor, SVGBaseEntity* attacker, int damage, const vec3_t& point) {
     // Save to queue for removal.
     Remove();
 }

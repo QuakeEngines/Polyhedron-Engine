@@ -261,12 +261,12 @@ unsigned Com_ParseExtensionString(const char *s, const char *const extnames[])
 
 /*
 ================
-Com_PlayerToEntityState
+Com_PlayerToServerEntityState
 
-Restores entity origin and angles from player state
+Restores ServerEntity origin and angles from player state
 ================
 */
-void Com_PlayerToEntityState(const PlayerState *ps, EntityState *es)
+void Com_PlayerToServerEntityState(const PlayerState *ps, ServerEntityState *es)
 {
     vec_t pitch;
 

@@ -99,7 +99,7 @@ void SelectNextItem(PlayerClient *ent, int itflags)
     cl->persistent.selectedItem = -1;
 }
 
-void SelectPrevItem(Entity *ent, int itflags)
+void SelectPrevItem(ServerEntity *ent, int itflags)
 {
     ServersClient   *cl;
     int         i, index;
@@ -108,7 +108,7 @@ void SelectPrevItem(Entity *ent, int itflags)
     cl = ent->client;
 
     if (cl->chaseTarget) {
-        SVG_ChasePrev((PlayerClient*)ent->classEntity);
+        SVG_ChasePrev((PlayerClient*)ent->classServerEntity);
         return;
     }
 
@@ -155,14 +155,14 @@ Cmd_Give_f
 Give items to a client
 ==================
 */
-void Cmd_Give_f(Entity *ent)
+void Cmd_Give_f(ServerEntity *ent)
 {
     const char        *name;
     gitem_t     *it;
     int         index;
     int         i;
     qboolean    give_all;
-    Entity     *it_ent;
+    ServerEntity     *it_ent;
 
     // Ensure these are valid.
     if (!ent) {
@@ -183,9 +183,9 @@ void Cmd_Give_f(Entity *ent)
 
     if (give_all || Q_stricmp(gi.argv(1), "health") == 0) {
         if (gi.argc() == 3)
-            ent->classEntity->SetHealth(atoi(gi.argv(2)));
+            ent->classServerEntity->SetHealth(atoi(gi.argv(2)));
         else
-            ent->classEntity->SetHealth(ent->classEntity->GetMaxHealth());
+            ent->classServerEntity->SetHealth(ent->classServerEntity->GetMaxHealth());
         if (!give_all)
             return;
     }
@@ -256,7 +256,7 @@ void Cmd_Give_f(Entity *ent)
         SVG_SpawnItem(it_ent, it);
 //        SVG_TouchItem(it_ent, ent, NULL, NULL); Items..
         if (it_ent->inUse)
-            SVG_FreeEntity(it_ent);
+            SVG_FreeServerEntity(it_ent);
     }
 }
 
@@ -273,15 +273,15 @@ argv(0) god
 void Cmd_God_f(SVGBaseEntity *ent)
 {
     if (deathmatch->value && !sv_cheats->value) {
-        gi.CPrintf(ent->GetServerEntity(), PRINT_HIGH, "You must run the server with '+set cheats 1' to enable this command.\n");
+        gi.CPrintf(ent->GetServerServerEntity(), PRINT_HIGH, "You must run the server with '+set cheats 1' to enable this command.\n");
         return;
     }
 
-    ent->SetFlags(ent->GetFlags() ^ EntityFlags::GodMode);
-    if (!(ent->GetFlags() & EntityFlags::GodMode))
-        gi.CPrintf(ent->GetServerEntity(), PRINT_HIGH, "godmode OFF\n");
+    ent->SetFlags(ent->GetFlags() ^ ServerEntityFlags::GodMode);
+    if (!(ent->GetFlags() & ServerEntityFlags::GodMode))
+        gi.CPrintf(ent->GetServerServerEntity(), PRINT_HIGH, "godmode OFF\n");
     else
-        gi.CPrintf(ent->GetServerEntity(), PRINT_HIGH, "godmode ON\n");
+        gi.CPrintf(ent->GetServerServerEntity(), PRINT_HIGH, "godmode ON\n");
 }
 
 
@@ -297,15 +297,15 @@ argv(0) notarget
 void Cmd_Notarget_f(SVGBaseEntity *ent)
 {
     if (deathmatch->value && !sv_cheats->value) {
-        gi.CPrintf(ent->GetServerEntity(), PRINT_HIGH, "You must run the server with '+set cheats 1' to enable this command.\n");
+        gi.CPrintf(ent->GetServerServerEntity(), PRINT_HIGH, "You must run the server with '+set cheats 1' to enable this command.\n");
         return;
     }
 
-    ent->SetFlags(ent->GetFlags() ^ EntityFlags::NoTarget);
-    if (!(ent->GetFlags() & EntityFlags::NoTarget))
-        gi.CPrintf(ent->GetServerEntity(), PRINT_HIGH, "notarget OFF\n");
+    ent->SetFlags(ent->GetFlags() ^ ServerEntityFlags::NoTarget);
+    if (!(ent->GetFlags() & ServerEntityFlags::NoTarget))
+        gi.CPrintf(ent->GetServerServerEntity(), PRINT_HIGH, "notarget OFF\n");
     else
-        gi.CPrintf(ent->GetServerEntity(), PRINT_HIGH, "notarget ON\n");
+        gi.CPrintf(ent->GetServerServerEntity(), PRINT_HIGH, "notarget ON\n");
 }
 
 
@@ -319,16 +319,16 @@ argv(0) noclip
 void Cmd_Noclip_f(SVGBaseEntity *ent)
 {
     if (deathmatch->value && !sv_cheats->value) {
-        gi.CPrintf(ent->GetServerEntity(), PRINT_HIGH, "You must run the server with '+set cheats 1' to enable this command.\n");
+        gi.CPrintf(ent->GetServerServerEntity(), PRINT_HIGH, "You must run the server with '+set cheats 1' to enable this command.\n");
         return;
     }
 
     if (ent->GetMoveType() == MoveType::NoClip) {
         ent->SetMoveType(MoveType::Walk);
-        gi.CPrintf(ent->GetServerEntity(), PRINT_HIGH, "noclip OFF\n");
+        gi.CPrintf(ent->GetServerServerEntity(), PRINT_HIGH, "noclip OFF\n");
     } else {
         ent->SetMoveType(MoveType::NoClip);
-        gi.CPrintf(ent->GetServerEntity(), PRINT_HIGH, "noclip ON\n");
+        gi.CPrintf(ent->GetServerServerEntity(), PRINT_HIGH, "noclip ON\n");
     }
 }
 
@@ -349,16 +349,16 @@ void Cmd_Use_f(PlayerClient *ent)
     s = gi.args(); // C++20: Added casts.
     it = SVG_FindItemByPickupName(s);
     if (!it) {
-        gi.CPrintf(ent->GetServerEntity(), PRINT_HIGH, "unknown item: %s\n", s);
+        gi.CPrintf(ent->GetServerServerEntity(), PRINT_HIGH, "unknown item: %s\n", s);
         return;
     }
     if (!it->Use) {
-        gi.CPrintf(ent->GetServerEntity(), PRINT_HIGH, "Item is not usable.\n");
+        gi.CPrintf(ent->GetServerServerEntity(), PRINT_HIGH, "Item is not usable.\n");
         return;
     }
     index = ITEM_INDEX(it);
     if (!ent->GetClient()->persistent.inventory[index]) {
-        gi.CPrintf(ent->GetServerEntity(), PRINT_HIGH, "Out of item: %s\n", s);
+        gi.CPrintf(ent->GetServerServerEntity(), PRINT_HIGH, "Out of item: %s\n", s);
         return;
     }
 
@@ -382,16 +382,16 @@ void Cmd_Drop_f(PlayerClient*ent)
     s = (const char*)gi.args(); // C++20: Added casts.
     it = SVG_FindItemByPickupName(s);
     if (!it) {
-        gi.CPrintf(ent->GetServerEntity(), PRINT_HIGH, "unknown item: %s\n", s);
+        gi.CPrintf(ent->GetServerServerEntity(), PRINT_HIGH, "unknown item: %s\n", s);
         return;
     }
     if (!it->Drop) {
-        gi.CPrintf(ent->GetServerEntity(), PRINT_HIGH, "Item is not dropable.\n");
+        gi.CPrintf(ent->GetServerServerEntity(), PRINT_HIGH, "Item is not dropable.\n");
         return;
     }
     index = ITEM_INDEX(it);
     if (!ent->GetClient()->persistent.inventory[index]) {
-        gi.CPrintf(ent->GetServerEntity(), PRINT_HIGH, "Out of item: %s\n", s);
+        gi.CPrintf(ent->GetServerServerEntity(), PRINT_HIGH, "Out of item: %s\n", s);
         return;
     }
 
@@ -404,7 +404,7 @@ void Cmd_Drop_f(PlayerClient*ent)
 Cmd_Inven_f
 =================
 */
-void Cmd_Inven_f(Entity *ent)
+void Cmd_Inven_f(ServerEntity *ent)
 {
     int         i;
     ServersClient   *cl;
@@ -439,13 +439,13 @@ void Cmd_InvUse_f(PlayerClient *ent)
     HUD_ValidateSelectedItem(ent);
 
     if (ent->GetClient()->persistent.selectedItem == -1) {
-        gi.CPrintf(ent->GetServerEntity(), PRINT_HIGH, "No item to use.\n");
+        gi.CPrintf(ent->GetServerServerEntity(), PRINT_HIGH, "No item to use.\n");
         return;
     }
 
     it = &itemlist[ent->GetClient()->persistent.selectedItem];
     if (!it->Use) {
-        gi.CPrintf(ent->GetServerEntity(), PRINT_HIGH, "Item is not usable.\n");
+        gi.CPrintf(ent->GetServerServerEntity(), PRINT_HIGH, "Item is not usable.\n");
         return;
     }
     it->Use(ent, it);
@@ -458,7 +458,7 @@ Cmd_WeapPrev_f
 */
 void Cmd_WeapPrev_f(PlayerClient *ent)
 {
-    ServersClient   *cl;
+    ServerClient   *cl;
     int         i, index;
     gitem_t     *it;
     int         selected_weapon;
@@ -560,13 +560,13 @@ void Cmd_InvDrop_f(PlayerClient *ent)
     HUD_ValidateSelectedItem(ent);
 
     if (ent->GetClient()->persistent.selectedItem == -1) {
-        gi.CPrintf(ent->GetServerEntity(), PRINT_HIGH, "No item to drop.\n");
+        gi.CPrintf(ent->GetServerServerEntity(), PRINT_HIGH, "No item to drop.\n");
         return;
     }
 
     it = &itemlist[ent->GetClient()->persistent.selectedItem];
     if (!it->Drop) {
-        gi.CPrintf(ent->GetServerEntity(), PRINT_HIGH, "Item is not dropable.\n");
+        gi.CPrintf(ent->GetServerServerEntity(), PRINT_HIGH, "Item is not dropable.\n");
         return;
     }
     it->Drop(ent, it);
@@ -582,7 +582,7 @@ void Cmd_Kill_f(PlayerClient *ent)
     if ((level.time - ent->GetClient()->respawnTime) < 5)
         return;
 
-    ent->SetFlags(ent->GetFlags() & ~EntityFlags::GodMode);
+    ent->SetFlags(ent->GetFlags() & ~ServerEntityFlags::GodMode);
     ent->SetHealth(0);
     game.gameMode->SetCurrentMeansOfDeath(MeansOfDeath::Suicide);
     ent->Die(ent, ent, 100000, vec3_zero());
@@ -593,7 +593,7 @@ void Cmd_Kill_f(PlayerClient *ent)
 Cmd_PutAway_f
 =================
 */
-void Cmd_PutAway_f(Entity *ent)
+void Cmd_PutAway_f(ServerEntity *ent)
 {
     ent->client->showScores = false;
     ent->client->showInventory = false;
@@ -622,7 +622,7 @@ int PlayerSort(void const *a, void const *b)
 Cmd_Players_f
 =================
 */
-void Cmd_Players_f(Entity *ent)
+void Cmd_Players_f(ServerEntity *ent)
 {
     int     i;
     int     count;
@@ -663,7 +663,7 @@ void Cmd_Players_f(Entity *ent)
 Cmd_Wave_f
 =================
 */
-void Cmd_Wave_f(Entity *ent)
+void Cmd_Wave_f(ServerEntity *ent)
 {
     int     i;
 
@@ -713,10 +713,10 @@ void Cmd_Wave_f(Entity *ent)
 Cmd_Say_f
 ==================
 */
-void Cmd_Say_f(Entity *ent, qboolean team, qboolean arg0)
+void Cmd_Say_f(ServerEntity *ent, qboolean team, qboolean arg0)
 {
     int     i, j;
-    Entity *other;
+    ServerEntity *other;
     char    *p; // C++20: Removed const.
     char    text[2048];
     ServersClient *cl;
@@ -785,19 +785,19 @@ void Cmd_Say_f(Entity *ent, qboolean team, qboolean arg0)
         if (!other->client)
             continue;
         if (team) {
-            if (!SVG_OnSameTeam(ent->classEntity, other->classEntity))
+            if (!SVG_OnSameTeam(ent->classServerEntity, other->classServerEntity))
                 continue;
         }
         gi.CPrintf(other, PRINT_CHAT, "%s", text);
     }
 }
 
-void Cmd_PlayerList_f(Entity *ent)
+void Cmd_PlayerList_f(ServerEntity *ent)
 {
     int i;
     char st[80];
     char text[1400];
-    Entity *e2;
+    ServerEntity *e2;
 
     // connect time, ping, score, name
     *text = 0;
@@ -828,16 +828,16 @@ void Cmd_PlayerList_f(Entity *ent)
 ClientCommand
 =================
 */
-void SVG_ClientCommand(Entity *serverEntity)
+void SVG_ClientCommand(ServerEntity *serverEntity)
 {
     const char    *cmd;
 
-    // Ensure it is an entity with active client.
+    // Ensure it is an ServerEntity with active client.
     if (!serverEntity->client)
         return; // Not fully in game yet
 
     // We can safely cast to PlayerClient now.
-    PlayerClient* ent = (PlayerClient*)serverEntity->classEntity;
+    PlayerClient* ent = (PlayerClient*)serverEntity->classServerEntity;
 
     // Fetch cmd.
     cmd = gi.argv(0);
@@ -868,7 +868,7 @@ void SVG_ClientCommand(Entity *serverEntity)
     else if (Q_stricmp(cmd, "drop") == 0)
         Cmd_Drop_f(ent);
     else if (Q_stricmp(cmd, "give") == 0)
-        Cmd_Give_f(ent->GetServerEntity());
+        Cmd_Give_f(ent->GetServerServerEntity());
     else if (Q_stricmp(cmd, "god") == 0)
         Cmd_God_f(ent);
     else if (Q_stricmp(cmd, "notarget") == 0)
@@ -876,7 +876,7 @@ void SVG_ClientCommand(Entity *serverEntity)
     else if (Q_stricmp(cmd, "noclip") == 0)
         Cmd_Noclip_f(ent);
     else if (Q_stricmp(cmd, "inven") == 0)
-        Cmd_Inven_f(ent->GetServerEntity());
+        Cmd_Inven_f(ent->GetServerServerEntity());
     else if (Q_stricmp(cmd, "invnext") == 0)
         SelectNextItem(ent, -1);
     else if (Q_stricmp(cmd, "invprev") == 0)

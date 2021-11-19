@@ -3,7 +3,7 @@
 
 class TargetEarthquake : public SVGBaseEntity {
 public:
-	TargetEarthquake( Entity* entity );
+	TargetEarthquake( ServerEntity* ServerEntity );
 	virtual ~TargetEarthquake() = default;
 
 	DefineMapClass( "target_earthquake", TargetEarthquake, SVGBaseEntity );

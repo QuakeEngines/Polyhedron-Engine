@@ -18,8 +18,8 @@
 //===============
 // FuncAreaportal::ctor
 //===============
-FuncAreaportal::FuncAreaportal( Entity* entity )
-	: Base( entity ) {
+FuncAreaportal::FuncAreaportal( ServerEntity* ServerEntity )
+	: Base( ServerEntity ) {
 
 }
 

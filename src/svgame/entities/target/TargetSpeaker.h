@@ -3,7 +3,7 @@
 
 class TargetSpeaker : public SVGBaseEntity {
 public:
-	TargetSpeaker( Entity* entity );
+	TargetSpeaker( ServerEntity* ServerEntity );
 	virtual ~TargetSpeaker() = default;
 
 	DefineMapClass( "target_speaker", TargetSpeaker, SVGBaseEntity );

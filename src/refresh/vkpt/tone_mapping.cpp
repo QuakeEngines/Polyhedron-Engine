@@ -371,7 +371,7 @@ vkpt_tone_mapping_record_cmd_buffer(VkCommandBuffer cmd_buf, float frame_time)
 	// (roughly) use the HDR->SDR transformation to map an SDR color grading
 	// function back to an HDR color grading function.
 
-	// Defines the white point and where we switch from an identity transform
+	// Defines the white point and where we switch from an idServerEntity transform
 	// to a Reinhard transform in the additional tone mapper we apply at the
 	// end of the previous tone mapping pipeline.
 	// Must be between 0 and 1; pixels with luminances above this value have
@@ -380,7 +380,7 @@ vkpt_tone_mapping_record_cmd_buffer(VkCommandBuffer cmd_buf, float frame_time)
 	// Should be greater than 1; defines those RGB values that get mapped to 1.
 	float knee_white_point = Cvar_Get("tm_white_point", "10.0", 0)->value;
 
-	// We modify Reinhard to smoothly blend with the identity transform up to tm_knee_start.
+	// We modify Reinhard to smoothly blend with the idServerEntity transform up to tm_knee_start.
 	// We need to find w, a, and b such that in y(x) = (wx+a)/(x+b),
 	// * y(knee_start) = tm_knee_start
 	// * dy/dx(knee_start) = 1

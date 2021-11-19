@@ -1466,41 +1466,41 @@ destroy_vulkan()
 	return 0;
 }
 
-typedef struct entity_hash_s {
+typedef struct ServerEntity_hash_s {
 	unsigned int mesh : 8;
 	unsigned int model : 9;
-	unsigned int entity : 15;
-} entity_hash_t;
+	unsigned int ServerEntity : 15;
+} ServerEntity_hash_t;
 
-static int entity_frame_num = 0;
-static int model_entity_ids[2][MAX_ENTITIES];
-static int world_entity_ids[2][MAX_ENTITIES];
-static int model_entity_id_count[2];
-static int world_entity_id_count[2];
+static int ServerEntity_frame_num = 0;
+static int model_ServerEntity_ids[2][MAX_ENTITIES];
+static int world_ServerEntity_ids[2][MAX_ENTITIES];
+static int model_ServerEntity_id_count[2];
+static int world_ServerEntity_id_count[2];
 static int iqm_matrix_count[2];
 
 #define MAX_MODEL_LIGHTS 16384
 static int num_model_lights = 0;
 static light_poly_t model_lights[MAX_MODEL_LIGHTS];
 
-static pbr_material_t const * get_mesh_material(const r_entity_t* entity, const maliasmesh_t* mesh)
+static pbr_material_t const * get_mesh_material(const r_ServerEntity_t* ServerEntity, const maliasmesh_t* mesh)
 {
-	if (entity->skin)
+	if (ServerEntity->skin)
 	{
-		return MAT_ForSkin(IMG_ForHandle(entity->skin));
+		return MAT_ForSkin(IMG_ForHandle(ServerEntity->skin));
 	}
 
 	int skinNumber = 0;
-	if (mesh->materials[entity->skinNumber])
-		skinNumber = entity->skinNumber;
+	if (mesh->materials[ServerEntity->skinNumber])
+		skinNumber = ServerEntity->skinNumber;
 
 	return mesh->materials[skinNumber];
 }
 
-static inline uint32_t fill_model_instance(const r_entity_t* entity, const model_t* model, const maliasmesh_t* mesh,
+static inline uint32_t fill_model_instance(const r_ServerEntity_t* ServerEntity, const model_t* model, const maliasmesh_t* mesh,
 	const float* transform, int model_instance_index, qboolean is_viewer_weapon, qboolean is_double_sided, int iqm_matrix_index)
 {
-	pbr_material_t const * material = get_mesh_material(entity, mesh);
+	pbr_material_t const * material = get_mesh_material(ServerEntity, mesh);
 
 	if (!material)
 	{
@@ -1530,18 +1530,18 @@ static inline uint32_t fill_model_instance(const r_entity_t* entity, const model
 
 	if (!MAT_IsKind(material_id, MATERIAL_KIND_GLASS))  
 	{
-		if (entity->flags & RenderEffects::RedShell)
+		if (ServerEntity->flags & RenderEffects::RedShell)
 			material_id |= MATERIAL_FLAG_SHELL_RED;
-		if (entity->flags & RenderEffects::GreenShell)
+		if (ServerEntity->flags & RenderEffects::GreenShell)
 			material_id |= MATERIAL_FLAG_SHELL_GREEN;
-		if (entity->flags & RenderEffects::BlueShell)
+		if (ServerEntity->flags & RenderEffects::BlueShell)
 			material_id |= MATERIAL_FLAG_SHELL_BLUE;
 	}
 
 	ModelInstance* instance = &vkpt_refdef.uniform_instance_buffer.model_instances[model_instance_index];
 
-	int frame = entity->frame;
-	int oldframe = entity->oldframe;
+	int frame = ServerEntity->frame;
+	int oldframe = ServerEntity->oldframe;
 	if (frame >= model->numframes) frame = 0;
 	if (oldframe >= model->numframes) oldframe = 0;
 
@@ -1550,9 +1550,9 @@ static inline uint32_t fill_model_instance(const r_entity_t* entity, const model
 	instance->model_index = model - r_models;
 	instance->offset_curr = mesh->vertex_offset + frame    * mesh->numverts * (sizeof(model_vertex_t) / sizeof(uint32_t));
 	instance->offset_prev = mesh->vertex_offset + oldframe * mesh->numverts * (sizeof(model_vertex_t) / sizeof(uint32_t));
-	instance->backlerp = entity->backlerp;
+	instance->backlerp = ServerEntity->backlerp;
 	instance->material = material_id;
-	instance->alpha = (entity->flags & RenderEffects::Translucent) ? entity->alpha : 1.0f;
+	instance->alpha = (ServerEntity->flags & RenderEffects::Translucent) ? ServerEntity->alpha : 1.0f;
 	instance->is_iqm = (model->iqmData) ? 1 : 0;
 	if (instance->is_iqm)
 		instance->offset_prev = iqm_matrix_index;
@@ -1623,7 +1623,7 @@ static void instance_model_lights(int num_light_polys, const light_poly_t* light
 	}
 }
 
-static void process_bsp_entity(const r_entity_t* entity, int* bsp_mesh_idx, int* instance_idx, int* num_instanced_vert) {
+static void process_bsp_ServerEntity(const r_ServerEntity_t* ServerEntity, int* bsp_mesh_idx, int* instance_idx, int* num_instanced_vert) {
 	QVKInstanceBuffer_t* uniform_instance_buffer = &vkpt_refdef.uniform_instance_buffer;
 	uint32_t* ubo_bsp_cluster_id = (uint32_t*)uniform_instance_buffer->bsp_cluster_id;
 	uint32_t* ubo_bsp_prim_offset = (uint32_t*)uniform_instance_buffer->bsp_prim_offset;
@@ -1633,25 +1633,25 @@ static void process_bsp_entity(const r_entity_t* entity, int* bsp_mesh_idx, int*
 
 	const int current_bsp_mesh_index = *bsp_mesh_idx;
 	if (current_bsp_mesh_index >= SHADER_MAX_BSP_ENTITIES) 	{
-		assert(!"BSP entity count overflow");
+		assert(!"BSP ServerEntity count overflow");
 		return;
 	}
 
 	if (*instance_idx >= (SHADER_MAX_ENTITIES + SHADER_MAX_BSP_ENTITIES)) 	{
-		assert(!"Total entity count overflow");
+		assert(!"Total ServerEntity count overflow");
 		return;
 	}
 
-	world_entity_ids[entity_frame_num][current_bsp_mesh_index] = entity->id;
+	world_ServerEntity_ids[ServerEntity_frame_num][current_bsp_mesh_index] = ServerEntity->id;
 
 	float transform[16];
-	create_entity_matrix(transform, (r_entity_t*)entity, false);
+	create_ServerEntity_matrix(transform, (r_ServerEntity_t*)ServerEntity, false);
 	BspMeshInstance* ubo_instance_info = uniform_instance_buffer->bsp_mesh_instances + current_bsp_mesh_index;
 	memcpy(&ubo_instance_info->M, transform, sizeof(transform));
-	ubo_instance_info->frame = entity->frame;
+	ubo_instance_info->frame = ServerEntity->frame;
 	memset(ubo_instance_info->padding, 0, sizeof(ubo_instance_info->padding));
 
-	bsp_model_t* model = vkpt_refdef.bsp_mesh_world.models + (~entity->model);
+	bsp_model_t* model = vkpt_refdef.bsp_mesh_world.models + (~ServerEntity->model);
 
 	vec3_t origin;
 	transform_point(model->center, transform, origin);
@@ -1715,8 +1715,8 @@ static inline qboolean is_masked_material(uint32_t material) {
 #define MESH_FILTER_MASKED 4
 #define MESH_FILTER_ALL 7
 
-static void process_regular_entity(
-	const r_entity_t* entity,
+static void process_regular_ServerEntity(
+	const r_ServerEntity_t* ServerEntity,
 	const model_t* model,
 	qboolean is_viewer_weapon,
 	qboolean is_double_sided,
@@ -1735,7 +1735,7 @@ static void process_regular_entity(
 	uint32_t* ubo_model_cluster_id = (uint32_t*)uniform_instance_buffer->model_cluster_id;
 
 	float transform[16];
-	create_entity_matrix(transform, (r_entity_t*)entity, is_viewer_weapon);
+	create_ServerEntity_matrix(transform, (r_ServerEntity_t*)ServerEntity, is_viewer_weapon);
 
 	int current_model_instance_index = *model_instance_idx;
 	int current_instance_index = *instance_idx;
@@ -1753,7 +1753,7 @@ static void process_regular_entity(
 			return;
 		}
 
-		R_ComputeIQMTransforms(model->iqmData, entity, iqm_matrix_data + (iqm_matrix_index * 12));
+		R_ComputeIQMTransforms(model->iqmData, ServerEntity, iqm_matrix_data + (iqm_matrix_index * 12));
 
 		*iqm_matrix_offset += (int)model->iqmData->num_poses;
 	}
@@ -1762,12 +1762,12 @@ static void process_regular_entity(
 		const maliasmesh_t* mesh = model->meshes + i;
 
 		if (current_model_instance_index >= SHADER_MAX_ENTITIES) {
-			assert(!"Model entity count overflow");
+			assert(!"Model ServerEntity count overflow");
 			break;
 		}
 
 		if (current_instance_index >= (SHADER_MAX_ENTITIES + SHADER_MAX_BSP_ENTITIES)) {
-			assert(!"Total entity count overflow");
+			assert(!"Total ServerEntity count overflow");
 			break;
 		}
 
@@ -1776,7 +1776,7 @@ static void process_regular_entity(
 			continue;
 		}
 
-		uint32_t material_id = fill_model_instance(entity, model, mesh, transform,
+		uint32_t material_id = fill_model_instance(ServerEntity, model, mesh, transform,
 			current_model_instance_index, is_viewer_weapon, is_double_sided, iqm_matrix_index);
 
 		if (!material_id)
@@ -1799,16 +1799,16 @@ static void process_regular_entity(
 				continue;
 		}
 
-		entity_hash_t hash;
-		hash.entity = entity->id;
-		hash.model = entity->model;
+		ServerEntity_hash_t hash;
+		hash.ServerEntity = ServerEntity->id;
+		hash.model = ServerEntity->model;
 		hash.mesh = i;
 
-		model_entity_ids[entity_frame_num][current_model_instance_index] = *(uint32_t*)&hash;
+		model_ServerEntity_ids[ServerEntity_frame_num][current_model_instance_index] = *(uint32_t*)&hash;
 
 		uint32_t cluster_id = ~0u;
 		if (bsp_world_model)
-			cluster_id = BSP_PointLeaf(bsp_world_model->nodes, ((r_entity_t*)entity)->origin)->cluster;
+			cluster_id = BSP_PointLeaf(bsp_world_model->nodes, ((r_ServerEntity_t*)ServerEntity)->origin)->cluster;
 		ubo_model_cluster_id[current_model_instance_index] = cluster_id;
 
 		ubo_model_idx_offset[current_model_instance_index] = mesh->idx_offset;
@@ -1855,8 +1855,8 @@ vkpt_drop_shaderballs()
 #endif
 
 static void
-prepare_entities(EntityUploadInfo* upload_info) {
-	entity_frame_num = !entity_frame_num;
+prepare_entities(ServerEntityUploadInfo* upload_info) {
+	ServerEntity_frame_num = !ServerEntity_frame_num;
 
 	QVKInstanceBuffer_t* instance_buffer = &vkpt_refdef.uniform_instance_buffer;
 
@@ -1888,31 +1888,31 @@ prepare_entities(EntityUploadInfo* upload_info) {
 	const qboolean first_person_model = (cl_player_model->integer == CL_PLAYER_MODEL_FIRST_PERSON) && cl.baseClientInfo.model;
 
 	for (int i = 0; i < vkpt_refdef.fd->num_entities; i++) 	{
-		const r_entity_t* entity = vkpt_refdef.fd->entities + i;
+		const r_ServerEntity_t* ServerEntity = vkpt_refdef.fd->entities + i;
 
-		if (entity->model & 0x80000000) 		{
-			const bsp_model_t* model = vkpt_refdef.bsp_mesh_world.models + (~entity->model);
+		if (ServerEntity->model & 0x80000000) 		{
+			const bsp_model_t* model = vkpt_refdef.bsp_mesh_world.models + (~ServerEntity->model);
 			if (model->masked)
 				masked_model_indices[masked_model_num++] = i;
 			else if (model->transparent)
 				transparent_model_indices[transparent_model_num++] = i;
 			else
-				process_bsp_entity(entity, &bsp_mesh_idx, &instance_idx, &num_instanced_vert); /* embedded in bsp */
+				process_bsp_ServerEntity(ServerEntity, &bsp_mesh_idx, &instance_idx, &num_instanced_vert); /* embedded in bsp */
 		} 		else 		{
-			const model_t* model = MOD_ForHandle(entity->model);
+			const model_t* model = MOD_ForHandle(ServerEntity->model);
 			if (model == NULL || model->meshes == NULL)
 				continue;
 
-			if (entity->flags & RenderEffects::ViewerModel)
+			if (ServerEntity->flags & RenderEffects::ViewerModel)
 				viewer_model_indices[viewer_model_num++] = i;
-			else if (entity->flags & RenderEffects::WeaponModel)
+			else if (ServerEntity->flags & RenderEffects::WeaponModel)
 				viewer_weapon_indices[viewer_weapon_num++] = i;
 			else if (model->model_class == MCLASS_EXPLOSION || model->model_class == MCLASS_SMOKE)
 				explosion_indices[explosion_num++] = i;
 			else 			{
 				qboolean contains_transparent = false;
 				qboolean contains_masked = false;
-				process_regular_entity(entity, model, false, false, &model_instance_idx, &instance_idx, &num_instanced_vert,
+				process_regular_ServerEntity(ServerEntity, model, false, false, &model_instance_idx, &instance_idx, &num_instanced_vert,
 					MESH_FILTER_OPAQUE, &contains_transparent, &contains_masked, &iqm_matrix_offset, qvk.iqm_matrices_shadow);
 
 				if (contains_transparent)
@@ -1923,8 +1923,8 @@ prepare_entities(EntityUploadInfo* upload_info) {
 
 			if (model->num_light_polys > 0) 			{
 				float transform[16];
-				const qboolean is_viewer_weapon = (entity->flags & RenderEffects::WeaponModel) != 0;
-				create_entity_matrix(transform, (r_entity_t*)entity, is_viewer_weapon);
+				const qboolean is_viewer_weapon = (ServerEntity->flags & RenderEffects::WeaponModel) != 0;
+				create_ServerEntity_matrix(transform, (r_ServerEntity_t*)ServerEntity, is_viewer_weapon);
 
 				instance_model_lights(model->num_light_polys, model->light_polys, transform);
 			}
@@ -1935,13 +1935,13 @@ prepare_entities(EntityUploadInfo* upload_info) {
 
 	const uint32_t transparent_model_base_vertex_num = num_instanced_vert;
 	for (int i = 0; i < transparent_model_num; i++) 	{
-		const r_entity_t* entity = vkpt_refdef.fd->entities + transparent_model_indices[i];
+		const r_ServerEntity_t* ServerEntity = vkpt_refdef.fd->entities + transparent_model_indices[i];
 
-		if (entity->model & 0x80000000) 		{
-			process_bsp_entity(entity, &bsp_mesh_idx, &instance_idx, &num_instanced_vert);
+		if (ServerEntity->model & 0x80000000) 		{
+			process_bsp_ServerEntity(ServerEntity, &bsp_mesh_idx, &instance_idx, &num_instanced_vert);
 		} 		else 		{
-			const model_t* model = MOD_ForHandle(entity->model);
-			process_regular_entity(entity, model, false, false, &model_instance_idx, &instance_idx, &num_instanced_vert,
+			const model_t* model = MOD_ForHandle(ServerEntity->model);
+			process_regular_ServerEntity(ServerEntity, model, false, false, &model_instance_idx, &instance_idx, &num_instanced_vert,
 				MESH_FILTER_TRANSPARENT, NULL, NULL, &iqm_matrix_offset, qvk.iqm_matrices_shadow);
 		}
 	}
@@ -1951,13 +1951,13 @@ prepare_entities(EntityUploadInfo* upload_info) {
 
 	const uint32_t masked_model_base_vertex_num = num_instanced_vert;
 	for (int i = 0; i < masked_model_num; i++) 	{
-		const r_entity_t* entity = vkpt_refdef.fd->entities + masked_model_indices[i];
+		const r_ServerEntity_t* ServerEntity = vkpt_refdef.fd->entities + masked_model_indices[i];
 
-		if (entity->model & 0x80000000) 		{
-			process_bsp_entity(entity, &bsp_mesh_idx, &instance_idx, &num_instanced_vert);
+		if (ServerEntity->model & 0x80000000) 		{
+			process_bsp_ServerEntity(ServerEntity, &bsp_mesh_idx, &instance_idx, &num_instanced_vert);
 		} 		else 		{
-			const model_t* model = MOD_ForHandle(entity->model);
-			process_regular_entity(entity, model, false, true, &model_instance_idx, &instance_idx, &num_instanced_vert,
+			const model_t* model = MOD_ForHandle(ServerEntity->model);
+			process_regular_ServerEntity(ServerEntity, model, false, true, &model_instance_idx, &instance_idx, &num_instanced_vert,
 				MESH_FILTER_MASKED, NULL, NULL, &iqm_matrix_offset, qvk.iqm_matrices_shadow);
 		}
 	}
@@ -1968,9 +1968,9 @@ prepare_entities(EntityUploadInfo* upload_info) {
 	const uint32_t viewer_model_base_vertex_num = num_instanced_vert;
 	if (first_person_model) 	{
 		for (int i = 0; i < viewer_model_num; i++) 		{
-			const r_entity_t* entity = vkpt_refdef.fd->entities + viewer_model_indices[i];
-			const model_t* model = MOD_ForHandle(entity->model);
-			process_regular_entity(entity, model, false, true, &model_instance_idx, &instance_idx, &num_instanced_vert,
+			const r_ServerEntity_t* ServerEntity = vkpt_refdef.fd->entities + viewer_model_indices[i];
+			const model_t* model = MOD_ForHandle(ServerEntity->model);
+			process_regular_ServerEntity(ServerEntity, model, false, true, &model_instance_idx, &instance_idx, &num_instanced_vert,
 				MESH_FILTER_ALL, NULL, NULL, &iqm_matrix_offset, qvk.iqm_matrices_shadow);
 		}
 	}
@@ -1982,12 +1982,12 @@ prepare_entities(EntityUploadInfo* upload_info) {
 
 	const uint32_t viewer_weapon_base_vertex_num = num_instanced_vert;
 	for (int i = 0; i < viewer_weapon_num; i++) 	{
-		const r_entity_t* entity = vkpt_refdef.fd->entities + viewer_weapon_indices[i];
-		const model_t* model = MOD_ForHandle(entity->model);
-		process_regular_entity(entity, model, true, false, &model_instance_idx, &instance_idx, &num_instanced_vert,
+		const r_ServerEntity_t* ServerEntity = vkpt_refdef.fd->entities + viewer_weapon_indices[i];
+		const model_t* model = MOD_ForHandle(ServerEntity->model);
+		process_regular_ServerEntity(ServerEntity, model, true, false, &model_instance_idx, &instance_idx, &num_instanced_vert,
 			MESH_FILTER_ALL, NULL, NULL, &iqm_matrix_offset, qvk.iqm_matrices_shadow);
 
-		if (entity->flags & RF_LEFTHAND)
+		if (ServerEntity->flags & RF_LEFTHAND)
 			upload_info->weapon_left_handed = true;
 	}
 
@@ -1996,9 +1996,9 @@ prepare_entities(EntityUploadInfo* upload_info) {
 
 	const uint32_t explosion_base_vertex_num = num_instanced_vert;
 	for (int i = 0; i < explosion_num; i++) 	{
-		const r_entity_t* entity = vkpt_refdef.fd->entities + explosion_indices[i];
-		const model_t* model = MOD_ForHandle(entity->model);
-		process_regular_entity(entity, model, false, false, &model_instance_idx, &instance_idx, &num_instanced_vert,
+		const r_ServerEntity_t* ServerEntity = vkpt_refdef.fd->entities + explosion_indices[i];
+		const model_t* model = MOD_ForHandle(ServerEntity->model);
+		process_regular_ServerEntity(ServerEntity, model, false, false, &model_instance_idx, &instance_idx, &num_instanced_vert,
 			MESH_FILTER_ALL, NULL, NULL, &iqm_matrix_offset, qvk.iqm_matrices_shadow);
 	}
 
@@ -2013,22 +2013,22 @@ prepare_entities(EntityUploadInfo* upload_info) {
 	memset(instance_buffer->model_current_to_prev, ~0u, sizeof(instance_buffer->model_current_to_prev));
 	memset(instance_buffer->model_prev_to_current, ~0u, sizeof(instance_buffer->model_prev_to_current));
 
-	world_entity_id_count[entity_frame_num] = bsp_mesh_idx;
-	for (int i = 0; i < world_entity_id_count[entity_frame_num]; i++) {
-		for (int j = 0; j < world_entity_id_count[!entity_frame_num]; j++) {
-			if (world_entity_ids[entity_frame_num][i] == world_entity_ids[!entity_frame_num][j]) {
+	world_ServerEntity_id_count[ServerEntity_frame_num] = bsp_mesh_idx;
+	for (int i = 0; i < world_ServerEntity_id_count[ServerEntity_frame_num]; i++) {
+		for (int j = 0; j < world_ServerEntity_id_count[!ServerEntity_frame_num]; j++) {
+			if (world_ServerEntity_ids[ServerEntity_frame_num][i] == world_ServerEntity_ids[!ServerEntity_frame_num][j]) {
 				instance_buffer->world_current_to_prev[i] = j;
 				instance_buffer->world_prev_to_current[j] = i;
 			}
 		}
 	}
 
-	model_entity_id_count[entity_frame_num] = model_instance_idx;
-	for (int i = 0; i < model_entity_id_count[entity_frame_num]; i++) {
-		for (int j = 0; j < model_entity_id_count[!entity_frame_num]; j++) {
-			entity_hash_t hash = *(entity_hash_t*)&model_entity_ids[entity_frame_num][i];
+	model_ServerEntity_id_count[ServerEntity_frame_num] = model_instance_idx;
+	for (int i = 0; i < model_ServerEntity_id_count[ServerEntity_frame_num]; i++) {
+		for (int j = 0; j < model_ServerEntity_id_count[!ServerEntity_frame_num]; j++) {
+			ServerEntity_hash_t hash = *(ServerEntity_hash_t*)&model_ServerEntity_ids[ServerEntity_frame_num][i];
 
-			if (model_entity_ids[entity_frame_num][i] == model_entity_ids[!entity_frame_num][j] && hash.entity != 0) {
+			if (model_ServerEntity_ids[ServerEntity_frame_num][i] == model_ServerEntity_ids[!ServerEntity_frame_num][j] && hash.ServerEntity != 0) {
 				instance_buffer->model_current_to_prev[i] = j;
 				instance_buffer->model_prev_to_current[j] = i;
 			}
@@ -2036,32 +2036,32 @@ prepare_entities(EntityUploadInfo* upload_info) {
 	}
 
 	// Store the number of IQM matrices for the next frame
-	iqm_matrix_count[entity_frame_num] = iqm_matrix_offset;
+	iqm_matrix_count[ServerEntity_frame_num] = iqm_matrix_offset;
 
-	if (iqm_matrix_count[entity_frame_num] > 0) 	{
+	if (iqm_matrix_count[ServerEntity_frame_num] > 0) 	{
 		// If we had some matrices previously...
-		if (iqm_matrix_count[!entity_frame_num] > 0) 		{
+		if (iqm_matrix_count[!ServerEntity_frame_num] > 0) 		{
 			// Copy over the previous frame IQM matrices into an offset location in the current frame buffer
-			memcpy(qvk.iqm_matrices_shadow + (iqm_matrix_count[entity_frame_num] * 12),
-				qvk.iqm_matrices_prev, iqm_matrix_count[!entity_frame_num] * 12 * sizeof(float));
+			memcpy(qvk.iqm_matrices_shadow + (iqm_matrix_count[ServerEntity_frame_num] * 12),
+				qvk.iqm_matrices_prev, iqm_matrix_count[!ServerEntity_frame_num] * 12 * sizeof(float));
 
 			// Patch the previous model instances to point at the offset matrices
-			for (int i = 0; i < model_entity_id_count[!entity_frame_num]; i++) 			{
+			for (int i = 0; i < model_ServerEntity_id_count[!ServerEntity_frame_num]; i++) 			{
 				ModelInstance* instance = &instance_buffer->model_instances_prev[i];
 				if (instance->is_iqm) {
 					// Offset = current matrix count
-					instance->offset_prev += iqm_matrix_count[entity_frame_num];
+					instance->offset_prev += iqm_matrix_count[ServerEntity_frame_num];
 				}
 			}
 		}
 
 		// Store the current matrices for the next frame
-		memcpy(qvk.iqm_matrices_prev, qvk.iqm_matrices_shadow, iqm_matrix_count[entity_frame_num] * 12 * sizeof(float));
+		memcpy(qvk.iqm_matrices_prev, qvk.iqm_matrices_shadow, iqm_matrix_count[ServerEntity_frame_num] * 12 * sizeof(float));
 
 		// Upload the current matrices to the staging buffer
 		IqmMatrixBuffer* iqm_matrix_staging = (IqmMatrixBuffer*)buffer_map(&qvk.buf_iqm_matrices_staging[qvk.current_frame_index]);
 
-		int total_matrix_count = (iqm_matrix_count[entity_frame_num] + iqm_matrix_count[!entity_frame_num]);
+		int total_matrix_count = (iqm_matrix_count[ServerEntity_frame_num] + iqm_matrix_count[!ServerEntity_frame_num]);
 		memcpy(iqm_matrix_staging, qvk.iqm_matrices_shadow, total_matrix_count * 12 * sizeof(float));
 
 		buffer_unmap(&qvk.buf_iqm_matrices_staging[qvk.current_frame_index]);
@@ -2664,7 +2664,7 @@ R_RenderFrame_RTX(refdef_t *fd)
 	world_anim_frame = new_world_anim_frame;
 
 	num_model_lights = 0;
-	EntityUploadInfo upload_info = { };
+	ServerEntityUploadInfo upload_info = { };
 	prepare_entities(&upload_info);
 	if (bsp_world_model)
 	{

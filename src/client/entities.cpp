@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License along
 with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
-// cl_ents.c -- entity parsing and management
+// cl_ents.c -- ServerEntity parsing and management
 
 #include "client.h"
 #include "client/gamemodule.h"
@@ -35,7 +35,7 @@ FRAME PARSING
 =========================================================================
 */
 
-static inline qboolean entity_optimized(const EntityState *state)
+static inline qboolean ServerEntity_optimized(const ServerEntityState *state)
 {
     if (cls.serverProtocol != PROTOCOL_VERSION_POLYHEDRON)
         return false;
@@ -50,17 +50,17 @@ static inline qboolean entity_optimized(const EntityState *state)
 }
 
 static inline void
-entity_update_new(cl_entity_t *ent, const EntityState *state, const vec_t *origin)
+ServerEntity_update_new(ClientServerEntity *ent, const ServerEntityState *state, const vec_t *origin)
 {
-    static int entity_ctr;
-    ent->id = ++entity_ctr;
+    static int ServerEntity_ctr;
+    ent->id = ++ServerEntity_ctr;
     ent->trailcount = 1024;     // for diminishing rocket / grenade trails
 
     // duplicate the current state so lerping doesn't hurt anything
     ent->prev = *state;
 
-    if (state->eventID == EntityEvent::PlayerTeleport ||
-        state->eventID == EntityEvent::OtherTeleport ||
+    if (state->eventID == ServerEntityEvent::PlayerTeleport ||
+        state->eventID == ServerEntityEvent::OtherTeleport ||
         (state->renderEffects & (RenderEffects::FrameLerp | RenderEffects::Beam))) {
         // no lerping if teleported
         ent->lerpOrigin = origin;
@@ -74,7 +74,7 @@ entity_update_new(cl_entity_t *ent, const EntityState *state, const vec_t *origi
 }
 
 static inline void
-entity_update_old(cl_entity_t *ent, const EntityState *state, const vec_t *origin)
+ServerEntity_update_old(ClientServerEntity *ent, const ServerEntityState *state, const vec_t *origin)
 {
     int eventID = state->eventID;
 
@@ -82,8 +82,8 @@ entity_update_old(cl_entity_t *ent, const EntityState *state, const vec_t *origi
         || state->modelIndex2 != ent->current.modelIndex2
         || state->modelIndex3 != ent->current.modelIndex3
         || state->modelIndex4 != ent->current.modelIndex4
-        || eventID == EntityEvent::PlayerTeleport
-        || eventID == EntityEvent::OtherTeleport
+        || eventID == ServerEntityEvent::PlayerTeleport
+        || eventID == ServerEntityEvent::OtherTeleport
         || fabsf(origin[0] - ent->current.origin[0]) > 512
         || fabsf(origin[1] - ent->current.origin[1]) > 512
         || fabsf(origin[2] - ent->current.origin[2]) > 512
@@ -103,7 +103,7 @@ entity_update_old(cl_entity_t *ent, const EntityState *state, const vec_t *origi
     ent->prev = ent->current;
 }
 
-static inline qboolean entity_new(const cl_entity_t *ent)
+static inline qboolean ServerEntity_new(const ClientServerEntity *ent)
 {
     if (!cl.oldframe.valid)
         return true;   // last received frame was invalid
@@ -123,13 +123,13 @@ static inline qboolean entity_new(const cl_entity_t *ent)
     return false;
 }
 
-static void entity_update(const EntityState *state)
+static void ServerEntity_update(const ServerEntityState *state)
 {
-    cl_entity_t *ent = &cs.entities[state->number];
+    ClientServerEntity *ent = &cs.entities[state->number];
     const vec_t *origin;
     vec3_t origin_v;
 
-    // if entity is solid, decode mins/maxs and add to the list
+    // if ServerEntity is solid, decode mins/maxs and add to the list
     if (state->solid && state->number != cl.frame.clientNumber + 1
         && cl.numSolidEntities < MAX_PACKET_ENTITIES) {
         cl.solidEntities[cl.numSolidEntities++] = ent;
@@ -140,33 +140,33 @@ static void entity_update(const EntityState *state)
     }
 
     // work around Q2PRO server bandwidth optimization
-    if (entity_optimized(state)) {
+    if (ServerEntity_optimized(state)) {
         origin = origin_v = cl.frame.playerState.pmove.origin;
     } else {
         origin = state->origin;
     }
 
-    if (entity_new(ent)) {
+    if (ServerEntity_new(ent)) {
         // wasn't in last update, so initialize some things
-        entity_update_new(ent, state, origin);
+        ServerEntity_update_new(ent, state, origin);
     } else {
-        entity_update_old(ent, state, origin);
+        ServerEntity_update_old(ent, state, origin);
     }
 
     ent->serverFrame = cl.frame.number;
     ent->current = *state;
 
     // work around Q2PRO server bandwidth optimization
-    if (entity_optimized(state)) {
-        Com_PlayerToEntityState(&cl.frame.playerState, &ent->current);
+    if (ServerEntity_optimized(state)) {
+        Com_PlayerToServerEntityState(&cl.frame.playerState, &ent->current);
     }
 }
 
-// an entity has just been parsed that has an event value
-static void entity_event(int number)
+// an ServerEntity has just been parsed that has an event value
+static void ServerEntity_event(int number)
 {
     // N&C: Let the CG Module handle this.
-    CL_GM_EntityEvent(number);
+    CL_GM_ServerEntityEvent(number);
 }
 
 static void set_active_state(void)
@@ -222,7 +222,7 @@ static void
 player_update(ServerFrame *oldframe, ServerFrame *frame, int framediv)
 {
     PlayerState *ps, *ops;
-    cl_entity_t *ent;
+    ClientServerEntity *ent;
     int oldnum;
 
     // find states to interpolate between
@@ -237,7 +237,7 @@ player_update(ServerFrame *oldframe, ServerFrame *frame, int framediv)
     if (oldframe->number != oldnum)
         goto dup;
 
-    // no lerping if player entity was teleported (origin check)
+    // no lerping if player ServerEntity was teleported (origin check)
     // N&C: FF Precision.
     // CPP: Added fabs instead of abs
     if (std::fabsf((float)(ops->pmove.origin[0] - ps->pmove.origin[0])) > 256 ||
@@ -245,12 +245,12 @@ player_update(ServerFrame *oldframe, ServerFrame *frame, int framediv)
         std::fabsf((float)(ops->pmove.origin[2] - ps->pmove.origin[2])) > 256) {
         goto dup;
     }
-    // no lerping if player entity was teleported (event check)
+    // no lerping if player ServerEntity was teleported (event check)
     ent = &cs.entities[frame->clientNumber + 1];
     if (ent->serverFrame > oldnum &&
         ent->serverFrame <= frame->number &&
-        (ent->current.eventID == EntityEvent::PlayerTeleport
-         || ent->current.eventID == EntityEvent::OtherTeleport)) {
+        (ent->current.eventID == ServerEntityEvent::PlayerTeleport
+         || ent->current.eventID == ServerEntityEvent::OtherTeleport)) {
         goto dup;
     }
 
@@ -280,8 +280,8 @@ A valid frame has been parsed.
 */
 void CL_DeltaFrame(void)
 {
-    cl_entity_t           *ent;
-    EntityState      *state;
+    ClientServerEntity           *ent;
+    ServerEntityState      *state;
     int                 i, j;
     int                 frameNumber;
     int                 prevstate = cls.connectionState;
@@ -297,21 +297,21 @@ void CL_DeltaFrame(void)
     // rebuild the list of solid entities for this frame
     cl.numSolidEntities = 0;
 
-    // initialize position of the player's own entity from playerstate.
-    // this is needed in situations when player entity is invisible, but
+    // initialize position of the player's own ServerEntity from playerstate.
+    // this is needed in situations when player ServerEntity is invisible, but
     // server sends an effect referencing it's origin (such as MuzzleFlashType::Login, etc)
     ent = &cs.entities[cl.frame.clientNumber + 1];
-    Com_PlayerToEntityState(&cl.frame.playerState, &ent->current);
+    Com_PlayerToServerEntityState(&cl.frame.playerState, &ent->current);
 
     for (i = 0; i < cl.frame.numEntities; i++) {
-        j = (cl.frame.firstEntity + i) & PARSE_ENTITIES_MASK;
-        state = &cl.entityStates[j];
+        j = (cl.frame.firstServerEntity + i) & PARSE_ENTITIES_MASK;
+        state = &cl.ServerEntityStates[j];
 
         // set current and prev
-        entity_update(state);
+        ServerEntity_update(state);
 
         // fire events
-        entity_event(state->number);
+        ServerEntity_event(state->number);
     }
 
     if (cls.demo.recording && !cls.demo.paused && !cls.demo.seeking && CL_FRAMESYNC()) {
@@ -337,13 +337,13 @@ void CL_DeltaFrame(void)
 }
 
 #ifdef _DEBUG
-// for debugging problems when out-of-date entity origin is referenced
-void CL_CheckEntityPresent(int entnum, const char *what)
+// for debugging problems when out-of-date ServerEntity origin is referenced
+void CL_CheckServerEntityPresent(int entnum, const char *what)
 {
-    cl_entity_t *e;
+    ClientServerEntity *e;
 
     if (entnum == cl.frame.clientNumber + 1) {
-        return; // player entity = current
+        return; // player ServerEntity = current
     }
 
     e = &cs.entities[entnum];
@@ -353,11 +353,11 @@ void CL_CheckEntityPresent(int entnum, const char *what)
 
     if (e->serverFrame) {
         Com_LPrintf(PRINT_DEVELOPER,
-                    "SERVER BUG: %s on entity %d last seen %d frames ago\n",
+                    "SERVER BUG: %s on ServerEntity %d last seen %d frames ago\n",
                     what, entnum, cl.frame.number - e->serverFrame);
     } else {
         Com_LPrintf(PRINT_DEVELOPER,
-                    "SERVER BUG: %s on entity %d never seen before\n",
+                    "SERVER BUG: %s on ServerEntity %d never seen before\n",
                     what, entnum);
     }
 }
@@ -372,7 +372,7 @@ INTERPOLATE BETWEEN FRAMES TO GET RENDERING PARMS
 ==========================================================================
 */
 
-// Use a static entity ID on some things because the renderer relies on eid to match between meshes
+// Use a static ServerEntity ID on some things because the renderer relies on eid to match between meshes
 // on the current and previous frames.
 #define RESERVED_ENTITIY_GUN 1
 #define RESERVED_ENTITIY_SHADERBALLS 2
@@ -438,14 +438,14 @@ void CL_AddEntities(void)
 
 /*
 ===============
-CL_GetEntitySoundOrigin
+CL_GetServerEntitySoundOrigin
 
 Called to get the sound spatialization origin
 ===============
 */
-vec3_t CL_GetEntitySoundOrigin(int entnum) {
+vec3_t CL_GetServerEntitySoundOrigin(int entnum) {
     // Pointers.
-    cl_entity_t   *ent;
+    ClientServerEntity   *ent;
     mmodel_t    *cm;
 
     // Vectors.
@@ -485,13 +485,13 @@ vec3_t CL_GetViewVelocity(void)
     return cl.frame.playerState.pmove.velocity;
 }
 
-vec3_t CL_GetEntitySoundVelocity(int ent)
+vec3_t CL_GetServerEntitySoundVelocity(int ent)
 {
-	cl_entity_t *old;
+	ClientServerEntity *old;
     vec3_t vel = vec3_zero();
 	if ((ent < 0) || (ent >= MAX_EDICTS))
 	{
-		Com_Error(ERR_DROP, "CL_GetEntitySoundVelocity: bad ent");
+		Com_Error(ERR_DROP, "CL_GetServerEntitySoundVelocity: bad ent");
 	}
 
 	old = &cs.entities[ent];

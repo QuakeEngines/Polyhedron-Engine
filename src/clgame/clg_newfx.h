@@ -33,6 +33,6 @@ void CLG_ParticleSmokeEffect(vec3_t org, vec3_t dir, int color, int count, int m
 void CLG_BlasterParticles2(vec3_t org, vec3_t dir, unsigned int color);
 void CLG_BlasterTrail2(vec3_t start, vec3_t end);
 void CLG_IonripperTrail(vec3_t start, vec3_t ent);
-void CLG_TrapParticles(r_entity_t* ent);
+void CLG_TrapParticles(r_ServerEntity_t* ent);
 void CLG_ParticleEffect3(vec3_t org, vec3_t dir, int color, int count);
 #endif // __CLGAME_NEWFX_H__

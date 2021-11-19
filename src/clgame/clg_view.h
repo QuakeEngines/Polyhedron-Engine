@@ -12,7 +12,7 @@
 void V_Init(void);
 void V_Shutdown(void);
 
-void V_AddEntity(r_entity_t* ent);
+void V_AddServerEntity(r_ServerEntity_t* ent);
 void V_AddLight(const vec3_t& org, float intensity, float r, float g, float b);
 void V_AddLightEx(const vec3_t& org, float intensity, float r, float g, float b, float radius);
 void V_AddLightStyle(int style, const vec4_t& value);

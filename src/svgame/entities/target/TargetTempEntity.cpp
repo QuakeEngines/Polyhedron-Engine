@@ -1,7 +1,7 @@
 /*
 // LICENSE HERE.
 
-// TargetTempEntity.cpp
+// TargetTempServerEntity.cpp
 */
 
 #include "../../g_local.h"
@@ -11,28 +11,28 @@
 
 #include "../base/SVGBaseEntity.h"
 
-#include "TargetTempEntity.h"
+#include "TargetTempServerEntity.h"
 
 //===============
-// TargetTempEntity::ctor
+// TargetTempServerEntity::ctor
 //===============
-TargetTempEntity::TargetTempEntity( Entity* entity )
-	: Base( entity ) {
+TargetTempServerEntity::TargetTempServerEntity( ServerEntity* ServerEntity )
+	: Base( ServerEntity ) {
 
 }
 
 //===============
-// TargetTempEntity::Spawn
+// TargetTempServerEntity::Spawn
 //===============
-void TargetTempEntity::Spawn() {
-	SetUseCallback( &TargetTempEntity::TempEntityUse );
+void TargetTempServerEntity::Spawn() {
+	SetUseCallback( &TargetTempServerEntity::TempServerEntityUse );
 }
 
 //===============
-// TargetTempEntity::TempEntityUse
+// TargetTempServerEntity::TempServerEntityUse
 //===============
-void TargetTempEntity::TempEntityUse( SVGBaseEntity* other, SVGBaseEntity* activator ) {
-	gi.WriteByte( SVG_CMD_TEMP_ENTITY );
+void TargetTempServerEntity::TempServerEntityUse( SVGBaseEntity* other, SVGBaseEntity* activator ) {
+	gi.WriteByte( SVG_CMD_TEMP_ServerEntity );
 	gi.WriteByte( GetStyle() );
 	gi.WriteVector3( GetOrigin() );
 	gi.Multicast( GetOrigin(), MultiCast::PVS );

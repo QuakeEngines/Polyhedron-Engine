@@ -56,14 +56,14 @@ struct PlayerMoveType {
 };
 
 //-----------------
-// EntityState->effects
+// ServerEntityState->effects
 // Effects are things handled on the client side (lights, particles, 
-// frame animations) that happen constantly on the given entity.
+// frame animations) that happen constantly on the given ServerEntity.
 // 
-// An entity that has effects will be sent to the client even if it has a zero
+// An ServerEntity that has effects will be sent to the client even if it has a zero
 // index model.
 //-----------------
-struct EntityEffectType {
+struct ServerEntityEffectType {
     // Animation Effects.
     static constexpr uint32_t AnimCycleFrames01hz2    = (1 << 0); // Auto cycle between the frames 0, and 1, at 2 hz.
     static constexpr uint32_t AnimCycleFrames23hz2    = (1 << 1); // Auto cycle between the frames 2, and 3, at 2 hz.
@@ -74,11 +74,11 @@ struct EntityEffectType {
 
     static constexpr uint32_t Rotate                  = (1 << 8); // Rotate (Items.)
 
-    // Entity 'type' Effects that dictate special entity 'type' treatment.
-    static constexpr uint32_t Gib     = (1 << 10);    // Entity is of type 'gib', and needs special treatment.
-    static constexpr uint32_t Corpse  = (1 << 11);    // Entity is of type 'corpse', and needs special treatment.
+    // ServerEntity 'type' Effects that dictate special ServerEntity 'type' treatment.
+    static constexpr uint32_t Gib     = (1 << 10);    // ServerEntity is of type 'gib', and needs special treatment.
+    static constexpr uint32_t Corpse  = (1 << 11);    // ServerEntity is of type 'corpse', and needs special treatment.
 
-    // 'Other' Effects. (Mostly null model entity stuff, weapon particles.)
+    // 'Other' Effects. (Mostly null model ServerEntity stuff, weapon particles.)
     static constexpr uint32_t Blaster     = (1 << 16);
     static constexpr uint32_t Torch       = (1 << 17);
     static constexpr uint32_t Teleporter  = (1 << 24);
@@ -143,13 +143,13 @@ struct MuzzleFlashType {
 #define MZ2_SOLDIER_MACHINEGUN_8        100
 
 //-----------------
-// Temp Entity Events (TE)
+// Temp ServerEntity Events (TE)
 //
-// Temp entity events are for things that happen at a location seperate from 
-// any existing entity. Temporary entity messages are explicitly constructed
+// Temp ServerEntity events are for things that happen at a location seperate from 
+// any existing ServerEntity. Temporary ServerEntity messages are explicitly constructed
 // and broadcast.
 //-----------------
-struct TempEntityEvent {
+struct TempServerEntityEvent {
     static constexpr uint8_t Gunshot = 0;
     static constexpr uint8_t Shotgun = 1;
     static constexpr uint8_t Blaster = 2;

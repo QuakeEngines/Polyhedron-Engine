@@ -17,8 +17,8 @@
 //===============
 // FuncTrain::ctor
 //===============
-FuncTrain::FuncTrain( Entity* entity )
- : Base( entity ) {
+FuncTrain::FuncTrain( ServerEntity* ServerEntity )
+ : Base( ServerEntity ) {
 
 }
 
@@ -47,7 +47,7 @@ void FuncTrain::Spawn() {
 	moveInfo.acceleration = GetSpeed();
 	moveInfo.deceleration = GetSpeed();
 
-	LinkEntity();
+	LinkServerEntity();
 
 	if ( targetStr.empty() ) {
 		gi.DPrintf( "func_train without a target at %s\n", vec3_to_cstr( GetAbsoluteCenter() ) );
@@ -62,21 +62,21 @@ void FuncTrain::PostSpawn() {
 		return;
 	}
 
-	SVGBaseEntity* ent = SVG_FindEntityByKeyValue( "targetname", targetStr );
+	SVGBaseEntity* ent = SVG_FindServerEntityByKeyValue( "targetname", targetStr );
 	if ( nullptr == ent ) {
 		gi.DPrintf( "FuncTrain: target '%s' not found, maybe you made a typo?\n", targetStr.c_str() );
 		return;
 	}
 
 	if ( !ent->IsSubclassOf<PathCorner>() ) {
-		gi.DPrintf( "FuncTrain: target '%s' is not a path entity\n", targetStr.c_str() );
+		gi.DPrintf( "FuncTrain: target '%s' is not a path ServerEntity\n", targetStr.c_str() );
 		return;
 	}
 
 	SetUseCallback( &FuncTrain::TrainUse );
 
 	serverEntity->state.origin = ent->GetOrigin() - GetMins();
-	LinkEntity();
+	LinkServerEntity();
 
 	// This train has no name, trigger it immediately
 	if ( targetNameStr.empty() ) {
@@ -118,7 +118,7 @@ void FuncTrain::TrainUse( SVGBaseEntity* other, SVGBaseEntity* activator ) {
 		SetVelocity( vec3_zero() );
 		SetNextThinkTime( 0.0f );
 	} else {
-		if ( nullptr != currentPathEntity ) {
+		if ( nullptr != currentPathServerEntity ) {
 			ResumePath();
 		} else {
 			NextCornerThink();
@@ -131,7 +131,7 @@ void FuncTrain::TrainUse( SVGBaseEntity* other, SVGBaseEntity* activator ) {
 // FuncTrain::NextCornerThink
 //===============
 void FuncTrain::NextCornerThink() {
-	SVGBaseEntity* entity = nullptr;
+	SVGBaseEntity* ServerEntity = nullptr;
 	vec3_t destination;
 	bool first = true;
 	bool again = true;
@@ -146,40 +146,40 @@ void FuncTrain::NextCornerThink() {
 			return;
 		}
 
-		entity = SVG_FindEntityByKeyValue( "targetname", GetTarget() );
-		if ( nullptr == entity ) {
+		ServerEntity = SVG_FindServerEntityByKeyValue( "targetname", GetTarget() );
+		if ( nullptr == ServerEntity ) {
 			gi.DPrintf( "FuncTrain::NextCornerThink: Target '%s' doesn't exist\n", GetTarget().c_str() );
 			return;
 		}
 		
 		// QUESTIONABLE: Are mappers gonna use non-path_corner ents?
 		// We'll probably be rewriting this logic anyway someday...
-		if ( !entity->IsClass<PathCorner>() ) {
+		if ( !ServerEntity->IsClass<PathCorner>() ) {
 			gi.DPrintf( "FuncTrain::NextCornerThink: Target '%s' isn't a path_corner\n", GetTarget().c_str() );
 			return;
 		}
 		
-		SetTarget( entity->GetTarget() );
+		SetTarget( ServerEntity->GetTarget() );
 
-		if ( entity->GetSpawnFlags() & PathCorner::SF_Teleport ) {
+		if ( ServerEntity->GetSpawnFlags() & PathCorner::SF_Teleport ) {
 			if ( !first ) {
-				gi.DPrintf( "Connected teleport path_corners, see '%s' at '%s'\n", entity->GetTypeInfo()->mapClass, vec3_to_cstr( entity->GetOrigin() ) );
+				gi.DPrintf( "Connected teleport path_corners, see '%s' at '%s'\n", ServerEntity->GetTypeInfo()->mapClass, vec3_to_cstr( ServerEntity->GetOrigin() ) );
 				return;
 			}
 
 			first = false;
 			again = true; // loop it
-			SetOrigin( entity->GetOrigin() - GetMins() );
+			SetOrigin( ServerEntity->GetOrigin() - GetMins() );
 			SetOldOrigin( GetOrigin() );
-			SetEventID( EntityEvent::OtherTeleport );
-			LinkEntity();
+			SetEventID( ServerEntityEvent::OtherTeleport );
+			LinkServerEntity();
 		}
 	}
 
-	moveInfo.wait = entity->GetWaitTime();
-	currentPathEntity = static_cast<PathCorner*>(entity);
+	moveInfo.wait = ServerEntity->GetWaitTime();
+	currentPathServerEntity = static_cast<PathCorner*>(ServerEntity);
 
-	destination = entity->GetOrigin() - GetMins();
+	destination = ServerEntity->GetOrigin() - GetMins();
 	moveInfo.state = MoverState::Top;
 	moveInfo.startOrigin = GetOrigin();
 	moveInfo.endAngles = destination;
@@ -192,7 +192,7 @@ void FuncTrain::NextCornerThink() {
 // FuncTrain::ResumePath
 //===============
 void FuncTrain::ResumePath() {
-	vec3_t destination = currentPathEntity->GetOrigin() - GetMins();
+	vec3_t destination = currentPathServerEntity->GetOrigin() - GetMins();
 
 	moveInfo.state = MoverState::Top;
 	moveInfo.startOrigin = GetOrigin();
@@ -207,15 +207,15 @@ void FuncTrain::ResumePath() {
 //===============
 void FuncTrain::WaitAtCorner() {
 	// Trigger stuff that is associated with the current path corner
-	if ( currentPathEntity->GetPathTarget() ) {
+	if ( currentPathServerEntity->GetPathTarget() ) {
 		// Temporarily swap target and pathTarget
-		std::string nextCorner = currentPathEntity->GetTarget();
-		currentPathEntity->SetTarget( currentPathEntity->GetPathTarget() );
-		currentPathEntity->UseTargets( activator );
-		currentPathEntity->SetTarget( nextCorner );
+		std::string nextCorner = currentPathServerEntity->GetTarget();
+		currentPathServerEntity->SetTarget( currentPathServerEntity->GetPathTarget() );
+		currentPathServerEntity->UseTargets( activator );
+		currentPathServerEntity->SetTarget( nextCorner );
 
 		// Do not proceed if we got killed by a killtarget
-		if ( GetServerFlags() & EntityServerFlags::Remove ) {
+		if ( GetServerFlags() & ServerEntityServerFlags::Remove ) {
 			return;
 		}
 	}
@@ -231,7 +231,7 @@ void FuncTrain::WaitAtCorner() {
 			SetNextThinkTime( 0.0f );
 		}
 
-		if ( !(GetFlags() & EntityFlags::TeamSlave) ) {
+		if ( !(GetFlags() & ServerEntityFlags::TeamSlave) ) {
 			if ( moveInfo.endSoundIndex ) {
 				gi.Sound( serverEntity, CHAN_NO_PHS_ADD + CHAN_VOICE, moveInfo.endSoundIndex, 1, ATTN_STATIC, 0 );
 			}
@@ -245,9 +245,9 @@ void FuncTrain::WaitAtCorner() {
 //===============
 // FuncTrain::OnWaitAtCorner
 //===============
-void FuncTrain::OnWaitAtCorner( Entity* ent ) {
-	if ( ent->classEntity->IsSubclassOf<FuncTrain>() ) {
-		static_cast<FuncTrain*>( ent->classEntity )->WaitAtCorner();
+void FuncTrain::OnWaitAtCorner( ServerEntity* ent ) {
+	if ( ent->classServerEntity->IsSubclassOf<FuncTrain>() ) {
+		static_cast<FuncTrain*>( ent->classServerEntity )->WaitAtCorner();
 	}
 }
 
@@ -255,7 +255,7 @@ void FuncTrain::OnWaitAtCorner( Entity* ent ) {
 // FuncTrain::TrainBlocked
 //===============
 void FuncTrain::TrainBlocked( SVGBaseEntity* other ) {
-	if ( !(other->GetServerFlags() & EntityServerFlags::Monster) && !other->GetClient() ) {
+	if ( !(other->GetServerFlags() & ServerEntityServerFlags::Monster) && !other->GetClient() ) {
 		// Give it a chance to go away on its own terms (like gibs)
 		SVG_InflictDamage( other, this, this, vec3_zero(), other->GetOrigin(), vec3_zero(), 100000, 1, 0, MeansOfDeath::Crush );
 		// If it's still there, nuke it

@@ -39,13 +39,13 @@ INTERMISSION
 // HUD_MoveClientToIntermission
 // 
 // Changes the client's movement type to PlayerMoveType::Freeze while setting its
-// origin and viewAngles to the previously fetched intermission entity 
+// origin and viewAngles to the previously fetched intermission ServerEntity 
 // values.
 //================
 //
-void HUD_MoveClientToIntermission(Entity *ent)
+void HUD_MoveClientToIntermission(ServerEntity *ent)
 {
-    //// Ensure it is a valid client entity.
+    //// Ensure it is a valid client ServerEntity.
     //if (!ent) {
     //    return;
     //}
@@ -56,7 +56,7 @@ void HUD_MoveClientToIntermission(Entity *ent)
     //if (deathmatch->value || coop->value)
     //    ent->client->showScores = true;
 
-    //// Copy over the previously fetched map intermission entity origin into
+    //// Copy over the previously fetched map intermission ServerEntity origin into
     //// the client player states positions.
     //ent->state.origin = level.intermission.origin;
     //ent->client->playerState.pmove.origin = level.intermission.origin;
@@ -88,13 +88,13 @@ void HUD_MoveClientToIntermission(Entity *ent)
 //===============
 // HUD_BeginIntermission
 // 
-// Begins an intermission process for the given target entity.
+// Begins an intermission process for the given target ServerEntity.
 //================
 //
-void SVG_HUD_BeginIntermission(Entity *targ)
+void SVG_HUD_BeginIntermission(ServerEntity *targ)
 {
     int     i, n;
-    Entity *client = nullptr;
+    ServerEntity *client = nullptr;
 
     // Ensure targ is valid.
     if (!targ) {
@@ -113,8 +113,8 @@ void SVG_HUD_BeginIntermission(Entity *targ)
         if (!client->inUse) {
             continue;
         }
-        if (client->classEntity->GetHealth() <= 0) {
-            game.gameMode->RespawnClient((PlayerClient*)client->classEntity);
+        if (client->classServerEntity->GetHealth() <= 0) {
+            game.gameMode->RespawnClient((PlayerClient*)client->classServerEntity);
         }
     }
 
@@ -145,30 +145,30 @@ void SVG_HUD_BeginIntermission(Entity *targ)
 
     level.intermission.exitIntermission = 0;
 
-    // Fetch an intermission entity.
-    Entity *intermissionEntity = SVG_Find(NULL, FOFS(className), "info_player_intermission");
-    if (!intermissionEntity) {
+    // Fetch an intermission ServerEntity.
+    ServerEntity *intermissionServerEntity = SVG_Find(NULL, FOFS(className), "info_player_intermission");
+    if (!intermissionServerEntity) {
         // the map creator forgot to put in an intermission point...
-        intermissionEntity = SVG_Find(NULL, FOFS(className), "info_player_start");
-        if (!intermissionEntity) {
-            intermissionEntity = SVG_Find(NULL, FOFS(className), "info_player_deathmatch");
+        intermissionServerEntity = SVG_Find(NULL, FOFS(className), "info_player_start");
+        if (!intermissionServerEntity) {
+            intermissionServerEntity = SVG_Find(NULL, FOFS(className), "info_player_deathmatch");
         }
     } else {
         // chose one of four spots
         i = rand() & 3;
         while (i--) {
-            intermissionEntity = SVG_Find(intermissionEntity, FOFS(className), "info_player_intermission");
-            if (!intermissionEntity) {  // wrap around the list 
-                intermissionEntity = SVG_Find(intermissionEntity, FOFS(className), "info_player_intermission");
+            intermissionServerEntity = SVG_Find(intermissionServerEntity, FOFS(className), "info_player_intermission");
+            if (!intermissionServerEntity) {  // wrap around the list 
+                intermissionServerEntity = SVG_Find(intermissionServerEntity, FOFS(className), "info_player_intermission");
             }
         }
     }
 
-    level.intermission.origin = intermissionEntity->state.origin, level.intermission.origin;
-    level.intermission.viewAngle = intermissionEntity->state.angles;
+    level.intermission.origin = intermissionServerEntity->state.origin, level.intermission.origin;
+    level.intermission.viewAngle = intermissionServerEntity->state.angles;
 
     // Initiate the client intermission mode for all clients.
-    // (MoveType = PM_FREEZE, positioned at intermission entity view values.)
+    // (MoveType = PM_FREEZE, positioned at intermission ServerEntity view values.)
     for (i = 0 ; i < maximumClients->value ; i++) {
         // Fetch client.
         client = g_entities + 1 + i;
@@ -200,7 +200,7 @@ void SVG_HUD_GenerateDMScoreboardLayout(SVGBaseEntity *ent, SVGBaseEntity *kille
     int     score, total;
     int     x, y;
     ServersClient   *cl;
-    Entity     *cl_ent;
+    ServerEntity     *cl_ent;
     const char    *tag; // C++20: STRING: Added const to char*
 
     // sort the clients by score
@@ -240,9 +240,9 @@ void SVG_HUD_GenerateDMScoreboardLayout(SVGBaseEntity *ent, SVGBaseEntity *kille
         y = 32 + 32 * (i % 6);
 
         // add a dogtag
-        if (ent && cl_ent == ent->GetServerEntity())
+        if (ent && cl_ent == ent->GetServerServerEntity())
             tag = "tag1";
-        else if (killer && cl_ent == killer->GetServerEntity())
+        else if (killer && cl_ent == killer->GetServerServerEntity())
             tag = "tag2";
         else
             tag = NULL;
@@ -287,7 +287,7 @@ void HUD_SendDMScoreboardMessage(SVGBaseEntity *ent)
         return;
 
     SVG_HUD_GenerateDMScoreboardLayout(ent, ent->GetEnemy());
-    gi.Unicast(ent->GetServerEntity(), true);
+    gi.Unicast(ent->GetServerServerEntity(), true);
 }
 
 
@@ -300,7 +300,7 @@ Display the scoreboard
 */
 void SVG_Command_Score_f(SVGBaseEntity*ent)
 {
-    // Entity. Make sure it is valid.
+    // ServerEntity. Make sure it is valid.
     if (!ent)
         return;
     
@@ -336,7 +336,7 @@ void SVG_Command_Score_f(SVGBaseEntity*ent)
 // and audio if required.
 //================
 //
-void SVG_HUD_SetClientStats(Entity* ent)
+void SVG_HUD_SetClientStats(ServerEntity* ent)
 {
     gitem_t* item;
 
@@ -349,7 +349,7 @@ void SVG_HUD_SetClientStats(Entity* ent)
     // health
     //
     ent->client->playerState.stats[STAT_HEALTH_ICON] = level.pic_health;
-    ent->client->playerState.stats[STAT_HEALTH] = ent->classEntity->GetHealth();
+    ent->client->playerState.stats[STAT_HEALTH] = ent->classServerEntity->GetHealth();
 
     //
     // ammo
@@ -438,7 +438,7 @@ void SVG_HUD_SetClientStats(Entity* ent)
 SVG_HUD_CheckChaseStats
 ===============
 */
-void SVG_HUD_CheckChaseStats(Entity *ent)
+void SVG_HUD_CheckChaseStats(ServerEntity *ent)
 {
     int i;
 
@@ -465,7 +465,7 @@ void SVG_HUD_CheckChaseStats(Entity *ent)
 SVG_HUD_SetSpectatorStats
 ===============
 */
-void SVG_HUD_SetSpectatorStats(Entity *ent)
+void SVG_HUD_SetSpectatorStats(ServerEntity *ent)
 {
     if (!ent) {
         return;

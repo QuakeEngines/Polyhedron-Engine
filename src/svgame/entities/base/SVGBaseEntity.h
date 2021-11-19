@@ -4,7 +4,7 @@
 //
 // SVGBaseEntity.h
 //
-// Base entity class, where the fun begins. All entities are inherited from this,
+// Base ServerEntity class, where the fun begins. All entities are inherited from this,
 // one way or the other :)
 //
 */
@@ -33,7 +33,7 @@ public:
     // Construct/Destructor.
     //
     //------------------------------------------------------------
-    SVGBaseEntity(Entity* svEntity);
+    SVGBaseEntity(ServerEntity* svServerEntity);
     virtual ~SVGBaseEntity();
 
 
@@ -44,18 +44,18 @@ public:
     //------------------------------------------------------------
     DefineTopAbstractClass( SVGBaseEntity );
 
-    // Checks if this entity class is exactly the given class
-    // @param entityClass: an entity class which must inherint from SVGBaseEntity
-    template<typename entityClass>
-    bool IsClass() const { // every entity has a ClassInfo, thanks to the DefineXYZ macro
-        return GetTypeInfo()->IsClass( entityClass::ClassInfo );
+    // Checks if this ServerEntity class is exactly the given class
+    // @param ServerEntityClass: an ServerEntity class which must inherint from SVGBaseEntity
+    template<typename SVGBaseEntity>
+    bool IsClass() const { // every ServerEntity has a ClassInfo, thanks to the DefineXYZ macro
+        return GetTypeInfo()->IsClass( SVGBaseEntity::ClassInfo );
     }
 
-    // Checks if this entity class is a subclass of another, or is the same class
-    // @param entityClass: an entity class which must inherint from SVGBaseEntity
-    template<typename entityClass>
+    // Checks if this ServerEntity class is a subclass of another, or is the same class
+    // @param ServerEntityClass: an ServerEntity class which must inherint from SVGBaseEntity
+    template<typename SVGBaseEntity>
     bool IsSubclassOf() const {
-        return GetTypeInfo()->IsSubclassOf( entityClass::ClassInfo );
+        return GetTypeInfo()->IsSubclassOf( SVGBaseEntity::ClassInfo );
     }
 
     //------------------------------------------------------------
@@ -64,12 +64,12 @@ public:
     //
     //------------------------------------------------------------
     virtual void Precache();    // Precaches data.
-    virtual void Spawn();       // Spawns the entity.
-    virtual void Respawn();     // Respawns the entity.
-    virtual void PostSpawn();   // PostSpawning is for handling entity references, since they may not exist yet during a spawn period.
-    virtual void Think();       // General entity thinking routine.
+    virtual void Spawn();       // Spawns the ServerEntity.
+    virtual void Respawn();     // Respawns the ServerEntity.
+    virtual void PostSpawn();   // PostSpawning is for handling ServerEntity references, since they may not exist yet during a spawn period.
+    virtual void Think();       // General ServerEntity thinking routine.
 
-    virtual void SpawnKey(const std::string& key, const std::string& value); // Called for each key:value when parsing the entity dictionary.
+    virtual void SpawnKey(const std::string& key, const std::string& value); // Called for each key:value when parsing the ServerEntity dictionary.
 
     //------------------------------------------------------------
     //
@@ -86,11 +86,11 @@ public:
 
     //------------------------------------------------------------
     //
-    // Entity interaction functions.
+    // ServerEntity interaction functions.
     //
     //------------------------------------------------------------
-    //  Calls Use on this entity's targets, and deletes its killtargets if any
-    //  @param activatorOverride: if nullptr, the entity's own activator is used and if the entity's own activator is nullptr, then this entity itself is the activator
+    //  Calls Use on this ServerEntity's targets, and deletes its killtargets if any
+    //  @param activatorOverride: if nullptr, the ServerEntity's own activator is used and if the ServerEntity's own activator is nullptr, then this ServerEntity itself is the activator
     void UseTargets( SVGBaseEntity* activatorOverride = nullptr );
 
 
@@ -99,31 +99,31 @@ public:
     // Getters.
     //
     //------------------------------------------------------------
-    // @returns The entity's center in world coordinates.
+    // @returns The ServerEntity's center in world coordinates.
     inline vec3_t GetAbsoluteCenter(){
         return vec3_scale( GetAbsoluteMax() + GetAbsoluteMin(), 0.5f );
     }
 
-    // @returns The entity's mins in world coordinates.
+    // @returns The ServerEntity's mins in world coordinates.
     inline const vec3_t& GetAbsoluteMin() {
         return serverEntity->absMin;
     }
-    // @returns The entity's maxs in world coordinates.
+    // @returns The ServerEntity's maxs in world coordinates.
     inline const vec3_t& GetAbsoluteMax() {
         return serverEntity->absMax;
     }
 
-    // @returns The entity which activated this entity. (If any)
+    // @returns The ServerEntity which activated this ServerEntity. (If any)
     inline SVGBaseEntity* GetActivator() {
         return activator;
     }
     
-    // @returns The angles of where this entity is pointing at.
+    // @returns The angles of where this ServerEntity is pointing at.
     inline const vec3_t& GetAngles() {
         return serverEntity->state.angles;
     }
 
-    // @returns The current angular velocity of where this entity is pointing at.
+    // @returns The current angular velocity of where this ServerEntity is pointing at.
     inline const vec3_t& GetAngularVelocity() {
         return angularVelocity;
     }
@@ -133,7 +133,7 @@ public:
         return vec3_scale( GetMaxs() + GetMins(), 0.5f );
     }
 
-    // @returns The entity's classname. Example: info_player_start
+    // @returns The ServerEntity's classname. Example: info_player_start
     inline const char* GetClassName() {
         return serverEntity->className;
     }
@@ -143,23 +143,23 @@ public:
         serverEntity->className = className;
     }
 
-    // @returns A pointer to the client belonging to this entity. (If any.)
-    gclient_s* GetClient() {
+    // @returns A pointer to the client belonging to this ServerEntity. (If any.)
+    ServerClient* GetClient() {
         return serverEntity->client;
     }
 
-    // @returns the entity's current Clipping Mask.
+    // @returns the ServerEntity's current Clipping Mask.
     inline const int32_t GetClipMask() {
         return serverEntity->clipMask;
     }
 
-    // @returns The damage this entity will give if messed with. 
-    // an example could be if an entity gets stuck between a platform and a wall.
+    // @returns The damage this ServerEntity will give if messed with. 
+    // an example could be if an ServerEntity gets stuck between a platform and a wall.
     inline const int32_t GetDamage() {
         return damage;
     }
 
-    // @returns The current state of this entity's 'deadness'.
+    // @returns The current state of this ServerEntity's 'deadness'.
     inline const int32_t GetDeadFlag() {
         return deadFlag;
     }
@@ -169,58 +169,58 @@ public:
         return delayTime;
     }
 
-    // @returns The effects of this entity.
+    // @returns The effects of this ServerEntity.
     inline const uint32_t GetEffects() {
         return serverEntity->state.effects;
     }
 
-    // @returns The enemy entity pointer (if any.)
+    // @returns The enemy ServerEntity pointer (if any.)
     inline SVGBaseEntity* GetEnemy() {
-        return enemyEntity;
+        return enemyServerEntity;
     }
 
 
-    // @returns a reference to the 'entityDictionary'.
-    virtual inline EntityDictionary &GetEntityDictionary() {
-        return serverEntity->entityDictionary;
+    // @returns a reference to the 'ServerEntityDictionary'.
+    virtual inline ServerEntityDictionary &GetServerEntityDictionary() {
+        return serverEntity->serverEntityDictionary;
     }
 
-    // @returns the current entity EventID, these are reset each frame.
+    // @returns the current ServerEntity EventID, these are reset each frame.
     inline const uint8_t GetEventID() {
         return serverEntity->state.eventID;
     }
 
-    // @returns The entity's general flags, coming from the EntityFlags enum.
+    // @returns The ServerEntity's general flags, coming from the ServerEntityFlags enum.
     inline const int32_t GetFlags() {
         return flags;
     }
 
-    // @returns The current animation frame of the entity.
+    // @returns The current animation frame of the ServerEntity.
     inline const int32_t GetFrame() {
         return serverEntity->state.frame;
     }
 
-    // @returns The entity's own gravity.
+    // @returns The ServerEntity's own gravity.
     inline const float GetGravity() {
         return gravity;
     }
 
-    // @returns The ground entity (if any).
-    inline SVGBaseEntity* GetGroundEntity() {
-        return groundEntity;
+    // @returns The ground ServerEntity (if any).
+    inline SVGBaseEntity* GetGroundServerEntity() {
+        return groundServerEntity;
     }
 
-    // @returns The entity's ground linkcount.s
-    inline int32_t GetGroundEntityLinkCount() {
-        return groundEntityLinkCount;
+    // @returns The ServerEntity's ground linkcount.s
+    inline int32_t GetGroundServerEntityLinkCount() {
+        return groundServerEntityLinkCount;
     }
 
-    // @returns The entity's health.
+    // @returns The ServerEntity's health.
     inline const int32_t GetHealth() {
         return health;
     }
 
-    // @returns The ideal yaw to use for this entity.
+    // @returns The ideal yaw to use for this ServerEntity.
     inline const float GetIdealYawAngle() {
         return idealYawAngle;
     }
@@ -230,7 +230,7 @@ public:
         return serverEntity->inUse;
     }
 
-    // Get the 'killTarget' entity value.
+    // Get the 'killTarget' ServerEntity value.
     inline const std::string &GetKillTarget() {
         return killTargetStr;
     }
@@ -301,21 +301,21 @@ public:
 
     // Return the 'noiseIndex' value.
     inline const int32_t GetNoiseIndex() {
-        return serverEntity->noiseIndex;
+        return noiseIndex;
     }
 
     // Return the 'noiseIndex2' value.
     inline const int32_t GetNoiseIndex2() {
-        return serverEntity->noiseIndex2;
+        return oiseIndex2;
     }
 
     inline const int32_t GetNumber() {
         return serverEntity->state.number;
     }
 
-    // Return the 'oldEnemyPtr' entity pointer.
+    // Return the 'oldEnemyPtr' ServerEntity pointer.
     SVGBaseEntity* GetOldEnemy() {
-        return oldEnemyEntity;
+        return oldEnemyServerEntity;
     }
 
     // Return the 'oldOrigin' value.
@@ -330,7 +330,7 @@ public:
 
     // Get the 'owner' value.
     inline SVGBaseEntity* GetOwner() {
-        return this->ownerEntity;
+        return this->ownerServerEntity;
     }
 
     // Return the 'renderEffects' value.
@@ -338,7 +338,7 @@ public:
         return serverEntity->state.renderEffects;
     }
 
-    // Get the 'pathTarget' entity value.
+    // Get the 'pathTarget' ServerEntity value.
     // Overridden by PathCorner
     // TODO: replace this ugly workaround with some component system
     inline virtual const char* GetPathTarget() {
@@ -371,7 +371,7 @@ public:
     }
 
     // Return a reference to the serverEntity its state.
-    inline const EntityState& GetState() {
+    inline const ServerEntityState& GetState() {
         return serverEntity->state;
     }
     // Return the 'style' value.
@@ -389,31 +389,31 @@ public:
         return takeDamage;
     }
 
-    // Return the 'target' entity value.
+    // Return the 'target' ServerEntity value.
     inline const std::string& GetTarget() {
         return targetStr;
     }
-    // Return the 'targetName' entity value.
+    // Return the 'targetName' ServerEntity value.
     inline const std::string& GetTargetName() {
         return targetNameStr;
     }
 
-    // Return the 'team' entity value.
+    // Return the 'team' ServerEntity value.
     inline char* GetTeam() {
         return serverEntity->team;
     }
 
-    // Return the 'teamChain' entity value.
-    inline SVGBaseEntity* GetTeamChainEntity() {
-        return teamChainEntity;
+    // Return the 'teamChain' ServerEntity value.
+    inline SVGBaseEntity* GetTeamChainServerEntity() {
+        return teamChainServerEntity;
     }
 
-    // Return the 'teamMaster' entity value.
-    inline SVGBaseEntity *GetTeamMasterEntity() {
-        return teamMasterEntity;
+    // Return the 'teamMaster' ServerEntity value.
+    inline SVGBaseEntity *GetTeamMasterServerEntity() {
+        return teamMasterServerEntity;
     }
 
-    // Return the 'viewHeight' entity value.
+    // Return the 'viewHeight' ServerEntity value.
     inline const int32_t GetViewHeight() {
         return viewHeight;
     }
@@ -467,7 +467,7 @@ public:
         this->angularVelocity = angularVelocity;
     }
 
-    // Set the 'mins', and 'maxs' values of the entity bounding box.
+    // Set the 'mins', and 'maxs' values of the ServerEntity bounding box.
     inline void SetBoundingBox(const vec3_t& mins, const vec3_t& maxs) {
         serverEntity->mins = mins;
         serverEntity->maxs = maxs;
@@ -500,7 +500,7 @@ public:
 
     // Set the 'enemyPtr' pointer.
     inline void SetEnemy(SVGBaseEntity* enemy) {
-        this->enemyEntity = enemy;
+        this->enemyServerEntity = enemy;
     }
 
     // Return the 'eventID' value.
@@ -523,16 +523,16 @@ public:
         this->gravity = gravity;
     }
 
-    // Set the 'groundEntitPtr' entity.
-    inline void SetGroundEntity(SVGBaseEntity* groundEntity) {
-        // Set SVGBaseEntity variant ground entity.
-        this->groundEntity = groundEntity;
+    // Set the 'groundEntitPtr' ServerEntity.
+    inline void SetGroundServerEntity(SVGBaseEntity* groundServerEntity) {
+        // Set SVGBaseEntity variant ground ServerEntity.
+        this->groundServerEntity = groundServerEntity;
     }
 
-    // Set the 'groundEntityLinkCount' value.
-    inline void SetGroundEntityLinkCount(int32_t groundEntityLinkCount) {
-        // Set it for THIS class entity.
-        this->groundEntityLinkCount = groundEntityLinkCount;
+    // Set the 'groundServerEntityLinkCount' value.
+    inline void SetGroundServerEntityLinkCount(int32_t groundServerEntityLinkCount) {
+        // Set it for THIS class ServerEntity.
+        this->groundServerEntityLinkCount = groundServerEntityLinkCount;
     }
 
     // Set the 'health' value.
@@ -632,7 +632,7 @@ public:
 
     // Set the 'oldEnemyPtr' pointer.
     inline void SetOldEnemy(SVGBaseEntity* oldEnemy) {
-        this->oldEnemyEntity = oldEnemy;
+        this->oldEnemyServerEntity = oldEnemy;
     }
 
     // Set the 'origin' value.
@@ -647,7 +647,7 @@ public:
 
     // Set the 'owner' value.
     inline void SetOwner(SVGBaseEntity* owner) {
-        this->ownerEntity = owner;
+        this->ownerServerEntity = owner;
     }
 
     // Set the 'renderEffects' value.
@@ -686,7 +686,7 @@ public:
     }
 
     // Set another copy of a serverEntity its state.
-    inline void SetState(const EntityState &state) {
+    inline void SetState(const ServerEntityState &state) {
         serverEntity->state = state;
     }
 
@@ -700,26 +700,26 @@ public:
         this->takeDamage = takeDamage;
     }
 
-    // Set the 'target' entity value.
+    // Set the 'target' ServerEntity value.
     inline void SetTarget(const std::string& target) {
         this->targetStr = target;
     }
-    // Set the 'targetName' entity value.
+    // Set the 'targetName' ServerEntity value.
     inline void SetTargetName(const std::string& targetName) {
         this->targetNameStr = targetName;
     }
 
-    // Set the 'teamChain' entity value.
-    inline void SetTeamChainEntity(SVGBaseEntity* entity) {
-        teamChainEntity = entity;
+    // Set the 'teamChain' ServerEntity value.
+    inline void SetTeamChainServerEntity(SVGBaseEntity* ServerEntity) {
+        teamChainServerEntity = ServerEntity;
     }
 
-    // Set the 'teamMaster' entity value.
-    inline void SetTeamMasterEntity(SVGBaseEntity* entity) {
-        teamMasterEntity = entity;
+    // Set the 'teamMaster' ServerEntity value.
+    inline void SetTeamMasterServerEntity(SVGBaseEntity* ServerEntity) {
+        teamMasterServerEntity = ServerEntity;
     }
 
-    // Set the 'viewHeight' entity value.
+    // Set the 'viewHeight' ServerEntity value.
     inline void SetViewHeight(const int32_t& height) {
         this->viewHeight = height;
     }
@@ -771,34 +771,34 @@ public:
 
     //------------------------------------------------------------
     // 
-    // General Entity Functions.
+    // General ServerEntity Functions.
     // 
     //------------------------------------------------------------
-    // Link entity to the world for collision testing.
-    void LinkEntity();
+    // Link ServerEntity to the world for collision testing.
+    void LinkServerEntity();
     
-    // Marks the entity to be removed in the next server frame
-    // This is preferred to SVG_FreeEntity, as it is safer
+    // Marks the ServerEntity to be removed in the next server frame
+    // This is preferred to SVG_FreeServerEntity, as it is safer
     void Remove();
 
-    // Unlink the entity from the world for collision testing.
-    void UnlinkEntity();
+    // Unlink the ServerEntity from the world for collision testing.
+    void UnlinkServerEntity();
 
-    // Returns the server entity pointer.
-    inline Entity* GetServerEntity() {
+    // Returns the server ServerEntity pointer.
+    inline ServerEntity* GetServerServerEntity() {
         return serverEntity;
     }
 
-    // Used only in SVG_FreeEntity
-    inline void SetServerEntity( Entity* svEntity )
+    // Used only in SVG_FreeServerEntity
+    inline void SetServerServerEntity( ServerEntity* svServerEntity )
     {
-        serverEntity = svEntity;
+        serverEntity = svServerEntity;
     }
 
 protected:
     //------------------------------------------------------------
     // 
-    // Entity Dictionary Value Parsing functions.
+    // ServerEntity Dictionary Value Parsing functions.
     // 
     // All return true on success and will have set the parsed
     // value on the referenced variale. Otherwise, it'll pick a 
@@ -810,23 +810,23 @@ protected:
     qboolean ParseStringKeyValue(const std::string& key, const std::string& value, std::string& stringValue);
     qboolean ParseVector3KeyValue(const std::string& key, const std::string& value, vec3_t& vectorValue);
 
-    // The actual server entity this class is a member of.
-    Entity *serverEntity;
+    // The actual server ServerEntity this class belongs to.
+    ServerEntity *serverEntity;
 
     //
-    // Other base entity members. (These were old fields in edict_T back in the day.)
+    // Other base ServerEntity members. (These were old fields in edict_T back in the day.)
     //
     // 
     //---------------------------------
     // -- Flags
-    // Entity flags, general flags, flags... :) 
+    // ServerEntity flags, general flags, flags... :) 
     int32_t flags;
-    // Entity spawn flags (Such as, is this a dropped item?)
+    // ServerEntity spawn flags (Such as, is this a dropped item?)
     int32_t spawnFlags;
 
     //---------------------------------
     // -- Strings.
-    // Entity MODEL filename.
+    // ServerEntity MODEL filename.
     std::string model;
     // Trigger kill target string.
     std::string killTargetStr;
@@ -856,16 +856,16 @@ protected:
     vec3_t angularVelocity;
     // Mass
     int32_t mass;
-    // Per entity gravity multiplier (1.0 is normal). TIP: Use for lowgrav artifact, flares
+    // Per ServerEntity gravity multiplier (1.0 is normal). TIP: Use for lowgrav artifact, flares
     float gravity;
     
     //-----------------------------------
     // -- Pointers.
-    // Goal Entity.
-    Entity* goalEntityPtr;
-    // Move Target Entity.
-    Entity* moveTargetPtr;
-    // The entity that activated this
+    // Goal ServerEntity.
+    ServerEntity* goalServerEntityPtr;
+    // Move Target ServerEntity.
+    ServerEntity* moveTargetPtr;
+    // The ServerEntity that activated this
     SVGBaseEntity* activator;
     
     // Yaw Speed. (Should be for monsters...)
@@ -882,18 +882,18 @@ protected:
     // Wait time before triggering at all, in case it was set to auto.
     float waitTime;
 
-    // Ground Entity link count. (To keep track if it is linked or not.)
-    int32_t groundEntityLinkCount;
+    // Ground ServerEntity link count. (To keep track if it is linked or not.)
+    int32_t groundServerEntityLinkCount;
 
     //------------------------------------
-    // Entity Status.
+    // ServerEntity Status.
     // Current health.
     int32_t health;
     // Maximum health.
     int32_t maxHealth;
 
     //------------------------------------
-    // Entity GAME settings.
+    // ServerEntity GAME settings.
     // The height above the origin, this is where EYE SIGHT comes from. Ok?
     int32_t viewHeight;
     // Determines how to interpret, take damage like a man or like a ... ? Yeah, pick up soap.
@@ -909,22 +909,22 @@ protected:
     //float delay;
 
     //
-    // Entity pointers.
+    // ServerEntity pointers.
     // 
     // Current active enemy, NULL if not any.    
-    SVGBaseEntity *enemyEntity;
-    // Ground entity we're standing on.
-    SVGBaseEntity *groundEntity;
+    SVGBaseEntity *enemyServerEntity;
+    // Ground ServerEntity we're standing on.
+    SVGBaseEntity *groundServerEntity;
     // Old enemy, NULL if not any.
-    SVGBaseEntity *oldEnemyEntity;
+    SVGBaseEntity *oldEnemyServerEntity;
 
     // Owner pointer. (Such as, did the player fire a blaster bolt? If so, the owner is...)
-    SVGBaseEntity* ownerEntity;
+    SVGBaseEntity* ownerServerEntity;
 
     // Team Chain Pointer.
-    SVGBaseEntity* teamChainEntity;
+    SVGBaseEntity* teamChainServerEntity;
     // Master Pointer.
-    SVGBaseEntity* teamMasterEntity;
+    SVGBaseEntity* teamMasterServerEntity;
     
 public:
     //
@@ -997,7 +997,7 @@ public:
     //
     // Callback implementations that can be set by all child entities.
     //
-    void SVGBaseEntityThinkRemove(void);
+    void SVGBaseServerEntityThinkRemove(void);
     // "No" thinking
-    void SVGBaseEntityThinkNull() { }
+    void SVGBaseServerEntityThinkNull() { }
 };

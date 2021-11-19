@@ -115,7 +115,7 @@ constexpr float PM_STEP_HEIGHT_MIN = 4.f;  // The smallest step that will be int
 constexpr float PM_STEP_NORMAL = 0.7f; // The minimum Z plane normal component required for standing.
 
 //--------------------------------------------------
-// Pointer to the actual (client-/npc-)entity PlayerMove(PM) structure.
+// Pointer to the actual (client-/npc-)ServerEntity PlayerMove(PM) structure.
 //--------------------------------------------------
 static PlayerMove* pm;
 
@@ -259,19 +259,19 @@ static vec3_t PM_ClipVelocity(const vec3_t in, const vec3_t normal, float bounce
 
 //
 //===============
-// PM_TouchEntity
+// PM_TouchServerEntity
 // 
-// Marks the specified entity as touched.
+// Marks the specified ServerEntity as touched.
 //===============
 //
-static void PM_TouchEntity(struct entity_s* ent) {
+static void PM_TouchServerEntity(struct ServerEntity_s* ent) {
     // Ensure it is valid.
     if (ent == NULL) {
         PM_Debug("ent = NULL");
         return;
     }
 
-    // Only touch entity if we aren't at the maximum limit yet.
+    // Only touch ServerEntity if we aren't at the maximum limit yet.
     if (pm->numTouchedEntities < PM_MAX_TOUCH_ENTS && ent) {
         pm->touchedEntities[pm->numTouchedEntities] = ent;
         pm->numTouchedEntities++;
@@ -301,7 +301,7 @@ static bool PM_CheckStep(const trace_t * trace) {
 
     if (!trace->allSolid) {
         if (trace->ent && trace->plane.normal.z >= PM_STEP_NORMAL) {
-            if (trace->ent != pm->groundEntityPtr || trace->plane.dist != playerMoveLocals.groundTrace.plane.dist) {
+            if (trace->ent != pm->groundServerEntityPtr || trace->plane.dist != playerMoveLocals.groundTrace.plane.dist) {
                 return true;
 
                 PM_Debug("PM_CheckStep: true");
@@ -464,8 +464,8 @@ static qboolean PM_StepSlideMove_(void)
             timeRemaining -= (timeRemaining * trace.fraction);
         }
 
-        // store a reference to the entity for firing game events
-        PM_TouchEntity(trace.ent);
+        // store a reference to the ServerEntity for firing game events
+        PM_TouchServerEntity(trace.ent);
 
         // record the impacted plane, or nudge velocity out along it
         if (PM_ImpactPlane(planes, numPlanes, trace.plane.normal)) {
@@ -623,7 +623,7 @@ static void PM_StepSlideMove(void)
 //
 static qboolean PM_CheckTrickJump(void) {
     // False in the following conditions.
-    if (pm->groundEntityPtr) { return false; }
+    if (pm->groundServerEntityPtr) { return false; }
     if (playerMoveLocals.previousVelocity.z < PM_SPEED_UP) { return false; }
     if (pm->moveCommand.input.upMove < 1) { return false; }
     if (pm->state.flags & PMF_JUMP_HELD) { return false; }
@@ -695,7 +695,7 @@ static qboolean PM_CheckJump(void) {
 
     // clear the ground indicators
     pm->state.flags &= ~PMF_ON_GROUND;
-    pm->groundEntityPtr = NULL;
+    pm->groundServerEntityPtr = NULL;
 
     // we can trick jump soon
     pm->state.flags |= PMF_TIME_TRICK_START;
@@ -805,8 +805,8 @@ static qboolean PM_CheckLadder(void) {
         // Add isClimbingLadder flag.
         pm->state.flags |= PMF_ON_LADDER;
 
-        // No ground entity, obviously.
-        pm->groundEntityPtr = NULL;
+        // No ground ServerEntity, obviously.
+        pm->groundServerEntityPtr = NULL;
 
         // Remove ducked and possible ON_GROUND flags.
         pm->state.flags &= ~(PMF_ON_GROUND | PMF_DUCKED);
@@ -965,7 +965,7 @@ static void PM_CheckGround(void) {
     if (trace.ent && trace.plane.normal.z >= PM_STEP_NORMAL) {
 
         // If we had no ground, then handle landing events
-        if (!pm->groundEntityPtr) {
+        if (!pm->groundServerEntityPtr) {
 
             // Any landing terminates the water jump
             if (pm->state.flags & PMF_TIME_WATER_JUMP) {
@@ -996,7 +996,7 @@ static void PM_CheckGround(void) {
 
         // Save a reference to the ground
         pm->state.flags |= PMF_ON_GROUND;
-        pm->groundEntityPtr = trace.ent;
+        pm->groundServerEntityPtr = trace.ent;
 
         // Sink down to it if not trick jumping
         if (!(pm->state.flags & PMF_TIME_TRICK_JUMP)) {
@@ -1006,11 +1006,11 @@ static void PM_CheckGround(void) {
         }
     } else {
         pm->state.flags &= ~PMF_ON_GROUND;
-        pm->groundEntityPtr = NULL;
+        pm->groundServerEntityPtr = NULL;
     }
 
-    // Always touch the entity, even if we couldn't stand on it
-    PM_TouchEntity(trace.ent);
+    // Always touch the ServerEntity, even if we couldn't stand on it
+    PM_TouchServerEntity(trace.ent);
 }
 
 
@@ -1151,7 +1151,7 @@ static void PM_ApplyCurrents(void) {
     }
 
     // add conveyer belt velocities
-    if (pm->groundEntityPtr) {
+    if (pm->groundServerEntityPtr) {
         if (playerMoveLocals.groundTrace.contents & CONTENTS_CURRENT_0) {
             current.x += 1.0;
         }

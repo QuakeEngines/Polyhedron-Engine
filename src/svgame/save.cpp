@@ -19,6 +19,8 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "g_local.h"
 #include "functionpointers.h"
 
+#if 0
+
 //#define _DEBUG
 typedef struct {
     fieldtype_t type;
@@ -50,7 +52,7 @@ typedef struct {
 #define E(name) _F(F_EDICT, name)
 #define P(name, type) _FA(F_POINTER, name, type)
 
-static const save_field_t entityfields[] = {
+static const save_field_t ServerEntityfields[] = {
 #define _OFS FOFS
     V(state.origin),
     V(state.angles),
@@ -79,7 +81,7 @@ static const save_field_t entityfields[] = {
     I(clipMask),
     E(owner),
 
-    //I(classEntity->GetMoveType()),
+    //I(classServerEntity->GetMoveType()),
 //    I(flags),
 
 //    L(model),
@@ -96,7 +98,7 @@ static const save_field_t entityfields[] = {
     L(killTarget),
     L(team),
     L(pathTarget),
-    E(targetEntityPtr),
+    E(targetServerEntityPtr),
 
     F(speed),
     F(acceleration),
@@ -111,7 +113,7 @@ static const save_field_t entityfields[] = {
 //    F(airFinishedTime),
 //    F(gravity),
 
-    E(goalEntityPtr),
+    E(goalServerEntityPtr),
     E(moveTargetPtr),
 //    F(yawSpeed),
  //   F(idealYawAngle),
@@ -153,8 +155,8 @@ static const save_field_t entityfields[] = {
     //E(enemy),
     //E(oldEnemyPtr),
     //E(activator),
-    //E(groundEntityPtr),
-    //I(groundEntityLinkCount),
+    //E(groundServerEntityPtr),
+    //I(groundServerEntityLinkCount),
     //E(teamChainPtr),
     //E(teamMasterPtr),
 
@@ -231,12 +233,12 @@ static const save_field_t levelfields[] = {
 
     E(sightClient),
 
-    E(sightEntity),
-    I(sightEntityFrameNumber),
-    E(soundEntity),
-    I(soundEntityFrameNumber),
-    E(sound2Entity),
-    I(sound2EntityFrameNumber),
+    E(sightServerEntity),
+    I(sightServerEntityFrameNumber),
+    E(soundServerEntity),
+    I(soundServerEntityFrameNumber),
+    E(sound2ServerEntity),
+    I(sound2ServerEntityFrameNumber),
 
     I(pic_health),
 
@@ -373,7 +375,7 @@ static const save_field_t gamefields[] = {
     {(fieldtype_t)0}
 #undef _OFS
 };
-
+#endif
 //=========================================================
 
 static void write_data(void *buf, size_t len, FILE *f)
@@ -499,7 +501,7 @@ static void write_field(FILE *f, const save_field_t *field, void *base)
         break;
 
     case F_EDICT:
-        write_index(f, *(void **)p, sizeof(Entity), g_entities, MAX_EDICTS - 1);
+        write_index(f, *(void **)p, sizeof(ServerEntity), g_entities, MAX_EDICTS - 1);
         break;
     case F_CLIENT:
         write_index(f, *(void **)p, sizeof(ServersClient), game.clients, game.maximumClients - 1);
@@ -684,7 +686,7 @@ static void read_field(FILE *f, const save_field_t *field, void *base)
         break;
 
     case F_EDICT:
-        *(Entity **)p = (Entity*)read_index(f, sizeof(Entity), g_entities, game.maxEntities - 1); // CPP: Cast
+        *(ServerEntity **)p = (ServerEntity*)read_index(f, sizeof(ServerEntity), g_entities, game.maxEntities - 1); // CPP: Cast
         break;
     case F_CLIENT:
         *(ServersClient **)p = (ServersClient*)read_index(f, sizeof(ServersClient), game.clients, game.maximumClients - 1); // CPP: Cast
@@ -818,7 +820,7 @@ WriteLevel
 void SVG_WriteLevel(const char *filename)
 {
     int     i;
-    Entity *ent;
+    ServerEntity *ent;
     FILE    *f;
 
     f = fopen(filename, "wb");
@@ -837,7 +839,7 @@ void SVG_WriteLevel(const char *filename)
         if (!ent->inUse)
             continue;
         write_int(f, i);
-        write_fields(f, entityfields, ent);
+        write_fields(f, ServerEntityfields, ent);
     }
     write_int(f, -1);
 
@@ -852,7 +854,7 @@ ReadLevel
 SpawnEntities will allready have been called on the
 level the same way it was when the level was saved.
 
-That is necessary to get the entityBaselines
+That is necessary to get the ServerEntityBaselines
 set up identically.
 
 The server will have cleared all of the world links before
@@ -866,7 +868,7 @@ void SVG_ReadLevel(const char *filename)
     int     entnum;
     FILE    *f;
     int     i;
-    Entity *ent;
+    ServerEntity *ent;
 
     // Free any dynamic memory allocated by loading the level
     // base state
@@ -906,19 +908,19 @@ void SVG_ReadLevel(const char *filename)
         if (entnum == -1)
             break;
         if (entnum < 0 || entnum >= game.maxEntities) {
-            gi.Error("%s: bad entity number", __func__);
+            gi.Error("%s: bad ServerEntity number", __func__);
         }
         if (entnum >= globals.numberOfEntities)
             globals.numberOfEntities = entnum + 1;
 
         ent = &g_entities[entnum];
-        read_fields(f, entityfields, ent);
+        read_fields(f, ServerEntityfields, ent);
         ent->inUse = true;
         ent->state.number = entnum;
 
         // let the server rebuild world links for this ent
         memset(&ent->area, 0, sizeof(ent->area));
-        gi.LinkEntity(ent);
+        gi.LinkServerEntity(ent);
     }
 
     fclose(f);
@@ -953,3 +955,4 @@ void SVG_ReadLevel(const char *filename)
     }
 }
 
+#endif

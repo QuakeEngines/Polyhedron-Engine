@@ -21,6 +21,10 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 // Shared include, we need it :)
 #include "shared/shared.h"
+#include "shared/entities/Server/ServerEntity.h"
+#include "shared/collision.h"
+class ServerEntity;
+struct trace_t;
 
 //
 //==============================================================
@@ -93,7 +97,7 @@ constexpr int32_t PM_MAX_TOUCH_ENTS = 32;
 // (in), (out), (in/out) mark which way a variable goes. Copied in to the
 // state befor processing, or copied back out of the state after processing.
 //-------------------
-typedef struct {
+struct PlayerMove {
     // Movement command (in)
     ClientMoveCommand moveCommand;
     
@@ -104,11 +108,11 @@ typedef struct {
     float hookPullSpeed;
 
     // Entities touched (out)
-    struct entity_s* touchedEntities[PM_MAX_TOUCH_ENTS];
+    ServerEntity* touchedEntities[PM_MAX_TOUCH_ENTS];
     int32_t numTouchedEntities;
 
-    // Pointer to the entity that is below the player. (out)
-    struct entity_s* groundEntityPtr; 
+    // Pointer to the ServerEntity that is below the player. (out)
+    ServerEntity* groundServerEntityPtr; 
 
     // Clamped, and including kick and delta (out)
     vec3_t viewAngles;
@@ -125,7 +129,7 @@ typedef struct {
     // Callback functions for collision with the world and solid entities
     trace_t (*q_gameabi Trace)(const vec3_t &start, const vec3_t &mins, const vec3_t &maxs, const vec3_t &end);
     int     (*PointContents)(const vec3_t &point);
-} PlayerMove;
+} ;
 
 //
 // PMove functions.

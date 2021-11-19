@@ -18,8 +18,8 @@
 //===============
 // FuncTimer::ctor
 //===============
-FuncTimer::FuncTimer( Entity* entity ) 
-	: Base( entity ) {
+FuncTimer::FuncTimer( ServerEntity* ServerEntity ) 
+	: Base( ServerEntity ) {
 
 }
 
@@ -46,7 +46,7 @@ void FuncTimer::Spawn() {
 		activator = this;
 	}
 
-	serverEntity->serverFlags = EntityServerFlags::NoClient;
+	serverEntity->serverFlags = ServerEntityServerFlags::NoClient;
 }
 
 //===============

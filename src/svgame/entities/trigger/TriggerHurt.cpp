@@ -23,13 +23,13 @@ static constexpr int32_t SPAWNFLAG_NO_PROTECTION	= 8;
 static constexpr int32_t SPAWNFLAG_SLOW_HURT		= 16;
 
 // Constructor/Deconstructor.
-TriggerHurt::TriggerHurt(Entity* svEntity) : SVGBaseTrigger(svEntity) {
+TriggerHurt::TriggerHurt(ServerEntity* svServerEntity) : SVGBaseTrigger(svServerEntity) {
 	//
 	// All callback functions best be nullptr.
 	//
 
 	//
-	// Set all entity pointer references to nullptr.
+	// Set all ServerEntity pointer references to nullptr.
 	//
 
 	//
@@ -80,12 +80,12 @@ void TriggerHurt::Spawn() {
 	else
 		SetSolid(Solid::Trigger); // Make it triggerable :)
 
-	// In case the entity can be "used", set it to hurt those who use it as well.
+	// In case the ServerEntity can be "used", set it to hurt those who use it as well.
 	if (GetSpawnFlags() & SPAWNFLAG_TOGGLE)
 		SetUseCallback(&TriggerHurt::TriggerHurtUse);
 
 	gi.DPrintf("TriggerHurt::Spawn!\n");
-	LinkEntity();
+	LinkServerEntity();
 }
 
 //
@@ -183,8 +183,8 @@ void TriggerHurt::TriggerHurtUse(SVGBaseEntity* other, SVGBaseEntity* activator)
 	else
 		SetSolid(Solid::Not);
 	
-	// Link entity back in for collision use.
-	LinkEntity();
+	// Link ServerEntity back in for collision use.
+	LinkServerEntity();
 
 	// Ensure that it can only be used ONCE.
 	if (!(GetSpawnFlags() & 2))

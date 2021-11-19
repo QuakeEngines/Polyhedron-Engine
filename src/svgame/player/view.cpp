@@ -107,7 +107,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 //    //
 //    // Calculate new view offset.
 //    //
-//    // Start off with the base entity viewheight. (Set by Player Move code.)
+//    // Start off with the base ServerEntity viewheight. (Set by Player Move code.)
 //    vec3_t newViewOffset = {
 //        0.f,
 //        0.f,
@@ -305,10 +305,10 @@ void SVG_Client_CalculateBlend(PlayerClient *ent)
 //    // Calculate delta velocity.
 //    vec3_t velocity = ent->GetVelocity();
 //
-//    if ((client->oldVelocity[2] < 0) && (velocity[2] > client->oldVelocity[2]) && (!ent->GetGroundEntity())) {
+//    if ((client->oldVelocity[2] < 0) && (velocity[2] > client->oldVelocity[2]) && (!ent->GetGroundServerEntity())) {
 //        delta = client->oldVelocity[2];
 //    } else {
-//        if (!ent->GetGroundEntity())
+//        if (!ent->GetGroundServerEntity())
 //            return;
 //        delta = velocity[2] - client->oldVelocity[2];
 //    }
@@ -326,7 +326,7 @@ void SVG_Client_CalculateBlend(PlayerClient *ent)
 //        return;
 //
 //    if (delta < 15) {
-//        ent->SetEventID(EntityEvent::Footstep);
+//        ent->SetEventID(ServerEntityEvent::Footstep);
 //        return;
 //    }
 //
@@ -338,9 +338,9 @@ void SVG_Client_CalculateBlend(PlayerClient *ent)
 //    if (delta > 30) {
 //        if (ent->GetHealth() > 0) {
 //            if (delta >= 55)
-//                ent->SetEventID(EntityEvent::FallFar);
+//                ent->SetEventID(ServerEntityEvent::FallFar);
 //            else
-//                ent->SetEventID(EntityEvent::Fall);
+//                ent->SetEventID(ServerEntityEvent::Fall);
 //        }
 //        ent->SetDebouncePainTime(level.time);   // no normal pain sound
 //        damage = (delta - 30) / 2;
@@ -349,9 +349,9 @@ void SVG_Client_CalculateBlend(PlayerClient *ent)
 //        dir = { 0.f, 0.f, 1.f };
 //
 //        if (!deathmatch->value || !((int)gamemodeflags->value & GameModeFlags::NoFalling))
-//            SVG_InflictDamage(ent, SVG_GetWorldClassEntity(), SVG_GetWorldClassEntity(), dir, ent->GetOrigin(), vec3_zero(), damage, 0, 0, MeansOfDeath::Falling);
+//            SVG_InflictDamage(ent, SVG_GetWorldClassServerEntity(), SVG_GetWorldClassServerEntity(), dir, ent->GetOrigin(), vec3_zero(), damage, 0, 0, MeansOfDeath::Falling);
 //    } else {
-//        ent->SetEventID(EntityEvent::FallShort);
+//        ent->SetEventID(ServerEntityEvent::FallShort);
 //        return;
 //    }
 //}
@@ -370,9 +370,9 @@ void SVG_Client_SetEvent(PlayerClient* ent) {
     //if (ent->GetEventID())
     //    return;
 
-    //if (ent->GetGroundEntity() && bobMove.XYSpeed > 225) {
+    //if (ent->GetGroundServerEntity() && bobMove.XYSpeed > 225) {
     //    if ((int)(ent->bobTime + bobMove) != bobCycle)
-    //        ent->SetEventID(EntityEvent::Footstep);
+    //        ent->SetEventID(ServerEntityEvent::Footstep);
     //}
 }
 
@@ -396,7 +396,7 @@ void SVG_Client_SetEffects(PlayerClient *ent)
     //    return;
 
     //// show cheaters!!!
-    //if (ent->GetFlags() & EntityFlags::GodMode) {
+    //if (ent->GetFlags() & ServerEntityFlags::GodMode) {
     //    ent->SetRenderEffects(ent->GetRenderEffects() | (RenderEffects::RedShell | RenderEffects::GreenShell | RenderEffects::BlueShell));
     //}
 }
@@ -476,7 +476,7 @@ void SVG_Client_SetSound(PlayerClient *ent)
 //        goto newanim;
 //    if (isRunning != client->animation.isRunning && client->animation.priorityAnimation == PlayerAnimation::Basic)
 //        goto newanim;
-//    if (!ent->GetGroundEntity() && client->animation.priorityAnimation <= PlayerAnimation::Wave)
+//    if (!ent->GetGroundServerEntity() && client->animation.priorityAnimation <= PlayerAnimation::Wave)
 //        goto newanim;
 //
 //    if (client->animation.priorityAnimation == PlayerAnimation::Reverse) {
@@ -493,7 +493,7 @@ void SVG_Client_SetSound(PlayerClient *ent)
 //    if (client->animation.priorityAnimation == PlayerAnimation::Death)
 //        return;     // stay there
 //    if (client->animation.priorityAnimation == PlayerAnimation::Jump) {
-//        if (!ent->GetGroundEntity())
+//        if (!ent->GetGroundServerEntity())
 //            return;     // stay there
 //        client->animation.priorityAnimation = PlayerAnimation::Wave;
 //        ent->SetFrame(FRAME_jump3);
@@ -507,7 +507,7 @@ void SVG_Client_SetSound(PlayerClient *ent)
 //    client->animation.isDucking = isDucking;
 //    client->animation.isRunning = isRunning;
 //
-//    if (!ent->GetGroundEntity()) {
+//    if (!ent->GetGroundServerEntity()) {
 //        client->animation.priorityAnimation = PlayerAnimation::Jump;
 //        if (ent->GetFrame() != FRAME_jump2)
 //            ent->SetFrame(FRAME_jump1);
@@ -545,7 +545,7 @@ void SVG_Client_SetSound(PlayerClient *ent)
 // 
 // Check for intermission, if so, act on it. 
 // 
-// Setup the entity player model direction settings
+// Setup the ServerEntity player model direction settings
 // so others in the world can see it that way too.
 // 
 // Further: Calculate bobcycle, any specific events, viewoffset additions,
@@ -565,7 +565,7 @@ void SVG_Client_SetSound(PlayerClient *ent)
 //        return;
 //    }
 //
-//    // Setup the current player and entity being processed.
+//    // Setup the current player and ServerEntity being processed.
 //    ent = ent;
 //    client = ent->GetClient();
 //
@@ -588,7 +588,7 @@ void SVG_Client_SetSound(PlayerClient *ent)
 //        // FIXME: add view drifting here?
 //        client->playerState.blend[3] = 0;
 //        client->playerState.fov = 90;
-//        SVG_HUD_SetClientStats(ent->GetServerEntity());
+//        SVG_HUD_SetClientStats(ent->GetServerServerEntity());
 //        return;
 //    }
 //
@@ -627,17 +627,17 @@ void SVG_Client_SetSound(PlayerClient *ent)
 //
 //        // Start at beginning of cycle again (See the else if statement.)
 //        client->bobTime = 0;
-//    } else if (ent->GetGroundEntity() || ent->GetWaterLevel() == 2) {
+//    } else if (ent->GetGroundServerEntity() || ent->GetWaterLevel() == 2) {
 //        // So bobbing only cycles when on ground.
 //        if (XYSpeed > 450)
 //            bobMove = 0.25;
 //        else if (XYSpeed > 210)
 //            bobMove = 0.125;
-//        else if (!ent->GetGroundEntity() && ent->GetWaterLevel() == 2 && XYSpeed > 100)
+//        else if (!ent->GetGroundServerEntity() && ent->GetWaterLevel() == 2 && XYSpeed > 100)
 //            bobMove = 0.225;
 //        else if (XYSpeed > 100)
 //            bobMove = 0.0825;
-//        else if (!ent->GetGroundEntity() && ent->GetWaterLevel() == 2)
+//        else if (!ent->GetGroundServerEntity() && ent->GetWaterLevel() == 2)
 //            bobMove = 0.1625;
 //        else
 //            bobMove = 0.03125;
@@ -675,11 +675,11 @@ void SVG_Client_SetSound(PlayerClient *ent)
 //
 //    // Set the stats to display for this client (one of the chase isSpectator stats or...)
 //    if (client->respawn.isSpectator)
-//        SVG_HUD_SetSpectatorStats(ent->GetServerEntity());
+//        SVG_HUD_SetSpectatorStats(ent->GetServerServerEntity());
 //    else
-//        SVG_HUD_SetClientStats(ent->GetServerEntity());
+//        SVG_HUD_SetClientStats(ent->GetServerServerEntity());
 //
-//    SVG_HUD_CheckChaseStats(ent->GetServerEntity());
+//    SVG_HUD_CheckChaseStats(ent->GetServerServerEntity());
 //
 //    SVG_Client_SetEvent(ent);
 //
@@ -700,7 +700,7 @@ void SVG_Client_SetSound(PlayerClient *ent)
 //    // if the scoreboard is up, update it
 //    if (client->showScores && !(level.frameNumber & 31)) {
 //        SVG_HUD_GenerateDMScoreboardLayout(ent, ent->GetEnemy());
-//        gi.Unicast(ent->GetServerEntity(), false);
+//        gi.Unicast(ent->GetServerServerEntity(), false);
 //    }
 //}
 

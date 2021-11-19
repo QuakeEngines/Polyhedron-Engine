@@ -20,6 +20,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "shared/shared.h"
 #include "shared/list.h"
 #include "shared/svgame.h"
+#include "shared/entities/ServerEntity.h"
 
 #include "common/bsp.h"
 #include "common/cmd.h"
@@ -71,10 +72,10 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 
 //=============================================================================
-#define EDICT_POOL(c, n) ((Entity *)((byte *)(c)->pool->entities + (c)->pool->entitySize*(n)))
+#define SHARED_ServerEntity_POOL(c, n) ((SharedServerEntity *)((byte *)(c)->pool->sharedEntities + (c)->pool->sharedServerEntitySize*(n)))
 
-#define EDICT_NUM(n) ((Entity *)((byte *)ge->entities + ge->entitySize*(n)))
-#define NUM_FOR_EDICT(e) ((int)(((byte *)(e) - (byte *)ge->entities) / ge->entitySize))
+#define SHARED_ServerEntity_NUM(n) ((SharedServerEntity *)((byte *)ge->sharedEntities + ge->sharedServerEntitySize*(n)))
+#define NUM_FOR_SHARED_ServerEntity(e) ((int)(((byte *)(e) - (byte *)ge->sharedEntities ) / ge->sharedServerEntitySize))
 
 
 //=============================================================================
@@ -95,8 +96,7 @@ constexpr uint32_t SV_FRAMEDIV = 1;
 constexpr uint32_t SV_FRAMESYNC = 1;
 #define SV_CLIENTSYNC(cl)   1
 
-// Entity leaf settings.
-static constexpr uint32_t MAX_TOTAL_ENT_LEAFS = 128;
+
 //=============================================================================
 
 //-----------------
@@ -105,7 +105,7 @@ static constexpr uint32_t MAX_TOTAL_ENT_LEAFS = 128;
 typedef struct {
     int         number;
     unsigned    num_entities;
-    unsigned    first_entity;
+    unsigned    first_ServerEntity;
     PlayerState playerState;
     int         clientNumber;
     int         areaBytes;
@@ -115,11 +115,11 @@ typedef struct {
 } ClientFrame;
 
 //-----------------
-// Server side Entity.
+// Server side ServerEntity.
 //-----------------
-typedef struct {
-    int         solid32;
-} server_entity_t;
+struct ServerEntity {
+    
+};
 
 
 //-----------------
@@ -136,11 +136,11 @@ typedef struct {
 
     char    name[MAX_QPATH];            // map name, or cinematic name
     cm_t    cm;
-    char    *entityString;
+    char    *ServerEntityString;
 
     char    configstrings[ConfigStrings::MaxConfigStrings][MAX_QPATH];
 
-    server_entity_t entities[MAX_EDICTS];
+    ServerEntity serverEntities[MAX_EDICTS];
 
     unsigned    tracecount;
 } server_t;
@@ -180,7 +180,7 @@ typedef struct {
             uint8_t     volume;
             uint8_t     attenuation;
             uint8_t     timeofs;
-            vec3_t      pos;     // Saved in case entity is freed
+            vec3_t      pos;     // Saved in case ServerEntity is freed
         };
     };
 } MessagePacket;
@@ -216,7 +216,7 @@ typedef struct client_s {
 
     // core info
     int32_t connectionState;
-    Entity *edict;     // EDICT_NUM(clientnum+1)
+    ServerEntity *edict;     // EDICT_NUM(clientnum+1)
     int number;     // client slot number
 
     // client flags
@@ -296,7 +296,7 @@ typedef struct client_s {
     int32_t protocolVersion;        // Major version
     int32_t protocolMinorVersion;   // Minor version
 
-    EntityStateMessageFlags esFlags; // Entity protocol flags
+    ServerEntityStateMessageFlags esFlags; // ServerEntity protocol flags
 
     // packetized messages
     list_t msg_free_list;
@@ -307,12 +307,12 @@ typedef struct client_s {
     size_t msg_dynamic_bytes;      // total size of dynamic memory allocated
 
     // per-client baseline chunks
-    PackedEntity *entityBaselines[SV_BASELINES_CHUNKS];
+    PackedServerEntity *ServerEntityBaselines[SV_BASELINES_CHUNKS];
 
     // server state pointers (hack for MVD channels implementation)
     char *configstrings;
     char *gamedir, *mapName;
-    EntityPool *pool;
+    ServerEntityPool *pool;
     cm_t *cm;
     int32_t slot;
     int32_t spawncount;
@@ -418,8 +418,8 @@ typedef struct server_static_s {
     client_t    *client_pool;       // [maximumClients]
 
     unsigned        num_entities;   // maximumClients * UPDATE_BACKUP * MAX_PACKET_ENTITIES
-    unsigned        next_entity;    // next state to use
-    PackedEntity    *entities;      // [num_entities]
+    unsigned        next_ServerEntity;    // next state to use
+    PackedServerEntity    *entities;      // [num_entities]
 
 #if USE_ZLIB
     z_stream        z;  // for compressing messages at once
@@ -492,7 +492,7 @@ extern cvar_t       *sv_zombietime;
 extern cvar_t       *sv_ghostime;
 
 extern client_t     *sv_client;
-extern Entity       *sv_player;
+extern ServerEntity       *sv_player;
 
 extern qboolean     sv_pending_autosave;
 
@@ -595,7 +595,7 @@ extern    ServerGameExports    *ge;
 
 void SV_InitGameProgs(void);
 void SV_ShutdownGameProgs(void);
-void SV_InitEntity(Entity *e);
+void SV_InitServerEntity(ServerEntity *e);
 
 //void PF_PMove(PlayerMove *pm);
 
@@ -617,19 +617,19 @@ int SV_NoSaveGames(void);
 void SV_ClearWorld(void);
 // called after the world model has been loaded, before linking any entities
 
-void PF_UnlinkEntity(Entity *ent);
-// call before removing an entity, and before trying to move one,
+void PF_UnlinkServerEntity(ServerEntity *ent);
+// call before removing an ServerEntity, and before trying to move one,
 // so it doesn't clip against itself
 
-void SV_LinkEntity(cm_t *cm, Entity *ent);
-void PF_LinkEntity(Entity *ent);
-// Needs to be called any time an entity changes origin, mins, maxs,
+void SV_LinkServerEntity(cm_t *cm, ServerEntity *ent);
+void PF_LinkServerEntity(ServerEntity *ent);
+// Needs to be called any time an ServerEntity changes origin, mins, maxs,
 // or solid.  Automatically unlinks if needed.
 // sets ent->v.absMin and ent->v.absMax
-// sets ent->leafnums[] for pvs determination even if the entity
+// sets ent->leafnums[] for pvs determination even if the ServerEntity
 // is not solid
 
-int SV_AreaEntities(const vec3_t &mins, const vec3_t &maxs, Entity **list, int maxcount, int areatype);
+int SV_AreaEntities(const vec3_t &mins, const vec3_t &maxs, ServerEntity **list, int maxcount, int areatype);
 // fills in a table of edict pointers with edicts that have bounding boxes
 // that intersect the given area.  It is possible for a non-axial bmodel
 // to be returned that doesn't actually intersect the area on an exact
@@ -637,7 +637,7 @@ int SV_AreaEntities(const vec3_t &mins, const vec3_t &maxs, Entity **list, int m
 // returns the number of pointers filled in
 // ??? does this always return the world?
 
-qboolean SV_EntityIsVisible(cm_t *cm, Entity *ent, byte *mask);
+qboolean SV_ServerEntityIsVisible(cm_t *cm, ServerEntity *ent, byte *mask);
 
 //===================================================================
 
@@ -649,7 +649,7 @@ int SV_PointContents(const vec3_t &p);
 // Quake 2 extends this to also check entities, to allow moving liquids
 
 trace_t q_gameabi SV_Trace(const vec3_t &start, const vec3_t &mins, const vec3_t &maxs, const vec3_t &end,
-                           Entity *passedict, int contentmask);
+                           ServerEntity *passedict, int contentmask);
 // mins and maxs are relative
 
 // if the entire move stays in a solid volume, trace.allSolid will be set,

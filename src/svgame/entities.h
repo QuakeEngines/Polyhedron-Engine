@@ -4,10 +4,10 @@
 //
 // entities.h
 //
-// All entity related functionality resides here. Need to allocate a class?
-// Find an entity? Anything else? You've hit the right spot.
+// All ServerEntity related functionality resides here. Need to allocate a class?
+// Find an ServerEntity? Anything else? You've hit the right spot.
 //
-// A "ClassEntity", or a CE, is always a member of a "ServerEntity", aka an SE.
+// A "ClassServerEntity", or a CE, is always a member of a "ServerEntity", aka an SE.
 //
 // The actual game logic implementation thus goes in ClassEntities. An SE is
 // merely a POD binding layer between SVGame and the server. (Important for
@@ -22,58 +22,58 @@
 
 
 //
-// Filter function namespace that actually contains the entity filter implementations.
+// Filter function namespace that actually contains the ServerEntity filter implementations.
 // 
-namespace EntityFilterFunctions {
-    // Returns true in case the (server-)Entity is in use.
-    inline bool EntityInUse(const Entity& ent) { return ent.inUse; }
-    // Returns true in case the (server-)Entity has a client attached to it.
-    inline bool EntityHasClient(const Entity& ent) { return static_cast<bool>(ent.client); }
-    // Returns true in case the (server-)Entity has a Class Entity attached to it.
-    inline bool EntityHasClassEntity(const Entity& ent) { return static_cast<bool>(ent.classEntity); }
+namespace ServerEntityFilterFunctions {
+    // Returns true in case the (server-)ServerEntity is in use.
+    inline bool ServerEntityInUse(const ServerEntity& ent) { return ent.inUse; }
+    // Returns true in case the (server-)ServerEntity has a client attached to it.
+    inline bool ServerEntityHasClient(const ServerEntity& ent) { return static_cast<bool>(ent.client); }
+    // Returns true in case the (server-)ServerEntity has a Class ServerEntity attached to it.
+    inline bool ServerEntityHasClassServerEntity(const ServerEntity& ent) { return static_cast<bool>(ent.classServerEntity); }
 
-    // Returns true in case the (server-)Entity has a client attached to it.
-    inline bool BaseEntityHasClient(SVGBaseEntity* ent) { return ent->GetClient(); }
-    // Returns true in case the BaseEntity has a ground entity set to it.
-    inline bool BaseEntityHasGroundEntity(SVGBaseEntity* ent) { return ent->GetGroundEntity(); }
-    // Returns true in case the BaseEntity is properly linked to a server entity.
-    inline bool BaseEntityHasServerEntity(SVGBaseEntity* ent) { return ent->GetServerEntity(); }
-    // Returns true if the BaseEntity contains the sought for targetname.
-    inline bool BaseEntityHasTargetName(SVGBaseEntity* ent) { return ent->GetTargetName() != "" && !ent->GetTargetName().empty(); }
-    // Returns true in case the BaseEntity has a client attached to it.
-    inline bool BaseEntityInUse(SVGBaseEntity* ent) { return ent->IsInUse(); }
-    // Returns true if the BaseEntity is NOT a nullptr.
-    inline bool BaseEntityIsValidPointer(SVGBaseEntity* ent) { return ent != nullptr; }
+    // Returns true in case the (server-)ServerEntity has a client attached to it.
+    inline bool BaseServerEntityHasClient(SVGBaseEntity* ent) { return ent->GetClient(); }
+    // Returns true in case the BaseServerEntity has a ground ServerEntity set to it.
+    inline bool BaseServerEntityHasGroundServerEntity(SVGBaseEntity* ent) { return ent->GetGroundServerEntity(); }
+    // Returns true in case the BaseServerEntity is properly linked to a server ServerEntity.
+    inline bool BaseServerEntityHasServerServerEntity(SVGBaseEntity* ent) { return ent->GetServerServerEntity(); }
+    // Returns true if the BaseServerEntity contains the sought for targetname.
+    inline bool BaseServerEntityHasTargetName(SVGBaseEntity* ent) { return ent->GetTargetName() != "" && !ent->GetTargetName().empty(); }
+    // Returns true in case the BaseServerEntity has a client attached to it.
+    inline bool BaseServerEntityInUse(SVGBaseEntity* ent) { return ent->IsInUse(); }
+    // Returns true if the BaseServerEntity is NOT a nullptr.
+    inline bool BaseServerEntityIsValidPointer(SVGBaseEntity* ent) { return ent != nullptr; }
 
-    // Returns true in case the BaseEntity has the queried for classname.
-    //inline bool BaseEntityHasClass(SVGBaseEntity* ent, std::string classname) { return ent->GetClassName() == classname; }
+    // Returns true in case the BaseServerEntity has the queried for classname.
+    //inline bool BaseServerEntityHasClass(SVGBaseEntity* ent, std::string classname) { return ent->GetClassName() == classname; }
 };
 
 
 //
-// Actual filters to use with GetBaseEntityRange, ..., ... TODO: What other functions?
+// Actual filters to use with GetBaseServerEntityRange, ..., ... TODO: What other functions?
 //
-namespace EntityFilters {
+namespace ServerEntityFilters {
     using namespace std::views;
 
-    inline auto InUse = std::views::filter( &EntityFilterFunctions::EntityInUse );
-    inline auto HasClient = std::views::filter( &EntityFilterFunctions::EntityHasClient );
-    inline auto HasClassEntity = std::views::filter( &EntityFilterFunctions::EntityHasClassEntity );
-    // WID: TODO: This one actually has to move into EntityFilterFunctions, and then
+    inline auto InUse = std::views::filter( &ServerEntityFilterFunctions::ServerEntityInUse );
+    inline auto HasClient = std::views::filter( &ServerEntityFilterFunctions::ServerEntityHasClient );
+    inline auto HasClassServerEntity = std::views::filter( &ServerEntityFilterFunctions::ServerEntityHasClassServerEntity );
+    // WID: TODO: This one actually has to move into ServerEntityFilterFunctions, and then
     // be referred to from here. However, I am unsure how to do that as of yet.
     inline auto HasClassName(const std::string& classname) {
         return std::ranges::views::filter(
-            [classname /*need a copy!*/](Entity &ent) {
+            [classname /*need a copy!*/](ServerEntity &ent) {
                 return classname == ent.className;
             }
         );
     }
-    // WID: TODO: This one actually has to move into EntityFilterFunctions, and then
+    // WID: TODO: This one actually has to move into ServerEntityFilterFunctions, and then
     // be referred to from here. However, I am unsure how to do that as of yet.
     inline auto HasKeyValue(const std::string& fieldKey, const std::string &fieldValue) {
         return std::ranges::views::filter(
-            [fieldKey, fieldValue /*need a copy!*/](Entity& ent) {
-                auto& dictionary = ent.entityDictionary;
+            [fieldKey, fieldValue /*need a copy!*/](ServerEntity& ent) {
+                auto& dictionary = ent.ServerEntityDictionary;
 
                 if (dictionary.find(fieldKey) != dictionary.end()) {
                     if (dictionary[fieldKey] == fieldValue) {
@@ -86,25 +86,53 @@ namespace EntityFilters {
         );
     }
 
+    // WID: TODO: This one actually has to move into ServerEntityFilterFunctions, and then
+    // be referred to from here. However, I am unsure how to do that as of yet.
+    template <typename ClassType>
+    auto HasSubclassServerEntityType() {
+        return std::ranges::views::filter(
+            [](ServerEntity &ent) {
+                if (ent.classServerEntity) {
+                    return ent->classServerEntity->IsClass<ClassType>();
+                } else {
+                    return false;
+                }
+            }
+        );
+    }
+
+    template <typename ClassType>
+    auto HasSubclassServerEntityTypeOf() {
+        return std::ranges::views::filter(
+            [](ServerEntity& ent) {
+                if (ent.classServerEntity) {
+                    return ent.classServerEntity->IsSubclassOf<ClassType>();
+                } else {
+                    return false;
+                }
+            }
+        );
+    }
+    
     inline auto Standard = (InUse);
 };
-namespace ef = EntityFilters; // Shortcut, lesser typing.
+namespace ef = ServerEntityFilters; // Shortcut, lesser typing.
 
 
 //
-// Actual filters to use with GetEntityRange, ..., ... TODO: What other functions?
+// Actual filters to use with GetServerEntityRange, ..., ... TODO: What other functions?
 //
-namespace BaseEntityFilters {
+namespace BaseServerEntityFilters {
     using namespace std::views;
 
-    // BaseEntity Filters to employ by pipelining. Very nice and easy method of doing loops.
-    inline auto IsValidPointer = std::views::filter( &EntityFilterFunctions::BaseEntityIsValidPointer );
-    inline auto HasServerEntity = std::views::filter( &EntityFilterFunctions::BaseEntityHasServerEntity);
-    inline auto HasGroundEntity = std::views::filter( &EntityFilterFunctions::BaseEntityHasGroundEntity);
-    inline auto InUse = std::views::filter( &EntityFilterFunctions::BaseEntityInUse );
-    inline auto HasClient = std::views::filter ( &EntityFilterFunctions::BaseEntityHasClient );
+    // BaseServerEntity Filters to employ by pipelining. Very nice and easy method of doing loops.
+    inline auto IsValidPointer = std::views::filter( &ServerEntityFilterFunctions::BaseServerEntityIsValidPointer );
+    inline auto HasServerServerEntity = std::views::filter( &ServerEntityFilterFunctions::BaseServerEntityHasServerServerEntity);
+    inline auto HasGroundServerEntity = std::views::filter( &ServerEntityFilterFunctions::BaseServerEntityHasGroundServerEntity);
+    inline auto InUse = std::views::filter( &ServerEntityFilterFunctions::BaseServerEntityInUse );
+    inline auto HasClient = std::views::filter ( &ServerEntityFilterFunctions::BaseServerEntityHasClient );
 
-    // WID: TODO: This one actually has to move into EntityFilterFunctions, and then
+    // WID: TODO: This one actually has to move into ServerEntityFilterFunctions, and then
     // be referred to from here. However, I am unsure how to do that as of yet.
     inline auto HasClassName(const std::string& classname) {
         return std::ranges::views::filter(
@@ -114,12 +142,12 @@ namespace BaseEntityFilters {
         );
     }
 
-    // WID: TODO: This one actually has to move into EntityFilterFunctions, and then
+    // WID: TODO: This one actually has to move into ServerEntityFilterFunctions, and then
     // be referred to from here. However, I am unsure how to do that as of yet.
     inline auto HasKeyValue(const std::string& fieldKey, const std::string& fieldValue) {
         return std::ranges::views::filter(
             [fieldKey, fieldValue /*need a copy!*/](SVGBaseEntity *ent) {
-                auto& dictionary = ent->GetEntityDictionary();
+                auto& dictionary = ent->GetServerEntityDictionary();
 
                 if (dictionary.find(fieldKey) != dictionary.end()) {
                     if (dictionary[fieldKey] == fieldValue) {
@@ -132,7 +160,7 @@ namespace BaseEntityFilters {
         );
     }
 
-    // WID: TODO: This one actually has to move into EntityFilterFunctions, and then
+    // WID: TODO: This one actually has to move into ServerEntityFilterFunctions, and then
     // be referred to from here. However, I am unsure how to do that as of yet.
     template <typename ClassType>
     auto IsClassOf() {
@@ -152,19 +180,19 @@ namespace BaseEntityFilters {
         );
     }
 
-    // WID: TODO: This one actually has to move into EntityFilterFunctions, and then
+    // WID: TODO: This one actually has to move into ServerEntityFilterFunctions, and then
     // be referred to from here. However, I am unsure how to do that as of yet.
     inline auto WithinRadius(vec3_t origin, float radius, uint32_t excludeSolidFlags) {
         return std::ranges::views::filter(
             [origin, radius, excludeSolidFlags/*need a copy!*/](SVGBaseEntity* ent) {
-                // Find distances between entity origins.
-                vec3_t entityOrigin = origin - (ent->GetOrigin() + vec3_scale(ent->GetMins() + ent->GetMaxs(), 0.5f));
+                // Find distances between ServerEntity origins.
+                vec3_t ServerEntityOrigin = origin - (ent->GetOrigin() + vec3_scale(ent->GetMins() + ent->GetMaxs(), 0.5f));
 
                 // Do they exceed our radius? Then we haven't find any.
-                if (vec3_length(entityOrigin) > radius)
+                if (vec3_length(ServerEntityOrigin) > radius)
                     return false;
 
-                // Cheers, we found our class entity.
+                // Cheers, we found our class ServerEntity.
                 return true;
             }
         );
@@ -174,97 +202,97 @@ namespace BaseEntityFilters {
     // Summed up pipelines to simplify life with.
     //
     // A wrapper for the most likely 3 widely used, and if forgotten, error prone filters.
-    inline auto Standard = (IsValidPointer | HasServerEntity | InUse);
+    inline auto Standard = (IsValidPointer | HasServerServerEntity | InUse);
 };
-namespace bef = BaseEntityFilters; // Shortcut, lesser typing.
+namespace bef = BaseServerEntityFilters; // Shortcut, lesser typing.
 
 
 //
 // C++ using magic.
 //
-using EntitySpan = std::span<Entity>;
-using BaseEntitySpan = std::span<SVGBaseEntity*>;
+using ServerEntitySpan = std::span<ServerEntity>;
+using BaseServerEntitySpan = std::span<SVGBaseEntity*>;
 
-using BaseEntityVector = std::vector<SVGBaseEntity*>;
+using BaseServerEntityVector = std::vector<SVGBaseEntity*>;
 
 // Returns a span containing all the entities in the range of [start] to [start + count].
 template <std::size_t start, std::size_t count>
-inline auto GetEntityRange() -> std::span<Entity, count> {
+inline auto GetServerEntityRange() -> std::span<ServerEntity, count> {
     return std::span(g_entities).subspan<start, count>();
 }
 
 // Returns a span containing all base entities in the range of [start] to [start + count].
 template <std::size_t start, std::size_t count>
-inline auto GetBaseEntityRange() -> std::span<SVGBaseEntity*, count> {
+inline auto GetBaseServerEntityRange() -> std::span<SVGBaseEntity*, count> {
     return std::span(g_baseEntities).subspan<start, count>();
 }
 
-inline EntitySpan GetEntityRange(std::size_t start, std::size_t count) {
-    return EntitySpan(g_entities).subspan(start, count);
+inline ServerEntitySpan GetServerEntityRange(std::size_t start, std::size_t count) {
+    return ServerEntitySpan(g_entities).subspan(start, count);
 }
-inline BaseEntitySpan GetBaseEntityRange(std::size_t start, std::size_t count) {
-    return BaseEntitySpan(g_baseEntities).subspan(start, count);
+inline BaseServerEntitySpan GetBaseServerEntityRange(std::size_t start, std::size_t count) {
+    return BaseServerEntitySpan(g_baseEntities).subspan(start, count);
 }
 
 
 //
-// Entity SEARCH utilities.
+// ServerEntity SEARCH utilities.
 //
-Entity* SVG_PickTarget(char* targetName);
-Entity* SVG_Find(Entity* from, int32_t fieldofs, const char* match); // C++20: Added const to char*
+ServerEntity* SVG_PickTarget(char* targetName);
+ServerEntity* SVG_Find(ServerEntity* from, int32_t fieldofs, const char* match); // C++20: Added const to char*
 
 // Find entities within a given radius.
 // Moved to gamemodes. This allows for them to customize what actually belongs in a certain radius.
 // All that might sound silly, but the key here is customization.
-//BaseEntityVector SVG_FindEntitiesWithinRadius(vec3_t org, float rad, uint32_t excludeSolidFlags = Solid::Not);
+//BaseServerEntityVector SVG_FindEntitiesWithinRadius(vec3_t org, float rad, uint32_t excludeSolidFlags = Solid::Not);
 // Find entities based on their field(key), and field(value).
-SVGBaseEntity* SVG_FindEntityByKeyValue(const std::string& fieldKey, const std::string& fieldValue, SVGBaseEntity* lastEntity = nullptr);
+SVGBaseEntity* SVG_FindServerEntityByKeyValue(const std::string& fieldKey, const std::string& fieldValue, SVGBaseEntity* lastServerEntity = nullptr);
 
 
 //
-// Server Entity handling.
+// Server ServerEntity handling.
 //
-void    SVG_InitEntity(Entity* e);
-void    SVG_FreeEntity(Entity* e);
+void    SVG_InitServerEntity(ServerEntity* e);
+void    SVG_FreeServerEntity(ServerEntity* e);
 
-Entity* SVG_GetWorldServerEntity();
-Entity* SVG_Spawn(void);
+ServerEntity* SVG_GetWorldServerServerEntity();
+ServerEntity* SVG_Spawn(void);
 
-Entity* SVG_CreateTargetChangeLevel(char* map);
+ServerEntity* SVG_CreateTargetChangeLevel(char* map);
 
 // Admer: quick little template function to spawn entities, until we have this code in a local game class :)
-template<typename entityClass>
-inline entityClass* SVG_CreateClassEntity(Entity* edict = nullptr, bool allocateNewEdict = true) {
-    entityClass* entity = nullptr;
-    // If a null entity was passed, create a new one
+template<typename ServerEntityClass>
+inline ServerEntityClass* SVG_CreateClassServerEntity(ServerEntity* edict = nullptr, bool allocateNewEdict = true) {
+    ServerEntityClass* ServerEntity = nullptr;
+    // If a null ServerEntity was passed, create a new one
     if (nullptr == edict) {
         if (allocateNewEdict) {
             edict = SVG_Spawn();
         } else {
-            gi.DPrintf("WARNING: tried to spawn a class entity when the edict is null\n");
+            gi.DPrintf("WARNING: tried to spawn a class ServerEntity when the edict is null\n");
             return nullptr;
         }
     }
     // Abstract classes will have AllocateInstance as nullptr, hence we gotta check for that
-    if (entityClass::ClassInfo.AllocateInstance) {
-        entity = static_cast<entityClass*>(entityClass::ClassInfo.AllocateInstance(edict)); // Entities that aren't in the type info system will error out here
-        edict->className = entity->GetTypeInfo()->className;
-        edict->classEntity = entity;
+    if (ServerEntityClass::ClassInfo.AllocateInstance) {
+        ServerEntity = static_cast<ServerEntityClass*>(ServerEntityClass::ClassInfo.AllocateInstance(edict)); // Entities that aren't in the type info system will error out here
+        edict->className = ServerEntity->GetTypeInfo()->className;
+        edict->classServerEntity = ServerEntity;
         if (nullptr == g_baseEntities[edict->state.number]) {
-            g_baseEntities[edict->state.number] = entity;
+            g_baseEntities[edict->state.number] = ServerEntity;
         } else {
             gi.DPrintf("ERROR: edict %i is already taken\n", edict->state.number);
         }
     }
-    return entity;
+    return ServerEntity;
 }
 
 
 //
-// ClassEntity handling.
+// ClassServerEntity handling.
 //
-SVGBaseEntity* SVG_GetWorldClassEntity();
-SVGBaseEntity* SVG_SpawnClassEntity(Entity* ent, const std::string& className);
-void SVG_FreeClassEntity(Entity* ent);
+SVGBaseEntity* SVG_GetWorldClassServerEntity();
+SVGBaseEntity* SVG_SpawnClassServerEntity(ServerEntity* ent, const std::string& className);
+void SVG_FreeClassServerEntity(ServerEntity* ent);
 
 #endif // __SVGAME_ENTITIES_H__

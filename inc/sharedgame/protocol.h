@@ -20,7 +20,7 @@
 typedef enum {
     SVG_CMD_MUZZLEFLASH = 22,
     SVG_CMD_MUZZLEFLASH2,
-    SVG_CMD_TEMP_ENTITY,
+    SVG_CMD_TEMP_ServerEntity,
     SVG_CMD_LAYOUT,
     SVG_CMD_INVENTORY,
 

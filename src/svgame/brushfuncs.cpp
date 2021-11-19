@@ -60,13 +60,13 @@
 // Support routines for movement (changes in origin using velocity)
 //
 
-//void Brush_Move_Done(Entity* ent)
+//void Brush_Move_Done(ServerEntity* ent)
 //{
-//    ent->classEntity->SetVelocity( vec3_zero() );
+//    ent->classServerEntity->SetVelocity( vec3_zero() );
 //    ent->moveInfo.OnEndFunction( ent );
 //}
 //
-//void Brush_Move_Final(Entity* ent)
+//void Brush_Move_Final(ServerEntity* ent)
 //{
 //    if ( ent->moveInfo.remainingDistance == 0 ) 
 //    {
@@ -75,14 +75,14 @@
 //    }
 //
 //    // Move only as far as to clear the remaining distance
-//    ent->classEntity->SetVelocity( vec3_scale( ent->moveInfo.dir, ent->moveInfo.remainingDistance / FRAMETIME ) );
+//    ent->classServerEntity->SetVelocity( vec3_scale( ent->moveInfo.dir, ent->moveInfo.remainingDistance / FRAMETIME ) );
 //
 //    // FIXME This is a problem.
 //    //ent->Think = Brush_Move_Done;
-//    ent->classEntity->SetNextThinkTime( level.time + FRAMETIME );
+//    ent->classServerEntity->SetNextThinkTime( level.time + FRAMETIME );
 //}
 //
-//void Brush_Move_Begin(Entity* ent)
+//void Brush_Move_Begin(ServerEntity* ent)
 //{
 //    float frames;
 //
@@ -94,36 +94,36 @@
 //    }
 //    
 //    //VectorScale(ent->moveInfo.dir, ent->moveInfo.speed, ent->velocity);
-//    ent->classEntity->SetVelocity( vec3_scale( ent->moveInfo.dir, ent->moveInfo.speed ) );
+//    ent->classServerEntity->SetVelocity( vec3_scale( ent->moveInfo.dir, ent->moveInfo.speed ) );
 //
 //    frames = floor( (ent->moveInfo.remainingDistance / ent->moveInfo.speed) / FRAMETIME );
 //    ent->moveInfo.remainingDistance -= frames * ent->moveInfo.speed * FRAMETIME;
-//    ent->classEntity->SetNextThinkTime( level.time + (frames * FRAMETIME) );
+//    ent->classServerEntity->SetNextThinkTime( level.time + (frames * FRAMETIME) );
 //    
 //    // FIXME: Mayhaps Brush_Move_Begin et al should be moved to SVGBaseEntity
 //    //ent->Think = Brush_Move_Final;
 //}
 //
-//void Think_AccelMove(Entity* ent);
+//void Think_AccelMove(ServerEntity* ent);
 //
-//void Brush_Move_Calc(Entity* ent, const vec3_t &dest, void(*func)(Entity*))
+//void Brush_Move_Calc(ServerEntity* ent, const vec3_t &dest, void(*func)(ServerEntity*))
 //{
-//    ent->classEntity->SetVelocity( vec3_zero() );
-//    ent->moveInfo.dir = dest - ent->classEntity->GetOrigin();
+//    ent->classServerEntity->SetVelocity( vec3_zero() );
+//    ent->moveInfo.dir = dest - ent->classServerEntity->GetOrigin();
 //    ent->moveInfo.remainingDistance = VectorNormalize( ent->moveInfo.dir );
 //    ent->moveInfo.OnEndFunction = func;
 //
 //    if (ent->moveInfo.speed == ent->moveInfo.acceleration && ent->moveInfo.speed == ent->moveInfo.deceleration)
 //    {
-//        if ( level.currentEntity == 
-//             ((ent->classEntity->GetFlags() & EntityFlags::TeamSlave) ? 
-//             ent->classEntity->GetTeamMasterEntity() : ent->classEntity) ) 
+//        if ( level.currentServerEntity == 
+//             ((ent->classServerEntity->GetFlags() & ServerEntityFlags::TeamSlave) ? 
+//             ent->classServerEntity->GetTeamMasterServerEntity() : ent->classServerEntity) ) 
 //        {
 //            Brush_Move_Begin(ent);
 //        }
 //        else 
 //        {
-//            ent->classEntity->SetNextThinkTime( level.time + FRAMETIME );
+//            ent->classServerEntity->SetNextThinkTime( level.time + FRAMETIME );
 //            //ent->Think = Brush_Move_Begin;
 //        }
 //    }
@@ -132,7 +132,7 @@
 //        // accelerative
 //        ent->moveInfo.currentSpeed = 0;
 //        //ent->Think = Think_AccelMove;
-//        ent->classEntity->SetNextThinkTime( level.time + FRAMETIME );
+//        ent->classServerEntity->SetNextThinkTime( level.time + FRAMETIME );
 //    }
 //}
 //
@@ -141,13 +141,13 @@
 //// Support routines for angular movement (changes in angle using angularVelocity)
 ////
 //
-//void Brush_AngleMove_Done(Entity* ent)
+//void Brush_AngleMove_Done(ServerEntity* ent)
 //{
-//    ent->classEntity->SetAngularVelocity( vec3_zero() );
+//    ent->classServerEntity->SetAngularVelocity( vec3_zero() );
 //    ent->moveInfo.OnEndFunction( ent );
 //}
 //
-//void Brush_AngleMove_Final(Entity* ent)
+//void Brush_AngleMove_Final(ServerEntity* ent)
 //{
 //    vec3_t move;
 //
@@ -166,13 +166,13 @@
 //        return;
 //    }
 //
-//    ent->classEntity->SetAngularVelocity( vec3_scale( move, 1.0f / FRAMETIME ) );
+//    ent->classServerEntity->SetAngularVelocity( vec3_scale( move, 1.0f / FRAMETIME ) );
 //    
 //    //ent->Think = Brush_AngleMove_Done;
-//    ent->classEntity->SetNextThinkTime( level.time + FRAMETIME );
+//    ent->classServerEntity->SetNextThinkTime( level.time + FRAMETIME );
 //}
 //
-//void Brush_AngleMove_Begin(Entity* ent)
+//void Brush_AngleMove_Begin(ServerEntity* ent)
 //{
 //    //vec3_t  destdelta;
 //    //float   len;
@@ -206,11 +206,11 @@
 //    ////ent->Think = Brush_AngleMove_Final;
 //}
 //
-//void Brush_AngleMove_Calc(Entity* ent, void(*func)(Entity*))
+//void Brush_AngleMove_Calc(ServerEntity* ent, void(*func)(ServerEntity*))
 //{
 //    //VectorClear(ent->angularVelocity);
 //    //ent->moveInfo.OnEndFunction = func;
-//    //if (level.currentEntity == ((ent->flags & EntityFlags::TeamSlave) ? ent->teamMasterPtr : ent)) {
+//    //if (level.currentServerEntity == ((ent->flags & ServerEntityFlags::TeamSlave) ? ent->teamMasterPtr : ent)) {
 //    //    Brush_AngleMove_Begin(ent);
 //    //}
 //    //else {
@@ -322,7 +322,7 @@
 //    return;
 //}
 
-void Think_AccelMove(Entity* ent)
+void Think_AccelMove(ServerEntity* ent)
 {
     //ent->moveInfo.remainingDistance -= ent->moveInfo.currentSpeed;
 

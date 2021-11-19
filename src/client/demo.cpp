@@ -75,11 +75,11 @@ fail:
     return false;
 }
 
-// writes a delta update of an EntityState list to the message.
+// writes a delta update of an ServerEntityState list to the message.
 static void emit_packet_entities(ServerFrame *from, ServerFrame *to)
 {
-    PackedEntity oldpack, newpack;
-    EntityState *oldent, *newent;
+    PackedServerEntity oldpack, newpack;
+    ServerEntityState *oldent, *newent;
     int     oldindex, newindex;
     int     oldnum, newnum;
     int     i, from_num_entities;
@@ -96,47 +96,47 @@ static void emit_packet_entities(ServerFrame *from, ServerFrame *to)
         if (newindex >= to->numEntities) {
             newnum = 9999;
         } else {
-            i = (to->firstEntity + newindex) & PARSE_ENTITIES_MASK;
-            newent = &cl.entityStates[i];
+            i = (to->firstServerEntity + newindex) & PARSE_ENTITIES_MASK;
+            newent = &cl.ServerEntityStates[i];
             newnum = newent->number;
         }
 
         if (oldindex >= from_num_entities) {
             oldnum = 9999;
         } else {
-            i = (from->firstEntity + oldindex) & PARSE_ENTITIES_MASK;
-            oldent = &cl.entityStates[i];
+            i = (from->firstServerEntity + oldindex) & PARSE_ENTITIES_MASK;
+            oldent = &cl.ServerEntityStates[i];
             oldnum = oldent->number;
         }
 
         if (newnum == oldnum) {
             // Delta update from old position. Because the force parm is false,
-            // this will not result in any bytes being emitted if the entity has
+            // this will not result in any bytes being emitted if the ServerEntity has
             // not changed at all. Note that players are always 'newentities',
             // this updates their oldOrigin always and prevents warping in case
             // of packet loss.
-            MSG_PackEntity(&oldpack, oldent);
-            MSG_PackEntity(&newpack, newent);
-            MSG_WriteDeltaEntity(&oldpack, &newpack,
-                                 (EntityStateMessageFlags)(newent->number <= cl.maximumClients ? MSG_ES_NEWENTITY : 0));   // CPP: WARNING: EntityStateMessageFlags cast.
+            MSG_PackServerEntity(&oldpack, oldent);
+            MSG_PackServerEntity(&newpack, newent);
+            MSG_WriteDeltaServerEntity(&oldpack, &newpack,
+                                 (ServerEntityStateMessageFlags)(newent->number <= cl.maximumClients ? MSG_ES_NEWServerEntity : 0));   // CPP: WARNING: ServerEntityStateMessageFlags cast.
             oldindex++;
             newindex++;
             continue;
         }
 
         if (newnum < oldnum) {
-            // this is a new entity, send it from the baseline
-            MSG_PackEntity(&oldpack, &cl.entityBaselines[newnum]);
-            MSG_PackEntity(&newpack, newent);
-            MSG_WriteDeltaEntity(&oldpack, &newpack, (EntityStateMessageFlags)(MSG_ES_FORCE | MSG_ES_NEWENTITY));  // CPP: WARNING: EntityStateMessageFlags cast.
+            // this is a new ServerEntity, send it from the baseline
+            MSG_PackServerEntity(&oldpack, &cl.ServerEntityBaselines[newnum]);
+            MSG_PackServerEntity(&newpack, newent);
+            MSG_WriteDeltaServerEntity(&oldpack, &newpack, (ServerEntityStateMessageFlags)(MSG_ES_FORCE | MSG_ES_NEWServerEntity));  // CPP: WARNING: ServerEntityStateMessageFlags cast.
             newindex++;
             continue;
         }
 
         if (newnum > oldnum) {
-            // the old entity isn't present in the new message
-            MSG_PackEntity(&oldpack, oldent);
-            MSG_WriteDeltaEntity(&oldpack, NULL, MSG_ES_FORCE);
+            // the old ServerEntity isn't present in the new message
+            MSG_PackServerEntity(&oldpack, oldent);
+            MSG_WriteDeltaServerEntity(&oldpack, NULL, MSG_ES_FORCE);
             oldindex++;
             continue;
         }
@@ -204,7 +204,7 @@ void CL_EmitDemoFrame(void)
         oldframe = &cl.frames[cls.demo.last_server_frame & UPDATE_MASK];
         lastFrame = FRAME_PRE;
         if (oldframe->number != cls.demo.last_server_frame || !oldframe->valid ||
-            cl.numEntityStates - oldframe->firstEntity > MAX_PARSE_ENTITIES) {
+            cl.numServerEntityStates - oldframe->firstServerEntity > MAX_PARSE_ENTITIES) {
             oldframe = NULL;
             lastFrame = -1;
         }
@@ -320,8 +320,8 @@ static void CL_Record_f(void)
     char    buffer[MAX_OSPATH];
     int     i, c;
     size_t  len;
-    EntityState  *ent;
-    PackedEntity pack;
+    ServerEntityState  *ent;
+    PackedServerEntity pack;
     char            *s;
     qhandle_t       f;
     unsigned        mode = FS_MODE_WRITE;
@@ -423,9 +423,9 @@ static void CL_Record_f(void)
         MSG_WriteByte(0);
     }
 
-    // entityBaselines
+    // ServerEntityBaselines
     for (i = 1; i < MAX_EDICTS; i++) {
-        ent = &cl.entityBaselines[i];
+        ent = &cl.ServerEntityBaselines[i];
         if (!ent->number)
             continue;
 
@@ -435,8 +435,8 @@ static void CL_Record_f(void)
         }
 
         MSG_WriteByte(svc_spawnbaseline);
-        MSG_PackEntity(&pack, ent);
-        MSG_WriteDeltaEntity(NULL, &pack, MSG_ES_FORCE);
+        MSG_PackServerEntity(&pack, ent);
+        MSG_WriteDeltaServerEntity(NULL, &pack, MSG_ES_FORCE);
     }
 
     MSG_WriteByte(svc_stufftext);
@@ -798,7 +798,7 @@ void CL_EmitDemoSnapshot(void)
         j = cl.frame.number - (UPDATE_BACKUP - 1) + i;
         frame = &cl.frames[j & UPDATE_MASK];
         if (frame->number != j || !frame->valid ||
-            cl.numEntityStates - frame->firstEntity > MAX_PARSE_ENTITIES) {
+            cl.numServerEntityStates - frame->firstServerEntity > MAX_PARSE_ENTITIES) {
             continue;
         }
 

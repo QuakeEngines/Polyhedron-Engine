@@ -15,7 +15,7 @@ public:
     //
     // Constructor/Deconstructor.
     //
-    SVGBaseTrigger(Entity* svEntity);
+    SVGBaseTrigger(ServerEntity* svServerEntity);
     virtual ~SVGBaseTrigger();
 
     DefineAbstractClass( SVGBaseTrigger, SVGBaseEntity );
@@ -24,10 +24,10 @@ public:
     // Interface functions. 
     //
     virtual void Precache() override;    // Precaches data.
-    virtual void Spawn() override;       // Spawns the entity.
-    virtual void Respawn() override;     // Respawns the entity.
-    virtual void PostSpawn() override;   // PostSpawning is for handling entity references, since they may not exist yet during a spawn period.
-    virtual void Think() override;       // General entity thinking routine.
+    virtual void Spawn() override;       // Spawns the ServerEntity.
+    virtual void Respawn() override;     // Respawns the ServerEntity.
+    virtual void PostSpawn() override;   // PostSpawning is for handling ServerEntity references, since they may not exist yet during a spawn period.
+    virtual void Think() override;       // General ServerEntity thinking routine.
 
     virtual void SpawnKey(const std::string& key, const std::string& value)  override;
 
@@ -39,24 +39,24 @@ public:
     //
     // Get/Set
     // 
-    // Return the 'activatorEntity' entity pointer.
+    // Return the 'activatorServerEntity' ServerEntity pointer.
     SVGBaseEntity* GetActivator() {
-        return activatorEntity;
+        return activatorServerEntity;
     }
 
     //
-    // Entity Set Functions.
+    // ServerEntity Set Functions.
     //
-    // Set the 'activatorEntity' pointer.
+    // Set the 'activatorServerEntity' pointer.
     inline void SetActivator(SVGBaseEntity* activator) {
-        this->activatorEntity = activator;
+        this->activatorServerEntity = activator;
     }
 
 protected:
     /* legacy trigger architecture */
     //float m_flDelay;
-    //virtual void(entity, int) Trigger;
-    //virtual void(entity, int, float) UseTargets;
+    //virtual void(ServerEntity, int) Trigger;
+    //virtual void(ServerEntity, int, float) UseTargets;
 
     ///* master feature */
     //virtual int(void) GetValue;
@@ -69,7 +69,7 @@ protected:
     virtual void InitPointTrigger();
 
     //
-    // Other base entity members. (These were old fields in edict_T back in the day.)
+    // Other base ServerEntity members. (These were old fields in edict_T back in the day.)
     //
 
 
@@ -79,25 +79,25 @@ protected:
     // Message when triggered.
     //std::string messageStr;
 
-    // Master trigger entity.
+    // Master trigger ServerEntity.
     //std::string masterStr;
 
     // Timestamp that the trigger has been called at.
     //
-    // Entity pointers.
+    // ServerEntity pointers.
     // 
-    //// Entity that activated this entity, NULL if none.
-    SVGBaseEntity* activatorEntity;
+    //// ServerEntity that activated this ServerEntity, NULL if none.
+    SVGBaseEntity* activatorServerEntity;
     //// Current active enemy, NULL if not any.    
-    //SVGBaseEntity* enemyEntity;
-    //// Ground entity we're standing on.
-    //SVGBaseEntity* groundEntity;
+    //SVGBaseEntity* enemyServerEntity;
+    //// Ground ServerEntity we're standing on.
+    //SVGBaseEntity* groundServerEntity;
     //// Old enemy, NULL if not any.
-    //SVGBaseEntity* oldEnemyEntity;
+    //SVGBaseEntity* oldEnemyServerEntity;
     //// Team Chain Pointer.
-    //SVGBaseEntity* teamChainEntity;
+    //SVGBaseEntity* teamChainServerEntity;
     //// Master Pointer.
-    //SVGBaseEntity* teamMasterEntity;
+    //SVGBaseEntity* teamMasterServerEntity;
 
 public:
 
@@ -114,4 +114,4 @@ protected:
     //DieCallbackPointer          dieFunction;
 };
 
-#endif // __SVGAME_ENTITIES_BASE_CBASEENTITY_H__
+#endif // __SVGAME_ENTITIES_BASE_CBASEServerEntity_H__

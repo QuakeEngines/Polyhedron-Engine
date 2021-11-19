@@ -78,7 +78,7 @@ Sends the contents of the mutlicast buffer to a single client.
 Archived in MVD stream.
 ===============
 */
-static void PF_Unicast(Entity *ent, qboolean reliable)
+static void PF_Unicast(ServerEntity *ent, qboolean reliable)
 {
     client_t    *client;
     int         cmd, flags, clientNumber;
@@ -204,7 +204,7 @@ Print to a single client if the level passes.
 Archived in MVD stream.
 ===============
 */
-static void PF_cprintf(Entity *ent, int level, const char *fmt, ...)
+static void PF_cprintf(ServerEntity *ent, int level, const char *fmt, ...)
 {
     char        msg[MAX_STRING_CHARS];
     va_list     argptr;
@@ -258,7 +258,7 @@ Centerprint to a single client.
 Archived in MVD stream.
 ===============
 */
-static void PF_centerprintf(Entity *ent, const char *fmt, ...)
+static void PF_centerprintf(ServerEntity *ent, const char *fmt, ...)
 {
     char        msg[MAX_STRING_CHARS];
     va_list     argptr;
@@ -318,7 +318,7 @@ PF_setmodel
 Also sets mins and maxs for inline bmodels
 =================
 */
-static void PF_setmodel(Entity *ent, const char *name)
+static void PF_setmodel(ServerEntity *ent, const char *name)
 {
     int         i;
     mmodel_t    *mod;
@@ -335,7 +335,7 @@ static void PF_setmodel(Entity *ent, const char *name)
         mod = CM_InlineModel(&sv.cm, name);
         VectorCopy(mod->mins, ent->mins);
         VectorCopy(mod->maxs, ent->maxs);
-        PF_LinkEntity(ent);
+        PF_LinkServerEntity(ent);
     }
 
 }
@@ -463,17 +463,17 @@ static qboolean PF_InPHS(const vec3_t& p1, const vec3_t& p2)
 ==================
 PF_StartSound
 
-Each entity can have eight independant sound sources, like voice,
+Each ServerEntity can have eight independant sound sources, like voice,
 weapon, feet, etc.
 
 If channel & 8, the sound will be sent to everyone, not just
 things in the PHS.
 
-FIXME: if entity isn't in PHS, they must be forced to be sent or
+FIXME: if ServerEntity isn't in PHS, they must be forced to be sent or
 have the origin explicitly sent.
 
 Channel 0 is an auto-allocate channel, the others override anything
-already running on that entity/channel pair.
+already running on that ServerEntity/channel pair.
 
 An attenuation of 0 will play full volume everywhere in the level.
 Larger attenuations will drop off.  (max 4 attenuation)
@@ -481,8 +481,8 @@ Larger attenuations will drop off.  (max 4 attenuation)
 Timeofs can range from 0.0 to 0.1 to cause sounds to be started
 later in the frame than they normally would.
 
-If origin is NULL, the origin is determined from the entity origin
-or the midpoint of the entity box for bmodels.
+If origin is NULL, the origin is determined from the ServerEntity origin
+or the midpoint of the ServerEntity box for bmodels.
 ==================
 */
 
@@ -496,7 +496,7 @@ or the midpoint of the entity box for bmodels.
     if (soundindex < 0 || soundindex >= MAX_SOUNDS) \
         Com_Error(ERR_DROP, "%s: soundindex = %d", __func__, soundindex);
 
-static void PF_StartSound(Entity *edict, int channel,
+static void PF_StartSound(ServerEntity *edict, int channel,
                           int soundindex, float volume,
                           float attenuation, float timeofs)
 {
@@ -525,7 +525,7 @@ static void PF_StartSound(Entity *edict, int channel,
 
     sendchan = (ent << 3) | (channel & 7);
 
-    // always send the entity number for channel overrides
+    // always send the ServerEntity number for channel overrides
     flags = SND_ENT;
     if (volume != DEFAULT_SOUND_PACKET_VOLUME)
         flags |= SND_VOLUME;
@@ -563,12 +563,12 @@ static void PF_StartSound(Entity *edict, int channel,
                 }
             }
             BSP_ClusterVis(sv.cm.cache, mask, leaf->cluster, DVIS_PHS);
-            if (!SV_EntityIsVisible(&sv.cm, edict, mask)) {
+            if (!SV_ServerEntityIsVisible(&sv.cm, edict, mask)) {
                 continue; // not in PHS
             }
         }
 
-        // use the entity origin unless it is a bmodel
+        // use the ServerEntity origin unless it is a bmodel
         if (edict->solid == Solid::BSP) {
             VectorAverage(edict->mins, edict->maxs, origin);
             VectorAdd(edict->state.origin, origin, origin);
@@ -604,7 +604,7 @@ static void PF_StartSound(Entity *edict, int channel,
         }
 
         // send origin for invisible entities
-        if (edict->serverFlags & EntityServerFlags::NoClient) {
+        if (edict->serverFlags & ServerEntityServerFlags::NoClient) {
             flags |= SND_POS;
         }
 
@@ -637,7 +637,7 @@ static void PF_StartSound(Entity *edict, int channel,
     }
 }
 
-static void PF_PositionedSound(vec3_t origin, Entity *entity, int channel,
+static void PF_PositionedSound(vec3_t origin, ServerEntity *ServerEntity, int channel,
                                int soundindex, float volume,
                                float attenuation, float timeofs)
 {
@@ -649,11 +649,11 @@ static void PF_PositionedSound(vec3_t origin, Entity *entity, int channel,
         Com_Error(ERR_DROP, "%s: NULL origin", __func__);
     CHECK_PARAMS
 
-    ent = NUM_FOR_EDICT(entity);
+    ent = NUM_FOR_EDICT(ServerEntity);
 
     sendchan = (ent << 3) | (channel & 7);
 
-    // always send the entity number for channel overrides
+    // always send the ServerEntity number for channel overrides
     flags = SND_ENT | SND_POS;
     if (volume != DEFAULT_SOUND_PACKET_VOLUME)
         flags |= SND_VOLUME;
@@ -710,7 +710,7 @@ static cvar_t *PF_cvar(const char *name, const char *value, int flags)
 // Stuff Cmd implementation like other Quake engines have for the server module.
 //===============
 //
-static void PF_stuffcmd(Entity* pent, const char* pszCommand) {
+static void PF_stuffcmd(ServerEntity* pent, const char* pszCommand) {
     MSG_WriteByte(svc_stufftext);
     MSG_WriteString(pszCommand);
 
@@ -877,8 +877,8 @@ void SV_InitGameProgs(void)
     importAPI.CenterPrintf = PF_centerprintf;
     importAPI.Error = PF_error;
 
-    importAPI.LinkEntity = PF_LinkEntity;
-    importAPI.UnlinkEntity = PF_UnlinkEntity;
+    importAPI.LinkServerEntity = PF_LinkServerEntity;
+    importAPI.UnlinkServerEntity = PF_UnlinkServerEntity;
     importAPI.BoxEntities = SV_AreaEntities;
     importAPI.Trace = SV_Trace;
     importAPI.PointContents = SV_PointContents;
@@ -937,14 +937,14 @@ void SV_InitGameProgs(void)
     // initialize
     ge->Init();
 
-    // sanitize entitySize
-    if (ge->entitySize < sizeof(Entity) || ge->entitySize > SIZE_MAX / MAX_EDICTS) {
-        Com_Error(ERR_DROP, "Server Game DLL returned bad size of Entity");
+    // sanitize ServerEntitySize
+    if (ge->ServerEntitySize < sizeof(ServerEntity) || ge->ServerEntitySize > SIZE_MAX / MAX_EDICTS) {
+        Com_Error(ERR_DROP, "Server Game DLL returned bad size of ServerEntity");
     }
 
     // sanitize maxEntities
-    if (ge->entitySize <= sv_maxclients->integer || ge->entitySize > MAX_EDICTS) {
-        Com_Error(ERR_DROP, "Server Game DLL returned bad number of maxEntities %i   %i", ge->entitySize, sizeof(Entity));
+    if (ge->ServerEntitySize <= sv_maxclients->integer || ge->ServerEntitySize > MAX_EDICTS) {
+        Com_Error(ERR_DROP, "Server Game DLL returned bad number of maxEntities %i   %i", ge->ServerEntitySize, sizeof(ServerEntity));
     }
 }
 

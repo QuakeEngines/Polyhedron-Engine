@@ -11,7 +11,7 @@
 #include "../entities.h"    // Entities.
 #include "../utils.h"       // Util funcs.
 
-// Server Game Base Entity.
+// Server Game Base ServerEntity.
 #include "../entities/base/SVGBaseEntity.h"
 
 // Game Mode.
@@ -49,7 +49,7 @@ qboolean CoopGameMode::CanDamage(SVGBaseEntity* target, SVGBaseEntity* inflictor
 // 
 //===============
 void CoopGameMode::ClientUpdateObituary(SVGBaseEntity* self, SVGBaseEntity* inflictor, SVGBaseEntity* attacker) {
-    std::string message; // String stating what happened to whichever entity. "suicides", "was squished" etc.
+    std::string message; // String stating what happened to whichever ServerEntity. "suicides", "was squished" etc.
     std::string messageAddition; // String stating what is additioned to it, "'s shrapnell" etc. Funny stuff.
 
     // If the attacker is a client, we know it was a friendly fire in this coop mode. :)
@@ -59,7 +59,7 @@ void CoopGameMode::ClientUpdateObituary(SVGBaseEntity* self, SVGBaseEntity* infl
     // Set a bool for whether we got friendly fire.
     qboolean friendlyFire = meansOfDeath & MeansOfDeath::FriendlyFire;
     // Quickly remove it from meansOfDeath again, our bool is set. This prevents it from 
-    // sticking around when we process the next entity/client.
+    // sticking around when we process the next ServerEntity/client.
     int32_t finalMeansOfDeath = meansOfDeath & ~MeansOfDeath::FriendlyFire; // Sum of things, final means of death.
 
     // Determine the means of death.
@@ -119,7 +119,7 @@ void CoopGameMode::ClientUpdateObituary(SVGBaseEntity* self, SVGBaseEntity* infl
         return;
     }
 
-    // Set 'self' its attacker entity pointer.
+    // Set 'self' its attacker ServerEntity pointer.
     self->SetEnemy(attacker);
 
     // If we have an attacker, and it IS a client...
@@ -176,7 +176,7 @@ void CoopGameMode::ClientUpdateObituary(SVGBaseEntity* self, SVGBaseEntity* infl
     }
 
     // Check for monster deaths here.
-    if (attacker->GetServerFlags() & EntityServerFlags::Monster) {
+    if (attacker->GetServerFlags() & ServerEntityServerFlags::Monster) {
         // Fill in message here
         // aka if (attacker->classname == "monster_1337h4x0r")
         // Then we do...

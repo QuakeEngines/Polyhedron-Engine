@@ -100,13 +100,13 @@ gitem_t *SVG_FindItemByPickupName(const char *pickup_name) // C++20: STRING: Add
 
 //======================================================================
 
-void DoRespawn(Entity *ent)
+void DoRespawn(ServerEntity *ent)
 {
     //if (!ent)
     //    return;
 
     //if (ent->team) {
-    //    Entity *master;
+    //    ServerEntity *master;
     //    int count;
     //    int choice;
 
@@ -121,31 +121,31 @@ void DoRespawn(Entity *ent)
     //        ;
     //}
 
-    //ent->serverFlags &= ~EntityServerFlags::NoClient;
+    //ent->serverFlags &= ~ServerEntityServerFlags::NoClient;
     //ent->solid = Solid::Trigger;
-    //gi.LinkEntity(ent);
+    //gi.LinkServerEntity(ent);
 
     //// send an effect
-    //ent->state.event = EntityEvent::ItemRespawn;
+    //ent->state.event = ServerEntityEvent::ItemRespawn;
 }
 
-void SVG_SetRespawn(Entity *ent, float delay)
+void SVG_SetRespawn(ServerEntity *ent, float delay)
 {
     if (!ent)
         return;
 
-//    ent->flags |= EntityFlags::Respawn;
-    ent->serverFlags |= EntityServerFlags::NoClient;
+//    ent->flags |= ServerEntityFlags::Respawn;
+    ent->serverFlags |= ServerEntityServerFlags::NoClient;
     ent->solid = Solid::Not;
 //    ent->nextThinkTime = level.time + delay;
 //    ent->Think = DoRespawn;
-    gi.LinkEntity(ent);
+    gi.LinkServerEntity(ent);
 }
 
 
 //======================================================================
 
-qboolean Pickup_Powerup(Entity *ent, Entity *other)
+qboolean Pickup_Powerup(ServerEntity *ent, ServerEntity *other)
 {
     int     quantity;
 
@@ -166,16 +166,16 @@ qboolean Pickup_Powerup(Entity *ent, Entity *other)
     return true;
 }
 
-void Drop_General(Entity *ent, gitem_t *item)
+void Drop_General(ServerEntity *ent, gitem_t *item)
 {
     SVG_DropItem(ent, item);
     ent->client->persistent.inventory[ITEM_INDEX(item)]--;
-    HUD_ValidateSelectedItem((PlayerClient*)ent->classEntity);
+    HUD_ValidateSelectedItem((PlayerClient*)ent->classServerEntity);
 }
 
 //======================================================================
 
-qboolean SVG_AddAmmo(Entity *ent, gitem_t *item, int count)
+qboolean SVG_AddAmmo(ServerEntity *ent, gitem_t *item, int count)
 {
     int         index;
     int         max;
@@ -245,7 +245,7 @@ qboolean Pickup_Ammo(SVGBaseEntity *ent, PlayerClient*other)
 
 void Drop_Ammo(PlayerClient *ent, gitem_t *item)
 {
-    //Entity *dropped;
+    //ServerEntity *dropped;
     //int     index;
 
     //index = ITEM_INDEX(item);
@@ -260,7 +260,7 @@ void Drop_Ammo(PlayerClient *ent, gitem_t *item)
     //    item->tag == AmmoType::Grenade &&
     //    ent->client->persistent.inventory[index] - dropped->count <= 0) {
     //    gi.CPrintf(ent, PRINT_HIGH, "Can't drop current weapon\n");
-    //    SVG_FreeEntity(dropped);
+    //    SVG_FreeServerEntity(dropped);
     //    return;
     //}
 
@@ -271,7 +271,7 @@ void Drop_Ammo(PlayerClient *ent, gitem_t *item)
 
 //======================================================================
 
-void MegaHealth_think(Entity *self)
+void MegaHealth_think(ServerEntity *self)
 {
     //if (self->owner->health > self->owner->maxHealth) {
     //    self->nextThinkTime = level.time + 1;
@@ -282,10 +282,10 @@ void MegaHealth_think(Entity *self)
     //if (!(self->spawnFlags & ItemSpawnFlags::DroppedItem) && (deathmatch->value))
     //    SVG_SetRespawn(self, 20);
     //else
-    //    SVG_FreeEntity(self);
+    //    SVG_FreeServerEntity(self);
 }
 
-qboolean Pickup_Health(Entity *ent, Entity *other)
+qboolean Pickup_Health(ServerEntity *ent, ServerEntity *other)
 {
 //    if (!(ent->style & HEALTH_IGNORE_MAX))
 //        if (other->health >= other->maxHealth)
@@ -302,8 +302,8 @@ qboolean Pickup_Health(Entity *ent, Entity *other)
 ////        ent->Think = MegaHealth_think;
 //        ent->nextThinkTime = level.time + 5;
 //        ent->owner = other;
-//        ent->flags |= EntityFlags::Respawn;
-//        ent->serverFlags |= EntityServerFlags::NoClient;
+//        ent->flags |= ServerEntityFlags::Respawn;
+//        ent->serverFlags |= ServerEntityServerFlags::NoClient;
 //        ent->solid = Solid::Not;
 //    } else {
 //        if (!(ent->spawnFlags & ItemSpawnFlags::DroppedItem) && (deathmatch->value))
@@ -440,7 +440,7 @@ void SVG_TouchItem(SVGBaseEntity *ent, SVGBaseEntity *other, cplane_t *plane, cs
     //}
 
     //if (!(ent->spawnFlags & ItemSpawnFlags::TargetsUsed)) {
-    //    UTIL_UseTargets(ent->classEntity, other->classEntity);
+    //    UTIL_UseTargets(ent->classServerEntity, other->classServerEntity);
     //    ent->spawnFlags |= ItemSpawnFlags::TargetsUsed;
     //}
 
@@ -448,36 +448,36 @@ void SVG_TouchItem(SVGBaseEntity *ent, SVGBaseEntity *other, cplane_t *plane, cs
     //    return;
 
     //if (!((coop->value) && (ent->item->flags & ItemFlags::StayInCoop)) || (ent->spawnFlags & (ItemSpawnFlags::DroppedItem | ItemSpawnFlags::DroppedPlayerItem))) {
-    //    if (ent->flags & EntityFlags::Respawn)
-    //        ent->flags &= ~EntityFlags::Respawn;
+    //    if (ent->flags & ServerEntityFlags::Respawn)
+    //        ent->flags &= ~ServerEntityFlags::Respawn;
     //    else
-    //        SVG_FreeEntity(ent);
+    //        SVG_FreeServerEntity(ent);
     //}
 }
 
 //======================================================================
 
-void drop_temp_touch(Entity *ent, Entity *other, cplane_t *plane, csurface_t *surf)
+void drop_temp_touch(ServerEntity *ent, ServerEntity *other, cplane_t *plane, csurface_t *surf)
 {
     if (other == ent->owner)
         return;
 
-    SVG_TouchItem(ent->classEntity, other->classEntity, plane, surf);
+    SVG_TouchItem(ent->classServerEntity, other->classServerEntity, plane, surf);
 }
 
-void drop_make_touchable(Entity *ent)
+void drop_make_touchable(ServerEntity *ent)
 {
 //    ent->Touch = SVG_TouchItem;
     if (deathmatch->value) {
 //        ent->nextThinkTime = level.time + 29;
-//        ent->Think = SVG_FreeEntity;
+//        ent->Think = SVG_FreeServerEntity;
     }
 }
 
-Entity *SVG_DropItem(Entity *ent, gitem_t *item)
+ServerClient *SVG_DropItem(ServerEntity *ent, gitem_t *item)
 {
     return NULL;
-//    Entity *dropped;
+//    ServerEntity *dropped;
 //    vec3_t  forward, right;
 //    vec3_t  offset;
 //
@@ -516,14 +516,14 @@ Entity *SVG_DropItem(Entity *ent, gitem_t *item)
 ////    dropped->Think = drop_make_touchable;
 //    dropped->nextThinkTime = level.time + 1;
 //
-//    gi.LinkEntity(dropped);
+//    gi.LinkServerEntity(dropped);
 //
 //    return dropped;
 }
 
-void Use_Item(Entity *ent, Entity *other, Entity *activator)
+void Use_Item(ServerEntity *ent, ServerEntity *other, ServerEntity *activator)
 {
-    ent->serverFlags &= ~EntityServerFlags::NoClient;
+    ent->serverFlags &= ~ServerEntityServerFlags::NoClient;
 //    ent->Use = NULL;
 
 //    if (ent->spawnFlags & ItemSpawnFlags::NoTouch) {
@@ -534,7 +534,7 @@ void Use_Item(Entity *ent, Entity *other, Entity *activator)
 ////        ent->Touch = SVG_TouchItem;
 //    }
 
-    gi.LinkEntity(ent);
+    gi.LinkServerEntity(ent);
 }
 
 //======================================================================
@@ -544,7 +544,7 @@ void Use_Item(Entity *ent, Entity *other, Entity *activator)
 droptofloor
 ================
 */
-void droptofloor(Entity *ent)
+void droptofloor(ServerEntity *ent)
 {
 //    trace_t     tr;
 //    vec3_t      dest;
@@ -566,18 +566,18 @@ void droptofloor(Entity *ent)
 //    tr = gi.Trace(ent->state.origin, ent->mins, ent->maxs, dest, ent, CONTENTS_MASK_SOLID);
 //    if (tr.startSolid) {
 //        gi.DPrintf("droptofloor: %s startsolid at %s\n", ent->className, Vec3ToString(ent->state.origin));
-//        SVG_FreeEntity(ent);
+//        SVG_FreeServerEntity(ent);
 //        return;
 //    }
 //
 //    VectorCopy(tr.endPosition, ent->state.origin);
 //
 //    if (ent->team) {
-//        ent->flags &= ~EntityFlags::TeamSlave;
+//        ent->flags &= ~ServerEntityFlags::TeamSlave;
 //        ent->chain = ent->teamChainPtr;
 //        ent->teamChainPtr = NULL;
 //
-//        ent->serverFlags |= EntityServerFlags::NoClient;
+//        ent->serverFlags |= ServerEntityServerFlags::NoClient;
 //        ent->solid = Solid::Not;
 //        if (ent == ent->teamMasterPtr) {
 //            ent->nextThinkTime = level.time + FRAMETIME;
@@ -588,17 +588,17 @@ void droptofloor(Entity *ent)
 //    if (ent->spawnFlags & ItemSpawnFlags::NoTouch) {
 //        ent->solid = Solid::BoundingBox;
 ////        ent->Touch = NULL;
-//        ent->state.effects &= ~EntityEffectType::Rotate;
+//        ent->state.effects &= ~ServerEntityEffectType::Rotate;
 //        ent->state.renderEffects &= ~RenderEffects::Glow;
 //    }
 //
 //    if (ent->spawnFlags & ItemSpawnFlags::TriggerSpawn) {
-//        ent->serverFlags |= EntityServerFlags::NoClient;
+//        ent->serverFlags |= ServerEntityServerFlags::NoClient;
 //        ent->solid = Solid::Not;
 ////        ent->Use = Use_Item;
 //    }
 //
-//    gi.LinkEntity(ent);
+//    gi.LinkServerEntity(ent);
 }
 
 
@@ -674,10 +674,10 @@ SVG_SpawnItem
 Sets the clipping size and plants the object on the floor.
 
 Items can't be immediately dropped to floor, because they might
-be on an entity that hasn't spawned yet.
+be on an ServerEntity that hasn't spawned yet.
 ============
 */
-void SVG_SpawnItem(Entity *ent, gitem_t *item)
+void SVG_SpawnItem(ServerEntity *ent, gitem_t *item)
 {
     SVG_PrecacheItem(item);
 
@@ -692,25 +692,25 @@ void SVG_SpawnItem(Entity *ent, gitem_t *item)
     //if (deathmatch->value) {
     //    if ((int)gamemodeflags->value & GameModeFlags::NoArmor) {
     //        if (item->Pickup == Pickup_Armor) {
-    //            SVG_FreeEntity(ent);
+    //            SVG_FreeServerEntity(ent);
     //            return;
     //        }
     //    }
     //    if ((int)gamemodeflags->value & GameModeFlags::NoItems) {
     //        if (item->Pickup == Pickup_Powerup) {
-    //            SVG_FreeEntity(ent);
+    //            SVG_FreeServerEntity(ent);
     //            return;
     //        }
     //    }
     //    if ((int)gamemodeflags->value & GameModeFlags::NoHealth) {
     //        if (item->Pickup == Pickup_Health) {
-    //            SVG_FreeEntity(ent);
+    //            SVG_FreeServerEntity(ent);
     //            return;
     //        }
     //    }
     //    if ((int)gamemodeflags->value & GameModeFlags::InfiniteAmmo) {
     //        if ((item->flags == ItemFlags::IsAmmo)) {
-    //            SVG_FreeEntity(ent);
+    //            SVG_FreeServerEntity(ent);
     //            return;
     //        }
     //    }
@@ -755,7 +755,7 @@ gitem_t itemlist[] = {
         NULL,
         NULL,
         "misc/ar1_pkup.wav",
-        "models/items/armor/body/tris.md2", EntityEffectType::Rotate,
+        "models/items/armor/body/tris.md2", ServerEntityEffectType::Rotate,
         NULL,
         /* icon */      "i_bodyarmor",
         /* pickup */    "Body Armor",
@@ -806,7 +806,7 @@ gitem_t itemlist[] = {
         Drop_Weapon,
         Weapon_Machinegun,
         "misc/w_pkup.wav",
-        "models/weapons/g_machn/tris.md2", EntityEffectType::Rotate,
+        "models/weapons/g_machn/tris.md2", ServerEntityEffectType::Rotate,
         "models/weapons/v_machn/tris.md2",
         /* icon */      "w_machinegun",
         /* pickup */    "Machinegun",
@@ -829,7 +829,7 @@ gitem_t itemlist[] = {
         Drop_Weapon,
         Weapon_Shotgun,
         "misc/w_pkup.wav",
-        "models/weapons/g_shotg/tris.md2", EntityEffectType::Rotate,
+        "models/weapons/g_shotg/tris.md2", ServerEntityEffectType::Rotate,
         "models/weapons/v_shotg/tris.md2",
         /* icon */      "w_shotgun",
         /* pickup */    "Shotgun",
@@ -852,7 +852,7 @@ gitem_t itemlist[] = {
         Drop_Weapon,
         Weapon_SuperShotgun,
         "misc/w_pkup.wav",
-        "models/weapons/g_shotg2/tris.md2", EntityEffectType::Rotate,
+        "models/weapons/g_shotg2/tris.md2", ServerEntityEffectType::Rotate,
         "models/weapons/v_shotg2/tris.md2",
         /* icon */      "w_sshotgun",
         /* pickup */    "Super Shotgun",
@@ -944,10 +944,10 @@ gitem_t itemlist[] = {
 
 /*QUAKED item_health (.3 .3 1) (-16 -16 -16) (16 16 16)
 */
-void SP_item_health(Entity *self)
+void SP_item_health(ServerEntity *self)
 {
     if (deathmatch->value && ((int)gamemodeflags->value & GameModeFlags::NoHealth)) {
-        SVG_FreeEntity(self);
+        SVG_FreeServerEntity(self);
         return;
     }
 
@@ -959,10 +959,10 @@ void SP_item_health(Entity *self)
 
 /*QUAKED item_health_small (.3 .3 1) (-16 -16 -16) (16 16 16)
 */
-void SP_item_health_small(Entity *self)
+void SP_item_health_small(ServerEntity *self)
 {
     if (deathmatch->value && ((int)gamemodeflags->value & GameModeFlags::NoHealth)) {
-        SVG_FreeEntity(self);
+        SVG_FreeServerEntity(self);
         return;
     }
 
@@ -975,10 +975,10 @@ void SP_item_health_small(Entity *self)
 
 /*QUAKED item_health_large (.3 .3 1) (-16 -16 -16) (16 16 16)
 */
-void SP_item_health_large(Entity *self)
+void SP_item_health_large(ServerEntity *self)
 {
     if (deathmatch->value && ((int)gamemodeflags->value & GameModeFlags::NoHealth)) {
-        SVG_FreeEntity(self);
+        SVG_FreeServerEntity(self);
         return;
     }
 
@@ -990,10 +990,10 @@ void SP_item_health_large(Entity *self)
 
 /*QUAKED item_health_mega (.3 .3 1) (-16 -16 -16) (16 16 16)
 */
-void SP_item_health_mega(Entity *self)
+void SP_item_health_mega(ServerEntity *self)
 {
     if (deathmatch->value && ((int)gamemodeflags->value & GameModeFlags::NoHealth)) {
-        SVG_FreeEntity(self);
+        SVG_FreeServerEntity(self);
         return;
     }
 

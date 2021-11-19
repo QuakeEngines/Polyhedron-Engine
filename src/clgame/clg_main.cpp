@@ -146,7 +146,7 @@ extern "C" {
 //    clge.UpdateUserinfo             = CLG_UpdateUserInfo;
 //
 //    // Entities.
-//    clge.EntityEvent                = CLG_EntityEvent;
+//    clge.ServerEntityEvent                = CLG_ServerEntityEvent;
 //
 //    // Movement Command.
 //    clge.BuildFrameMoveCommand      = CLG_BuildFrameMoveCommand;

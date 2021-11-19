@@ -23,7 +23,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 typedef struct {
     const char    *name; // C++20: STRING: Added const
-    void (*spawn)(Entity *ent);
+    void (*spawn)(ServerEntity *ent);
 } spawn_func_t;
 
 typedef struct {
@@ -72,7 +72,7 @@ static const spawn_func_t spawn_funcs[] = {
     //{"trigger_gravity", SP_trigger_gravity},
     //{"trigger_monsterjump", SP_trigger_monsterjump},
 
-    //{"target_temp_entity", SP_target_temp_entity},
+    //{"target_temp_ServerEntity", SP_target_temp_ServerEntity},
     //{"target_speaker", SP_target_speaker},
     //{"target_explosion", SP_target_explosion},
     //{"target_changelevel", SP_target_changelevel},
@@ -164,7 +164,7 @@ static const spawn_field_t temp_fields[] = {
 };
 
 //
-// SVG_SpawnClassEntity
+// SVG_SpawnClassServerEntity
 //
 //
 #include "entities/base/SVGBaseEntity.h"
@@ -202,26 +202,26 @@ static char* ED_NewString(const char* string) {
 ===============
 ED_CallSpawn
 
-Allocates the proper server game entity class. Then spawns the entity.
+Allocates the proper server game ServerEntity class. Then spawns the ServerEntity.
 ===============
 */
-void ED_CallSpawn(Entity *ent)
+void ED_CallSpawn(ServerEntity *ent)
 {
-    auto dictionary = ent->entityDictionary;
-    ent->className = ED_NewString( ent->entityDictionary["classname"].c_str() );
-    ent->classEntity = SVG_SpawnClassEntity( ent, ent->className );
+    auto dictionary = ent->ServerEntityDictionary;
+    ent->className = ED_NewString( ent->ServerEntityDictionary["classname"].c_str() );
+    ent->classServerEntity = SVG_SpawnClassServerEntity( ent, ent->className );
     // If we did not find the classname, then give up
-    if ( nullptr == ent->classEntity ) {
-        SVG_FreeEntity( ent );
+    if ( nullptr == ent->classServerEntity ) {
+        SVG_FreeServerEntity( ent );
         return;
     }
-    // Initialise the entity with its respected keyvalue properties
-    for ( const auto& keyValueEntry : ent->entityDictionary ) {
-        ent->classEntity->SpawnKey( keyValueEntry.first, keyValueEntry.second );
+    // Initialise the ServerEntity with its respected keyvalue properties
+    for ( const auto& keyValueEntry : ent->ServerEntityDictionary ) {
+        ent->classServerEntity->SpawnKey( keyValueEntry.first, keyValueEntry.second );
     }
-    // Precache and spawn, to set the entity up
-    ent->classEntity->Precache();
-    ent->classEntity->Spawn();
+    // Precache and spawn, to set the ServerEntity up
+    ent->classServerEntity->Precache();
+    ent->classServerEntity->Spawn();
 }
 
 /*
@@ -232,7 +232,7 @@ Parses an edict out of the given string, returning the new position
 ed should be a properly initialized empty edict.
 ====================
 */
-void ED_ParseEntity(const char** data, Entity* ent) {
+void ED_ParseServerEntity(const char** data, ServerEntity* ent) {
     qboolean    init;
     char* key, * value;
 
@@ -263,7 +263,7 @@ void ED_ParseEntity(const char** data, Entity* ent) {
         if (key[0] == '_')
             continue;
 
-        ent->entityDictionary[key] = value;
+        ent->ServerEntityDictionary[key] = value;
         //if (!ED_ParseField(spawn_fields, key, value, (byte *)ent)) {
         //    if (!ED_ParseField(temp_fields, key, value, (byte *)&st)) {
         //        gi.DPrintf("%s: %s is not a field\n", __func__, key);
@@ -335,13 +335,13 @@ SVG_FindTeams
 
 Chain together all entities with a matching team field.
 
-All but the first will have the EntityFlags::TeamSlave flag set.
+All but the first will have the ServerEntityFlags::TeamSlave flag set.
 All but the last will have the teamchain field set to the next one
 ================
 */
 void SVG_FindTeams(void)
 {
-    Entity* e, * e2;
+    ServerEntity* e, * e2;
     SVGBaseEntity *chain;
     int     i, j;
     int     c, c2;
@@ -349,41 +349,41 @@ void SVG_FindTeams(void)
     c = 0;
     c2 = 0;
     for (i = 1, e = g_entities + i; i < globals.numberOfEntities; i++, e++) {
-        // Fetch class entity.
-        SVGBaseEntity *classEntity = g_baseEntities[e->state.number];
+        // Fetch class ServerEntity.
+        SVGBaseEntity *classServerEntity = g_baseEntities[e->state.number];
 
-        if (classEntity == NULL)
+        if (classServerEntity == NULL)
             continue;
 
-        if (!classEntity->IsInUse())
+        if (!classServerEntity->IsInUse())
             continue;
-        if (!classEntity->GetTeam())
+        if (!classServerEntity->GetTeam())
             continue;
-        if (classEntity->GetFlags() & EntityFlags::TeamSlave)
+        if (classServerEntity->GetFlags() & ServerEntityFlags::TeamSlave)
             continue;
-        chain = classEntity;
-        classEntity->SetTeamMasterEntity(classEntity);
+        chain = classServerEntity;
+        classServerEntity->SetTeamMasterServerEntity(classServerEntity);
         c++;
         c2++;
         for (j = i + 1, e2 = e + 1 ; j < globals.numberOfEntities ; j++, e2++) {
-            // Fetch class entity.
-            SVGBaseEntity* classEntity2 = g_baseEntities[e->state.number];
+            // Fetch class ServerEntity.
+            SVGBaseEntity* classServerEntity2 = g_baseEntities[e->state.number];
 
-            if (classEntity2 == NULL)
+            if (classServerEntity2 == NULL)
                 continue;
 
-            if (!classEntity2->IsInUse())
+            if (!classServerEntity2->IsInUse())
                 continue;
-            if (!classEntity2->GetTeam())
+            if (!classServerEntity2->GetTeam())
                 continue;
-            if (classEntity2->GetFlags() & EntityFlags::TeamSlave)
+            if (classServerEntity2->GetFlags() & ServerEntityFlags::TeamSlave)
                 continue;
-            if (!strcmp(classEntity->GetTeam(), classEntity2->GetTeam())) {
+            if (!strcmp(classServerEntity->GetTeam(), classServerEntity2->GetTeam())) {
                 c2++;
-                chain->SetTeamChainEntity(classEntity2);
-                classEntity2->SetTeamMasterEntity(classEntity);
-                chain = classEntity2;
-                classEntity2->SetFlags(classEntity2->GetFlags() | EntityFlags::TeamSlave);
+                chain->SetTeamChainServerEntity(classServerEntity2);
+                classServerEntity2->SetTeamMasterServerEntity(classServerEntity);
+                chain = classServerEntity2;
+                classServerEntity2->SetFlags(classServerEntity2->GetFlags() | ServerEntityFlags::TeamSlave);
             }
         }
     }
@@ -396,15 +396,15 @@ void SVG_FindTeams(void)
 ==============
 SVG_SpawnEntities
 
-Creates a server's entity / program execution context by
-parsing textual entity definitions out of an ent file.
+Creates a server's ServerEntity / program execution context by
+parsing textual ServerEntity definitions out of an ent file.
 ==============
 */
 extern void SVG_AllocateGamePlayerClientEntities();
 
 void SVG_SpawnEntities(const char *mapName, const char *entities, const char *spawnpoint)
 {
-    Entity     *ent;
+    ServerEntity     *ent;
     int         inhibit;
     char        *com_token;
     int         i;
@@ -462,37 +462,37 @@ void SVG_SpawnEntities(const char *mapName, const char *entities, const char *sp
             ent = g_entities;
         else
             ent = SVG_Spawn();
-        ED_ParseEntity(&entities, ent);
+        ED_ParseServerEntity(&entities, ent);
 
         //// yet another map hack
         //if (!Q_stricmp(level.mapName, "command") && !Q_stricmp(ent->className, "trigger_once") && !Q_stricmp(ent->model, "*27"))
-        //    ent->spawnFlags &= ~EntitySpawnFlags::NotHard;
+        //    ent->spawnFlags &= ~ServerEntitySpawnFlags::NotHard;
 
         //// remove things (except the world) from different skill levels or deathmatch
         //if (ent != g_entities) {
-        //    // Do a check for deathmatch, in case the entity isn't allowed there.
+        //    // Do a check for deathmatch, in case the ServerEntity isn't allowed there.
         //    if (deathmatch->value) {
-        //        if (ent->spawnFlags & EntitySpawnFlags::NotDeathMatch) {
-        //            SVG_FreeEntity(ent);
+        //        if (ent->spawnFlags & ServerEntitySpawnFlags::NotDeathMatch) {
+        //            SVG_FreeServerEntity(ent);
         //            inhibit++;
         //            continue;
         //        }
         //    } else {
-        //        if ( /* ((coop->value) && (ent->spawnFlags & EntitySpawnFlags::NotCoop)) || */
-        //            ((skill->value == 0) && (ent->spawnFlags & EntitySpawnFlags::NotEasy)) ||
-        //            ((skill->value == 1) && (ent->spawnFlags & EntitySpawnFlags::NotMedium)) ||
-        //            (((skill->value == 2) || (skill->value == 3)) && (ent->spawnFlags & EntitySpawnFlags::NotHard))
+        //        if ( /* ((coop->value) && (ent->spawnFlags & ServerEntitySpawnFlags::NotCoop)) || */
+        //            ((skill->value == 0) && (ent->spawnFlags & ServerEntitySpawnFlags::NotEasy)) ||
+        //            ((skill->value == 1) && (ent->spawnFlags & ServerEntitySpawnFlags::NotMedium)) ||
+        //            (((skill->value == 2) || (skill->value == 3)) && (ent->spawnFlags & ServerEntitySpawnFlags::NotHard))
         //        ) {
-        //            SVG_FreeEntity(ent);
+        //            SVG_FreeServerEntity(ent);
         //            inhibit++;
         //            continue;
         //        }
         //    }
 
-        //    ent->spawnFlags &= ~(EntitySpawnFlags::NotEasy | EntitySpawnFlags::NotMedium | EntitySpawnFlags::NotHard | EntitySpawnFlags::NotCoop | EntitySpawnFlags::NotDeathMatch);
+        //    ent->spawnFlags &= ~(ServerEntitySpawnFlags::NotEasy | ServerEntitySpawnFlags::NotMedium | ServerEntitySpawnFlags::NotHard | ServerEntitySpawnFlags::NotCoop | ServerEntitySpawnFlags::NotDeathMatch);
         //}
 
-        // Allocate the class entity, and call its spawn.
+        // Allocate the class ServerEntity, and call its spawn.
         ED_CallSpawn(ent);
     }
 
@@ -513,7 +513,7 @@ void SVG_SpawnEntities(const char *mapName, const char *entities, const char *sp
     ent = EDICT_NUM(i);
     while (i < globals.pool.numberOfEntities) {
         if (ent->inUse != 0 || ent->inUse != 1)
-            Com_DPrintf("Invalid entity %d\n", i);
+            Com_DPrintf("Invalid ServerEntity %d\n", i);
         i++, ent++;
     }
 #endif

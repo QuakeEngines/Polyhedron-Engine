@@ -2,7 +2,7 @@
 // LICENSE HERE.
 
 //
-// GibEntity.cpp
+// GibServerEntity.cpp
 //
 //
 */
@@ -16,14 +16,14 @@
 
 // Class Entities.
 #include "../base/SVGBaseEntity.h"
-#include "GibEntity.h"
+#include "GibServerEntity.h"
 
 // Constructor/Deconstructor.
-GibEntity::GibEntity(Entity* svEntity)
-    : SVGBaseEntity(svEntity) {
+GibServerEntity::GibServerEntity(ServerEntity* svServerEntity)
+    : SVGBaseEntity(svServerEntity) {
 
 }
-GibEntity::~GibEntity() {
+GibServerEntity::~GibServerEntity() {
 
 }
 
@@ -33,7 +33,7 @@ GibEntity::~GibEntity() {
 //
 //===============
 //
-void GibEntity::Precache() {
+void GibServerEntity::Precache() {
     Base::Precache();
 }
 
@@ -43,58 +43,58 @@ void GibEntity::Precache() {
 //
 //===============
 //
-void GibEntity::Spawn() {
+void GibServerEntity::Spawn() {
     // Spawn.
     Base::Spawn();
 }
 
 //
 //===============
-// GibEntity::Respawn
+// GibServerEntity::Respawn
 //
 //===============
 //
-void GibEntity::Respawn() {
+void GibServerEntity::Respawn() {
     Base::Respawn();
 }
 
 //
 //===============
-// GibEntity::PostSpawn
+// GibServerEntity::PostSpawn
 //
 //===============
 //
-void GibEntity::PostSpawn() {
+void GibServerEntity::PostSpawn() {
     Base::PostSpawn();
 }
 
 //
 //===============
-// GibEntity::Think
+// GibServerEntity::Think
 //
 //===============
 //
-void GibEntity::Think() {
+void GibServerEntity::Think() {
     // Parent class Think.
     Base::Think();
 }
 
 //===============
-// GibEntity::SpawnKey
+// GibServerEntity::SpawnKey
 //
-// GibEntity spawn key handling.
+// GibServerEntity spawn key handling.
 //===============
-void GibEntity::SpawnKey(const std::string& key, const std::string& value) {
+void GibServerEntity::SpawnKey(const std::string& key, const std::string& value) {
     // Parent class spawnkey.
     Base::SpawnKey(key, value);
 }
 
 //===============
-// GibEntity::ClipGibVelocity
+// GibServerEntity::ClipGibVelocity
 //
 // Clips gib velocity, in case it goes out of control that is.
 //===============
-void GibEntity::ClipGibVelocity(vec3_t &velocity) {
+void GibServerEntity::ClipGibVelocity(vec3_t &velocity) {
     // Y Axis.
     if (velocity.x < -300)
         velocity.x = -300;
@@ -115,11 +115,11 @@ void GibEntity::ClipGibVelocity(vec3_t &velocity) {
 }
 
 //===============
-// GibEntity::CalculateVelocityForDamage
+// GibServerEntity::CalculateVelocityForDamage
 //
-// 'other' is the actual entity that is spawning these gibs.
+// 'other' is the actual ServerEntity that is spawning these gibs.
 //===============
-//float GibEntity::CalculateVelocityForDamage(SVGBaseEntity *other, const int32_t damage, vec3_t &velocity) {
+//float GibServerEntity::CalculateVelocityForDamage(SVGBaseEntity *other, const int32_t damage, vec3_t &velocity) {
 //    // Calculate the velocity based on the damage passed over.
 //    velocity = {
 //        100.f * crandom(),
@@ -140,29 +140,29 @@ void GibEntity::ClipGibVelocity(vec3_t &velocity) {
 //}
 
 //===============
-// GibEntity::GibEntityThink
+// GibServerEntity::GibServerEntityThink
 //
 //===============
-void GibEntity::GibEntityThink() {
+void GibServerEntity::GibServerEntityThink() {
     // Increase frame and set a new think time.
     SetFrame(GetFrame() + 1);
     SetNextThinkTime(level.time + FRAMETIME);
 
     // Play frames for these meshes, cut the crap at frame 10.
     if (GetFrame() == 10) {
-        SetThinkCallback(&SVGBaseEntity::SVGBaseEntityThinkRemove);
+        SetThinkCallback(&SVGBaseEntity::SVGBaseServerEntityThinkRemove);
         SetNextThinkTime(level.time + 8 + random() * 10);
     }
 }
 
 //===============
-// GibEntity::GibEntityTouch
+// GibServerEntity::GibServerEntityTouch
 //
 //===============
-void GibEntity::GibEntityTouch(SVGBaseEntity* self, SVGBaseEntity* other, cplane_t* plane, csurface_t* surf) {
+void GibServerEntity::GibServerEntityTouch(SVGBaseEntity* self, SVGBaseEntity* other, cplane_t* plane, csurface_t* surf) {
     vec3_t  right;
 
-    if (!GetGroundEntity())
+    if (!GetGroundServerEntity())
         return;
 
     // Reset touch callback to nullptr.
@@ -178,19 +178,19 @@ void GibEntity::GibEntityTouch(SVGBaseEntity* self, SVGBaseEntity* other, cplane
 
         if (GetModelIndex() == sm_meat_index) {
             SetFrame(GetFrame() + 1);
-            SetThinkCallback(&GibEntity::GibEntityThink);
+            SetThinkCallback(&GibServerEntity::GibServerEntityThink);
             SetNextThinkTime(level.time + FRAMETIME);
         }
     }
 }
 
 //===============
-// GibEntity::GibEntityDie
+// GibServerEntity::GibServerEntityDie
 //
 // Savely call Remove so it queues up for removal without causing 
-// serverEntity/classEntity conflicts.
+// serverEntity/classServerEntity conflicts.
 //===============
-void GibEntity::GibEntityDie(SVGBaseEntity* inflictor, SVGBaseEntity* attacker, int damage, const vec3_t& point) {
+void GibServerEntity::GibServerEntityDie(SVGBaseEntity* inflictor, SVGBaseEntity* attacker, int damage, const vec3_t& point) {
     // Time to queue it for removal.
     Remove();
 }

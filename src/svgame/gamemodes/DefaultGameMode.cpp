@@ -11,7 +11,7 @@
 #include "../entities.h"    // Entities.
 #include "../utils.h"       // Util funcs.
 
-// Server Game Base Entity.
+// Server Game Base ServerEntity.
 #include "../entities/base/SVGBaseEntity.h"
 #include "../entities/base/BodyCorpse.h"
 #include "../entities/base/PlayerClient.h"
@@ -42,18 +42,18 @@ DefaultGameMode::~DefaultGameMode() {
 // Interface functions. 
 //
 //===============
-// DefaultGameMode::GetEntityTeamName
+// DefaultGameMode::GetServerEntityTeamName
 //
-// Assigns the teamname to the string passed, returns false in case the entity
+// Assigns the teamname to the string passed, returns false in case the ServerEntity
 // is not part of a team at all.
 //===============
-qboolean DefaultGameMode::GetEntityTeamName(SVGBaseEntity* ent, std::string &teamName) {
+qboolean DefaultGameMode::GetServerEntityTeamName(SVGBaseEntity* ent, std::string &teamName) {
     // Placeholder.
     teamName = "";
 
     return false;
 
-    //// We'll assume that this entity needs to have a client.
+    //// We'll assume that this ServerEntity needs to have a client.
     //if (!ent->GetClient())
     //    return "";
 
@@ -92,13 +92,13 @@ qboolean DefaultGameMode::OnSameTeam(SVGBaseEntity* ent1, SVGBaseEntity* ent2) {
     //    return false;
 
     //// Fetch the team names of both entities.
-    //std::string teamEntity1 = GetEntityTeamName(ent1);
-    //std::string teamEntity2 = GetEntityTeamName(ent2);
+    //std::string teamServerEntity1 = GetServerEntityTeamName(ent1);
+    //std::string teamServerEntity2 = GetServerEntityTeamName(ent2);
 
     //// In case they are equal, return true.
-    //if (!teamEntity1.empty() && !teamEntity2.empty())
-    //    if (teamEntity1 != "" && teamEntity2 != "")
-    //        if (teamEntity1 == teamEntity2)
+    //if (!teamServerEntity1.empty() && !teamServerEntity2.empty())
+    //    if (teamServerEntity1 != "" && teamServerEntity2 != "")
+    //        if (teamServerEntity1 == teamServerEntity2)
     //            return true;
 
     // If we reached this point, we're done, no going on.
@@ -117,7 +117,7 @@ qboolean DefaultGameMode::CanDamage(SVGBaseEntity* target, SVGBaseEntity* inflic
     // bmodels need special checking because their origin is 0,0,0 <-- is bad.
     //
     // Solid entities need a special check, as their origin is usually 0,0,0
-    // Exception to the above: the solid entity moves or has an origin brush
+    // Exception to the above: the solid ServerEntity moves or has an origin brush
     if (target->GetMoveType() == MoveType::Push) {
         // Calculate destination.
         destination = target->GetAbsoluteMin() + target->GetAbsoluteMax();
@@ -170,35 +170,35 @@ qboolean DefaultGameMode::CanDamage(SVGBaseEntity* target, SVGBaseEntity* inflic
 //===============
 // DefaultGameMode::FindWithinRadius
 //
-// Returns a BaseEntityVector list containing the results of the found
+// Returns a BaseServerEntityVector list containing the results of the found
 // given entities that reside within the origin to radius. 
 // 
 // Flags can be set to determine which "solids" to exclude.
 //===============
-BaseEntityVector DefaultGameMode::FindBaseEnitiesWithinRadius(const vec3_t& origin, float radius, uint32_t excludeSolidFlags) {
+BaseServerEntityVector DefaultGameMode::FindBaseEnitiesWithinRadius(const vec3_t& origin, float radius, uint32_t excludeSolidFlags) {
     // List of base entities to return.
-    std::vector<SVGBaseEntity*> baseEntityList;
+    std::vector<SVGBaseEntity*> baseServerEntityList;
 
     // Iterate over all entities, see who is nearby, and who is not.
-    for (auto* radiusBaseEntity : GetBaseEntityRange<0, MAX_EDICTS>()
+    for (auto* radiusBaseServerEntity : GetBaseServerEntityRange<0, MAX_EDICTS>()
          | bef::Standard
          | bef::WithinRadius(origin, radius, excludeSolidFlags)) {
 
-        // Push radiusEntity result item to the list.
-        baseEntityList.push_back(radiusBaseEntity);
+        // Push radiusServerEntity result item to the list.
+        baseServerEntityList.push_back(radiusBaseServerEntity);
     }
 
     // The list might be empty, ensure to check for that ;-)
-    return baseEntityList;
+    return baseServerEntityList;
 }
 
 //===============
-// DefaultGameMode::EntityKilled
+// DefaultGameMode::ServerEntityKilled
 //
-// Called when an entity is killed, or at least, about to be.
+// Called when an ServerEntity is killed, or at least, about to be.
 // Determine how to deal with it, usually resides in a callback to Die.
 //===============
-void DefaultGameMode::EntityKilled(SVGBaseEntity* target, SVGBaseEntity* inflictor, SVGBaseEntity* attacker, int32_t damage, vec3_t point) {
+void DefaultGameMode::ServerEntityKilled(SVGBaseEntity* target, SVGBaseEntity* inflictor, SVGBaseEntity* attacker, int32_t damage, vec3_t point) {
     // Ensure health isn't exceeding limits.
     if (target->GetHealth() < -999)
         target->SetHealth(-999);
@@ -207,8 +207,8 @@ void DefaultGameMode::EntityKilled(SVGBaseEntity* target, SVGBaseEntity* inflict
     target->SetEnemy(attacker);
 
     // Determine whether it is a monster, and if it IS set to being dead....
-    if ((target->GetServerFlags() & EntityServerFlags::Monster) && (target->GetDeadFlag() != DEAD_DEAD)) {
-        target->SetServerFlags(target->GetServerFlags() | EntityServerFlags::DeadMonster);   // Now treat as a different content type
+    if ((target->GetServerFlags() & ServerEntityServerFlags::Monster) && (target->GetDeadFlag() != DEAD_DEAD)) {
+        target->SetServerFlags(target->GetServerFlags() | ServerEntityServerFlags::DeadMonster);   // Now treat as a different content type
 
 //        if (!(targ->monsterInfo.aiflags & AI_GOOD_GUY)) {
 //            level.killedMonsters++;
@@ -229,7 +229,7 @@ void DefaultGameMode::EntityKilled(SVGBaseEntity* target, SVGBaseEntity* inflict
         return;
     }
 
-    if ((target->GetServerFlags() & EntityServerFlags::Monster) && (target->GetDeadFlag() != DEAD_DEAD)) {
+    if ((target->GetServerFlags() & ServerEntityServerFlags::Monster) && (target->GetDeadFlag() != DEAD_DEAD)) {
         target->SetTouchCallback(nullptr);
 
         // This can only be done on base monster entities and derivates
@@ -257,7 +257,7 @@ void DefaultGameMode::InflictDamage(SVGBaseEntity* target, SVGBaseEntity* inflic
         return;
     }
 
-    // In case this entity is not taking any damage, all bets are off, don't bother moving on.
+    // In case this ServerEntity is not taking any damage, all bets are off, don't bother moving on.
     if (!target->GetTakeDamage())
         return;
 
@@ -280,15 +280,15 @@ void DefaultGameMode::InflictDamage(SVGBaseEntity* target, SVGBaseEntity* inflic
     ServersClient* client = target->GetClient();
 
     // Lame thing, regarding the sparks to use. Ancient code, keeping it for now.
-    int32_t te_sparks = TempEntityEvent::Sparks;
+    int32_t te_sparks = TempServerEntityEvent::Sparks;
     if (damageFlags & DamageFlags::Bullet)
-        te_sparks = TempEntityEvent::BulletSparks;
+        te_sparks = TempServerEntityEvent::BulletSparks;
 
     // Retrieve normalized direction.
     vec3_t dir = vec3_normalize(dmgDir);
 
     // Ensure there is no odd knockback issues.
-    if (target->GetFlags() & EntityFlags::NoKnockBack)
+    if (target->GetFlags() & ServerEntityFlags::NoKnockBack)
         knockBack = 0;
 
     // Figure out the momentum to add in case KnockBacks are off. 
@@ -317,12 +317,12 @@ void DefaultGameMode::InflictDamage(SVGBaseEntity* target, SVGBaseEntity* inflic
     damageSaved = 0;            // Damaged saved, from being taken.
 
                                 // check for godmode
-    if ((target->GetFlags() & EntityFlags::GodMode) && !(damageFlags & DamageFlags::IgnoreProtection)) {
+    if ((target->GetFlags() & ServerEntityFlags::GodMode) && !(damageFlags & DamageFlags::IgnoreProtection)) {
         damageTaken = 0;
         damageSaved = damage;
 
-        // Leave it for the game mode to move on and spawn this temp entity (if allowed.)
-        SpawnTempDamageEntity(te_sparks, point, normal, damageSaved);
+        // Leave it for the game mode to move on and spawn this temp ServerEntity (if allowed.)
+        SpawnTempDamageServerEntity(te_sparks, point, normal, damageSaved);
     }
 
     // Team damage avoidance
@@ -333,13 +333,13 @@ void DefaultGameMode::InflictDamage(SVGBaseEntity* target, SVGBaseEntity* inflic
     if (damageTaken) {
         // Check if monster, or client, in which case, we spawn blood.
         // If not... :)... Do not.
-        if ((target->GetServerFlags() & EntityServerFlags::Monster) || (client)) {
-            // SpawnTempDamageEntity(TempEntityEvent::Blood, point, normal, take);
-            // Leave it for the game mode to move on and spawn this temp entity (if allowed.)
-            SpawnTempDamageEntity(TempEntityEvent::Blood, point, dir, damageTaken);
+        if ((target->GetServerFlags() & ServerEntityServerFlags::Monster) || (client)) {
+            // SpawnTempDamageServerEntity(TempServerEntityEvent::Blood, point, normal, take);
+            // Leave it for the game mode to move on and spawn this temp ServerEntity (if allowed.)
+            SpawnTempDamageServerEntity(TempServerEntityEvent::Blood, point, dir, damageTaken);
         } else {
-            // Leave it for the game mode to move on and spawn this temp entity (if allowed.)
-            SpawnTempDamageEntity(te_sparks, point, normal, damageTaken);
+            // Leave it for the game mode to move on and spawn this temp ServerEntity (if allowed.)
+            SpawnTempDamageServerEntity(te_sparks, point, normal, damageTaken);
         }
 
         // Adjust health based on calculated damage to take.
@@ -348,17 +348,17 @@ void DefaultGameMode::InflictDamage(SVGBaseEntity* target, SVGBaseEntity* inflic
         // In case health is/was below 0.
         if (target->GetHealth() <= 0) {
             // Check if monster, or client, in which case, we execute no knockbacks :)
-            if ((target->GetServerFlags() & EntityServerFlags::Monster) || (client))
-                target->SetFlags(target->GetFlags() | EntityFlags::NoKnockBack);
+            if ((target->GetServerFlags() & ServerEntityServerFlags::Monster) || (client))
+                target->SetFlags(target->GetFlags() | ServerEntityFlags::NoKnockBack);
 
-            // It's dead though, or at least we assume so... Call on to: EntityKilled.
-            EntityKilled(target, inflictor, attacker, damageTaken, point);
+            // It's dead though, or at least we assume so... Call on to: ServerEntityKilled.
+            ServerEntityKilled(target, inflictor, attacker, damageTaken, point);
             return;
         }
     }
 
     // Special damage handling for monsters.
-    if (target->GetServerFlags() & EntityServerFlags::Monster) {
+    if (target->GetServerFlags() & ServerEntityServerFlags::Monster) {
         // WID: Maybe do some check for monster entities here sooner or later? Who knows...
         // Gotta have them cunts react to it. But we'll see, might as well be on TakeDamage :)
         //M_ReactToDamage(targ, attacker);
@@ -371,9 +371,9 @@ void DefaultGameMode::InflictDamage(SVGBaseEntity* target, SVGBaseEntity* inflic
         //}
     } else {
         if (client) {
-            //if (!(targ->flags & EntityFlags::GodMode) && (take))
+            //if (!(targ->flags & ServerEntityFlags::GodMode) && (take))
             //    targ->Pain(targ, attacker, knockBack, take);
-            if (!(target->GetFlags() & EntityFlags::GodMode) && (damageTaken)) {
+            if (!(target->GetFlags() & ServerEntityFlags::GodMode) && (damageTaken)) {
                 target->TakeDamage(attacker, knockBack, damageTaken);
             }
         } else if (damageTaken) {
@@ -399,7 +399,7 @@ void DefaultGameMode::InflictRadiusDamage(SVGBaseEntity* inflictor, SVGBaseEntit
     // Damage point counter for radius sum ups.
     float   points = 0.f;
 
-    // Actual entity loop pointer.
+    // Actual ServerEntity loop pointer.
     SVGBaseEntity* ent = nullptr;
 
     // N&C: From Yamagi Q2, to prevent issues.
@@ -408,37 +408,37 @@ void DefaultGameMode::InflictRadiusDamage(SVGBaseEntity* inflictor, SVGBaseEntit
     }
 
     // Find entities within radius.
-    BaseEntityVector radiusEntities = FindBaseEnitiesWithinRadius(inflictor->GetOrigin(), radius, Solid::Not);
+    BaseServerEntityVector radiusEntities = FindBaseEnitiesWithinRadius(inflictor->GetOrigin(), radius, Solid::Not);
 
     //while ((ent = SVG_FindEntitiesWithinRadius(ent, inflictor->GetOrigin(), radius)) != NULL) {
-    for (auto& baseEntity : radiusEntities) {
-        //// Continue in case this entity has to be ignored from applying damage.
-        if (baseEntity == ignore)
+    for (auto& baseServerEntity : radiusEntities) {
+        //// Continue in case this ServerEntity has to be ignored from applying damage.
+        if (baseServerEntity == ignore)
             continue;
 
-        // Continue in case this entity CAN'T take any damage.
-        if (!baseEntity->GetTakeDamage())
+        // Continue in case this ServerEntity CAN'T take any damage.
+        if (!baseServerEntity->GetTakeDamage())
             continue;
 
         // Calculate damage points.
-        vec3_t velocity = baseEntity->GetMins() + baseEntity->GetMaxs();
-        velocity = vec3_fmaf(baseEntity->GetOrigin(), 0.5f, velocity);
+        vec3_t velocity = baseServerEntity->GetMins() + baseServerEntity->GetMaxs();
+        velocity = vec3_fmaf(baseServerEntity->GetOrigin(), 0.5f, velocity);
         velocity -= inflictor->GetOrigin();
         points = damage - 0.5f * vec3_length(velocity);
 
-        // In case the attacker is the own entity, half damage.
+        // In case the attacker is the own ServerEntity, half damage.
         if (ent == attacker)
             points = points * 0.5f;
 
         // Apply damage points.
         if (points > 0) {
             // Ensure whether we CAN actually apply damage.
-            if (CanDamage(baseEntity, inflictor)) {
+            if (CanDamage(baseServerEntity, inflictor)) {
                 // Calculate direcion.
-                vec3_t dir = baseEntity->GetOrigin() - inflictor->GetOrigin();
+                vec3_t dir = baseServerEntity->GetOrigin() - inflictor->GetOrigin();
 
                 // Apply damages.
-                InflictDamage(baseEntity, inflictor, attacker, dir, inflictor->GetOrigin(), vec3_zero(), (int)points, (int)points, DamageFlags::IndirectFromRadius, mod);
+                InflictDamage(baseServerEntity, inflictor, attacker, dir, inflictor->GetOrigin(), vec3_zero(), (int)points, (int)points, DamageFlags::IndirectFromRadius, mod);
             }
         }
     }
@@ -463,10 +463,10 @@ const int32_t& DefaultGameMode::GetCurrentMeansOfDeath() {
 //===============
 // DefaultGameMode::SpawnClientCorpse
 // 
-// Spawns a dead body entity for the given client.
+// Spawns a dead body ServerEntity for the given client.
 //===============
 void DefaultGameMode::SpawnClientCorpse(SVGBaseEntity* ent) {
-    // Ensure it is an entity.
+    // Ensure it is an ServerEntity.
     if (!ent)
         return;
 
@@ -474,74 +474,74 @@ void DefaultGameMode::SpawnClientCorpse(SVGBaseEntity* ent) {
     if (!ent->GetClient())
         return;
 
-    // Unlink the player client entity.
-    ent->UnlinkEntity();
+    // Unlink the player client ServerEntity.
+    ent->UnlinkServerEntity();
 
     // Grab a body from the queue, and cycle to the next one.
-    Entity *bodyEntity = &g_entities[game.maximumClients + level.bodyQue + 1];
+    ServerEntity *bodyServerEntity = &g_entities[game.maximumClients + level.bodyQue + 1];
     level.bodyQue = (level.bodyQue + 1) % BODY_QUEUE_SIZE;
 
     // Send an effect on this body, in case it already has a model index.
     // This'll cause a body not to just "disappear", but actually play some
     // bloody particles over there.
-    if (bodyEntity->state.modelIndex) {
-        gi.WriteByte(SVG_CMD_TEMP_ENTITY);
-        gi.WriteByte(TempEntityEvent::Blood);
-        gi.WriteVector3(bodyEntity->state.origin);
+    if (bodyServerEntity->state.modelIndex) {
+        gi.WriteByte(SVG_CMD_TEMP_ServerEntity);
+        gi.WriteByte(TempServerEntityEvent::Blood);
+        gi.WriteVector3(bodyServerEntity->state.origin);
         gi.WriteVector3(vec3_zero());
-        gi.Multicast(bodyEntity->state.origin, MultiCast::PVS);
+        gi.Multicast(bodyServerEntity->state.origin, MultiCast::PVS);
     }
 
-    // Create the class entity for this queued bodyEntity.
-    SVGBaseEntity *bodyClassEntity = SVG_CreateClassEntity<BodyCorpse>(bodyEntity, false);
+    // Create the class ServerEntity for this queued bodyServerEntity.
+    SVGBaseEntity *bodyClassServerEntity = SVG_CreateClassServerEntity<BodyCorpse>(bodyServerEntity, false);
 
-    // Unlink the body entity, in case it was linked before.
-    bodyClassEntity->UnlinkEntity();
+    // Unlink the body ServerEntity, in case it was linked before.
+    bodyClassServerEntity->UnlinkServerEntity();
 
-    // Copy over the bodies state of the current entity into the body entity.
-    bodyClassEntity->SetState(ent->GetState());
-    // Change its number so it is accurately set to the one belonging to bodyEntity.
-    // (Has to happen since we first copied over an entire entity state.)
-    bodyClassEntity->SetNumber(bodyEntity - g_entities);
+    // Copy over the bodies state of the current ServerEntity into the body ServerEntity.
+    bodyClassServerEntity->SetState(ent->GetState());
+    // Change its number so it is accurately set to the one belonging to bodyServerEntity.
+    // (Has to happen since we first copied over an entire ServerEntity state.)
+    bodyClassServerEntity->SetNumber(bodyServerEntity - g_entities);
     // Set the event ID for this frame to OtherTeleport.
-    bodyClassEntity->SetEventID(EntityEvent::OtherTeleport);
+    bodyClassServerEntity->SetEventID(ServerEntityEvent::OtherTeleport);
 
     // Copy over the serverflags from ent.
-    bodyClassEntity->SetServerFlags(ent->GetServerFlags());
-    bodyClassEntity->SetMins(ent->GetMins());
-    bodyClassEntity->SetMaxs(ent->GetMaxs());
-    bodyClassEntity->SetAbsoluteMin(ent->GetAbsoluteMin());
-    bodyClassEntity->SetAbsoluteMax(ent->GetAbsoluteMax());
-    bodyClassEntity->SetSize(ent->GetSize());
-    bodyClassEntity->SetVelocity(ent->GetVelocity());
-    bodyClassEntity->SetAngularVelocity(ent->GetAngularVelocity());
-    bodyClassEntity->SetSolid(ent->GetSolid());
-    bodyClassEntity->SetClipMask(ent->GetClipMask());
-    bodyClassEntity->SetOwner(ent->GetOwner());
-    bodyClassEntity->SetMoveType(ent->GetMoveType());
-    bodyClassEntity->SetGroundEntity(ent->GetGroundEntity());
+    bodyClassServerEntity->SetServerFlags(ent->GetServerFlags());
+    bodyClassServerEntity->SetMins(ent->GetMins());
+    bodyClassServerEntity->SetMaxs(ent->GetMaxs());
+    bodyClassServerEntity->SetAbsoluteMin(ent->GetAbsoluteMin());
+    bodyClassServerEntity->SetAbsoluteMax(ent->GetAbsoluteMax());
+    bodyClassServerEntity->SetSize(ent->GetSize());
+    bodyClassServerEntity->SetVelocity(ent->GetVelocity());
+    bodyClassServerEntity->SetAngularVelocity(ent->GetAngularVelocity());
+    bodyClassServerEntity->SetSolid(ent->GetSolid());
+    bodyClassServerEntity->SetClipMask(ent->GetClipMask());
+    bodyClassServerEntity->SetOwner(ent->GetOwner());
+    bodyClassServerEntity->SetMoveType(ent->GetMoveType());
+    bodyClassServerEntity->SetGroundServerEntity(ent->GetGroundServerEntity());
 
     // Set the die callback, and set its take damage.
-    bodyClassEntity->SetDieCallback(&BodyCorpse::BodyCorpseDie);
-    bodyClassEntity->SetTakeDamage(TakeDamage::Yes);
+    bodyClassServerEntity->SetDieCallback(&BodyCorpse::BodyCorpseDie);
+    bodyClassServerEntity->SetTakeDamage(TakeDamage::Yes);
 
     // Link it in for collision etc.
-    bodyClassEntity->LinkEntity();
+    bodyClassServerEntity->LinkServerEntity();
 }
 
 //===============
-// DefaultGameMode::SpawnTempDamageEntity
+// DefaultGameMode::SpawnTempDamageServerEntity
 // 
-// Sends a message to all clients in the current PVS, spawning a temp entity for
+// Sends a message to all clients in the current PVS, spawning a temp ServerEntity for
 // displaying damage entities client side. (Sparks, what have ya.)
 //===============
-void DefaultGameMode::SpawnTempDamageEntity(int32_t type, const vec3_t& origin, const vec3_t& normal, int32_t damage) {
+void DefaultGameMode::SpawnTempDamageServerEntity(int32_t type, const vec3_t& origin, const vec3_t& normal, int32_t damage) {
     // WID: Ensure the effect can't send more damage. But that is unimplemented for the clients atm to even detect...
     if (damage > 255)
         damage = 255;
 
     // Write away.
-    gi.WriteByte(SVG_CMD_TEMP_ENTITY);
+    gi.WriteByte(SVG_CMD_TEMP_ServerEntity);
     gi.WriteByte(type);
     //  gi.WriteByte (damage); // <-- This was legacy crap, might wanna implement it ourselves eventually.
     gi.WriteVector3(origin);
@@ -593,10 +593,10 @@ void DefaultGameMode::OnLevelExit() {
     // End the server frames for all clients.
     SVG_ClientEndServerFrames();
 
-    // Loop through the server entities, and run the base entity frame if any exists.
+    // Loop through the server entities, and run the base ServerEntity frame if any exists.
     for (int32_t i = 0; i < maximumClients->value; i++) {
-        // Fetch the WorldSpawn entity number.
-        Entity *serverEntity = &g_entities[i];
+        // Fetch the WorldSpawn ServerEntity number.
+        ServerEntity *serverEntity = &g_entities[i];
 
         if (!serverEntity)
             continue;
@@ -606,12 +606,12 @@ void DefaultGameMode::OnLevelExit() {
 
         uint32_t stateNumber = serverEntity->state.number;
 
-        // Fetch the corresponding base entity.
-        SVGBaseEntity* entity = g_baseEntities[stateNumber];
+        // Fetch the corresponding base ServerEntity.
+        SVGBaseEntity* ServerEntity = g_baseEntities[stateNumber];
 
-        // Ensure an entity its health is reset to default.
-        if (entity->GetHealth() > entity->GetClient()->persistent.maxHealth)
-            entity->SetHealth(entity->GetClient()->persistent.maxHealth);
+        // Ensure an ServerEntity its health is reset to default.
+        if (ServerEntity->GetHealth() > ServerEntity->GetClient()->persistent.maxHealth)
+            ServerEntity->SetHealth(ServerEntity->GetClient()->persistent.maxHealth);
     }
 }
 
@@ -624,20 +624,20 @@ void DefaultGameMode::OnLevelExit() {
 // This basically allows for the game to disable fetching user input that makes
 // our movement tick. And/or shoot weaponry while in intermission time.
 //===============
-void DefaultGameMode::ClientBeginServerFrame(Entity* serverEntity) {
+void DefaultGameMode::ClientBeginServerFrame(ServerEntity* serverEntity) {
     // Ensure we aren't in an intermission time.
     if (level.intermission.time)
         return;
 
     // Fetch the client.
     ServersClient* client = serverEntity->client;
-    PlayerClient* player = (PlayerClient*)serverEntity->classEntity;
+    PlayerClient* player = (PlayerClient*)serverEntity->classServerEntity;
     // This has to go ofc.... lol. What it simply does though, is determine whether there is 
     // a need to respawn as spectator.
     //if (deathmatch->value &&
     //    client->persistent.isSpectator != client->respawn.isSpectator &&
     //    (level.time - client->respawnTime) >= 5) {
-    //    spectator_respawn(ent->GetServerEntity());
+    //    spectator_respawn(ent->GetServerServerEntity());
     //    return;
     //}
 
@@ -663,7 +663,7 @@ void DefaultGameMode::ClientBeginServerFrame(Entity* serverEntity) {
 
             if ((client->latchedButtons & buttonMask) ||
                 (deathmatch->value && ((int)gamemodeflags->value & GameModeFlags::ForceRespawn))) {
-                game.gameMode->RespawnClient((PlayerClient*)player->GetServerEntity());
+                game.gameMode->RespawnClient((PlayerClient*)player->GetServerServerEntity());
                 client->latchedButtons = 0;
             }
         }
@@ -688,21 +688,21 @@ void DefaultGameMode::ClientBeginServerFrame(Entity* serverEntity) {
 // 
 // Used to set the latest view offsets
 //===============
-void DefaultGameMode::ClientEndServerFrame(Entity *serverEntity) {
+void DefaultGameMode::ClientEndServerFrame(ServerEntity *serverEntity) {
     float   bobTime;
 
-    if (!serverEntity || !serverEntity->client || !serverEntity->classEntity) {
+    if (!serverEntity || !serverEntity->client || !serverEntity->classServerEntity) {
         return;
     }
 
-    // Setup the current player and entity being processed.
+    // Setup the current player and ServerEntity being processed.
     ServersClient *client = serverEntity->client;
 
-    // Used for in this function, the classEntity of the given serverEntity.
-    PlayerClient* classEntity = (PlayerClient*)serverEntity->classEntity;
+    // Used for in this function, the classServerEntity of the given serverEntity.
+    PlayerClient* classServerEntity = (PlayerClient*)serverEntity->classServerEntity;
 
-    // Fetch the bobMove in use for classEntity.
-    PlayerClient::BobMoveCycle& bobMoveCycle = classEntity->GetBobMoveCycle();
+    // Fetch the bobMove in use for classServerEntity.
+    PlayerClient::BobMoveCycle& bobMoveCycle = classServerEntity->GetBobMoveCycle();
 
     //
     // If the origin or velocity have changed since ClientThink(),
@@ -712,8 +712,8 @@ void DefaultGameMode::ClientEndServerFrame(Entity *serverEntity) {
     // If it wasn't updated here, the view position would lag a frame
     // behind the body position when pushed -- "sinking into plats"
     //
-    client->playerState.pmove.origin = classEntity->GetOrigin();
-    client->playerState.pmove.velocity = classEntity->GetVelocity();
+    client->playerState.pmove.origin = classServerEntity->GetOrigin();
+    client->playerState.pmove.velocity = classServerEntity->GetVelocity();
 
     //
     // If the end of unit layout is displayed, don't give
@@ -727,10 +727,10 @@ void DefaultGameMode::ClientEndServerFrame(Entity *serverEntity) {
         return;
     }
 
-    vec3_vectors(client->aimAngles, &classEntity->GetBobMoveCycle().forward, &classEntity->GetBobMoveCycle().right, &classEntity->GetBobMoveCycle().up);
+    vec3_vectors(client->aimAngles, &classServerEntity->GetBobMoveCycle().forward, &classServerEntity->GetBobMoveCycle().right, &classServerEntity->GetBobMoveCycle().up);
 
     // Burn from lava, etc
-    classEntity->CheckWorldEffects();
+    classServerEntity->CheckWorldEffects();
 
     //
     // Set model angles from view angles so other things in
@@ -739,21 +739,21 @@ void DefaultGameMode::ClientEndServerFrame(Entity *serverEntity) {
     vec3_t newPlayerAngles = serverEntity->state.angles;
 
     if (client->aimAngles[vec3_t::Pitch] > 180)
-        newPlayerAngles[vec3_t::Pitch] = (-360 + classEntity->GetClient()->aimAngles[vec3_t::Pitch]) / 3;
+        newPlayerAngles[vec3_t::Pitch] = (-360 + classServerEntity->GetClient()->aimAngles[vec3_t::Pitch]) / 3;
     else
-        newPlayerAngles[vec3_t::Pitch] = classEntity->GetClient()->aimAngles[vec3_t::Pitch] / 3;
-    newPlayerAngles[vec3_t::Yaw] = classEntity->GetClient()->aimAngles[vec3_t::Yaw];
+        newPlayerAngles[vec3_t::Pitch] = classServerEntity->GetClient()->aimAngles[vec3_t::Pitch] / 3;
+    newPlayerAngles[vec3_t::Yaw] = classServerEntity->GetClient()->aimAngles[vec3_t::Yaw];
     newPlayerAngles[vec3_t::Roll] = 0;
-    newPlayerAngles[vec3_t::Roll] = classEntity->CalculateRoll(newPlayerAngles, classEntity->GetVelocity()) * 4;
+    newPlayerAngles[vec3_t::Roll] = classServerEntity->CalculateRoll(newPlayerAngles, classServerEntity->GetVelocity()) * 4;
 
     // Last but not least, after having calculated the Pitch, Yaw, and Roll, set the new angles.
-    classEntity->SetAngles(newPlayerAngles);
+    classServerEntity->SetAngles(newPlayerAngles);
 
     //
     // Calculate the player its X Y axis' speed and calculate the cycle for
     // bobbing based on that.
     //
-    vec3_t playerVelocity = classEntity->GetVelocity();
+    vec3_t playerVelocity = classServerEntity->GetVelocity();
     // Without * FRAMETIME = XYSpeed = std::sqrtf(playerVelocity[0] * playerVelocity[0] + playerVelocity[1] * playerVelocity[1]);
     bobMoveCycle.XYSpeed = std::sqrtf(playerVelocity[0] * playerVelocity[0] + playerVelocity[1] * playerVelocity[1]);
 
@@ -763,17 +763,17 @@ void DefaultGameMode::ClientEndServerFrame(Entity *serverEntity) {
 
         // Start at beginning of cycle again (See the else if statement.)
         client->bobTime = 0;
-    } else if (classEntity->GetGroundEntity() || classEntity->GetWaterLevel() == 2) {
+    } else if (classServerEntity->GetGroundServerEntity() || classServerEntity->GetWaterLevel() == 2) {
         // So bobbing only cycles when on ground.
         if (bobMoveCycle.XYSpeed > 450)
             bobMoveCycle.move = 0.25;
         else if (bobMoveCycle.XYSpeed > 210)
             bobMoveCycle.move = 0.125;
-        else if (!classEntity->GetGroundEntity() && classEntity->GetWaterLevel() == 2 && bobMoveCycle.XYSpeed > 100)
+        else if (!classServerEntity->GetGroundServerEntity() && classServerEntity->GetWaterLevel() == 2 && bobMoveCycle.XYSpeed > 100)
             bobMoveCycle.move = 0.225;
         else if (bobMoveCycle.XYSpeed > 100)
             bobMoveCycle.move = 0.0825;
-        else if (!classEntity->GetGroundEntity() && classEntity->GetWaterLevel() == 2)
+        else if (!classServerEntity->GetGroundServerEntity() && classServerEntity->GetWaterLevel() == 2)
             bobMoveCycle.move = 0.1625;
         else
             bobMoveCycle.move = 0.03125;
@@ -800,23 +800,23 @@ void DefaultGameMode::ClientEndServerFrame(Entity *serverEntity) {
  //   bobMove.fracSin = std::fabsf(std::sinf(bobTime * M_PI));
 
     // Detect hitting the floor, and apply damage appropriately.
-    classEntity->CheckFallingDamage();
+    classServerEntity->CheckFallingDamage();
 
     // Apply all other the damage taken this frame
-    classEntity->ApplyDamageFeedback();
+    classServerEntity->ApplyDamageFeedback();
 
     // Determine the new frame's view offsets
-    classEntity->CalculateViewOffset();
+    classServerEntity->CalculateViewOffset();
 
     // Determine the gun offsets
-    classEntity->CalculateGunOffset();
+    classServerEntity->CalculateGunOffset();
 
     // Determine the full screen color blend
     // must be after viewOffset, so eye contents can be
     // accurately determined
     // FIXME: with client prediction, the contents
     // should be determined by the client
-    classEntity->CalculateScreenBlend();
+    classServerEntity->CalculateScreenBlend();
 
     // Set the stats to display for this client (one of the chase isSpectator stats or...)
     if (client->respawn.isSpectator)
@@ -826,16 +826,16 @@ void DefaultGameMode::ClientEndServerFrame(Entity *serverEntity) {
 
     SVG_HUD_CheckChaseStats(serverEntity);
 
-    classEntity->SetEvent();
+    classServerEntity->SetEvent();
 
-    classEntity->SetEffects();
+    classServerEntity->SetEffects();
 
-    classEntity->SetSound();
+    classServerEntity->SetSound();
 
-    classEntity->SetAnimationFrame();
+    classServerEntity->SetAnimationFrame();
 
     // Store velocity and view angles.
-    client->oldVelocity = classEntity->GetVelocity();
+    client->oldVelocity = classServerEntity->GetVelocity();
     client->oldViewAngles = client->playerState.pmove.viewAngles;
 
     // Reset weapon kicks to zer0.
@@ -844,7 +844,7 @@ void DefaultGameMode::ClientEndServerFrame(Entity *serverEntity) {
 
     // if the scoreboard is up, update it
     if (client->showScores && !(level.frameNumber & 31)) {
-        SVG_HUD_GenerateDMScoreboardLayout(classEntity, classEntity->GetEnemy());
+        SVG_HUD_GenerateDMScoreboardLayout(classServerEntity, classServerEntity->GetEnemy());
         gi.Unicast(serverEntity, false);
     }
 }
@@ -854,7 +854,7 @@ void DefaultGameMode::ClientEndServerFrame(Entity *serverEntity) {
 // 
 // Client is connecting, what do? :)
 //===============
-qboolean DefaultGameMode::ClientConnect(Entity* serverEntity, char *userinfo) {
+qboolean DefaultGameMode::ClientConnect(ServerEntity* serverEntity, char *userinfo) {
     if (!serverEntity) {
         gi.DPrintf("ClientConnect executed with invalid (nullptr) serverEntity");
         return false;
@@ -929,13 +929,13 @@ qboolean DefaultGameMode::ClientConnect(Entity* serverEntity, char *userinfo) {
 // 
 // Called when a client is ready to be placed in the game after connecting.
 //===============
-void DefaultGameMode::ClientBegin(Entity* serverEntity) {
+void DefaultGameMode::ClientBegin(ServerEntity* serverEntity) {
     if (!serverEntity) {
         gi.DPrintf("ClientBegin executed with invalid (nullptr) serverEntity");
         return;
     }
 
-    // Setup the client for the server entity.
+    // Setup the client for the server ServerEntity.
     serverEntity->client = game.clients + (serverEntity - g_entities - 1);
 
     // We got our own deathmatch mode class, it should copy this function and modify it to tis needs.
@@ -955,18 +955,18 @@ void DefaultGameMode::ClientBegin(Entity* serverEntity) {
             serverEntity->client->playerState.pmove.deltaAngles[i] = serverEntity->client->playerState.pmove.viewAngles[i];
     } else {
         // Initialize a clean serverEntity.
-        SVG_InitEntity(serverEntity);
+        SVG_InitServerEntity(serverEntity);
         
-        // Delete previous classentity, if existent (older client perhaps).
-        SVG_FreeClassEntity(serverEntity);
+        // Delete previous classServerEntity, if existent (older client perhaps).
+        SVG_FreeClassServerEntity(serverEntity);
 
-        // Recreate class PlayerClient entity.
-        serverEntity->classEntity = SVG_CreateClassEntity<PlayerClient>(serverEntity, false);
+        // Recreate class PlayerClient ServerEntity.
+        serverEntity->classServerEntity = SVG_CreateClassServerEntity<PlayerClient>(serverEntity, false);
 
         // Initialize client respawn data.
         InitializeClientRespawnData(serverEntity->client);
 
-        // Put into our server and blast away! (Takes care of spawning classEntity).
+        // Put into our server and blast away! (Takes care of spawning classServerEntity).
         PutClientInServer(serverEntity);
     }
 
@@ -1013,10 +1013,10 @@ void DefaultGameMode::ClientDisconnect(PlayerClient* player) {
         gi.Multicast(player->GetOrigin(), MultiCast::PVS);
     }
 
-    // Unset this entity, after all, it's about to disconnect so.
+    // Unset this ServerEntity, after all, it's about to disconnect so.
     // We don't want it having any model, collision, sound, event, effects...
     // and ensure it is not in use anymore, also change its classname.
-    player->UnlinkEntity();
+    player->UnlinkServerEntity();
     player->SetModelIndex(0);
     player->Base::SetSound(0);
     player->SetEventID(0);
@@ -1037,7 +1037,7 @@ void DefaultGameMode::ClientDisconnect(PlayerClient* player) {
 // DefaultGameMode::ClientUserinfoChanged
 // 
 //===============
-void DefaultGameMode::ClientUserinfoChanged(Entity* ent, char* userinfo) {
+void DefaultGameMode::ClientUserinfoChanged(ServerEntity* ent, char* userinfo) {
     char    *s;
     int     playernum;
 
@@ -1093,7 +1093,7 @@ void DefaultGameMode::ClientUserinfoChanged(Entity* ent, char* userinfo) {
 // 
 //===============
 void DefaultGameMode::ClientUpdateObituary(SVGBaseEntity* self, SVGBaseEntity* inflictor, SVGBaseEntity* attacker) {
-    std::string message = ""; // String stating what happened to whichever entity. "suicides", "was squished" etc.
+    std::string message = ""; // String stating what happened to whichever ServerEntity. "suicides", "was squished" etc.
     std::string messageAddition = ""; // String stating what is additioned to it, "'s shrapnell" etc. Funny stuff.
 
                                       // Goes to COOP GAME MODE.
@@ -1210,7 +1210,7 @@ void DefaultGameMode::ClientUpdateObituary(SVGBaseEntity* self, SVGBaseEntity* i
     }
 
     // Check for monster deaths here.
-    if (attacker->GetServerFlags() & EntityServerFlags::Monster) {
+    if (attacker->GetServerFlags() & ServerEntityServerFlags::Monster) {
         // Fill in message here
         // aka if (attacker->classname == "monster_1337h4x0r")
         // Then we do...
@@ -1236,7 +1236,7 @@ void DefaultGameMode::ClientUpdateObituary(SVGBaseEntity* self, SVGBaseEntity* i
 }
 
 
-void DefaultGameMode::InitializeClientPersistentData(ServersClient* client) {
+void DefaultGameMode::InitializeClientPersistentData(gclient_s *client) {
     gitem_t     *item = NULL;
 
     if (!client)
@@ -1279,7 +1279,7 @@ void DefaultGameMode::InitializeClientRespawnData(ServersClient* client) {
 // Choose any info_player_start or its derivates, it'll do a subclassof check, so the only valid classnames are
 // those who have inherited from info_player_start. (info_player_deathmatch, etc).
 //===============
-void DefaultGameMode::SelectClientSpawnPoint(Entity* ent, vec3_t& origin, vec3_t& angles, const std::string& classname) {
+void DefaultGameMode::SelectClientSpawnPoint(ServerEntity* ent, vec3_t& origin, vec3_t& angles, const std::string& classname) {
     SVGBaseEntity *spawnPoint = nullptr;
 
     //// Find a single player start spot
@@ -1329,7 +1329,7 @@ void DefaultGameMode::SelectClientSpawnPoint(Entity* ent, vec3_t& origin, vec3_t
 // #2. In thecase of a MP mode death however, after a small intermission time, it'll
 // call this function again to respawn our player.
 //===============
-void DefaultGameMode::PutClientInServer(Entity *ent) {
+void DefaultGameMode::PutClientInServer(ServerEntity *ent) {
     // Find a spawn point for this client to be "placed"/"put" at.
     vec3_t  mins = PM_MINS;
     vec3_t  maxs = PM_MAXS;
@@ -1345,7 +1345,7 @@ void DefaultGameMode::PutClientInServer(Entity *ent) {
 
     SelectClientSpawnPoint(ent, spawnOrigin, spawnAngles, "info_player_start");
 
-    // Fetch the entity index, and the client right off the bat.
+    // Fetch the ServerEntity index, and the client right off the bat.
     int32_t index = ent - g_entities - 1;
     ServersClient* client = ent->client;
 
@@ -1388,12 +1388,12 @@ void DefaultGameMode::PutClientInServer(Entity *ent) {
     InitializeClientPersistentData(client);
     client->respawn = respawnData;
 
-    // Copy some data from the client to the entity
-    FetchClientEntityData(ent);
+    // Copy some data from the client to the ServerEntity
+    FetchClientServerEntityData(ent);
 
-    // clear entity values
-    PlayerClient* playerClient = (PlayerClient*)ent->classEntity;
-    playerClient->SetGroundEntity(nullptr);
+    // clear ServerEntity values
+    PlayerClient* playerClient = (PlayerClient*)ent->classServerEntity;
+    playerClient->SetGroundServerEntity(nullptr);
     playerClient->SetClient(&game.clients[index]);
     playerClient->SetTakeDamage(TakeDamage::Aim);
     playerClient->SetMoveType(MoveType::Walk);
@@ -1410,8 +1410,8 @@ void DefaultGameMode::PutClientInServer(Entity *ent) {
     /*ent->pain = player_pain;*/
     playerClient->SetWaterLevel(0);
     playerClient->SetWaterType(0);
-    playerClient->SetFlags(playerClient->GetFlags() & ~EntityFlags::NoKnockBack);
-    playerClient->SetServerFlags(playerClient->GetServerFlags() & ~EntityServerFlags::DeadMonster);
+    playerClient->SetFlags(playerClient->GetFlags() & ~ServerEntityFlags::NoKnockBack);
+    playerClient->SetServerFlags(playerClient->GetServerFlags() & ~ServerEntityServerFlags::DeadMonster);
     playerClient->SetMins(mins);
     playerClient->SetMaxs(maxs);
     playerClient->SetVelocity(vec3_zero());
@@ -1435,7 +1435,7 @@ void DefaultGameMode::PutClientInServer(Entity *ent) {
     // Set gun index to whichever was persistent in (if any) previous map.
     client->playerState.gunIndex = gi.ModelIndex(client->persistent.activeWeapon->viewModel);
 
-    // clear entity state values
+    // clear ServerEntity state values
     ent->state.effects = 0;
     ent->state.modelIndex = 255;        // will use the skin specified model
     ent->state.modelIndex2 = 255;       // custom gun model
@@ -1445,7 +1445,7 @@ void DefaultGameMode::PutClientInServer(Entity *ent) {
 
     ent->state.frame = 0;
     ent->state.origin = spawnOrigin;
-    ent->state.origin.z += 1;  // Mmake sure entity is off the ground
+    ent->state.origin.z += 1;  // Mmake sure ServerEntity is off the ground
 
     // Set old Origin to current, because hell, we are here now spawning.
     ent->state.oldOrigin = ent->state.origin;
@@ -1476,14 +1476,14 @@ void DefaultGameMode::PutClientInServer(Entity *ent) {
         // No solid.
         ent->solid = Solid::Not;
 
-        // NoClient flag, aka, do not send this entity to other clients. It is invisible to them.
-        ent->serverFlags |= EntityServerFlags::NoClient;
+        // NoClient flag, aka, do not send this ServerEntity to other clients. It is invisible to them.
+        ent->serverFlags |= ServerEntityServerFlags::NoClient;
 
         // Obviously no gun index.
         ent->client->playerState.gunIndex = 0;
 
-        // Last but not least link our entity.
-        gi.LinkEntity(ent);
+        // Last but not least link our ServerEntity.
+        gi.LinkServerEntity(ent);
         
         return;
     } else {
@@ -1494,7 +1494,7 @@ void DefaultGameMode::PutClientInServer(Entity *ent) {
     // could't spawn in?
     }
 
-    gi.LinkEntity(ent);
+    gi.LinkServerEntity(ent);
 
     // force the current weapon up
     client->newWeapon = client->persistent.activeWeapon;
@@ -1510,14 +1510,14 @@ void DefaultGameMode::RespawnClient(PlayerClient* ent) {
     // Kept around here to port later to other gamemodes.
     //if (deathmatch->value || coop->value) {
     //    // Spectator's don't leave bodies
-    //    if (self->classEntity->GetMoveType() != MoveType::NoClip && self->classEntity->GetMoveType() != MoveType::Spectator)
-    //        game.gameMode->SpawnClientCorpse(self->classEntity);
+    //    if (self->classServerEntity->GetMoveType() != MoveType::NoClip && self->classServerEntity->GetMoveType() != MoveType::Spectator)
+    //        game.gameMode->SpawnClientCorpse(self->classServerEntity);
 
-    //    self->serverFlags &= ~EntityServerFlags::NoClient;
-    //    game.gameMode->PutClientInServer((PlayerClient*)self->classEntity);
+    //    self->serverFlags &= ~ServerEntityServerFlags::NoClient;
+    //    game.gameMode->PutClientInServer((PlayerClient*)self->classServerEntity);
 
     //    // add a teleportation effect
-    //    self->state.eventID = EntityEvent::PlayerTeleport;
+    //    self->state.eventID = ServerEntityEvent::PlayerTeleport;
 
     //    // hold in place briefly
     //    self->client->playerState.pmove.flags = PMF_TIME_TELEPORT;
@@ -1538,25 +1538,25 @@ void DefaultGameMode::RespawnClient(PlayerClient* ent) {
 
 
 //===============
-// DefaultGameMode::SaveClientEntityData
+// DefaultGameMode::SaveClientServerEntityData
 // 
 // Some information that should be persistant, like health,
 // is still stored in the edict structure, so it needs to
 // be mirrored out to the client structure before all the
 // edicts are wiped.
 //===============
-void DefaultGameMode::SaveClientEntityData(void) {
-    Entity *ent;
+void DefaultGameMode::SaveClientServerEntityData(void) {
+    ServerEntity *ent;
 
     for (int32_t i = 0 ; i < game.maximumClients ; i++) {
         ent = &g_entities[1 + i];
         if (!ent->inUse)
             continue;
-        if (!ent->classEntity)
+        if (!ent->classServerEntity)
             continue;
-        game.clients[i].persistent.health = ent->classEntity->GetHealth();
-        game.clients[i].persistent.maxHealth = ent->classEntity->GetMaxHealth();
-        game.clients[i].persistent.savedFlags = (ent->classEntity->GetFlags() & (EntityFlags::GodMode | EntityFlags::NoTarget | EntityFlags::PowerArmor));
+        game.clients[i].persistent.health = ent->classServerEntity->GetHealth();
+        game.clients[i].persistent.maxHealth = ent->classServerEntity->GetMaxHealth();
+        game.clients[i].persistent.savedFlags = (ent->classServerEntity->GetFlags() & (ServerEntityFlags::GodMode | ServerEntityFlags::NoTarget | ServerEntityFlags::PowerArmor));
         if (coop->value && ent->client)
             game.clients[i].persistent.score = ent->client->respawn.score;
     }
@@ -1565,18 +1565,18 @@ void DefaultGameMode::SaveClientEntityData(void) {
 //===============
 // DefaultGameMode::RespawnClient
 // 
-// // Fetch client data that was stored between previous entity wipe session
+// // Fetch client data that was stored between previous ServerEntity wipe session
 //===============
-void DefaultGameMode::FetchClientEntityData(Entity* ent) {
+void DefaultGameMode::FetchClientServerEntityData(ServerEntity* ent) {
     if (!ent)
         return;
 
-    if (!ent->classEntity)
+    if (!ent->classServerEntity)
         return;
 
-    ent->classEntity->SetHealth(ent->client->persistent.health);
-    ent->classEntity->SetMaxHealth(ent->client->persistent.maxHealth);
-    ent->classEntity->SetFlags(ent->classEntity->GetFlags() | ent->client->persistent.savedFlags);
+    ent->classServerEntity->SetHealth(ent->client->persistent.health);
+    ent->classServerEntity->SetMaxHealth(ent->client->persistent.maxHealth);
+    ent->classServerEntity->SetFlags(ent->classServerEntity->GetFlags() | ent->client->persistent.savedFlags);
     if (coop->value && ent->client)
         ent->client->respawn.score = ent->client->persistent.score;
 }

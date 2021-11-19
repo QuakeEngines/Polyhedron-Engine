@@ -111,7 +111,7 @@ void SVG_AllocateGameClients();
 void SVG_AllocateGamePlayerClientEntities();
 void SVG_InitializeCVars();
 
-void SVG_RunEntity(SVGBaseEntity *ent);
+void SVG_RunServerEntity(SVGBaseEntity *ent);
 void SVG_WriteGame(const char *filename, qboolean autosave);
 void SVG_ReadGame(const char *filename);
 void SVG_WriteLevel(const char *filename);
@@ -216,7 +216,7 @@ ServerGameExports* GetServerGameAPI(ServerGameImports* import)
 
     globals.ServerCommand = SVG_ServerCommand;
 
-    globals.entitySize = sizeof(Entity);
+    globals.ServerEntitySize = sizeof(ServerEntity);
 
     return &globals;
 }
@@ -337,7 +337,7 @@ void SVG_InitializeCVars() {
 //=====================
 // SVG_InitializeServerEntities
 //
-// Sets up the server entity aligned array.
+// Sets up the server ServerEntity aligned array.
 //=====================
 //
 void SVG_InitializeServerEntities() {
@@ -380,25 +380,25 @@ void SVG_AllocateGamePlayerClientEntities() {
     // Loop over the number of clients.
     int32_t maximumClients = game.maximumClients;
 
-    // Allocate a classentity for each client in existence.
+    // Allocate a classServerEntity for each client in existence.
     for (int32_t i = 1; i < maximumClients + 1; i++) {
-        // Fetch server entity.
-        Entity* serverEntity = &g_entities[i];
+        // Fetch server ServerEntity.
+        ServerEntity* serverEntity = &g_entities[i];
 
-        // Initialize entity.
-        SVG_InitEntity(serverEntity);
+        // Initialize ServerEntity.
+        SVG_InitServerEntity(serverEntity);
 
         // Allocate their class entities appropriately.
-        serverEntity->classEntity = SVG_CreateClassEntity<PlayerClient>(serverEntity, false); //SVG_SpawnClassEntity(serverEntity, serverEntity->className);
+        serverEntity->classServerEntity = SVG_CreateClassServerEntity<PlayerClient>(serverEntity, false); //SVG_SpawnClassServerEntity(serverEntity, serverEntity->className);
         
         // Be sure to reset their inuse, after all, they aren't in use.
-        serverEntity->classEntity->SetInUse(false);
+        serverEntity->classServerEntity->SetInUse(false);
 
         // Fetch client index.
         const int32_t clientIndex = i - 1; // Same as the older: serverEntity - g_entities - 1;
 
-        // Assign the designated client to this PlayerClient entity.
-        ((PlayerClient*)serverEntity->classEntity)->SetClient(&game.clients[clientIndex]);
+        // Assign the designated client to this PlayerClient ServerEntity.
+        ((PlayerClient*)serverEntity->classServerEntity)->SetClient(&game.clients[clientIndex]);
     }
 }
 
@@ -460,14 +460,14 @@ void SVG_ClientEndServerFrames(void)
     // (This happens here, so we can take into consideration objects that have
     // pushed the player. And of course, because damage has been added.)
     for (int32_t i = 0; i < maximumClients->value; i++) {
-        // First, fetch entity state number.
+        // First, fetch ServerEntity state number.
         int32_t stateNumber = g_entities[1 + i].state.number;
 
         // Now, let's go wild. (Purposely, do not assume the pointer is a PlayerClient.)
-        Entity *entity = &g_entities[stateNumber]; // WID: 1 +, because 0 == WorldSpawn.
+        ServerEntity *ServerEntity = &g_entities[stateNumber]; // WID: 1 +, because 0 == WorldSpawn.
 
         // See if we're gooszsd to go, if not, continue for the next. 
-        if (!entity || !entity->inUse || !entity->client)
+        if (!ServerEntity || !ServerEntity->inUse || !ServerEntity->client)
             continue;
 
         // Ugly cast, yes, but at this point we know we can do this. And that, to do it, matters more than
@@ -486,7 +486,7 @@ The timelimit or fraglimit has been exceeded
 */
 void SVG_EndDMLevel(void)
 {
-    Entity     *ent;
+    ServerEntity     *ent;
     char *s, *t, *f;
     static const char *seps = " ,\n\r";
 
@@ -570,7 +570,7 @@ SVG_CheckDMRules
 void SVG_CheckDMRules(void)
 {
     int         i;
-    ServersClient   *cl;
+    ServerClient   *cl;
 
     if (level.intermission.time)
         return;
@@ -628,65 +628,65 @@ void SVG_RunFrame(void)
     // Treat each object in turn
     // "even the world gets a chance to Think", it does.
     //
-    // Fetch the WorldSpawn entity number.
+    // Fetch the WorldSpawn ServerEntity number.
     int32_t stateNumber = g_entities[0].state.number;
 
-    // Fetch the corresponding base entity.
-    SVGBaseEntity* entity = g_baseEntities[stateNumber];
+    // Fetch the corresponding base ServerEntity.
+    SVGBaseEntity* ServerEntity = g_baseEntities[stateNumber];
 
-    // Loop through the server entities, and run the base entity frame if any exists.
+    // Loop through the server entities, and run the base ServerEntity frame if any exists.
     for (int32_t i = 0; i < globals.numberOfEntities; i++) {
         // Acquire state number.
         stateNumber = g_entities[i].state.number;
 
-        // Fetch the corresponding base entity.
-        SVGBaseEntity* entity = g_baseEntities[stateNumber];
+        // Fetch the corresponding base ServerEntity.
+        SVGBaseEntity* ServerEntity = g_baseEntities[stateNumber];
 
         // Is it even valid?
-        if (entity == nullptr)
+        if (ServerEntity == nullptr)
             continue;
 
         // Don't go on if it isn't in use.
-        if (!entity->IsInUse())
+        if (!ServerEntity->IsInUse())
             continue;
 
-        if (!entity->GetServerEntity())
+        if (!ServerEntity->GetServerServerEntity())
             continue;
 
-        // Admer: entity was marked for removal at the previous tick
-        if (entity->GetServerFlags() & EntityServerFlags::Remove) {
-            SVG_FreeEntity(entity->GetServerEntity());
+        // Admer: ServerEntity was marked for removal at the previous tick
+        if (ServerEntity->GetServerFlags() & ServerEntityServerFlags::Remove) {
+            SVG_FreeServerEntity(ServerEntity->GetServerServerEntity());
             continue;
         }
 
-        // Let the level data know which entity we are processing right now.
-        level.currentEntity = entity;
+        // Let the level data know which ServerEntity we are processing right now.
+        level.currentServerEntity = ServerEntity;
 
         // Store previous(old) origin.
-        entity->SetOldOrigin(entity->GetOrigin());
+        ServerEntity->SetOldOrigin(ServerEntity->GetOrigin());
 
-        // If the ground entity moved, make sure we are still on it
-        if ((entity->GetGroundEntity() && entity->GetGroundEntity()->GetServerEntity())
-            && (entity->GetGroundEntity()->GetLinkCount() != entity->GetGroundEntityLinkCount())) {
-            // Reset ground entity.
-            entity->SetGroundEntity(nullptr);
+        // If the ground ServerEntity moved, make sure we are still on it
+        if ((ServerEntity->GetGroundServerEntity() && ServerEntity->GetGroundServerEntity()->GetServerServerEntity())
+            && (ServerEntity->GetGroundServerEntity()->GetLinkCount() != ServerEntity->GetGroundServerEntityLinkCount())) {
+            // Reset ground ServerEntity.
+            ServerEntity->SetGroundServerEntity(nullptr);
 
             // Ensure we only check for it in case it is required (ie, certain movetypes do not want this...)
-            if (!(entity->GetFlags() & (EntityFlags::Swim | EntityFlags::Fly)) && (entity->GetServerFlags() & EntityServerFlags::Monster)) {
-                SVG_StepMove_CheckGround(entity);
+            if (!(ServerEntity->GetFlags() & (ServerEntityFlags::Swim | ServerEntityFlags::Fly)) && (ServerEntity->GetServerFlags() & ServerEntityServerFlags::Monster)) {
+                SVG_StepMove_CheckGround(ServerEntity);
             }
         }
 
         // Time to begin a server frame for all of our clients. (This has to ha
         if (i > 0 && i <= maximumClients->value) {
-            // Ensure the entity actually is owned by a client. 
-            if (entity->GetClient())
-                game.gameMode->ClientBeginServerFrame(entity->GetServerEntity());
+            // Ensure the ServerEntity actually is owned by a client. 
+            if (ServerEntity->GetClient())
+                game.gameMode->ClientBeginServerFrame(ServerEntity->GetServerServerEntity());
             continue;
         }
 
-        // Last but not least, "run" process the entity.
-        SVG_RunEntity(entity);
+        // Last but not least, "run" process the ServerEntity.
+        SVG_RunServerEntity(ServerEntity);
     }
 
     // See if it is time to end a deathmatch.

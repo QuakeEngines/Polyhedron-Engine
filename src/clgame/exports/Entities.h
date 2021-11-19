@@ -11,7 +11,7 @@
 //---------------------------------------------------------------------
 class ClientGameEntities : public IClientGameExportEntities {
 public:
-	// Executed whenever an entity event is receieved.
+	// Executed whenever an ServerEntity event is receieved.
 	void Event(int32_t number) final;
 };
 

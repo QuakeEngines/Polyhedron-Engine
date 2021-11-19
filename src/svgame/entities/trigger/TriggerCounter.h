@@ -3,7 +3,7 @@
 
 class TriggerCounter : public SVGBaseTrigger {
 public:
-	TriggerCounter( Entity* entity );
+	TriggerCounter( ServerEntity* ServerEntity );
 	virtual ~TriggerCounter() = default;
 
 	DefineMapClass( "trigger_counter", TriggerCounter, SVGBaseTrigger );

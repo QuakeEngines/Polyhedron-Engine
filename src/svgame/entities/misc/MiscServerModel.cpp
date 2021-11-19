@@ -11,11 +11,11 @@
 #include "../../utils.h"            // Util funcs.
 #include "../../physics/stepmove.h" // Stepmove funcs.
 
-// Server Game Base Entity.
+// Server Game Base ServerEntity.
 #include "../base/SVGBaseEntity.h"
 #include "../base/SVGBaseTrigger.h"
 
-// Misc Server Model Entity.
+// Misc Server Model ServerEntity.
 #include "MiscServerModel.h"
 
 
@@ -23,8 +23,8 @@
 //
 // Constructor/Deconstructor.
 //
-MiscServerModel::MiscServerModel(Entity* svEntity)
-    : SVGBaseTrigger(svEntity) {
+MiscServerModel::MiscServerModel(ServerEntity* svServerEntity)
+    : SVGBaseTrigger(svServerEntity) {
 
 }
 MiscServerModel::~MiscServerModel() {
@@ -80,7 +80,7 @@ void MiscServerModel::Spawn() {
     SetMoveType(MoveType::None);
 
     // Since this is a "monster", after all...
-    SetFlags(EntityServerFlags::Monster);
+    SetFlags(ServerEntityServerFlags::Monster);
 
     // Set clip mask.
     SetClipMask(CONTENTS_MASK_MONSTERSOLID | CONTENTS_MASK_PLAYERSOLID);
@@ -102,7 +102,7 @@ void MiscServerModel::Spawn() {
     // Set the bounding box.
     SetBoundingBox(GetMins(), GetMaxs());
 
-    //SetFlags(EntityFlags::Swim);
+    //SetFlags(ServerEntityFlags::Swim);
     // Set default values in case we have none.
     if (!GetMass()) {
         SetMass(40);
@@ -121,7 +121,7 @@ void MiscServerModel::Spawn() {
         SetFrame(0);
     }
 
-    // Set entity to allow taking damage.
+    // Set ServerEntity to allow taking damage.
     SetTakeDamage(TakeDamage::Yes);
 
     //// Setup our MiscServerModel callbacks.
@@ -133,8 +133,8 @@ void MiscServerModel::Spawn() {
     // Setup the next think time.
     SetNextThinkTime(level.time + 2.f * FRAMETIME);
 
-    // Link the entity to world, for collision testing.
-    LinkEntity();
+    // Link the ServerEntity to world, for collision testing.
+    LinkServerEntity();
 }
 
 //
@@ -236,7 +236,7 @@ void MiscServerModel::SpawnKey(const std::string& key, const std::string& value)
 //// ==============
 //// MiscServerModel::MiscServerModelUse
 //// 
-//// So that mappers can trigger this entity in order to blow it up
+//// So that mappers can trigger this ServerEntity in order to blow it up
 //// ==============
 //void MiscServerModel::MiscServerModelUse(SVGBaseEntity* caller, SVGBaseEntity* activator) {
 //    MiscServerModelDie(caller, activator, 999, GetOrigin());
@@ -268,7 +268,7 @@ void MiscServerModel::MiscServerModelThink(void) {
     if (trace.fraction == 1 || trace.allSolid)
         return;
     ////
-    ////    // Set new entity origin.
+    ////    // Set new ServerEntity origin.
     SetOrigin(trace.endPosition);
     //
     //     //
@@ -277,8 +277,8 @@ void MiscServerModel::MiscServerModelThink(void) {
     //
     //    // Setup its next think time, for a frame ahead.
     SetNextThinkTime(level.time + FRAMETIME);
-    //    // Link entity back in.
-    LinkEntity();
+    //    // Link ServerEntity back in.
+    LinkServerEntity();
 
     //
     //    //// Do a check ground for the step move of this pusher.
@@ -337,13 +337,13 @@ void MiscServerModel::MiscServerModelThink(void) {
 //    // Reset origin to saved origin.
 //    SetOrigin(save);
 //
-//    // Depending on whether we have a ground entity or not, we determine which explosion to use.
-//    if (GetGroundEntity())
+//    // Depending on whether we have a ground ServerEntity or not, we determine which explosion to use.
+//    if (GetGroundServerEntity())
 //        SVG_BecomeExplosion2(this);
 //    else
 //        SVG_BecomeExplosion1(this);
 //
-//    // Ensure we have no more think callback pointer set when this entity has "died"
+//    // Ensure we have no more think callback pointer set when this ServerEntity has "died"
 //    SetThinkCallback(nullptr);
 //}
 //
@@ -355,10 +355,10 @@ void MiscServerModel::MiscServerModelThink(void) {
 ////===============
 ////
 void MiscServerModel::MiscServerModelDie(SVGBaseEntity* inflictor, SVGBaseEntity* attacker, int damage, const vec3_t& point) {
-    // Entity is dying, it can't take any more damage.
+    // ServerEntity is dying, it can't take any more damage.
     SetTakeDamage(TakeDamage::No);
 
-    // Attacker becomes this entity its "activator".
+    // Attacker becomes this ServerEntity its "activator".
     SetActivator(attacker);
 
     // Play a nasty gib sound, yughh :)
@@ -375,7 +375,7 @@ void MiscServerModel::MiscServerModelDie(SVGBaseEntity* inflictor, SVGBaseEntity
     SetNextThinkTime(level.time + 1 * FRAMETIME);
 
     // Set think function.
-    SetThinkCallback(&MiscServerModel::SVGBaseEntityThinkRemove);
+    SetThinkCallback(&MiscServerModel::SVGBaseServerEntityThinkRemove);
 }
 //
 ////
@@ -391,13 +391,13 @@ void MiscServerModel::MiscServerModelDie(SVGBaseEntity* inflictor, SVGBaseEntity
 //        return;
 //    if (!other)
 //        return;
-//    // TODO: Move elsewhere in baseentity, I guess?
-//    // Prevent this entity from touching itself.
+//    // TODO: Move elsewhere in baseServerEntity, I guess?
+//    // Prevent this ServerEntity from touching itself.
 //    if (this == other)
 //        return;
 //
-//    // Ground entity checks.
-//    if ((!other->GetGroundEntity()) || (other->GetGroundEntity() == this))
+//    // Ground ServerEntity checks.
+//    if ((!other->GetGroundServerEntity()) || (other->GetGroundServerEntity() == this))
 //        return;
 //
 //    // Calculate ratio to use.
@@ -411,5 +411,5 @@ void MiscServerModel::MiscServerModelDie(SVGBaseEntity* inflictor, SVGBaseEntity
 //
 //    // Last but not least, move a step ahead.
 //    SVG_StepMove_Walk(this, yaw, 40 * ratio * FRAMETIME);
-//    //gi.DPrintf("self: '%i' is TOUCHING other: '%i'\n", self->GetServerEntity()->state.number, other->GetServerEntity()->state.number);
+//    //gi.DPrintf("self: '%i' is TOUCHING other: '%i'\n", self->GetServerServerEntity()->state.number, other->GetServerServerEntity()->state.number);
 //}

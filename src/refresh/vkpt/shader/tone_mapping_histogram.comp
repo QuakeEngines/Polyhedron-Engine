@@ -52,7 +52,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 // mapper is based in part on some new research by Eilertsen, Mantiuk, and Unger
 // on HDR tone mapping, which phrases tone mapping as a minimization problem
 // (minimize contrast distortion, or how much the slope of the tone mapper's
-// curve varies from 1 - i.e. the identity - for each pixel on screen, while
+// curve varies from 1 - i.e. the idServerEntity - for each pixel on screen, while
 // making sure the luminance of the result fits in the visible display range),
 // and includes modifications to avoid amplifying noise levels, which is
 // especially useful for a ray traced game. (We don't implement some things,

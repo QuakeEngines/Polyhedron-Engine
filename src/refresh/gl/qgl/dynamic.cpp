@@ -390,10 +390,10 @@ static void APIENTRY logLineWidth(GLfloat width)
     dllLineWidth(width);
 }
 
-static void APIENTRY logLoadIdentity(void)
+static void APIENTRY logLoadIdServerEntity(void)
 {
-    SIG("glLoadIdentity");
-    dllLoadIdentity();
+    SIG("glLoadIdServerEntity");
+    dllLoadIdServerEntity();
 }
 
 static void APIENTRY logLoadMatrixf(const GLfloat *m)

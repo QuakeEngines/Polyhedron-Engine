@@ -32,7 +32,7 @@ a non-instant attack weapon.  It checks to see if a
 monster's dodge function should be called.
 =================
 */
-static void check_dodge(Entity *self, const vec3_t &start, const vec3_t &dir, int speed)
+static void check_dodge(ServerEntity *self, const vec3_t &start, const vec3_t &dir, int speed)
 {
     //vec3_t  end;
     //vec3_t  v;
@@ -46,7 +46,7 @@ static void check_dodge(Entity *self, const vec3_t &start, const vec3_t &dir, in
     //}
     //VectorMA(start, WORLD_SIZE, dir, end);
     //tr = gi.Trace(start, vec3_zero(), vec3_zero(), end, self, CONTENTS_MASK_SHOT);
-    //if ((tr.ent) && (tr.ent->serverFlags & EntityServerFlags::Monster) && (tr.ent->health > 0) && (tr.ent->monsterInfo.dodge) && infront(tr.ent, self)) {
+    //if ((tr.ent) && (tr.ent->serverFlags & ServerEntityServerFlags::Monster) && (tr.ent->health > 0) && (tr.ent->monsterInfo.dodge) && infront(tr.ent, self)) {
     //    VectorSubtract(tr.endPosition, start, v);
     //    eta = (VectorLength(v) - tr.ent->maxs[0]) / speed;
     //    
@@ -98,11 +98,11 @@ qboolean SVG_FireHit(SVGBaseEntity *self, vec3_t &aim, int32_t damage, int32_t k
         if (!tr.ent->GetTakeDamage())
             return false;
         // if it will hit any client/monster then hit the one we wanted to hit
-        if ((tr.ent->GetServerFlags() & EntityServerFlags::Monster) || (tr.ent->GetClient()))
+        if ((tr.ent->GetServerFlags() & ServerEntityServerFlags::Monster) || (tr.ent->GetClient()))
             tr.ent = self->GetEnemy();
     }
 
-    AngleVectors(self->GetServerEntity()->state.angles, &forward, &right, &up);
+    AngleVectors(self->GetServerServerEntity()->state.angles, &forward, &right, &up);
     point = vec3_fmaf(self->GetOrigin(), range, forward);
     point = vec3_fmaf(point, aim[1], right);
     point = vec3_fmaf(point, aim[2], up);
@@ -111,7 +111,7 @@ qboolean SVG_FireHit(SVGBaseEntity *self, vec3_t &aim, int32_t damage, int32_t k
     // do the damage
     SVG_InflictDamage(tr.ent, self, self, dir, point, vec3_zero(), damage, kick / 2, DamageFlags::NoKnockBack, MeansOfDeath::Hit);
 
-    if (!(tr.ent->GetServerFlags() & EntityServerFlags::Monster) && (!tr.ent->GetClient()))
+    if (!(tr.ent->GetServerFlags() & ServerEntityServerFlags::Monster) && (!tr.ent->GetClient()))
         return false;
 
     // do our special form of knockback here
@@ -120,7 +120,7 @@ qboolean SVG_FireHit(SVGBaseEntity *self, vec3_t &aim, int32_t damage, int32_t k
     v = vec3_normalize(v);
     self->GetEnemy()->SetVelocity(vec3_fmaf(self->GetEnemy()->GetVelocity(), kick, v));
     if (self->GetEnemy()->GetVelocity().z > 0)
-        self->GetEnemy()->SetGroundEntity(nullptr);
+        self->GetEnemy()->SetGroundServerEntity(nullptr);
     return true;
 }
 
@@ -184,8 +184,8 @@ static void fire_lead(SVGBaseEntity *self, const vec3_t& start, const vec3_t& ai
                     color = SplashType::Unknown;
 
                 if (color != SplashType::Unknown) {
-                    gi.WriteByte(SVG_CMD_TEMP_ENTITY);
-                    gi.WriteByte(TempEntityEvent::Splash);
+                    gi.WriteByte(SVG_CMD_TEMP_ServerEntity);
+                    gi.WriteByte(TempServerEntityEvent::Splash);
                     gi.WriteByte(8);
                     gi.WriteVector3(tr.endPosition);
                     gi.WriteVector3(tr.plane.normal);
@@ -215,7 +215,7 @@ static void fire_lead(SVGBaseEntity *self, const vec3_t& start, const vec3_t& ai
                 SVG_InflictDamage(tr.ent, self, self, aimdir, tr.endPosition, tr.plane.normal, damage, kick, DamageFlags::Bullet, mod);
             } else {
                 if (strncmp(tr.surface->name, "sky", 3) != 0) {
-                    gi.WriteByte(SVG_CMD_TEMP_ENTITY);
+                    gi.WriteByte(SVG_CMD_TEMP_ServerEntity);
                     gi.WriteByte(te_impact);
                     gi.WriteVector3(tr.endPosition);
                     gi.WriteVector3(tr.plane.normal);
@@ -243,8 +243,8 @@ static void fire_lead(SVGBaseEntity *self, const vec3_t& start, const vec3_t& ai
         VectorAdd(water_start, tr.endPosition, pos);
         VectorScale(pos, 0.5, pos);
 
-        gi.WriteByte(SVG_CMD_TEMP_ENTITY);
-        gi.WriteByte(TempEntityEvent::BubbleTrail);
+        gi.WriteByte(SVG_CMD_TEMP_ServerEntity);
+        gi.WriteByte(TempServerEntityEvent::BubbleTrail);
         gi.WriteVector3(water_start);
         gi.WriteVector3(tr.endPosition);
         gi.Multicast(pos, MultiCast::PVS);
@@ -262,7 +262,7 @@ pistols, rifles, etc....
 */
 void SVG_FireBullet(SVGBaseEntity *self, const vec3_t& start, const vec3_t& aimdir, int damage, int kick, int hspread, int vspread, int mod)
 {
-    fire_lead(self, start, aimdir, damage, kick, TempEntityEvent::Gunshot, hspread, vspread, mod);
+    fire_lead(self, start, aimdir, damage, kick, TempServerEntityEvent::Gunshot, hspread, vspread, mod);
 }
 
 //
@@ -277,7 +277,7 @@ void SVG_FireShotgun(SVGBaseEntity* self, const vec3_t &start, const vec3_t &aim
     int		i;
 
     for (i = 0; i < count; i++)
-        fire_lead(self, start, aimdir, damage, kick, TempEntityEvent::Shotgun, hspread, vspread, mod);
+        fire_lead(self, start, aimdir, damage, kick, TempServerEntityEvent::Shotgun, hspread, vspread, mod);
 }
 
 //
@@ -295,11 +295,11 @@ void SVG_FireBlaster(SVGBaseEntity *self, const vec3_t& start, const vec3_t &aim
     // Calculate direction vector.
     vec3_t dir = vec3_normalize(aimdir);
  
-    // Spawn the blaster bolt server entity.
-    BlasterBolt* boltEntity = SVG_CreateClassEntity<BlasterBolt>();
+    // Spawn the blaster bolt server ServerEntity.
+    BlasterBolt* boltServerEntity = SVG_CreateClassServerEntity<BlasterBolt>();
 
     // Welp. It can happen sometimes
-    if ( nullptr == boltEntity ) {
+    if ( nullptr == boltServerEntity ) {
         return;
     }
 
@@ -308,50 +308,50 @@ void SVG_FireBlaster(SVGBaseEntity *self, const vec3_t& start, const vec3_t &aim
     // This stuff down there is... really rotten
 
     // Basic attributes.
-    boltEntity->Precache();
-    boltEntity->Spawn();
+    boltServerEntity->Precache();
+    boltServerEntity->Spawn();
 
-    boltEntity->SetOwner(self);
-    boltEntity->SetDamage(damage);
+    boltServerEntity->SetOwner(self);
+    boltServerEntity->SetDamage(damage);
     if (hyper)
-        boltEntity->SetSpawnFlags(1);
-    boltEntity->SetMoveType(MoveType::FlyMissile);
-    boltEntity->SetSolid(Solid::BoundingBox);
-    boltEntity->SetClipMask(CONTENTS_MASK_SHOT);
-    boltEntity->SetEffects(boltEntity->GetEffects() | effect);
+        boltServerEntity->SetSpawnFlags(1);
+    boltServerEntity->SetMoveType(MoveType::FlyMissile);
+    boltServerEntity->SetSolid(Solid::BoundingBox);
+    boltServerEntity->SetClipMask(CONTENTS_MASK_SHOT);
+    boltServerEntity->SetEffects(boltServerEntity->GetEffects() | effect);
 
     // Physics attributes.
-    boltEntity->SetOrigin(start);    // Initial origin.
-    boltEntity->SetOldOrigin(start); // Initial origin, same to origin, since this entity had no frame life yet.
-    boltEntity->SetAngles(vec3_euler(dir));
-    boltEntity->SetVelocity(vec3_scale(dir, speed));
-    boltEntity->SetMins(vec3_zero()); // Clear bounding mins.
-    boltEntity->SetMaxs(vec3_zero()); // clear bounding maxs.
+    boltServerEntity->SetOrigin(start);    // Initial origin.
+    boltServerEntity->SetOldOrigin(start); // Initial origin, same to origin, since this ServerEntity had no frame life yet.
+    boltServerEntity->SetAngles(vec3_euler(dir));
+    boltServerEntity->SetVelocity(vec3_scale(dir, speed));
+    boltServerEntity->SetMins(vec3_zero()); // Clear bounding mins.
+    boltServerEntity->SetMaxs(vec3_zero()); // clear bounding maxs.
 
     // Model/Sound attributes.
-    boltEntity->SetModel("models/objects/laser/tris.md2");
-    boltEntity->SetSound(SVG_PrecacheSound("misc/lasfly.wav"));
+    boltServerEntity->SetModel("models/objects/laser/tris.md2");
+    boltServerEntity->SetSound(SVG_PrecacheSound("misc/lasfly.wav"));
 
     // Set Touch and Think callbacks.
-    boltEntity->SetTouchCallback(&BlasterBolt::BlasterBoltTouch);
+    boltServerEntity->SetTouchCallback(&BlasterBolt::BlasterBoltTouch);
 
     // Set think.
-    boltEntity->SetNextThinkTime(level.time + 2); // Admer: should this really be a thing?
-    boltEntity->SetThinkCallback(&SVGBaseEntity::SVGBaseEntityThinkRemove);
+    boltServerEntity->SetNextThinkTime(level.time + 2); // Admer: should this really be a thing?
+    boltServerEntity->SetThinkCallback(&SVGBaseEntity::SVGBaseServerEntityThinkRemove);
 
     // Link Bolt into world.
-    boltEntity->LinkEntity();
+    boltServerEntity->LinkServerEntity();
 
     // If a client is firing this bolt, let AI check for dodges.
     //if (self->client)
     //    check_dodge(self, bolt->state.origin, dir, speed);
 
     // Trace bolt.
-    SVGTrace trace = SVG_Trace(self->GetOrigin(), vec3_zero(), vec3_zero(), boltEntity->GetOrigin(), boltEntity, CONTENTS_MASK_SHOT);
+    SVGTrace trace = SVG_Trace(self->GetOrigin(), vec3_zero(), vec3_zero(), boltServerEntity->GetOrigin(), boltServerEntity, CONTENTS_MASK_SHOT);
 
     // Did we hit anything?
     if (trace.fraction < 1.0) {
-        boltEntity->SetOrigin(vec3_fmaf(boltEntity->GetOrigin(), -10, dir));
-        boltEntity->Touch(boltEntity, trace.ent, NULL, NULL);
+        boltServerEntity->SetOrigin(vec3_fmaf(boltServerEntity->GetOrigin(), -10, dir));
+        boltServerEntity->Touch(boltServerEntity, trace.ent, NULL, NULL);
     }
 }

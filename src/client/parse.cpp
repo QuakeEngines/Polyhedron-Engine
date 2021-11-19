@@ -32,30 +32,30 @@ extern IClientGameExports* cge;
 =====================================================================
 */
 
-static inline void CL_ParseDeltaEntity(ServerFrame  *frame,
+static inline void CL_ParseDeltaServerEntity(ServerFrame  *frame,
                                        int             newnum,
-                                       EntityState  *old,
+                                       ServerEntityState  *old,
                                        int             bits)
 {
-    EntityState    *state;
+    ServerEntityState    *state;
 
     // suck up to MAX_EDICTS for servers that don't cap at MAX_PACKET_ENTITIES
     if (frame->numEntities >= MAX_EDICTS) {
         Com_Error(ERR_DROP, "%s: MAX_EDICTS exceeded", __func__);
     }
 
-    state = &cl.entityStates[cl.numEntityStates & PARSE_ENTITIES_MASK];
-    cl.numEntityStates++;
+    state = &cl.ServerEntityStates[cl.numServerEntityStates & PARSE_ENTITIES_MASK];
+    cl.numServerEntityStates++;
     frame->numEntities++;
 
 #ifdef _DEBUG
     if (cl_shownet->integer > 2 && bits) {
-        MSG_ShowDeltaEntityBits(bits);
+        MSG_ShowDeltaServerEntityBits(bits);
         Com_LPrintf(PRINT_DEVELOPER, "\n");
     }
 #endif
 
-    MSG_ParseDeltaEntity(old, state, newnum, bits, cl.esFlags);
+    MSG_ParseDeltaServerEntity(old, state, newnum, bits, cl.esFlags);
 
     // shuffle previous origin to old
     if (!(bits & U_OLDORIGIN) && !(state->renderEffects & RenderEffects::Beam))
@@ -67,11 +67,11 @@ static void CL_ParsePacketEntities(ServerFrame *oldframe,
 {
     int            newnum;
     int            bits;
-    EntityState    *oldstate;
+    ServerEntityState    *oldstate;
     int            oldindex, oldnum;
     int i;
 
-    frame->firstEntity = cl.numEntityStates;
+    frame->firstServerEntity = cl.numServerEntityStates;
     frame->numEntities = 0;
 
     // delta from the entities present in oldframe
@@ -83,14 +83,14 @@ static void CL_ParsePacketEntities(ServerFrame *oldframe,
         if (oldindex >= oldframe->numEntities) {
             oldnum = 99999;
         } else {
-            i = oldframe->firstEntity + oldindex;
-            oldstate = &cl.entityStates[i & PARSE_ENTITIES_MASK];
+            i = oldframe->firstServerEntity + oldindex;
+            oldstate = &cl.ServerEntityStates[i & PARSE_ENTITIES_MASK];
             oldnum = oldstate->number;
         }
     }
 
     while (1) {
-        newnum = MSG_ParseEntityBits(&bits);
+        newnum = MSG_ParseServerEntityBits(&bits);
         if (newnum < 0 || newnum >= MAX_EDICTS) {
             Com_Error(ERR_DROP, "%s: bad number: %d", __func__, newnum);
         }
@@ -106,21 +106,21 @@ static void CL_ParsePacketEntities(ServerFrame *oldframe,
         while (oldnum < newnum) {
             // one or more entities from the old packet are unchanged
             SHOWNET(3, "   unchanged: %i\n", oldnum);
-            CL_ParseDeltaEntity(frame, oldnum, oldstate, 0);
+            CL_ParseDeltaServerEntity(frame, oldnum, oldstate, 0);
 
             oldindex++;
 
             if (oldindex >= oldframe->numEntities) {
                 oldnum = 99999;
             } else {
-                i = oldframe->firstEntity + oldindex;
-                oldstate = &cl.entityStates[i & PARSE_ENTITIES_MASK];
+                i = oldframe->firstServerEntity + oldindex;
+                oldstate = &cl.ServerEntityStates[i & PARSE_ENTITIES_MASK];
                 oldnum = oldstate->number;
             }
         }
 
         if (bits & U_REMOVE) {
-            // the entity present in oldframe is not in the current frame
+            // the ServerEntity present in oldframe is not in the current frame
             SHOWNET(2, "   remove: %i\n", newnum);
             if (oldnum != newnum) {
                 Com_DPrintf("U_REMOVE: oldnum != newnum\n");
@@ -134,8 +134,8 @@ static void CL_ParsePacketEntities(ServerFrame *oldframe,
             if (oldindex >= oldframe->numEntities) {
                 oldnum = 99999;
             } else {
-                i = oldframe->firstEntity + oldindex;
-                oldstate = &cl.entityStates[i & PARSE_ENTITIES_MASK];
+                i = oldframe->firstServerEntity + oldindex;
+                oldstate = &cl.ServerEntityStates[i & PARSE_ENTITIES_MASK];
                 oldnum = oldstate->number;
             }
             continue;
@@ -144,7 +144,7 @@ static void CL_ParsePacketEntities(ServerFrame *oldframe,
         if (oldnum == newnum) {
             // delta from previous state
             SHOWNET(2, "   delta: %i ", newnum);
-            CL_ParseDeltaEntity(frame, newnum, oldstate, bits);
+            CL_ParseDeltaServerEntity(frame, newnum, oldstate, bits);
             if (!bits) {
                 SHOWNET(2, "\n");
             }
@@ -154,8 +154,8 @@ static void CL_ParsePacketEntities(ServerFrame *oldframe,
             if (oldindex >= oldframe->numEntities) {
                 oldnum = 99999;
             } else {
-                i = oldframe->firstEntity + oldindex;
-                oldstate = &cl.entityStates[i & PARSE_ENTITIES_MASK];
+                i = oldframe->firstServerEntity + oldindex;
+                oldstate = &cl.ServerEntityStates[i & PARSE_ENTITIES_MASK];
                 oldnum = oldstate->number;
             }
             continue;
@@ -164,7 +164,7 @@ static void CL_ParsePacketEntities(ServerFrame *oldframe,
         if (oldnum > newnum) {
             // delta from baseline
             SHOWNET(2, "   baseline: %i ", newnum);
-            CL_ParseDeltaEntity(frame, newnum, &cl.entityBaselines[newnum], bits);
+            CL_ParseDeltaServerEntity(frame, newnum, &cl.ServerEntityBaselines[newnum], bits);
             if (!bits) {
                 SHOWNET(2, "\n");
             }
@@ -177,15 +177,15 @@ static void CL_ParsePacketEntities(ServerFrame *oldframe,
     while (oldnum != 99999) {
         // one or more entities from the old packet are unchanged
         SHOWNET(3, "   unchanged: %i\n", oldnum);
-        CL_ParseDeltaEntity(frame, oldnum, oldstate, 0);
+        CL_ParseDeltaServerEntity(frame, oldnum, oldstate, 0);
 
         oldindex++;
 
         if (oldindex >= oldframe->numEntities) {
             oldnum = 99999;
         } else {
-            i = oldframe->firstEntity + oldindex;
-            oldstate = &cl.entityStates[i & PARSE_ENTITIES_MASK];
+            i = oldframe->firstServerEntity + oldindex;
+            oldstate = &cl.ServerEntityStates[i & PARSE_ENTITIES_MASK];
             oldnum = oldstate->number;
         }
     }
@@ -254,10 +254,10 @@ static void CL_ParseFrame(int extrabits)
             // should never happen
             Com_DPrintf("%s: delta from invalid frame\n", __func__);
             cl.frameFlags |= FrameFlags::BadFrame;
-        } else if (cl.numEntityStates - oldframe->firstEntity >
+        } else if (cl.numServerEntityStates - oldframe->firstServerEntity >
                    MAX_PARSE_ENTITIES - MAX_PACKET_ENTITIES) {
             Com_DPrintf("%s: delta entities too old\n", __func__);
-            cl.frameFlags |= FrameFlags::OldEntity;
+            cl.frameFlags |= FrameFlags::OldServerEntity;
         } else {
             frame.valid = true; // valid delta parse
         }
@@ -405,11 +405,11 @@ static void CL_ParseBaseline(int index, int bits)
     }
 #ifdef _DEBUG
     if (cl_shownet->integer > 2) {
-        MSG_ShowDeltaEntityBits(bits);
+        MSG_ShowDeltaServerEntityBits(bits);
         Com_LPrintf(PRINT_DEVELOPER, "\n");
     }
 #endif
-    MSG_ParseDeltaEntity(NULL, &cl.entityBaselines[index], index, bits, cl.esFlags);
+    MSG_ParseDeltaServerEntity(NULL, &cl.ServerEntityBaselines[index], index, bits, cl.esFlags);
 }
 
 // instead of wasting space for svc_configstring and svc_spawnbaseline
@@ -427,7 +427,7 @@ static void CL_ParseGamestate(void)
     }
 
     while (msg_read.readCount < msg_read.currentSize) {
-        index = MSG_ParseEntityBits(&bits);
+        index = MSG_ParseServerEntityBits(&bits);
         if (!index) {
             break;
         }
@@ -486,7 +486,7 @@ static void CL_ParseServerData(void)
         fs_game->flags |= CVAR_ROM;
     }
 
-    // parse player entity number
+    // parse player ServerEntity number
     cl.clientNumber = MSG_ReadShort();
 
     // get the full level name
@@ -513,8 +513,8 @@ static void CL_ParseServerData(void)
     cl.serverState = i;
 
 
-    //cl.esFlags = (EntityStateMessageFlags)(cl.esFlags | MSG_ES_UMASK); // CPP: IMPROVE: cl.esFlags |= MSG_ES_UMASK;
-    cl.esFlags = (EntityStateMessageFlags)(cl.esFlags | MSG_ES_BEAMORIGIN); // CPP: IMPROVE: cl.esFlags |= MSG_ES_BEAMORIGIN;
+    //cl.esFlags = (ServerEntityStateMessageFlags)(cl.esFlags | MSG_ES_UMASK); // CPP: IMPROVE: cl.esFlags |= MSG_ES_UMASK;
+    cl.esFlags = (ServerEntityStateMessageFlags)(cl.esFlags | MSG_ES_BEAMORIGIN); // CPP: IMPROVE: cl.esFlags |= MSG_ES_BEAMORIGIN;
 
 
     if (cl.clientNumber == -1) {
@@ -549,7 +549,7 @@ ACTION MESSAGES
 
 static void CL_ParseStartSoundPacket(void)
 {
-    int flags, channel, entity;
+    int flags, channel, ServerEntity;
 
     flags = MSG_ReadByte();
     if ((flags & (SND_ENT | SND_POS)) == 0)
@@ -575,15 +575,15 @@ static void CL_ParseStartSoundPacket(void)
         snd.timeofs = 0;
 
     if (flags & SND_ENT) {
-        // entity relative
+        // ServerEntity relative
         channel = MSG_ReadShort();
-        entity = channel >> 3;
-        if (entity < 0 || entity >= MAX_EDICTS)
-            Com_Error(ERR_DROP, "%s: bad entity: %d", __func__, entity);
-        snd.entity = entity;
+        ServerEntity = channel >> 3;
+        if (ServerEntity < 0 || ServerEntity >= MAX_EDICTS)
+            Com_Error(ERR_DROP, "%s: bad ServerEntity: %d", __func__, ServerEntity);
+        snd.ServerEntity = ServerEntity;
         snd.channel = channel & 7;
     } else {
-        snd.entity = 0;
+        snd.ServerEntity = 0;
         snd.channel = 0;
     }
 
@@ -890,7 +890,7 @@ badbyte:
             break;
 
         case svc_spawnbaseline:
-            index = MSG_ParseEntityBits(&bits);
+            index = MSG_ParseServerEntityBits(&bits);
             CL_ParseBaseline(index, bits);
             break;
 
@@ -1017,7 +1017,7 @@ void CL_SeekDemoMessage(void)
             break;
 
         // WatIsDeze: Movd to CGModule.
-        //case SVG_CMD_TEMP_ENTITY:
+        //case SVG_CMD_TEMP_ServerEntity:
         //    CL_ParseTEntPacket();
         //    break;
 

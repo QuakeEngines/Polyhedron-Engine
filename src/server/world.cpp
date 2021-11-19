@@ -22,7 +22,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 /*
 ===============================================================================
 
-ENTITY AREA CHECKING
+ServerEntity AREA CHECKING
 
 FIXME: this use of "area" is different from the bsp file use
 ===============================================================================
@@ -43,7 +43,7 @@ static areanode_t   sv_areanodes[AREA_NODES];
 static int          sv_numareanodes;
 
 static vec3_t    area_mins, area_maxs; // MATHLIB: No more float* pointers to local func arrays.
-static Entity  **area_list;
+static ServerEntity  **area_list;
 static int      area_count, area_maxcount;
 static int      area_type;
 
@@ -101,7 +101,7 @@ SV_ClearWorld
 void SV_ClearWorld(void)
 {
     mmodel_t *cm;
-    Entity *ent;
+    ServerEntity *ent;
     int i;
 
     memset(sv_areanodes, 0, sizeof(sv_areanodes));
@@ -121,12 +121,12 @@ void SV_ClearWorld(void)
 
 /*
 ===============
-SV_EntityIsVisible
+SV_ServerEntityIsVisible
 
 Checks if edict is potentially visible from the given PVS row.
 ===============
 */
-qboolean SV_EntityIsVisible(cm_t *cm, Entity *ent, byte *mask)
+qboolean SV_ServerEntityIsVisible(cm_t *cm, ServerEntity *ent, byte *mask)
 {
     int i;
 
@@ -150,10 +150,10 @@ qboolean SV_EntityIsVisible(cm_t *cm, Entity *ent, byte *mask)
 SV_LinkEdict
 
 General purpose routine shared between game DLL and MVD code.
-Links entity to PVS leafs.
+Links ServerEntity to PVS leafs.
 ===============
 */
-void SV_LinkEntity(cm_t *cm, Entity *ent)
+void SV_LinkServerEntity(cm_t *cm, ServerEntity *ent)
 {
     mleaf_t     *leafs[MAX_TOTAL_ENT_LEAFS];
     int         clusters[MAX_TOTAL_ENT_LEAFS];
@@ -253,7 +253,7 @@ void SV_LinkEntity(cm_t *cm, Entity *ent)
     }
 }
 
-void PF_UnlinkEntity(Entity *ent)
+void PF_UnlinkServerEntity(ServerEntity *ent)
 {
     if (!ent->area.prev)
         return;        // not linked in anywhere
@@ -261,20 +261,20 @@ void PF_UnlinkEntity(Entity *ent)
     ent->area.prev = ent->area.next = NULL;
 }
 
-void PF_LinkEntity(Entity *ent)
+void PF_LinkServerEntity(ServerEntity *ent)
 {
     areanode_t *node;
-    server_entity_t *sent;
+    server_ServerEntity_t *sent;
     int entnum;
 
     if (ent->area.prev)
-        PF_UnlinkEntity(ent);     // unlink from old position
+        PF_UnlinkServerEntity(ent);     // unlink from old position
 
     if (ent == ge->entities)
         return;        // don't add the world
 
     if (!ent->inUse) {
-        Com_DPrintf("%s: entity %d is not in use\n", __func__, NUM_FOR_EDICT(ent));
+        Com_DPrintf("%s: ServerEntity %d is not in use\n", __func__, NUM_FOR_EDICT(ent));
         return;
     }
 
@@ -285,10 +285,10 @@ void PF_LinkEntity(Entity *ent)
     entnum = NUM_FOR_EDICT(ent);
     sent = &sv.entities[entnum];
 
-    // encode the size into the entity_state for client prediction
+    // encode the size into the ServerEntity_state for client prediction
     switch (ent->solid) {
     case Solid::BoundingBox:
-        if ((ent->serverFlags & EntityServerFlags::DeadMonster) || VectorCompare(ent->mins, ent->maxs)) {
+        if ((ent->serverFlags & ServerEntityServerFlags::DeadMonster) || VectorCompare(ent->mins, ent->maxs)) {
             ent->state.solid = 0;
             sent->solid32 = 0;
         } else {
@@ -306,7 +306,7 @@ void PF_LinkEntity(Entity *ent)
         break;
     }
 
-    SV_LinkEntity(&sv.cm, ent);
+    SV_LinkServerEntity(&sv.cm, ent);
 
     // if first time, make sure oldOrigin is valid
     if (!ent->linkCount) {
@@ -347,7 +347,7 @@ SV_AreaEntities_r
 static void SV_AreaEntities_r(areanode_t *node)
 {
     list_t      *start;
-    Entity     *check;
+    ServerEntity     *check;
 
     // touch linked edicts
     if (area_type == AREA_SOLID)
@@ -355,7 +355,7 @@ static void SV_AreaEntities_r(areanode_t *node)
     else
         start = &node->trigger_edicts;
 
-    LIST_FOR_EACH(Entity, check, start, area) {
+    LIST_FOR_EACH(ServerEntity, check, start, area) {
         if (check->solid == Solid::Not)
             continue;        // deactivated
         if (check->absMin[0] > area_maxs[0]
@@ -390,7 +390,7 @@ static void SV_AreaEntities_r(areanode_t *node)
 SV_AreaEntities
 ================
 */
-int SV_AreaEntities(const vec3_t &mins, const vec3_t &maxs, Entity **list,
+int SV_AreaEntities(const vec3_t &mins, const vec3_t &maxs, ServerEntity **list,
                   int maxcount, int areatype)
 {
     area_mins = mins;
@@ -410,13 +410,13 @@ int SV_AreaEntities(const vec3_t &mins, const vec3_t &maxs, Entity **list,
 
 /*
 ================
-SV_HullForEntity
+SV_HullForServerEntity
 
 Returns a headNode that can be used for testing or clipping an
 object of mins/maxs size.
 ================
 */
-static mnode_t *SV_HullForEntity(Entity *ent)
+static mnode_t *SV_HullForServerEntity(ServerEntity *ent)
 {
     if (ent->solid == Solid::BSP) {
         int i = ent->state.modelIndex - 1;
@@ -439,7 +439,7 @@ SV_PointContents
 */
 int SV_PointContents(const vec3_t &p)
 {
-    static Entity     *touch[MAX_EDICTS], *hit;
+    static ServerEntity     *touch[MAX_EDICTS], *hit;
     int         i, num;
     int         contents;
 
@@ -457,7 +457,7 @@ int SV_PointContents(const vec3_t &p)
         hit = touch[i];
 
         // might intersect, so do an exact clip
-        contents |= CM_TransformedPointContents(p, SV_HullForEntity(hit),
+        contents |= CM_TransformedPointContents(p, SV_HullForServerEntity(hit),
                                                 hit->state.origin, hit->state.angles);
     }
 
@@ -471,11 +471,11 @@ SV_ClipMoveToEntities
 ====================
 */
 static void SV_ClipMoveToEntities(const vec3_t &start, const vec3_t &mins, const vec3_t &maxs, const vec3_t &end,
-                                  Entity *passedict, int contentmask, trace_t *tr)
+                                  ServerEntity *passedict, int contentmask, trace_t *tr)
 {
     vec3_t      boxmins, boxmaxs;
     int         i, num;
-    static Entity     *touchlist[MAX_EDICTS], *touch;
+    static ServerEntity     *touchlist[MAX_EDICTS], *touch;
     trace_t     trace;
 
     // create the bounding box of the entire move
@@ -491,7 +491,7 @@ static void SV_ClipMoveToEntities(const vec3_t &start, const vec3_t &mins, const
 
     num = SV_AreaEntities(boxmins, boxmaxs, touchlist, MAX_EDICTS, AREA_SOLID);
 
-    // be careful, it is possible to have an entity in this
+    // be careful, it is possible to have an ServerEntity in this
     // list removed before we get to it (killtriggered)
     for (i = 0; i < num; i++) {
         touch = touchlist[i];
@@ -509,15 +509,15 @@ static void SV_ClipMoveToEntities(const vec3_t &start, const vec3_t &mins, const
         }
 
         if (!(contentmask & CONTENTS_DEADMONSTER)
-            && (touch->serverFlags & EntityServerFlags::DeadMonster))
+            && (touch->serverFlags & ServerEntityServerFlags::DeadMonster))
             continue;
 
         // might intersect, so do an exact clip
         CM_TransformedBoxTrace(&trace, start, end, mins, maxs,
-                               SV_HullForEntity(touch), contentmask,
+                               SV_HullForServerEntity(touch), contentmask,
                                touch->state.origin, touch->state.angles);
 
-        CM_ClipEntity(tr, &trace, touch);
+        CM_ClipServerEntity(tr, &trace, touch);
     }
 }
 
@@ -530,7 +530,7 @@ Passedict and edicts owned by passedict are explicitly not checked.
 ==================
 */
 trace_t q_gameabi SV_Trace(const vec3_t &start, const vec3_t &mins, const vec3_t &maxs, const vec3_t &end,
-                           Entity *passedict, int contentmask)
+                           ServerEntity *passedict, int contentmask)
 {
     trace_t     trace;
 

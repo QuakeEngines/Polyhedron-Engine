@@ -19,8 +19,8 @@
 //===============
 // TriggerRelay::ctor
 //===============
-TriggerRelay::TriggerRelay( Entity* entity )
-	: Base( entity ) {
+TriggerRelay::TriggerRelay( ServerEntity* ServerEntity )
+	: Base( ServerEntity ) {
 }
 
 //===============

@@ -38,7 +38,7 @@ typedef struct {
 } KeyBinding;
 
 //
-// Explosion particle entity effect structure.
+// Explosion particle ServerEntity effect structure.
 //
 typedef struct {
 	enum {
@@ -54,7 +54,7 @@ typedef struct {
 		ex_flare
 	} type;
 
-	r_entity_t    ent;
+	r_ServerEntity_t    ent;
 	int         frames;
 	float       light;
 	vec3_t      lightcolor;
@@ -78,11 +78,11 @@ constexpr uint32_t NOEXP_GRENADE = 1;
 constexpr uint32_t NOEXP_ROCKET = 2;
 
 //
-// Local client entity structure, temporary entities.
+// Local client ServerEntity structure, temporary entities.
 //
-typedef struct cl_entity_s {
-    EntityState    current;
-    EntityState    prev;            // will always be valid, but might just be a copy of current
+class ClientServerEntity {
+    ServerEntityState    current;
+    ServerEntityState    prev;            // will always be valid, but might just be a copy of current
 
     vec3_t          mins, maxs;
 
@@ -92,10 +92,10 @@ typedef struct cl_entity_s {
     vec3_t          lerpOrigin;        // for trails (variable hz)
 
     int             id;
-} cl_entity_t;
+};
 
 //
-// Temporarl Entity parameters.
+// Temporarl ServerEntity parameters.
 // Used for parsing EFFECTS in the client.
 //
 typedef struct {
@@ -106,8 +106,8 @@ typedef struct {
     vec3_t dir;
     int count;
     int color;
-    int entity1;
-    int entity2;
+    int ServerEntity1;
+    int ServerEntity2;
     int time;
 } tent_params_t;
 
@@ -116,7 +116,7 @@ typedef struct {
 // Used for parsing MUZZLEFLASHE messages in the client.
 //
 typedef struct {
-    int entity;
+    int ServerEntity;
     int weapon;
     int silenced;
 } mz_params_t;
@@ -128,7 +128,7 @@ typedef struct {
 typedef struct {
     int     flags;
     int     index;
-    int     entity;
+    int     ServerEntity;
     int     channel;
     vec3_t  pos;
     float   volume;
@@ -224,7 +224,7 @@ typedef struct {
 // The server frame structure contains information about the frame
 // being sent from the server.
 //
-typedef struct {
+struct ServerFrame {
     qboolean valid; // False if delta parsing failed.
 
     int32_t number; // Sequential identifier, used for delta.
@@ -237,15 +237,15 @@ typedef struct {
     int32_t clientNumber;       // The client number.
 
     int32_t numEntities;    // The number of entities in the frame.
-    int32_t firstEntity;    // The first entity in the frame.
-} ServerFrame;
+    int32_t firstServerEntity;    // The first ServerEntity in the frame.
+} ;
 
 //
 // This structure contains all (persistent)shared data with the client.
 //
 struct ClientShared {
     // Stores the entities.
-    cl_entity_t entities[MAX_ENTITIES];
+    ClientServerEntity *entities[MAX_ENTITIES];
     int num_entities;
 };
 
@@ -262,8 +262,8 @@ struct ClientPredictedState {
     // Predicted velocity.
     vec3_t velocity;
 
-    // Ground entity pointer of the predicted frame.
-    struct entity_s* groundEntityPtr;
+    // Ground ServerEntity pointer of the predicted frame.
+    struct ServerEntity_s* groundServerEntityPtr;
 
     // Prediction error that is interpolated over the server frame.
     vec3_t error;
@@ -307,21 +307,21 @@ struct ClientState {
     ClientPredictedState predictedState;
 
     //
-    // Entity States.
+    // ServerEntity States.
     // 
     // Solid Entities, these are REBUILT during EACH FRAME.
-    cl_entity_t *solidEntities[MAX_PACKET_ENTITIES];
+     ClientServerEntity *solidEntities[MAX_PACKET_ENTITIES];
     int32_t numSolidEntities;
 
-    // Entity Baseline States. These are where to start working from.
-    EntityState entityBaselines[MAX_EDICTS];
+    // ServerEntity Baseline States. These are where to start working from.
+    ServerEntityState ServerEntityBaselines[MAX_EDICTS];
 
-    // The actual current Entity States.
-    EntityState entityStates[MAX_PARSE_ENTITIES];
-    int32_t numEntityStates;
+    // The actual current ServerEntity States.
+    ServerEntityState ServerEntityStates[MAX_PARSE_ENTITIES];
+    int32_t numServerEntityStates;
 
-    // The current client entity state messaging flags.
-    EntityStateMessageFlags    esFlags;
+    // The current client ServerEntity state messaging flags.
+    ServerEntityStateMessageFlags    esFlags;
 
     //
     // Server Frames.
@@ -386,9 +386,9 @@ struct ClientState {
 
     qboolean thirdPersonView;
 
-    // Predicted values, used for smooth player entity movement in thirdperson view
-    vec3_t playerEntityOrigin;
-    vec3_t playerEntityAngles;
+    // Predicted values, used for smooth player ServerEntity movement in thirdperson view
+    vec3_t playerServerEntityOrigin;
+    vec3_t playerServerEntityAngles;
     
     //
     // transient data from server

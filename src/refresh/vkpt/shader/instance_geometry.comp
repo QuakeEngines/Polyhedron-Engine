@@ -18,7 +18,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 */
 
 // ========================================================================== //
-// This shader takes the entity models for the current frame and applies
+// This shader takes the ServerEntity models for the current frame and applies
 // transforms to their original frames, producing triangles for these models
 // in their final world positions. Also applies texture animations.
 // ========================================================================== //

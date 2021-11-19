@@ -23,8 +23,8 @@
 //===============
 // FuncDoor::ctor
 //===============
-FuncDoor::FuncDoor( Entity* entity ) 
-	: Base( entity ) {
+FuncDoor::FuncDoor( ServerEntity* ServerEntity ) 
+	: Base( ServerEntity ) {
 
 }
 
@@ -53,7 +53,7 @@ void FuncDoor::Spawn() {
     SetSolid( Solid::BSP );
     SetModel( GetModel() );
 
-    SetThinkCallback( &SVGBaseEntity::SVGBaseEntityThinkNull );
+    SetThinkCallback( &SVGBaseEntity::SVGBaseServerEntityThinkNull );
     SetBlockedCallback( &FuncDoor::DoorBlocked );
     SetUseCallback( &FuncDoor::DoorUse );
 
@@ -116,25 +116,25 @@ void FuncDoor::Spawn() {
     moveInfo.endAngles = GetAngles();
 
     if ( GetSpawnFlags() & SF_Toggle ) {
-        serverEntity->state.effects |= EntityEffectType::AnimCycleAll2hz;
+        serverEntity->state.effects |= ServerEntityEffectType::AnimCycleAll2hz;
     }
     if ( GetSpawnFlags() & SF_YAxis ) {
-        serverEntity->state.effects |= EntityEffectType::AnimCycleAll30hz;
+        serverEntity->state.effects |= ServerEntityEffectType::AnimCycleAll30hz;
     }
 
     // To simplify logic elsewhere, make non-teamed doors into a team of one
     if ( !GetTeam() ) {
-        SetTeamMasterEntity( this );
+        SetTeamMasterServerEntity( this );
     }
 
-    LinkEntity();
+    LinkServerEntity();
 }
 
 //===============
 // FuncDoor::PostSpawn
 // 
 // func_door in Q2 originally used spawn think functions
-// to achieve this. If the entity had health or had a 
+// to achieve this. If the ServerEntity had health or had a 
 // targetname, it'd calculate its move speed, else
 // it'd spawn a door trigger around itself
 //===============
@@ -150,7 +150,7 @@ void FuncDoor::PostSpawn() {
 // FuncDoor::DoorUse
 //===============
 void FuncDoor::DoorUse( SVGBaseEntity* other, SVGBaseEntity* activator ) {
-    if ( GetFlags() & EntityFlags::TeamSlave ) {
+    if ( GetFlags() & ServerEntityFlags::TeamSlave ) {
         return;
     }
 
@@ -163,7 +163,7 @@ void FuncDoor::DoorUse( SVGBaseEntity* other, SVGBaseEntity* activator ) {
     if ( GetSpawnFlags() & SF_Toggle ) {
         if ( moveInfo.state == MoverState::Up || moveInfo.state == MoverState::Top ) {
             // Trigger all paired doors
-            for ( SVGBaseEntity* ent = this; nullptr != ent; ent = ent->GetTeamChainEntity() ) {
+            for ( SVGBaseEntity* ent = this; nullptr != ent; ent = ent->GetTeamChainServerEntity() ) {
                 if ( ent->IsSubclassOf<FuncDoor>() ) {
                     ent->SetMessage( "" );
                     ent->SetTouchCallback( nullptr );
@@ -176,7 +176,7 @@ void FuncDoor::DoorUse( SVGBaseEntity* other, SVGBaseEntity* activator ) {
     }
 
     // Trigger all paired doors
-    for ( SVGBaseEntity* ent = this; nullptr != ent; ent = ent->GetTeamChainEntity() ) {
+    for ( SVGBaseEntity* ent = this; nullptr != ent; ent = ent->GetTeamChainServerEntity() ) {
         if ( ent->IsSubclassOf<FuncDoor>() ) {
             ent->SetMessage( "" );
             ent->SetTouchCallback( nullptr );
@@ -190,12 +190,12 @@ void FuncDoor::DoorUse( SVGBaseEntity* other, SVGBaseEntity* activator ) {
 //===============
 void FuncDoor::DoorShotOpen( SVGBaseEntity* inflictor, SVGBaseEntity* attacker, int damage, const vec3_t& point ) {
     SVGBaseEntity* ent;
-    for ( ent = GetTeamMasterEntity(); nullptr != ent; ent = GetTeamChainEntity() ) {
+    for ( ent = GetTeamMasterServerEntity(); nullptr != ent; ent = GetTeamChainServerEntity() ) {
         ent->SetHealth( GetMaxHealth() );
         ent->SetTakeDamage( TakeDamage::No );
     }
 
-    GetTeamMasterEntity()->Use( attacker, attacker );
+    GetTeamMasterServerEntity()->Use( attacker, attacker );
 }
 
 //===============
@@ -204,7 +204,7 @@ void FuncDoor::DoorShotOpen( SVGBaseEntity* inflictor, SVGBaseEntity* attacker, 
 void FuncDoor::DoorBlocked( SVGBaseEntity* other ) {
     SVGBaseEntity* ent;
     
-    if ( !(other->GetServerFlags() & EntityServerFlags::Monster) && !(other->GetClient()) ) {
+    if ( !(other->GetServerFlags() & ServerEntityServerFlags::Monster) && !(other->GetClient()) ) {
         // Give it a chance to go away on its own terms (like gibs)
         SVG_InflictDamage( other, this, this, vec3_zero(), other->GetOrigin(), vec3_zero(), 10000, 1, 0, MeansOfDeath::Crush );
         // If it's still there, nuke it
@@ -223,13 +223,13 @@ void FuncDoor::DoorBlocked( SVGBaseEntity* other ) {
     // so let it just squash the object to death real fast
     if ( moveInfo.wait >= 0 ) {
         if ( moveInfo.state == MoverState::Down ) {
-            for ( ent = GetTeamMasterEntity(); nullptr != ent; ent = GetTeamChainEntity() ) {
+            for ( ent = GetTeamMasterServerEntity(); nullptr != ent; ent = GetTeamChainServerEntity() ) {
                 if ( ent->IsSubclassOf<FuncDoor>() ) {
                     static_cast<FuncDoor*>( ent )->DoorGoUp( ent->GetActivator() );
                 }
             }
         } else {
-            for ( ent = GetTeamMasterEntity(); nullptr != ent; ent = GetTeamChainEntity() ) {
+            for ( ent = GetTeamMasterServerEntity(); nullptr != ent; ent = GetTeamChainServerEntity() ) {
                 if ( ent->IsSubclassOf<FuncDoor>() ) {
                     static_cast<FuncDoor*>( ent )->DoorGoDown();
                 }
@@ -253,8 +253,8 @@ void FuncDoor::DoorTouch( SVGBaseEntity* self, SVGBaseEntity* other, cplane_t* p
     debounceTouchTime = level.time + 5.0f;
 
     if ( !messageStr.empty() ) {
-        gi.CenterPrintf( other->GetServerEntity(), "%s", messageStr.c_str() );
-        gi.Sound( other->GetServerEntity(), CHAN_AUTO, gi.SoundIndex( MessageSoundPath ), 1.0f, ATTN_NORM, 0.0f );
+        gi.CenterPrintf( other->GetServerServerEntity(), "%s", messageStr.c_str() );
+        gi.Sound( other->GetServerServerEntity(), CHAN_AUTO, gi.SoundIndex( MessageSoundPath ), 1.0f, ATTN_NORM, 0.0f );
     }
 }
 
@@ -274,9 +274,9 @@ void FuncDoor::DoorGoUp( SVGBaseEntity* activator ) {
         return;
     }
 
-    if ( !(GetFlags() & EntityFlags::TeamSlave) ) {
+    if ( !(GetFlags() & ServerEntityFlags::TeamSlave) ) {
         if ( moveInfo.startSoundIndex ) {
-            gi.Sound( GetServerEntity(), CHAN_NO_PHS_ADD + CHAN_VOICE, moveInfo.startSoundIndex, 1, ATTN_STATIC, 0.0f );
+            gi.Sound( GetServerServerEntity(), CHAN_NO_PHS_ADD + CHAN_VOICE, moveInfo.startSoundIndex, 1, ATTN_STATIC, 0.0f );
         }
         SetSound( moveInfo.middleSoundIndex );
     }
@@ -292,9 +292,9 @@ void FuncDoor::DoorGoUp( SVGBaseEntity* activator ) {
 // FuncDoor::DoorGoDown
 //===============
 void FuncDoor::DoorGoDown() {
-    if ( !(GetFlags() & EntityFlags::TeamSlave) ) {
+    if ( !(GetFlags() & ServerEntityFlags::TeamSlave) ) {
         if ( moveInfo.startSoundIndex ) {
-            gi.Sound( GetServerEntity(), CHAN_NO_PHS_ADD + CHAN_VOICE, moveInfo.startSoundIndex, 1, ATTN_STATIC, 0 );
+            gi.Sound( GetServerServerEntity(), CHAN_NO_PHS_ADD + CHAN_VOICE, moveInfo.startSoundIndex, 1, ATTN_STATIC, 0 );
         }
         SetSound( moveInfo.middleSoundIndex );
     }
@@ -326,9 +326,9 @@ void FuncDoor::DoGoDown() {
 // FuncDoor::HitTop
 //===============
 void FuncDoor::HitTop() {
-    if ( !(GetFlags() & EntityFlags::TeamSlave) ) {
+    if ( !(GetFlags() & ServerEntityFlags::TeamSlave) ) {
         if ( moveInfo.endSoundIndex ) {
-            gi.Sound( GetServerEntity(), CHAN_NO_PHS_ADD + CHAN_VOICE, moveInfo.endSoundIndex, 1.0f, ATTN_STATIC, 0.0f );
+            gi.Sound( GetServerServerEntity(), CHAN_NO_PHS_ADD + CHAN_VOICE, moveInfo.endSoundIndex, 1.0f, ATTN_STATIC, 0.0f );
         }
         SetSound( 0 );
     }
@@ -348,9 +348,9 @@ void FuncDoor::HitTop() {
 // FuncDoor::HitBottom
 //===============
 void FuncDoor::HitBottom() {
-    if ( !(GetFlags() & EntityFlags::TeamSlave) ) {
+    if ( !(GetFlags() & ServerEntityFlags::TeamSlave) ) {
         if ( moveInfo.endSoundIndex ) {
-            gi.Sound( GetServerEntity(), CHAN_NO_PHS_ADD + CHAN_VOICE, moveInfo.endSoundIndex, 1.0f, ATTN_STATIC, 0.0f );
+            gi.Sound( GetServerServerEntity(), CHAN_NO_PHS_ADD + CHAN_VOICE, moveInfo.endSoundIndex, 1.0f, ATTN_STATIC, 0.0f );
         }
         SetSound( 0 );
     }
@@ -362,18 +362,18 @@ void FuncDoor::HitBottom() {
 //===============
 // FuncDoor::OnDoorHitTop
 //===============
-void FuncDoor::OnDoorHitTop( Entity* self ) {
-    if ( self->classEntity->IsSubclassOf<FuncDoor>() ) {
-        static_cast<FuncDoor*>( self->classEntity )->HitTop();
+void FuncDoor::OnDoorHitTop( ServerEntity* self ) {
+    if ( self->classServerEntity->IsSubclassOf<FuncDoor>() ) {
+        static_cast<FuncDoor*>( self->classServerEntity )->HitTop();
     }
 }
 
 //===============
 // FuncDoor::OnDoorHitBottom
 //===============
-void FuncDoor::OnDoorHitBottom( Entity* self ) {
-    if ( self->classEntity->IsSubclassOf<FuncDoor>() ) {
-        static_cast<FuncDoor*>(self->classEntity)->HitBottom();
+void FuncDoor::OnDoorHitBottom( ServerEntity* self ) {
+    if ( self->classServerEntity->IsSubclassOf<FuncDoor>() ) {
+        static_cast<FuncDoor*>(self->classServerEntity)->HitBottom();
     }
 }
 
@@ -381,7 +381,7 @@ void FuncDoor::OnDoorHitBottom( Entity* self ) {
 // FuncDoor::CalculateMoveSpeed
 //===============
 void FuncDoor::CalculateMoveSpeed() {
-    if ( GetFlags() & EntityFlags::TeamSlave ) {
+    if ( GetFlags() & ServerEntityFlags::TeamSlave ) {
         return; // Only the team master does this
     }
 
@@ -394,7 +394,7 @@ void FuncDoor::CalculateMoveSpeed() {
     
     // Find the smallest distance any member of the team will be moving
     min = fabsf( moveInfo.distance );
-    for ( ent = dynamic_cast<FuncDoor*>( GetTeamChainEntity() ); ent; ent = dynamic_cast<FuncDoor*>( ent->GetTeamChainEntity() ) ) {
+    for ( ent = dynamic_cast<FuncDoor*>( GetTeamChainServerEntity() ); ent; ent = dynamic_cast<FuncDoor*>( ent->GetTeamChainServerEntity() ) ) {
         distance = fabsf( ent->moveInfo.distance );
         if ( distance < min ) {
             min = distance;
@@ -404,7 +404,7 @@ void FuncDoor::CalculateMoveSpeed() {
     time = min / GetSpeed();
 
     // Adjust speeds so they will all complete at the same time
-    for ( ent = this; ent; ent = dynamic_cast<FuncDoor*>(ent->GetTeamChainEntity()) ) {
+    for ( ent = this; ent; ent = dynamic_cast<FuncDoor*>(ent->GetTeamChainServerEntity()) ) {
         newSpeed = fabsf( ent->moveInfo.distance ) / time;
         ratio = newSpeed / ent->moveInfo.speed;
 
@@ -442,11 +442,11 @@ void FuncDoor::SpawnDoorTrigger() {
     vec3_t mins = GetMins();
     vec3_t maxs = GetMaxs();
 
-    if ( GetFlags() & EntityFlags::TeamSlave ) {
+    if ( GetFlags() & ServerEntityFlags::TeamSlave ) {
         return; // Only the team leader spawns a trigger
     }
     
-    for ( teamMember = dynamic_cast<FuncDoor*>(GetTeamChainEntity()); teamMember; teamMember = dynamic_cast<FuncDoor*>(teamMember->GetTeamChainEntity()) ) {
+    for ( teamMember = dynamic_cast<FuncDoor*>(GetTeamChainServerEntity()); teamMember; teamMember = dynamic_cast<FuncDoor*>(teamMember->GetTeamChainServerEntity()) ) {
         AddPointToBounds( teamMember->GetAbsoluteMin(), mins, maxs );
         AddPointToBounds( teamMember->GetAbsoluteMax(), mins, maxs );
     }
@@ -475,7 +475,7 @@ void FuncDoor::UseAreaportals( bool open ) const {
     }
 
     SVGBaseEntity* ent = nullptr;
-    while ( ent = SVG_FindEntityByKeyValue( "targetname", targetStr, ent ) ) {
+    while ( ent = SVG_FindServerEntityByKeyValue( "targetname", targetStr, ent ) ) {
         if ( ent->IsClass<FuncAreaportal>() ) {
             static_cast<FuncAreaportal*>(ent)->ActivatePortal( open );
         }

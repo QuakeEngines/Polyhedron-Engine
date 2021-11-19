@@ -42,48 +42,48 @@ to a noise in hopes of seeing the player from there.
 */
 void SVG_PlayerNoise(SVGBaseEntity *who, vec3_t where, int type)
 {
-    Entity     *noise;
+    ServerEntity     *noise;
 
     if (deathmatch->value)
         return;
 
-    if (who->GetFlags() & EntityFlags::NoTarget)
+    if (who->GetFlags() & ServerEntityFlags::NoTarget)
         return;
 
 
-    if (!who->GetServerEntity()->myNoisePtr) {
+    if (!who->GetServerServerEntity()->myNoisePtr) {
         noise = SVG_Spawn();
         noise->className = "player_noise";
         VectorSet(noise->mins, -8, -8, -8);
         VectorSet(noise->maxs, 8, 8, 8);
-        noise->owner = who->GetServerEntity();
-        noise->serverFlags = EntityServerFlags::NoClient;
-        who->GetServerEntity()->myNoisePtr = noise;
+        noise->owner = who->GetServerServerEntity();
+        noise->serverFlags = ServerEntityServerFlags::NoClient;
+        who->GetServerServerEntity()->myNoisePtr = noise;
 
         noise = SVG_Spawn();
         noise->className = "player_noise";
         VectorSet(noise->mins, -8, -8, -8);
         VectorSet(noise->maxs, 8, 8, 8);
-        noise->owner = who->GetServerEntity();
-        noise->serverFlags = EntityServerFlags::NoClient;
-        who->GetServerEntity()->myNoise2Ptr = noise;
+        noise->owner = who->GetServerServerEntity();
+        noise->serverFlags = ServerEntityServerFlags::NoClient;
+        who->GetServerServerEntity()->myNoise2Ptr = noise;
     }
 
     if (type == PNOISE_SELF || type == PNOISE_WEAPON) {
-        noise = who->GetServerEntity()->myNoisePtr;
-        level.soundEntity = noise;
-        level.soundEntityFrameNumber = level.frameNumber;
+        noise = who->GetServerServerEntity()->myNoisePtr;
+        level.soundServerEntity = noise;
+        level.soundServerEntityFrameNumber = level.frameNumber;
     } else { // type == PNOISE_IMPACT
-        noise = who->GetServerEntity()->myNoise2Ptr;
-        level.sound2Entity = noise;
-        level.sound2EntityFrameNumber = level.frameNumber;
+        noise = who->GetServerServerEntity()->myNoise2Ptr;
+        level.sound2ServerEntity = noise;
+        level.sound2ServerEntityFrameNumber = level.frameNumber;
     }
 
     VectorCopy(where, noise->state.origin);
     VectorSubtract(where, noise->maxs, noise->absMin);
     VectorAdd(where, noise->maxs, noise->absMax);
     noise->teleportTime = level.time;
-    gi.LinkEntity(noise);
+    gi.LinkServerEntity(noise);
 }
 
 
@@ -113,12 +113,12 @@ qboolean Pickup_Weapon(SVGBaseEntity *ent, PlayerClient *other)
     //    if (!(ent->spawnFlags & ItemSpawnFlags::DroppedPlayerItem)) {
     //        if (deathmatch->value) {
     //            if ((int)(gamemodeflags->value) & GameModeFlags::WeaponsStay)
-    //                ent->flags |= EntityFlags::Respawn;
+    //                ent->flags |= ServerEntityFlags::Respawn;
     //            else
     //                SVG_SetRespawn(ent, 30);
     //        }
     //        if (coop->value)
-    //            ent->flags |= EntityFlags::Respawn;
+    //            ent->flags |= ServerEntityFlags::Respawn;
     //    }
     //}
 
@@ -160,7 +160,7 @@ void SVG_ChangeWeapon(PlayerClient*ent)
             i = ((client->persistent.activeWeapon->weaponModelIndex & 0xff) << 8);
         else
             i = 0;
-        ent->SetSkinNumber((ent->GetServerEntity() - g_entities - 1) | i);
+        ent->SetSkinNumber((ent->GetServerServerEntity() - g_entities - 1) | i);
     }
 
     if (client->persistent.activeWeapon && client->persistent.activeWeapon->ammo)
@@ -258,12 +258,12 @@ void Use_Weapon(PlayerClient *ent, gitem_t* item)
         ammoIndex = ITEM_INDEX(ammo_item);
 
         if (!client->persistent.inventory[ammoIndex]) {
-            gi.CPrintf(ent->GetServerEntity(), PRINT_HIGH, "No %s for %s.\n", ammo_item->pickupName, item->pickupName);
+            gi.CPrintf(ent->GetServerServerEntity(), PRINT_HIGH, "No %s for %s.\n", ammo_item->pickupName, item->pickupName);
             return;
         }
 
         if (client->persistent.inventory[ammoIndex] < item->quantity) {
-            gi.CPrintf(ent->GetServerEntity(), PRINT_HIGH, "Not enough %s for %s.\n", ammo_item->pickupName, item->pickupName);
+            gi.CPrintf(ent->GetServerServerEntity(), PRINT_HIGH, "Not enough %s for %s.\n", ammo_item->pickupName, item->pickupName);
             return;
         }
     }
@@ -290,11 +290,11 @@ void Drop_Weapon(PlayerClient *ent, gitem_t *item)
     index = ITEM_INDEX(item);
     // see if we're already using it
     if (((item == client->persistent.activeWeapon) || (item == client->newWeapon)) && (client->persistent.inventory[index] == 1)) {
-        gi.CPrintf(ent->GetServerEntity(), PRINT_HIGH, "Can't drop current weapon\n");
+        gi.CPrintf(ent->GetServerServerEntity(), PRINT_HIGH, "Can't drop current weapon\n");
         return;
     }
 
-    SVG_DropItem(ent->GetServerEntity(), item);
+    SVG_DropItem(ent->GetServerServerEntity(), item);
     client->persistent.inventory[index]--;
 }
 
@@ -388,7 +388,7 @@ void Weapon_Generic(PlayerClient *ent, int FRAME_ACTIVATE_LAST, int FRAME_FIRE_L
                 }
             } else {
                 if (level.time >= ent->GetDebouncePainTime()) {
-                    gi.Sound(ent->GetServerEntity(), CHAN_VOICE, gi.SoundIndex("weapons/noammo.wav"), 1, ATTN_NORM, 0);
+                    gi.Sound(ent->GetServerServerEntity(), CHAN_VOICE, gi.SoundIndex("weapons/noammo.wav"), 1, ATTN_NORM, 0);
                     ent->SetDebouncePainTime(level.time + 1);
                 }
                 NoAmmoWeaponChange(ent);

@@ -76,7 +76,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #define qglLightf glLightf
 #define qglLightfv glLightfv
 #define qglLineWidth glLineWidth
-#define qglLoadIdentity glLoadIdentity
+#define qglLoadIdServerEntity glLoadIdServerEntity
 #define qglLoadMatrixf glLoadMatrixf
 #define qglLogicOp glLogicOp
 #define qglMaterialf glMaterialf

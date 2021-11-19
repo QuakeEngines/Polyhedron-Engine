@@ -219,7 +219,7 @@ inline vec3_t vec3_negate(const vec3_t &v) {
 //===============
 // vec3_one
 // 
-// Returns an identity vector:
+// Returns an idServerEntity vector:
 // `vec3_t { 1.f, 1.f, 1.f }`
 //===============
 //

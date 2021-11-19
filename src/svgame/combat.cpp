@@ -31,13 +31,13 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 //===============
 // SVG_InflictDamage
 //
-// Inflicts actual damage on the targeted entity, the rest speaks for itself.
+// Inflicts actual damage on the targeted ServerEntity, the rest speaks for itself.
 // Calls into the GameMode of course, to ensure whether things are solid to do at all.
 // 
 // If you'd like the old info...
-// targ        entity that is being damaged
-// inflictor   entity that is causing the damage
-// attacker    entity that caused the inflictor to damage targ
+// targ        ServerEntity that is being damaged
+// inflictor   ServerEntity that is causing the damage
+// attacker    ServerEntity that caused the inflictor to damage targ
 // example : targ = monster, inflictor = rocket, attacker = player
 //
 // dir         direction of the attack

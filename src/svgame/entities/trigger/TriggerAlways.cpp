@@ -19,13 +19,13 @@
 // 
 
 // Constructor/Deconstructor.
-TriggerAlways::TriggerAlways(Entity* svEntity) : SVGBaseTrigger(svEntity) {
+TriggerAlways::TriggerAlways(ServerEntity* svServerEntity) : SVGBaseTrigger(svServerEntity) {
 	//
 	// All callback functions best be nullptr.
 	//
 
 	//
-	// Set all entity pointer references to nullptr.
+	// Set all ServerEntity pointer references to nullptr.
 	//
 
 	//
@@ -65,11 +65,11 @@ void TriggerAlways::Spawn() {
 	//self->noiseIndex = gi.SoundIndex("world/electro.wav");
 	SetTouchCallback(&TriggerAlways::TriggerAlwaysTouch);
 
-	// In case the entity can be "used", set it to hurt those who use it as well.
+	// In case the ServerEntity can be "used", set it to hurt those who use it as well.
 	SetUseCallback(&TriggerAlways::TriggerAlwaysUse);
 
 	gi.DPrintf("TriggerHurt::Spawn!\n");
-	LinkEntity();
+	LinkServerEntity();
 }
 
 //

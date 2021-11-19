@@ -3,7 +3,7 @@
 
 class TriggerPush : public SVGBaseTrigger {
 public:
-	TriggerPush( Entity* entity );
+	TriggerPush( ServerEntity* ServerEntity );
 	virtual ~TriggerPush() = default;
 
 	DefineMapClass( "trigger_push", TriggerPush, SVGBaseTrigger );

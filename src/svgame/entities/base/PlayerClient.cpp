@@ -22,7 +22,7 @@
 #include "PlayerClient.h"
 
 // Constructor/Deconstructor.
-PlayerClient::PlayerClient(Entity* svEntity) : SVGBaseEntity(svEntity) {
+PlayerClient::PlayerClient(ServerEntity* svServerEntity) : SVGBaseEntity(svServerEntity) {
 
 }
 PlayerClient::~PlayerClient() {
@@ -50,7 +50,7 @@ void PlayerClient::Spawn() {
     Base::Spawn();
 
     // When spawned, we aren't on any ground, make sure of that.
-    SetGroundEntity(nullptr);
+    SetGroundServerEntity(nullptr);
 
 //    ent->client = &game.clients[index];
     SetTakeDamage(TakeDamage::Aim);
@@ -69,8 +69,8 @@ void PlayerClient::Spawn() {
     SetWaterType(0);
 
     // Setup Flags.
-    SetFlags(GetFlags() & ~EntityFlags::NoKnockBack);
-    SetServerFlags(GetServerFlags() & ~EntityServerFlags::DeadMonster);
+    SetFlags(GetFlags() & ~ServerEntityFlags::NoKnockBack);
+    SetServerFlags(GetServerFlags() & ~ServerEntityServerFlags::DeadMonster);
 
     // Default Player Move bounding box.
     SetMins(vec3_scale(PM_MINS, PM_SCALE));
@@ -138,8 +138,8 @@ void PlayerClient::SpawnKey(const std::string& key, const std::string& value) {
 //===============
 //
 void PlayerClient::PlayerClientDie(SVGBaseEntity* inflictor, SVGBaseEntity* attacker, int damage, const vec3_t& point) {
-    // Fetch server entity.
-    Entity* serverEntity = GetServerEntity();
+    // Fetch server ServerEntity.
+    ServerEntity* serverEntity = GetServerServerEntity();
 
     // Fetch client.
     gclient_s* client = GetClient();
@@ -157,12 +157,12 @@ void PlayerClient::PlayerClientDie(SVGBaseEntity* inflictor, SVGBaseEntity* atta
     SetModelIndex2(0);
 
     // Our effect type is now: CORPSE. Beautiful dead corpse :P
-    Base::SetEffects(EntityEffectType::Corpse);
+    Base::SetEffects(ServerEntityEffectType::Corpse);
 
     // Fetch angles, only maintain the yaw, reset the others.
     SetAngles(vec3_t{ 0.f, GetAngles()[vec3_t::PYR::Yaw], 0.f });
 
-    // Ensure our client entity is playing no sounds anymore.
+    // Ensure our client ServerEntity is playing no sounds anymore.
     Base::SetSound(0);
     client->weaponSound = 0;
 
@@ -170,7 +170,7 @@ void PlayerClient::PlayerClientDie(SVGBaseEntity* inflictor, SVGBaseEntity* atta
     SetMaxs(GetMaxs() - vec3_t{ 0.f, 0.f, -8.f });
 
     // Change server flags, we're a dead monster now.
-    SetServerFlags(GetServerFlags() | EntityServerFlags::DeadMonster);
+    SetServerFlags(GetServerFlags() | ServerEntityServerFlags::DeadMonster);
 
     // If we're not dead yet, we got some death initializing to do.
     if (!GetDeadFlag()) {
@@ -202,7 +202,7 @@ void PlayerClient::PlayerClientDie(SVGBaseEntity* inflictor, SVGBaseEntity* atta
     }
 
     // Remove powerups.
-    SetFlags(GetFlags() & ~EntityFlags::PowerArmor);
+    SetFlags(GetFlags() & ~ServerEntityFlags::PowerArmor);
 
     // In case our health went under -40, shred this body to gibs!
     if (GetHealth() < -40) {
@@ -255,8 +255,8 @@ void PlayerClient::PlayerClientDie(SVGBaseEntity* inflictor, SVGBaseEntity* atta
     // Set the dead flag to: DEAD, duhh.
     SetDeadFlag(DEAD_DEAD);
 
-    // Link our entity back in for collision purposes.
-    LinkEntity();
+    // Link our ServerEntity back in for collision purposes.
+    LinkServerEntity();
 }
 
 //===============
@@ -276,11 +276,11 @@ void PlayerClient::SetEvent() {
     }
 
     // Are we on-ground and "speeding" hard enough?
-    if (GetGroundEntity() && bobMove.XYSpeed > 225) {
+    if (GetGroundServerEntity() && bobMove.XYSpeed > 225) {
         // Do a footstep, from left, to right, left, to right.
         // Do the Bob!
         if ((int)(client->bobTime + bobMove.move) != bobMove.cycle ) {
-            SetEventID(EntityEvent::Footstep);
+            SetEventID(ServerEntityEvent::Footstep);
         } else {
             Com_DPrintf("client->bobTime + bobMove[%i]\nbobMove.cycle[%i]\n-----------------\n");
         }
@@ -300,7 +300,7 @@ void PlayerClient::SetEffects()
         return;
 
     // show cheaters!!!
-    if (GetFlags() & EntityFlags::GodMode) {
+    if (GetFlags() & ServerEntityFlags::GodMode) {
         Base::SetRenderEffects(GetRenderEffects() | (RenderEffects::RedShell | RenderEffects::GreenShell | RenderEffects::BlueShell));
     }
 }
@@ -350,11 +350,11 @@ void PlayerClient::LookAtKiller(SVGBaseEntity* inflictor, SVGBaseEntity* attacke
     gclient_s* client = GetClient();
 
     // Is the attack, not us, or the world?
-    if (attacker && attacker != SVG_GetWorldClassEntity() && attacker != this) {
+    if (attacker && attacker != SVG_GetWorldClassServerEntity() && attacker != this) {
         float yaw = vec3_to_yaw(attacker->GetOrigin() - GetOrigin());
         SetKillerYaw(yaw);
     // Is the inflictor, and not an attack, NOT us or the WORLD?
-    } else if (inflictor && inflictor != SVG_GetWorldClassEntity() && inflictor != this) {
+    } else if (inflictor && inflictor != SVG_GetWorldClassServerEntity() && inflictor != this) {
         float yaw = vec3_to_yaw(inflictor->GetOrigin() - GetOrigin());
         SetKillerYaw(yaw);
     // If none of the above, set the yaw as is.
@@ -418,10 +418,10 @@ void PlayerClient::CheckFallingDamage()
     // Calculate delta velocity.
     vec3_t velocity = GetVelocity();
 
-    if ((client->oldVelocity[2] < 0) && (velocity[2] > client->oldVelocity[2]) && (!GetGroundEntity())) {
+    if ((client->oldVelocity[2] < 0) && (velocity[2] > client->oldVelocity[2]) && (!GetGroundServerEntity())) {
         delta = client->oldVelocity[2];
     } else {
-        if (!GetGroundEntity())
+        if (!GetGroundServerEntity())
             return;
         delta = velocity[2] - client->oldVelocity[2];
     }
@@ -439,7 +439,7 @@ void PlayerClient::CheckFallingDamage()
         return;
 
     if (delta < 15 / 6) {
-        SetEventID(EntityEvent::Footstep);
+        SetEventID(ServerEntityEvent::Footstep);
         return;
     }
 
@@ -451,9 +451,9 @@ void PlayerClient::CheckFallingDamage()
     if (delta > 30) {
         if (GetHealth() > 0) {
             if (delta >= 55)
-                SetEventID(EntityEvent::FallFar);
+                SetEventID(ServerEntityEvent::FallFar);
             else
-                SetEventID(EntityEvent::Fall);
+                SetEventID(ServerEntityEvent::Fall);
         }
         SetDebouncePainTime(level.time);   // no normal pain sound
         damage = (delta - 30) / 2;
@@ -463,10 +463,10 @@ void PlayerClient::CheckFallingDamage()
 
         //if (!deathmatch->value || 
         if (!((int)gamemodeflags->value & GameModeFlags::NoFalling)) {
-            SVG_InflictDamage(this, SVG_GetWorldClassEntity(), SVG_GetWorldClassEntity(), dir, GetOrigin(), vec3_zero(), damage, 0, 0, MeansOfDeath::Falling);
+            SVG_InflictDamage(this, SVG_GetWorldClassServerEntity(), SVG_GetWorldClassServerEntity(), dir, GetOrigin(), vec3_zero(), damage, 0, 0, MeansOfDeath::Falling);
         }
     } else {
-        SetEventID(EntityEvent::FallShort);
+        SetEventID(ServerEntityEvent::FallShort);
         return;
     }
 }
@@ -511,7 +511,7 @@ void PlayerClient::CheckWorldEffects()
             SVG_Sound(this, CHAN_BODY, gi.SoundIndex("player/watr_in.wav"), 1, ATTN_NORM, 0);
         }
         
-        SetFlags(GetFlags() | EntityFlags::InWater);
+        SetFlags(GetFlags() | ServerEntityFlags::InWater);
 
         // clear damage_debounce, so the pain sound will play immediately
         SetDebounceDamageTime(level.time - 1);
@@ -523,7 +523,7 @@ void PlayerClient::CheckWorldEffects()
     if (oldWaterLevel && ! waterLevel) {
         SVG_PlayerNoise(this, GetOrigin(), PNOISE_SELF);
         SVG_Sound(this, CHAN_BODY, gi.SoundIndex("player/watr_out.wav"), 1, ATTN_NORM, 0);
-        SetFlags(GetFlags() & ~EntityFlags::InWater);
+        SetFlags(GetFlags() & ~ServerEntityFlags::InWater);
     }
 
     //
@@ -573,7 +573,7 @@ void PlayerClient::CheckWorldEffects()
 
                 SetDebouncePainTime(level.time);
 
-                SVG_InflictDamage(this, SVG_GetWorldClassEntity(), SVG_GetWorldClassEntity(), vec3_zero(),   GetOrigin(), vec3_zero(), GetDamage(), 0, DamageFlags::NoArmorProtection, MeansOfDeath::Water);
+                SVG_InflictDamage(this, SVG_GetWorldClassServerEntity(), SVG_GetWorldClassServerEntity(), vec3_zero(),   GetOrigin(), vec3_zero(), GetDamage(), 0, DamageFlags::NoArmorProtection, MeansOfDeath::Water);
             }
         }
     } else {
@@ -595,11 +595,11 @@ void PlayerClient::CheckWorldEffects()
                 SetDebouncePainTime(level.time + 1);
             }
 
-            SVG_InflictDamage(this, SVG_GetWorldClassEntity(), SVG_GetWorldClassEntity(), vec3_zero(), GetOrigin(), vec3_zero(), 3 * waterLevel, 0, 0, MeansOfDeath::Lava);
+            SVG_InflictDamage(this, SVG_GetWorldClassServerEntity(), SVG_GetWorldClassServerEntity(), vec3_zero(), GetOrigin(), vec3_zero(), 3 * waterLevel, 0, 0, MeansOfDeath::Lava);
         }
 
         if (GetWaterType() & CONTENTS_SLIME) {
-            SVG_InflictDamage(this, SVG_GetWorldClassEntity(), SVG_GetWorldClassEntity(), vec3_zero(), GetOrigin(), vec3_zero(), 1 * waterLevel, 0, 0, MeansOfDeath::Slime);
+            SVG_InflictDamage(this, SVG_GetWorldClassServerEntity(), SVG_GetWorldClassServerEntity(), vec3_zero(), GetOrigin(), vec3_zero(), 1 * waterLevel, 0, 0, MeansOfDeath::Slime);
         }
     }
 }
@@ -628,7 +628,7 @@ void PlayerClient::ApplyDamageFeedback() {
     client->playerState.stats[STAT_FLASHES] = 0;
     if (client->damages.blood)
         client->playerState.stats[STAT_FLASHES] |= 1;
-    if (client->damages.armor && !(GetFlags() & EntityFlags::GodMode))
+    if (client->damages.armor && !(GetFlags() & ServerEntityFlags::GodMode))
         client->playerState.stats[STAT_FLASHES] |= 2;
 
     // total points of damage shot at the player this frame
@@ -668,7 +668,7 @@ void PlayerClient::ApplyDamageFeedback() {
         count = 10; // always make a visible effect
 
                     // Play an apropriate pain sound
-    if ((level.time > GetDebouncePainTime()) && !(GetFlags() & EntityFlags::GodMode)) {
+    if ((level.time > GetDebouncePainTime()) && !(GetFlags() & ServerEntityFlags::GodMode)) {
         r = 1 + (rand() & 1);
         SetDebouncePainTime(level.time + 0.7f);
         if (GetHealth() < 25)
@@ -820,7 +820,7 @@ void PlayerClient::CalculateViewOffset()
     //
     // Calculate new view offset.
     //
-    // Start off with the base entity viewheight. (Set by Player Move code.)
+    // Start off with the base ServerEntity viewheight. (Set by Player Move code.)
     vec3_t newViewOffset = {
         0.f,
         0.f,
@@ -983,7 +983,7 @@ void PlayerClient::SetAnimationFrame() {
         goto newanim;
     if (isRunning != client->animation.isRunning && client->animation.priorityAnimation == PlayerAnimation::Basic)
         goto newanim;
-    if (!GetGroundEntity() && client->animation.priorityAnimation <= PlayerAnimation::Wave)
+    if (!GetGroundServerEntity() && client->animation.priorityAnimation <= PlayerAnimation::Wave)
         goto newanim;
 
     if (client->animation.priorityAnimation == PlayerAnimation::Reverse) {
@@ -1000,7 +1000,7 @@ void PlayerClient::SetAnimationFrame() {
     if (client->animation.priorityAnimation == PlayerAnimation::Death)
         return;     // stay there
     if (client->animation.priorityAnimation == PlayerAnimation::Jump) {
-        if (!GetGroundEntity())
+        if (!GetGroundServerEntity())
             return;     // stay there
         client->animation.priorityAnimation = PlayerAnimation::Wave;
         SetFrame(FRAME_jump3);
@@ -1014,7 +1014,7 @@ newanim:
     client->animation.isDucking = isDucking;
     client->animation.isRunning = isRunning;
 
-    if (!GetGroundEntity()) {
+    if (!GetGroundServerEntity()) {
         client->animation.priorityAnimation = PlayerAnimation::Jump;
         if (GetFrame() != FRAME_jump2)
             SetFrame(FRAME_jump1);

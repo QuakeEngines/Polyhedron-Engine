@@ -38,7 +38,7 @@ void		CL_GM_ClientUpdateUserInfo(cvar_t* var, from_t from);
 //
 // Entities.
 //
-void		CL_GM_EntityEvent(int32_t number);
+void		CL_GM_ServerEntityEvent(int32_t number);
 
 //
 // Media

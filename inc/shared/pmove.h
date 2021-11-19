@@ -56,12 +56,12 @@ struct PlayerMoveState {
 // PlayerMoveInput is part of each client user cmd.
 //-----------------
 struct PlayerMoveInput {
-    uint8_t msec;       // Duration of the command, in milliseconds
-    vec3_t viewAngles;  // The final view angles for this command
-    int16_t forwardMove, rightMove, upMove; // Directional intentions
-    uint8_t buttons;    // Bit mask of buttons down
-    uint8_t impulse;    // Impulse cmd.
-    uint8_t lightLevel; // Lightlevel.
+    uint8_t msec{0};       // Duration of the command, in milliseconds
+    vec3_t viewAngles{0.f, 0.f, 0.f};  // The final view angles for this command
+    int16_t forwardMove{0}, rightMove{0}, upMove{0}; // Directional intentions
+    uint8_t buttons{0};    // Bit mask of buttons down
+    uint8_t impulse{0};    // Impulse cmd.
+    uint8_t lightLevel{0}; // Lightlevel.
 };
 
 //-----------------
@@ -70,14 +70,14 @@ struct PlayerMoveInput {
 struct ClientMoveCommand {
     PlayerMoveInput input;  // the movement command
 
-    uint32_t timeSent;      // Time sent, for calculating pings
-    uint32_t timeReceived;  // Time rcvd, for calculating pings
-    uint32_t commandNumber; // Current commandNumber for this move command frame
+    uint32_t timeSent{0};      // Time sent, for calculating pings
+    uint32_t timeReceived{0};  // Time rcvd, for calculating pings
+    uint32_t commandNumber{0}; // Current commandNumber for this move command frame
 
     struct {
         uint32_t simulationTime;    // The simulation time when prediction was run
-        vec3_t origin;              // The predicted origin for this command
-        vec3_t error;               // The prediction error for this command
+        vec3_t origin{0.f, 0.f, 0.f};              // The predicted origin for this command
+        vec3_t error{0.f, 0.f, 0.f};               // The prediction error for this command
     } prediction;
 };
 

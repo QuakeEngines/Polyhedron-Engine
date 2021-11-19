@@ -442,7 +442,7 @@ void CL_InitGameProgs(void)
     importAPI.CM_TransformedPointContents = CM_TransformedPointContents;
     importAPI.CM_BoxTrace = CM_BoxTrace;
     importAPI.CM_TransformedBoxTrace = CM_TransformedBoxTrace;
-    importAPI.CM_ClipEntity = CM_ClipEntity;
+    importAPI.CM_ClipServerEntity = CM_ClipServerEntity;
 
     // Command.
     importAPI.Cmd_AddCommand = Cmd_AddCommand;
@@ -650,7 +650,7 @@ void CL_InitGameProgs(void)
 // Called when the client is seeking in a demo playback.
 //===============
 //
-void CL_GM_EntityEvent(int32_t number) {
+void CL_GM_ServerEntityEvent(int32_t number) {
     if (cge && cge->entities)
         cge->entities->Event(number);
 }

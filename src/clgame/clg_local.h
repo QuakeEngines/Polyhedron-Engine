@@ -61,7 +61,7 @@ inline qboolean CLG_FRAMESYNC() {
 //-------------------
 typedef struct clg_view_s {
     // Stores the entities.
-    r_entity_t entities[MAX_ENTITIES];
+    r_ServerEntity_t entities[MAX_ENTITIES];
     int num_entities;
 
     // Holds all the dynamic lights currently in the view frame.
@@ -131,7 +131,7 @@ extern ClientShared  *cs;
 //-------------------
 // Game - Specific to the game itself.
 //-------------------
-// Stores parameters parsed from a temporary entity message.s
+// Stores parameters parsed from a temporary ServerEntity message.s
 extern tent_params_t   teParameters;
 // Stores parameters parsed from a muzzleflash message.
 extern mz_params_t     mzParameters;

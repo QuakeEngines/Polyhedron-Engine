@@ -413,6 +413,10 @@ SET(HEADERS_SHARED
 	# Container lib.
 	../inc/shared/containers/IterableCArray.h
 
+	# Entities lib.
+	#../inc/shared/entities/gclient_t.h
+	../inc/shared/entities/ServerEntity.h
+
 	# Interfaces
 	../inc/shared/interfaces/IClientGameExports.h
 	../inc/shared/interfaces/IClientGameImports.h

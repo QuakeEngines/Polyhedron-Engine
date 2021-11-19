@@ -24,14 +24,14 @@
 // 
 
 // Constructor/Deconstructor.
-TriggerDelayedUse::TriggerDelayedUse(Entity* svEntity) 
-	: SVGBaseTrigger(svEntity) {
+TriggerDelayedUse::TriggerDelayedUse(ServerEntity* svServerEntity) 
+	: SVGBaseTrigger(svServerEntity) {
 	//
 	// All callback functions best be nullptr.
 	//
 
 	//
-	// Set all entity pointer references to nullptr.
+	// Set all ServerEntity pointer references to nullptr.
 	//
 
 	//
@@ -69,8 +69,8 @@ void TriggerDelayedUse::Spawn() {
 	SetMoveType(MoveType::None);
 	SetSolid(Solid::Not);
 
-	// Link entity for collision.
-	LinkEntity();
+	// Link ServerEntity for collision.
+	LinkServerEntity();
 }
 
 //
@@ -126,6 +126,6 @@ void TriggerDelayedUse::TriggerDelayedUseThink() {
 	// Use the 'set' activator.
 	UseTargets(GetActivator());
 
-	// Free this entity.
-	SVG_FreeEntity(GetServerEntity());
+	// Free this ServerEntity.
+	SVG_FreeServerEntity(GetServerServerEntity());
 }

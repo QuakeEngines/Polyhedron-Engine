@@ -25,7 +25,7 @@ void SVG_CenterPrint(SVGBaseEntity* ent, const std::string& str) {
     if (!ent)
         return;
 
-    gi.CenterPrintf(ent->GetServerEntity(), "%s", str.c_str());
+    gi.CenterPrintf(ent->GetServerServerEntity(), "%s", str.c_str());
 }
 
 //
@@ -39,7 +39,7 @@ void SVG_Sound(SVGBaseEntity* ent, int32_t channel, int32_t soundIndex, float vo
     if (!ent)
         return;
 
-    gi.Sound(ent->GetServerEntity(), channel, soundIndex, volume, attenuation, timeOffset);
+    gi.Sound(ent->GetServerServerEntity(), channel, soundIndex, volume, attenuation, timeOffset);
 }
 
 
@@ -51,7 +51,7 @@ void SVG_Sound(SVGBaseEntity* ent, int32_t channel, int32_t soundIndex, float vo
 //===============
 //
 std::vector<SVGBaseEntity*> SVG_BoxEntities(const vec3_t& mins, const vec3_t& maxs, int32_t listCount, int32_t areaType) {
-    Entity* boxedServerEntities[MAX_EDICTS];
+    ServerEntity* boxedServerEntities[MAX_EDICTS];
     std::vector<SVGBaseEntity*> boxedBaseEntities;
 
     // Ensure the listCount can't exceed the max edicts.
@@ -80,11 +80,11 @@ std::vector<SVGBaseEntity*> SVG_BoxEntities(const vec3_t& mins, const vec3_t& ma
 //===============
 //
 SVGTrace SVG_Trace(const vec3_t& start, const vec3_t& mins, const vec3_t& maxs, const vec3_t& end, SVGBaseEntity* passent, const int32_t& contentMask) {
-    // Fetch server entity in case one was passed to us.
-    Entity* serverPassEntity = (passent ? passent->GetServerEntity() : NULL);
+    // Fetch server ServerEntity in case one was passed to us.
+    ServerEntity* serverPassServerEntity = (passent ? passent->GetServerServerEntity() : NULL);
 
     // Execute server trace.
-    trace_t trace = gi.Trace(start, mins, maxs, end, serverPassEntity, contentMask);
+    trace_t trace = gi.Trace(start, mins, maxs, end, serverPassServerEntity, contentMask);
 
     // Convert results to Server Game Trace.
     SVGTrace svgTrace;
@@ -111,10 +111,10 @@ SVGTrace SVG_Trace(const vec3_t& start, const vec3_t& mins, const vec3_t& maxs, 
         if (g_baseEntities[index] != NULL) {
             svgTrace.ent = g_baseEntities[index];
         } else {
-            svgTrace.ent = g_entities[0].classEntity;
+            svgTrace.ent = g_entities[0].classServerEntity;
         }
     } else {
-        svgTrace.ent = g_entities[0].classEntity;
+        svgTrace.ent = g_entities[0].classServerEntity;
     }
 
     return svgTrace;

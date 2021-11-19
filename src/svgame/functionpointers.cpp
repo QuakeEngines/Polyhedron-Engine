@@ -13,113 +13,113 @@
 //
 #include "functionpointers.h"
 
-extern void door_blocked(Entity* self, Entity* other);
-extern void plat_blocked(Entity* self, Entity* other);
-extern void rotating_blocked(Entity* self, Entity* other);
-extern void train_blocked(Entity* self, Entity* other);
-extern void body_die(Entity* self, Entity* inflictor, Entity* attacker, int damage, const vec3_t& point);
-extern void button_killed(Entity* self, Entity* inflictor, Entity* attacker, int damage, const vec3_t& point);
-extern void debris_die(Entity* self, Entity* inflictor, Entity* attacker, int damage, const vec3_t& point);
-extern void door_killed(Entity* self, Entity* inflictor, Entity* attacker, int damage, const vec3_t& point);
-extern void func_explosive_explode(Entity* self, Entity* inflictor, Entity* attacker, int damage, const vec3_t& point);
-extern void gib_die(Entity* self, Entity* inflictor, Entity* attacker, int damage, const vec3_t& point);
+extern void door_blocked(ServerEntity* self, ServerEntity* other);
+extern void plat_blocked(ServerEntity* self, ServerEntity* other);
+extern void rotating_blocked(ServerEntity* self, ServerEntity* other);
+extern void train_blocked(ServerEntity* self, ServerEntity* other);
+extern void body_die(ServerEntity* self, ServerEntity* inflictor, ServerEntity* attacker, int damage, const vec3_t& point);
+extern void button_killed(ServerEntity* self, ServerEntity* inflictor, ServerEntity* attacker, int damage, const vec3_t& point);
+extern void debris_die(ServerEntity* self, ServerEntity* inflictor, ServerEntity* attacker, int damage, const vec3_t& point);
+extern void door_killed(ServerEntity* self, ServerEntity* inflictor, ServerEntity* attacker, int damage, const vec3_t& point);
+extern void func_explosive_explode(ServerEntity* self, ServerEntity* inflictor, ServerEntity* attacker, int damage, const vec3_t& point);
+extern void gib_die(ServerEntity* self, ServerEntity* inflictor, ServerEntity* attacker, int damage, const vec3_t& point);
 
-extern void Brush_AngleMove_Begin(Entity* self);
-extern void Brush_AngleMove_Done(Entity* self);
-extern void Brush_AngleMove_Final(Entity* self);
+extern void Brush_AngleMove_Begin(ServerEntity* self);
+extern void Brush_AngleMove_Done(ServerEntity* self);
+extern void Brush_AngleMove_Final(ServerEntity* self);
 
-extern void button_return(Entity* self);
+extern void button_return(ServerEntity* self);
 
-extern void door_go_down(Entity* self);
+extern void door_go_down(ServerEntity* self);
 
-extern void DoRespawn(Entity* self);
-extern void drop_make_touchable(Entity* self);
-extern void droptofloor(Entity* self);
+extern void DoRespawn(ServerEntity* self);
+extern void drop_make_touchable(ServerEntity* self);
+extern void droptofloor(ServerEntity* self);
 
-extern void func_object_release(Entity* self);
-extern void func_timer_think(Entity* self);
-extern void func_train_find(Entity* self);
+extern void func_object_release(ServerEntity* self);
+extern void func_timer_think(ServerEntity* self);
+extern void func_train_find(ServerEntity* self);
 
-extern void gib_think(Entity* self);
+extern void gib_think(ServerEntity* self);
 
-extern void MegaHealth_think(Entity* self);
+extern void MegaHealth_think(ServerEntity* self);
 
-//extern void Brush_Move_Begin(Entity* self);
-//extern void Brush_Move_Done(Entity* self);
-//extern void Brush_Move_Final(Entity* self);
-extern void multi_wait(Entity* self);
-extern void plat_go_down(Entity* self);
-//extern void SP_CreateCoopSpots(Entity* self);
-extern void SP_FixCoopSpots(Entity* self);
-extern void target_crosslevel_target_think(Entity* self);
-extern void target_earthquake_think(Entity* self);
-extern void target_explosion_explode(Entity* self);
-extern void target_lightramp_think(Entity* self);
-extern void Think_AccelMove(Entity* self);
+//extern void Brush_Move_Begin(ServerEntity* self);
+//extern void Brush_Move_Done(ServerEntity* self);
+//extern void Brush_Move_Final(ServerEntity* self);
+extern void multi_wait(ServerEntity* self);
+extern void plat_go_down(ServerEntity* self);
+//extern void SP_CreateCoopSpots(ServerEntity* self);
+extern void SP_FixCoopSpots(ServerEntity* self);
+extern void target_crosslevel_target_think(ServerEntity* self);
+extern void target_earthquake_think(ServerEntity* self);
+extern void target_explosion_explode(ServerEntity* self);
+extern void target_lightramp_think(ServerEntity* self);
+extern void Think_AccelMove(ServerEntity* self);
 
-extern void Think_CalcMoveSpeed(Entity* self);
-extern void Think_Delay(Entity* self);
-extern void Think_SpawnDoorTrigger(Entity* self);
-extern void train_next(Entity* self);
-extern void trigger_elevator_init(Entity* self);
-//extern void blaster_touch(Entity* self, Entity* other, cplane_t* plane, csurface_t* surf);
-extern void button_touch(Entity* self, Entity* other, cplane_t* plane, csurface_t* surf);
-extern void door_touch(Entity* self, Entity* other, cplane_t* plane, csurface_t* surf);
-extern void drop_temp_touch(Entity* self, Entity* other, cplane_t* plane, csurface_t* surf);
-extern void func_object_touch(Entity* self, Entity* other, cplane_t* plane, csurface_t* surf);
-extern void gib_touch(Entity* self, Entity* other, cplane_t* plane, csurface_t* surf);
-extern void hurt_touch(Entity* self, Entity* other, cplane_t* plane, csurface_t* surf);
+extern void Think_CalcMoveSpeed(ServerEntity* self);
+extern void Think_Delay(ServerEntity* self);
+extern void Think_SpawnDoorTrigger(ServerEntity* self);
+extern void train_next(ServerEntity* self);
+extern void trigger_elevator_init(ServerEntity* self);
+//extern void blaster_touch(ServerEntity* self, ServerEntity* other, cplane_t* plane, csurface_t* surf);
+extern void button_touch(ServerEntity* self, ServerEntity* other, cplane_t* plane, csurface_t* surf);
+extern void door_touch(ServerEntity* self, ServerEntity* other, cplane_t* plane, csurface_t* surf);
+extern void drop_temp_touch(ServerEntity* self, ServerEntity* other, cplane_t* plane, csurface_t* surf);
+extern void func_object_touch(ServerEntity* self, ServerEntity* other, cplane_t* plane, csurface_t* surf);
+extern void gib_touch(ServerEntity* self, ServerEntity* other, cplane_t* plane, csurface_t* surf);
+extern void hurt_touch(ServerEntity* self, ServerEntity* other, cplane_t* plane, csurface_t* surf);
 
-extern void rotating_touch(Entity* self, Entity* other, cplane_t* plane, csurface_t* surf);
+extern void rotating_touch(ServerEntity* self, ServerEntity* other, cplane_t* plane, csurface_t* surf);
 
-extern void teleporter_touch(Entity* self, Entity* other, cplane_t* plane, csurface_t* surf);
-extern void Touch_DoorTrigger(Entity* self, Entity* other, cplane_t* plane, csurface_t* surf);
-extern void Touch_Multi(Entity* self, Entity* other, cplane_t* plane, csurface_t* surf);
-extern void Touch_Plat_Center(Entity* self, Entity* other, cplane_t* plane, csurface_t* surf);
-extern void trigger_gravity_touch(Entity* self, Entity* other, cplane_t* plane, csurface_t* surf);
-extern void trigger_monsterjump_touch(Entity* self, Entity* other, cplane_t* plane, csurface_t* surf);
-extern void trigger_push_touch(Entity* self, Entity* other, cplane_t* plane, csurface_t* surf);
+extern void teleporter_touch(ServerEntity* self, ServerEntity* other, cplane_t* plane, csurface_t* surf);
+extern void Touch_DoorTrigger(ServerEntity* self, ServerEntity* other, cplane_t* plane, csurface_t* surf);
+extern void Touch_Multi(ServerEntity* self, ServerEntity* other, cplane_t* plane, csurface_t* surf);
+extern void Touch_Plat_Center(ServerEntity* self, ServerEntity* other, cplane_t* plane, csurface_t* surf);
+extern void trigger_gravity_touch(ServerEntity* self, ServerEntity* other, cplane_t* plane, csurface_t* surf);
+extern void trigger_monsterjump_touch(ServerEntity* self, ServerEntity* other, cplane_t* plane, csurface_t* surf);
+extern void trigger_push_touch(ServerEntity* self, ServerEntity* other, cplane_t* plane, csurface_t* surf);
 
-extern void button_use(Entity* self, Entity* other, Entity* activator);
-extern void door_use(Entity* self, Entity* other, Entity* activator);
-extern void func_conveyor_use(Entity* self, Entity* other, Entity* activator);
-extern void func_explosive_spawn(Entity* self, Entity* other, Entity* activator);
-extern void func_explosive_use(Entity* self, Entity* other, Entity* activator);
-extern void func_object_use(Entity* self, Entity* other, Entity* activator);
-extern void func_timer_use(Entity* self, Entity* other, Entity* activator);
-extern void func_wall_use(Entity* self, Entity* other, Entity* activator);
-extern void hurt_use(Entity* self, Entity* other, Entity* activator);
-//extern void light_use(Entity* self, Entity* other, Entity* activator);
-extern void rotating_use(Entity* self, Entity* other, Entity* activator);
-extern void target_earthquake_use(Entity* self, Entity* other, Entity* activator);
-extern void target_lightramp_use(Entity* self, Entity* other, Entity* activator);
-extern void train_use(Entity* self, Entity* other, Entity* activator);
-extern void trigger_counter_use(Entity* self, Entity* other, Entity* activator);
-extern void trigger_crosslevel_trigger_use(Entity* self, Entity* other, Entity* activator);
-extern void trigger_elevator_use(Entity* self, Entity* other, Entity* activator);
-extern void trigger_enable(Entity* self, Entity* other, Entity* activator);
-extern void trigger_key_use(Entity* self, Entity* other, Entity* activator);
-extern void trigger_relay_use(Entity* self, Entity* other, Entity* activator);
-extern void Use_Areaportal(Entity* self, Entity* other, Entity* activator);
+extern void button_use(ServerEntity* self, ServerEntity* other, ServerEntity* activator);
+extern void door_use(ServerEntity* self, ServerEntity* other, ServerEntity* activator);
+extern void func_conveyor_use(ServerEntity* self, ServerEntity* other, ServerEntity* activator);
+extern void func_explosive_spawn(ServerEntity* self, ServerEntity* other, ServerEntity* activator);
+extern void func_explosive_use(ServerEntity* self, ServerEntity* other, ServerEntity* activator);
+extern void func_object_use(ServerEntity* self, ServerEntity* other, ServerEntity* activator);
+extern void func_timer_use(ServerEntity* self, ServerEntity* other, ServerEntity* activator);
+extern void func_wall_use(ServerEntity* self, ServerEntity* other, ServerEntity* activator);
+extern void hurt_use(ServerEntity* self, ServerEntity* other, ServerEntity* activator);
+//extern void light_use(ServerEntity* self, ServerEntity* other, ServerEntity* activator);
+extern void rotating_use(ServerEntity* self, ServerEntity* other, ServerEntity* activator);
+extern void target_earthquake_use(ServerEntity* self, ServerEntity* other, ServerEntity* activator);
+extern void target_lightramp_use(ServerEntity* self, ServerEntity* other, ServerEntity* activator);
+extern void train_use(ServerEntity* self, ServerEntity* other, ServerEntity* activator);
+extern void trigger_counter_use(ServerEntity* self, ServerEntity* other, ServerEntity* activator);
+extern void trigger_crosslevel_trigger_use(ServerEntity* self, ServerEntity* other, ServerEntity* activator);
+extern void trigger_elevator_use(ServerEntity* self, ServerEntity* other, ServerEntity* activator);
+extern void trigger_enable(ServerEntity* self, ServerEntity* other, ServerEntity* activator);
+extern void trigger_key_use(ServerEntity* self, ServerEntity* other, ServerEntity* activator);
+extern void trigger_relay_use(ServerEntity* self, ServerEntity* other, ServerEntity* activator);
+extern void Use_Areaportal(ServerEntity* self, ServerEntity* other, ServerEntity* activator);
 
-extern void Use_Item(Entity* ent, Entity* other, Entity* activator);
-extern void use_killbox(Entity* ent, Entity* other, Entity* activator);
-extern void Use_Multi(Entity* ent, Entity* other, Entity* activator);
-extern void Use_Plat(Entity* ent, Entity* other, Entity* activator);
-extern void use_target_blaster(Entity* ent, Entity* other, Entity* activator);
-extern void use_target_changelevel(Entity* ent, Entity* other, Entity* activator);
-extern void use_target_explosion(Entity* ent, Entity* other, Entity* activator);
-extern void use_target_spawner(Entity* ent, Entity* other, Entity* activator);
-extern void Use_Target_Speaker(Entity* ent, Entity* other, Entity* activator);
-extern void use_target_splash(Entity* ent, Entity* other, Entity* activator);
-extern void Use_Target_Tent(Entity* ent, Entity* other, Entity* activator);
-extern void plat_hit_bottom(Entity* self);
-extern void plat_hit_top(Entity* self);
-extern void button_done(Entity* self);
-extern void button_wait(Entity* self);
-extern void door_hit_bottom(Entity* self);
-extern void door_hit_top(Entity* self);
-extern void train_wait(Entity* self);
+extern void Use_Item(ServerEntity* ent, ServerEntity* other, ServerEntity* activator);
+extern void use_killbox(ServerEntity* ent, ServerEntity* other, ServerEntity* activator);
+extern void Use_Multi(ServerEntity* ent, ServerEntity* other, ServerEntity* activator);
+extern void Use_Plat(ServerEntity* ent, ServerEntity* other, ServerEntity* activator);
+extern void use_target_blaster(ServerEntity* ent, ServerEntity* other, ServerEntity* activator);
+extern void use_target_changelevel(ServerEntity* ent, ServerEntity* other, ServerEntity* activator);
+extern void use_target_explosion(ServerEntity* ent, ServerEntity* other, ServerEntity* activator);
+extern void use_target_spawner(ServerEntity* ent, ServerEntity* other, ServerEntity* activator);
+extern void Use_Target_Speaker(ServerEntity* ent, ServerEntity* other, ServerEntity* activator);
+extern void use_target_splash(ServerEntity* ent, ServerEntity* other, ServerEntity* activator);
+extern void Use_Target_Tent(ServerEntity* ent, ServerEntity* other, ServerEntity* activator);
+extern void plat_hit_bottom(ServerEntity* self);
+extern void plat_hit_top(ServerEntity* self);
+extern void button_done(ServerEntity* self);
+extern void button_wait(ServerEntity* self);
+extern void door_hit_bottom(ServerEntity* self);
+extern void door_hit_top(ServerEntity* self);
+extern void train_wait(ServerEntity* self);
 
 //const save_ptr_t save_ptrs[] = {
 //{ P_blocked, door_blocked },
@@ -153,7 +153,7 @@ extern void train_wait(Entity* self);
 //{ P_think, func_object_release },
 //{ P_think, func_timer_think },
 //{ P_think, func_train_find },
-//{ P_think, SVG_FreeEntity },
+//{ P_think, SVG_FreeServerEntity },
 //{ P_think, gib_think },
 //
 //{ P_think, MegaHealth_think },

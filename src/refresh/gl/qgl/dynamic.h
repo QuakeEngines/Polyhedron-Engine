@@ -78,7 +78,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
     QGL(Lightf); \
     QGL(Lightfv); \
     QGL(LineWidth); \
-    QGL(LoadIdentity); \
+    QGL(LoadIdServerEntity); \
     QGL(LoadMatrixf); \
     QGL(LogicOp); \
     QGL(Materialf); \
@@ -206,7 +206,7 @@ typedef void (APIENTRY * qglLightModelfv_t)(GLenum pname, const GLfloat *params)
 typedef void (APIENTRY * qglLightf_t)(GLenum light, GLenum pname, GLfloat param);
 typedef void (APIENTRY * qglLightfv_t)(GLenum light, GLenum pname, const GLfloat *params);
 typedef void (APIENTRY * qglLineWidth_t)(GLfloat width);
-typedef void (APIENTRY * qglLoadIdentity_t)(void);
+typedef void (APIENTRY * qglLoadIdServerEntity_t)(void);
 typedef void (APIENTRY * qglLoadMatrixf_t)(const GLfloat *m);
 typedef void (APIENTRY * qglLogicOp_t)(GLenum opcode);
 typedef void (APIENTRY * qglMaterialf_t)(GLenum face, GLenum pname, GLfloat param);

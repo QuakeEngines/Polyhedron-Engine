@@ -35,7 +35,7 @@ typedef union {
 } msg_float;
 
 //---------------
-// This is the actual packed entity data that is transferred over the network.
+// This is the actual packed ServerEntity data that is transferred over the network.
 // It is bit precise, sensitive, and any change here would required changes elsewhere.
 // 
 // Be careful, and only touch this if you know what you are doing.
@@ -63,7 +63,7 @@ typedef struct {
     // Sound ID, and Event ID.
     uint8_t     sound;
     uint8_t     eventID;
-} PackedEntity;
+} PackedServerEntity;
 
 //---------------
 // Player state messaging flags.
@@ -77,11 +77,11 @@ enum PlayerStateMessageFlags {
 };
 
 //---------------
-// Entity state messaging flags.
+// ServerEntity state messaging flags.
 //---------------
-enum EntityStateMessageFlags {
+enum ServerEntityStateMessageFlags {
     MSG_ES_FORCE = (1 << 0),
-    MSG_ES_NEWENTITY = (1 << 1),
+    MSG_ES_NEWServerEntity = (1 << 1),
     MSG_ES_FIRSTPERSON = (1 << 2),
 //    MSG_ES_UMASK = (1 << 4),
     MSG_ES_BEAMORIGIN = (1 << 5),
@@ -94,7 +94,7 @@ extern byte         msg_write_buffer[MAX_MSGLEN];
 extern SizeBuffer   msg_read;
 extern byte         msg_read_buffer[MAX_MSGLEN];
 
-extern const PackedEntity       nullEntityState;
+extern const PackedServerEntity       nullServerEntityState;
 extern const PlayerState        nullPlayerState;
 extern const ClientMoveCommand  nullUserCmd;
 
@@ -112,8 +112,8 @@ void    MSG_WriteVector3(const vec3_t& pos);
 void    MSG_WriteBits(int value, int bits);
 int     MSG_WriteDeltaClientMoveCommand(const ClientMoveCommand* from, const ClientMoveCommand* cmd);
 #endif
-void    MSG_PackEntity(PackedEntity* out, const EntityState* in);
-void    MSG_WriteDeltaEntity(const PackedEntity* from, const PackedEntity* to, EntityStateMessageFlags flags);
+void    MSG_PackServerEntity(PackedServerEntity* out, const ServerEntityState* in);
+void    MSG_WriteDeltaServerEntity(const PackedServerEntity* from, const PackedServerEntity* to, ServerEntityStateMessageFlags flags);
 int     MSG_WriteDeltaPlayerstate(const PlayerState* from, PlayerState* to, PlayerStateMessageFlags flags);
 
 static inline void* MSG_WriteData(const void* data, size_t len)
@@ -142,8 +142,8 @@ vec3_t  MSG_ReadVector3(void);
 vec3_t  MSG_ReadVector3(void);
 #endif
 void    MSG_ReadDeltaClientMoveCommand(const ClientMoveCommand* from, ClientMoveCommand* cmd);
-int     MSG_ParseEntityBits(int* bits);
-void    MSG_ParseDeltaEntity(const EntityState* from, EntityState* to, int number, int bits, EntityStateMessageFlags flags);
+int     MSG_ParseServerEntityBits(int* bits);
+void    MSG_ParseDeltaServerEntity(const ServerEntityState* from, ServerEntityState* to, int number, int bits, ServerEntityStateMessageFlags flags);
 #if USE_CLIENT
 void    MSG_ParseDeltaPlayerstate(const PlayerState* from, PlayerState* to, int flags, int extraflags);
 #endif
@@ -154,7 +154,7 @@ void    MSG_ShowDeltaPlayerstateBits(int flags, int extraflags);
 void    MSG_ShowDeltaUsercmdBits(int bits);
 #endif
 #if USE_CLIENT
-void    MSG_ShowDeltaEntityBits(int bits);
+void    MSG_ShowDeltaServerEntityBits(int bits);
 void    MSG_ShowDeltaPlayerstateBits_Packet(int flags);
 const char* MSG_ServerCommandString(int cmd);
 #define MSG_ShowSVC(cmd) \

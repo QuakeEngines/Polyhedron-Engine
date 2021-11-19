@@ -149,7 +149,7 @@ static const char dm_statusbar[] =
 ;
 
 // Constructor/Deconstructor.
-WorldSpawn::WorldSpawn(Entity* svEntity) : SVGBaseEntity(svEntity) {
+WorldSpawn::WorldSpawn(ServerEntity* svServerEntity) : SVGBaseEntity(svServerEntity) {
 
 }
 WorldSpawn::~WorldSpawn() {
@@ -283,7 +283,7 @@ void WorldSpawn::Spawn() {
     // Reserve some spots for dead player bodies for coop / deathmatch
     level.bodyQue = 0;
     for (int i = 0; i < BODY_QUEUE_SIZE; i++) {
-        Entity* ent = SVG_Spawn();
+        ServerEntity* ent = SVG_Spawn();
         ent->className = "bodyque";
     }
 
@@ -379,7 +379,7 @@ void WorldSpawn::Think() {
 //===============
 // WorldSpawn::SpawnKey
 //
-// This function can be overrided, to allow for custom entity key:value parsing.
+// This function can be overrided, to allow for custom ServerEntity key:value parsing.
 //===============
 //
 void WorldSpawn::SpawnKey(const std::string& key, const std::string& value) {

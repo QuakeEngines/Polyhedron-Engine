@@ -9,11 +9,11 @@
 #ifndef __CLGAME_TENTS_H__
 #define __CLGAME_TENTS_H__
 
-void CLG_ParseTempEntity(void);
+void CLG_ParseTempServerEntity(void);
 void CLG_SmokeAndFlash(vec3_t origin);
 
-void CLG_RegisterTempEntityModels(void);
-void CLG_RegisterTempEntitySounds(void);
+void CLG_RegisterTempServerEntityModels(void);
+void CLG_RegisterTempServerEntitySounds(void);
 
 void CLG_ClearTempEntities(void);
 void CLG_AddTempEntities(void);

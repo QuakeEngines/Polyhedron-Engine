@@ -45,11 +45,11 @@ public:
 };
 
 //---------------------------------------------------------------------
-// ENTITY interface to implement. 
+// ServerEntity interface to implement. 
 //---------------------------------------------------------------------
 class IClientGameExportEntities {
 public:
-    // Executed whenever an entity event is receieved.
+    // Executed whenever an ServerEntity event is receieved.
     virtual void Event(int32_t number) = 0;
 };
 

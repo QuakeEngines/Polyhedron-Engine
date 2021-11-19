@@ -490,7 +490,7 @@ static void setup_shadow(void)
 
     GL_MultMatrix(tmp, glr.viewmatrix, matrix);
 
-    // rotate for entity
+    // rotate for ServerEntity
     matrix[0] = glr.entaxis[0][0];
     matrix[4] = glr.entaxis[1][0];
     matrix[8] = glr.entaxis[2][0];
@@ -551,7 +551,7 @@ static void draw_shadow(maliasmesh_t *mesh)
 
 static int texnum_for_mesh(maliasmesh_t *mesh)
 {
-    r_entity_t *ent = glr.ent;
+    r_ServerEntity_t *ent = glr.ent;
 
     if (ent->flags & RF_SHELL_MASK)
         return TEXNUM_WHITE;
@@ -577,7 +577,7 @@ static void draw_alias_mesh(maliasmesh_t *mesh)
 {
     glStateBits_t state = GLS_DEFAULT;
 
-    // fall back to entity matrix
+    // fall back to ServerEntity matrix
     GL_LoadMatrix(glr.entmatrix);
 
     if (shadelight)
@@ -627,7 +627,7 @@ static void draw_alias_mesh(maliasmesh_t *mesh)
 
 void GL_DrawAliasModel(model_t *model)
 {
-    r_entity_t *ent = glr.ent;
+    r_ServerEntity_t *ent = glr.ent;
     glCullResult_t cull;
     int i;
 
@@ -689,7 +689,7 @@ void GL_DrawAliasModel(model_t *model)
 	if (ent->scale > 0.f)
 		scale = ent->scale;
 
-    GL_RotateForEntity(origin, scale);
+    GL_RotateForServerEntity(origin, scale);
 
     if ((ent->flags & (RenderEffects::WeaponModel | RF_LEFTHAND)) ==
         (RenderEffects::WeaponModel | RF_LEFTHAND)) {

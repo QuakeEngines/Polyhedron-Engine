@@ -57,14 +57,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 
 //=============================================================================
-
-// N&C: Most structures related to the client have been moved over here.
-// They are shared to the client game dll, since it is tightly coupled.
 #include "shared/cltypes.h"
-
-// N&C: TODO: REMOVE ONCE ALL OF THIS HAS MOVED TO THE GAME MODULE.
-extern explosion_t  cl_explosions[MAX_EXPLOSIONS];
-extern cl_entity_t  cl_entities[MAX_EDICTS];
 
 extern    ClientState    cl;
 extern    ClientShared   cs;
@@ -457,12 +450,12 @@ void CL_DeltaFrame(void);
 void CL_AddEntities(void);
 
 #ifdef _DEBUG
-void CL_CheckEntityPresent(int entnum, const char *what);
+void CL_CheckServerEntityPresent(int entnum, const char *what);
 #endif
 
 // the sound code makes callbacks to the client for entitiy position
 // information, so entities can be dynamically re-spatialized
-vec3_t CL_GetEntitySoundOrigin(int ent);
+vec3_t CL_GetServerEntitySoundOrigin(int ent);
 vec3_t CL_GetViewVelocity(void);
 
 //
@@ -474,7 +467,7 @@ extern    qhandle_t gun_model;
 void V_Init(void);
 void V_Shutdown(void);
 void V_RenderView(void);
-//void V_AddEntity(r_entity_t *ent);
+//void V_AddServerEntity(r_ServerEntity_t *ent);
 //void V_AddParticle(rparticle_t *p);
 //#if USE_DLIGHTS
 //void V_AddLight(const vec3_t &org, float intensity, float r, float g, float b);

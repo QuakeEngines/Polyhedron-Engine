@@ -20,8 +20,8 @@
 //===============
 // FuncExplosive::FuncExplosive
 //===============
-FuncExplosive::FuncExplosive( Entity* entity ) 
-	: Base( entity ) {
+FuncExplosive::FuncExplosive( ServerEntity* ServerEntity ) 
+	: Base( ServerEntity ) {
 }
 
 //===============
@@ -35,7 +35,7 @@ void FuncExplosive::Spawn() {
     SetModel( GetModel() );
 
     if ( GetSpawnFlags() & SF_StartDeactivated ) {
-        SetServerFlags( EntityServerFlags::NoClient );
+        SetServerFlags( ServerEntityServerFlags::NoClient );
         SetSolid( Solid::Not );
         SetUseCallback( &FuncExplosive::ExplosiveAppearUse );
     } else {
@@ -46,9 +46,9 @@ void FuncExplosive::Spawn() {
     }
 
     if ( GetSpawnFlags() & SF_Animated ) {
-        serverEntity->state.effects |= EntityEffectType::AnimCycleAll2hz;
+        serverEntity->state.effects |= ServerEntityEffectType::AnimCycleAll2hz;
     } else if ( GetSpawnFlags() & SF_AnimatedFast ) {
-        serverEntity->state.effects |= EntityEffectType::AnimCycleAll30hz;
+        serverEntity->state.effects |= ServerEntityEffectType::AnimCycleAll30hz;
     }
 
     if ( useFunction != &FuncExplosive::ExplosiveUse ) {
@@ -138,8 +138,8 @@ void FuncExplosive::ExplosiveUse( SVGBaseEntity* other, SVGBaseEntity* activator
 //===============
 void FuncExplosive::ExplosiveAppearUse( SVGBaseEntity* other, SVGBaseEntity* activator ) {
     SetSolid( Solid::BSP );
-    SetServerFlags( GetServerFlags() & ~EntityServerFlags::NoClient );
+    SetServerFlags( GetServerFlags() & ~ServerEntityServerFlags::NoClient );
     SetUseCallback( nullptr );
     SVG_KillBox( this );
-    LinkEntity();
+    LinkServerEntity();
 }

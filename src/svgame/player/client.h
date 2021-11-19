@@ -11,20 +11,20 @@
 
 class PlayerClient;
 
-qboolean SVG_ClientConnect(Entity* ent, char* userinfo);
-void SVG_ClientDisconnect(Entity* ent);
+qboolean SVG_ClientConnect(ServerEntity* ent, char* userinfo);
+void SVG_ClientDisconnect(ServerEntity* ent);
 
-void SVG_HUD_BeginIntermission(Entity* targ);
+void SVG_HUD_BeginIntermission(ServerEntity* targ);
 
 // Tosses the client weapon.
 void SVG_TossClientWeapon(PlayerClient* playerClient);
 
-void SVG_ClientBegin(Entity* ent);
-void SVG_ClientCommand(Entity* ent);
-void SVG_ClientUserinfoChanged(Entity* ent, char* userinfo);
+void SVG_ClientBegin(ServerEntity* ent);
+void SVG_ClientCommand(ServerEntity* ent);
+void SVG_ClientUserinfoChanged(ServerEntity* ent, char* userinfo);
 
 //void SVG_ClientBeginServerFrame(SVGBaseEntity* ent); // WID: Moved to gamemodes.
-void SVG_ClientThink(Entity* ent, ClientMoveCommand* cmd);
+void SVG_ClientThink(ServerEntity* ent, ClientMoveCommand* cmd);
 
 void SVG_ClientEndServerFrames(void);
 

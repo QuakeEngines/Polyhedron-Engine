@@ -51,7 +51,7 @@ void Blaster_Fire(PlayerClient* ent, const vec3_t &g_offset, int damage, qboolea
 
     // send muzzle flash
     gi.WriteByte(SVG_CMD_MUZZLEFLASH);
-    gi.WriteShort(ent->GetServerEntity() - g_entities);
+    gi.WriteShort(ent->GetServerServerEntity() - g_entities);
     gi.WriteByte(MuzzleFlashType::Blaster | is_silenced);
     vec3_t origin = ent->GetOrigin();
     gi.Multicast(origin, MultiCast::PVS);
@@ -68,7 +68,7 @@ void Weapon_Blaster_Fire(PlayerClient *ent)
         damage = 15;
     else
         damage = 10;
-    Blaster_Fire(ent, vec3_zero(), damage, false, EntityEffectType::Blaster);
+    Blaster_Fire(ent, vec3_zero(), damage, false, ServerEntityEffectType::Blaster);
     ent->GetClient()->playerState.gunFrame++;
 }
 

@@ -107,7 +107,7 @@ struct dmd2header_s;
 qerror_t MOD_ValidateMD2(struct dmd2header_s *header, size_t length);
 
 qerror_t MOD_LoadIQM_Base(model_t* mod, const void* rawdata, size_t length, const char* mod_name);
-qboolean R_ComputeIQMTransforms(const iqm_model_t* model, const r_entity_t* entity, float* pose_matrices);
+qboolean R_ComputeIQMTransforms(const iqm_model_t* model, const r_ServerEntity_t* ServerEntity, float* pose_matrices);
 
 // these are implemented in [gl,sw]_models.c
 typedef qerror_t(*mod_load_t)(model_t*, const void*, size_t, const char*);

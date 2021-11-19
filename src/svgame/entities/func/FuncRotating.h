@@ -5,7 +5,7 @@ class SVGBaseMover;
 
 class FuncRotating : public SVGBaseMover {
 public:
-	FuncRotating( Entity* entity );
+	FuncRotating( ServerEntity* ServerEntity );
 	virtual ~FuncRotating() = default;
 
 	DefineMapClass( "func_rotating", FuncRotating, SVGBaseMover );

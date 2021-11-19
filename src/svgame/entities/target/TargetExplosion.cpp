@@ -16,8 +16,8 @@
 //===============
 // TargetExplosion::ctor
 //===============
-TargetExplosion::TargetExplosion( Entity* entity )
-	: Base( entity ) {
+TargetExplosion::TargetExplosion( ServerEntity* ServerEntity )
+	: Base( ServerEntity ) {
 
 }
 
@@ -26,7 +26,7 @@ TargetExplosion::TargetExplosion( Entity* entity )
 //===============
 void TargetExplosion::Spawn() {
 	SetUseCallback( &TargetExplosion::ExplosionUse );
-	SetServerFlags( EntityServerFlags::NoClient );
+	SetServerFlags( ServerEntityServerFlags::NoClient );
 }
 
 //===============
@@ -48,8 +48,8 @@ void TargetExplosion::ExplosionUse( SVGBaseEntity* other, SVGBaseEntity* activat
 // TargetExplosion::ExplosionThink
 //===============
 void TargetExplosion::ExplosionThink() {
-	gi.WriteByte( SVG_CMD_TEMP_ENTITY );
-	gi.WriteByte( TempEntityEvent::Explosion1 );
+	gi.WriteByte( SVG_CMD_TEMP_ServerEntity );
+	gi.WriteByte( TempServerEntityEvent::Explosion1 );
 	gi.WriteVector3( GetOrigin() );
 	gi.Multicast( GetOrigin(), MultiCast::PHS );
 

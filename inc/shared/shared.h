@@ -493,12 +493,12 @@ typedef struct file_info_s {
 //=============================================================================
 //
 //-----------------
-// EntityState->renderEffects
+// ServerEntityState->renderEffects
 //
-// The render effects are useful for tweaking the way how an entity is displayed.
+// The render effects are useful for tweaking the way how an ServerEntity is displayed.
 // It may be favored for it to only be visible in mirrors, or fullbright, name it.
 // 
-// This is t he place to look for in-game entity rendering effects to apply.
+// This is t he place to look for in-game ServerEntity rendering effects to apply.
 //-----------------
 typedef enum {
     ViewerModel     = (1 << 0),     // Don't draw through eyes, only mirrors.

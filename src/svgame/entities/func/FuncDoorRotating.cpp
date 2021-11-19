@@ -23,8 +23,8 @@
 //===============
 // FuncDoorRotating::ctor
 //===============
-FuncDoorRotating::FuncDoorRotating( Entity* entity )
-	: Base( entity ) {
+FuncDoorRotating::FuncDoorRotating( ServerEntity* ServerEntity )
+	: Base( ServerEntity ) {
 
 }
 
@@ -72,7 +72,7 @@ void FuncDoorRotating::Spawn() {
 	moveInfo.endAngles = GetEndPosition();
 	moveInfo.dir = moveDirection;
 
-	LinkEntity();
+	LinkServerEntity();
 }
 
 //===============

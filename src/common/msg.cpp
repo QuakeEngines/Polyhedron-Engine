@@ -42,7 +42,7 @@ byte        msg_write_buffer[MAX_MSGLEN];
 SizeBuffer   msg_read;
 byte        msg_read_buffer[MAX_MSGLEN];
 
-const PackedEntity   nullEntityState = {};
+const PackedServerEntity   nullServerEntityState = {};
 const PlayerState    nullPlayerState = {};
 const ClientMoveCommand         nullUserCmd = {};
 
@@ -282,9 +282,9 @@ int MSG_WriteDeltaClientMoveCommand(const ClientMoveCommand* from, const ClientM
 
 #endif // USE_CLIENT
 
-void MSG_PackEntity(PackedEntity* out, const EntityState* in)
+void MSG_PackServerEntity(PackedServerEntity* out, const ServerEntityState* in)
 {
-    // allow 0 to accomodate empty entityBaselines
+    // allow 0 to accomodate empty ServerEntityBaselines
     if (in->number < 0 || in->number >= MAX_EDICTS)
         Com_Error(ERR_DROP, "%s: bad number: %d", __func__, in->number);
 
@@ -306,9 +306,9 @@ void MSG_PackEntity(PackedEntity* out, const EntityState* in)
     out->eventID = in->eventID;
 }
 
-void MSG_WriteDeltaEntity(const PackedEntity* from,
-    const PackedEntity* to,
-    EntityStateMessageFlags          flags)
+void MSG_WriteDeltaServerEntity(const PackedServerEntity* from,
+    const PackedServerEntity* to,
+    ServerEntityStateMessageFlags          flags)
 {
     uint32_t    bits, mask;
 
@@ -332,14 +332,14 @@ void MSG_WriteDeltaEntity(const PackedEntity* from,
         else
             MSG_WriteByte(from->number);
 
-        return; // remove entity
+        return; // remove ServerEntity
     }
 
     if (to->number < 1 || to->number >= MAX_EDICTS)
         Com_Error(ERR_DROP, "%s: bad number: %d", __func__, to->number);
 
     if (!from)
-        from = &nullEntityState;
+        from = &nullServerEntityState;
 
     // send an update
     bits = 0;
@@ -360,7 +360,7 @@ void MSG_WriteDeltaEntity(const PackedEntity* from,
         if (!EqualEpsilonf(to->angles[2], from->angles[2]))
             bits |= U_ANGLE_Z;
 
-        if (flags & MSG_ES_NEWENTITY) {
+        if (flags & MSG_ES_NEWServerEntity) {
             if (!EqualEpsilonf(to->oldOrigin[0], from->origin[0]) ||
                 !EqualEpsilonf(to->oldOrigin[1], from->origin[1]) ||
                 !EqualEpsilonf(to->oldOrigin[2], from->origin[2]))
@@ -1000,12 +1000,12 @@ void MSG_ReadDeltaClientMoveCommand(const ClientMoveCommand* from, ClientMoveCom
 
 /*
 =================
-MSG_ParseEntityBits
+MSG_ParseServerEntityBits
 
-Returns the entity number and the header bits
+Returns the ServerEntity number and the header bits
 =================
 */
-int MSG_ParseEntityBits(int* bits)
+int MSG_ParseServerEntityBits(int* bits)
 {
     int         b, total;
     int         number;
@@ -1036,19 +1036,19 @@ int MSG_ParseEntityBits(int* bits)
 
 /*
 ==================
-MSG_ParseDeltaEntity
+MSG_ParseDeltaServerEntity
 
-Can go from either a baseline or a previous packet_entity
+Can go from either a baseline or a previous packet_ServerEntity
 ==================
 */
-void MSG_ParseDeltaEntity(const EntityState* from, EntityState* to, int number, int bits, EntityStateMessageFlags flags) {
+void MSG_ParseDeltaServerEntity(const ServerEntityState* from, ServerEntityState* to, int number, int bits, ServerEntityStateMessageFlags flags) {
     // Sanity checks.
     if (!to) {
         Com_Error(ERR_DROP, "%s: NULL", __func__);
     }
 
     if (number < 1 || number >= MAX_EDICTS) {
-        Com_Error(ERR_DROP, "%s: bad entity number: %d", __func__, number);
+        Com_Error(ERR_DROP, "%s: bad ServerEntity number: %d", __func__, number);
     }
 
     // Set everything to the state we are delta'ing from
@@ -1364,7 +1364,7 @@ void MSG_ShowDeltaUsercmdBits(int bits)
 
 #if USE_CLIENT
 
-void MSG_ShowDeltaEntityBits(int bits)
+void MSG_ShowDeltaServerEntityBits(int bits)
 {
 #define S(b,s) if(bits&U_##b) SHOWBITS(s)
     S(MODEL, "modelIndex");
@@ -1442,7 +1442,7 @@ const char* MSG_ServerCommandString(int cmd)
             // N&C: Protocol todo: add a game callback for this...?
             //S(muzzleflash)
             //S(muzzleflash2)
-            //S(temp_entity)
+            //S(temp_ServerEntity)
             //S(layout)
             //S(inventory)
             S(nop)

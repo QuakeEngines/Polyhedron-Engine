@@ -49,7 +49,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 // The game can override any of the settings in place
 // (forcing skins or names, etc) before copying it off.
 //================
-void SVG_ClientUserinfoChanged(Entity* ent, char* userinfo) {
+void SVG_ClientUserinfoChanged(ServerEntity* ent, char* userinfo) {
     if (!ent)
         return;
 
@@ -69,9 +69,9 @@ void SVG_ClientUserinfoChanged(Entity* ent, char* userinfo) {
 // we use carnal knowledge of the maps to fix the coop spot targetnames to match
 // that of the nearest named single player spot
 
-void SP_FixCoopSpots(Entity *self)
+void SP_FixCoopSpots(ServerEntity *self)
 {
-    Entity *spot;
+    ServerEntity *spot;
     vec3_t  d;
 
     spot = NULL;
@@ -98,7 +98,7 @@ void SP_FixCoopSpots(Entity *self)
 void SVG_TossClientWeapon(PlayerClient *playerClient)
 {
     gitem_t     *item;
-    Entity     *drop;
+    ServerEntity     *drop;
     float       spread = 1.5f;
 
     if (!deathmatch->value)
@@ -112,7 +112,7 @@ void SVG_TossClientWeapon(PlayerClient *playerClient)
 
     if (item) {
         //playerClient->GetClient()->aimAngles[vec3_t::Yaw] -= spread;
-        //drop = SVG_DropItem(playerClient->GetServerEntity(), item);
+        //drop = SVG_DropItem(playerClient->GetServerServerEntity(), item);
         //playerClient->GetClient()->aimAngles[vec3_t::Yaw] += spread;
         //drop->spawnFlags = ItemSpawnFlags::DroppedPlayerItem;
     }
@@ -133,44 +133,44 @@ edicts are wiped.
 void SVG_SaveClientData(void)
 {
     int     i;
-    Entity *ent;
+    ServerEntity *ent;
 
     for (i = 0 ; i < game.maximumClients ; i++) {
         ent = &g_entities[1 + i];
         if (!ent->inUse)
             continue;
-        if (!ent->classEntity)
+        if (!ent->classServerEntity)
             continue;
-        game.clients[i].persistent.health = ent->classEntity->GetHealth();
-        game.clients[i].persistent.maxHealth = ent->classEntity->GetMaxHealth();
-        game.clients[i].persistent.savedFlags = (ent->classEntity->GetFlags() & (EntityFlags::GodMode | EntityFlags::NoTarget | EntityFlags::PowerArmor));
+        game.clients[i].persistent.health = ent->classServerEntity->GetHealth();
+        game.clients[i].persistent.maxHealth = ent->classServerEntity->GetMaxHealth();
+        game.clients[i].persistent.savedFlags = (ent->classServerEntity->GetFlags() & (ServerEntityFlags::GodMode | ServerEntityFlags::NoTarget | ServerEntityFlags::PowerArmor));
         if (coop->value && ent->client)
             game.clients[i].persistent.score = ent->client->respawn.score;
     }
 }
 
-void SVG_FetchClientData(Entity *ent)
+void SVG_FetchClientData(ServerEntity *ent)
 {
     if (!ent)
         return;
 
-    if (!ent->classEntity)
+    if (!ent->classServerEntity)
         return;
 
-    ent->classEntity->SetHealth(ent->client->persistent.health);
-    ent->classEntity->SetMaxHealth(ent->client->persistent.maxHealth);
-    ent->classEntity->SetFlags(ent->classEntity->GetFlags() | ent->client->persistent.savedFlags);
+    ent->classServerEntity->SetHealth(ent->client->persistent.health);
+    ent->classServerEntity->SetMaxHealth(ent->client->persistent.maxHealth);
+    ent->classServerEntity->SetFlags(ent->classServerEntity->GetFlags() | ent->client->persistent.savedFlags);
     if (coop->value && ent->client)
         ent->client->respawn.score = ent->client->persistent.score;
 }
 
 //======================================================================
 
-void body_die(Entity *self, Entity *inflictor, Entity *attacker, int damage, const vec3_t& point)
+void body_die(ServerEntity *self, ServerEntity *inflictor, ServerEntity *attacker, int damage, const vec3_t& point)
 {
     //int n;
 
-    //if (self->classEntity && self->classEntity->GetHealth() < -40) {
+    //if (self->classServerEntity && self->classServerEntity->GetHealth() < -40) {
     //    gi.Sound(self, CHAN_BODY, gi.SoundIndex("misc/udeath.wav"), 1, ATTN_NORM, 0);
     //    for (n = 0; n < 4; n++)
     //        SVG_ThrowGib(self, "models/objects/gibs/sm_meat/tris.md2", damage, GIB_ORGANIC);
@@ -184,7 +184,7 @@ void body_die(Entity *self, Entity *inflictor, Entity *attacker, int damage, con
 * only called when persistent.isSpectator changes
 * note that resp.isSpectator should be the opposite of persistent.isSpectator here
 */
-void spectator_respawn(Entity *ent)
+void spectator_respawn(ServerEntity *ent)
 {
     int i, numspec;
 
@@ -245,7 +245,7 @@ void spectator_respawn(Entity *ent)
     // clear client on respawn
     ent->client->respawn.score = ent->client->persistent.score = 0;
 
-    ent->serverFlags &= ~EntityServerFlags::NoClient;
+    ent->serverFlags &= ~ServerEntityServerFlags::NoClient;
     game.gameMode->PutClientInServer(ent);
 
     // add a teleportation effect
@@ -279,9 +279,9 @@ A client has just connected to the server in
 deathmatch mode, so clear everything out before starting them.
 =====================
 */
-void SVG_ClientBeginDeathmatch(Entity *ent)
+void SVG_ClientBeginDeathmatch(ServerEntity *ent)
 {
-    //SVG_InitEntity(ent);
+    //SVG_InitServerEntity(ent);
 
     //game.gameMode->InitializeClientRespawnData(ent->client);
 
@@ -315,9 +315,9 @@ to be placed into the game.  This will happen every level load.
 */
 extern void DebugShitForEntitiesLulz();
 
-void SVG_ClientBegin(Entity *ent)
+void SVG_ClientBegin(ServerEntity *ent)
 {
-    // Fetch this entity's client.
+    // Fetch this ServerEntity's client.
     ent->client = game.clients + (ent - g_entities - 1);
 
     // Let the game mode decide from here on out.
@@ -338,7 +338,7 @@ Changing levels will NOT cause this to be called again, but
 loadgames will.
 ============
 */
-qboolean SVG_ClientConnect(Entity *ent, char *userinfo)
+qboolean SVG_ClientConnect(ServerEntity *ent, char *userinfo)
 {
     return game.gameMode->ClientConnect(ent, userinfo);
 }
@@ -351,19 +351,19 @@ Called when a player drops from the server.
 Will not be called between levels.
 ============
 */
-void SVG_ClientDisconnect(Entity *ent)
+void SVG_ClientDisconnect(ServerEntity *ent)
 {
     //int     playernum;
 
-    // Ensure this entity has a client.
+    // Ensure this ServerEntity has a client.
     if (!ent->client)
         return;
-    // Ensure it has a class entity also.
-    if (!ent->classEntity)
+    // Ensure it has a class ServerEntity also.
+    if (!ent->classServerEntity)
         return;
 
     // Since it does, we pass it on to the game mode.
-    game.gameMode->ClientDisconnect((PlayerClient*)ent->classEntity);
+    game.gameMode->ClientDisconnect((PlayerClient*)ent->classServerEntity);
 
     // FIXME: don't break skins on corpses, etc
     //playernum = ent-g_entities-1;
@@ -374,12 +374,12 @@ void SVG_ClientDisconnect(Entity *ent)
 //==============================================================
 
 
-Entity *pm_passent;
+ServerEntity *pm_passent;
 
 // pmove doesn't need to know about passent and contentmask
 trace_t q_gameabi PM_Trace(const vec3_t &start, const vec3_t &mins, const vec3_t &maxs, const vec3_t &end)
 {
-    if (pm_passent->classEntity && pm_passent->classEntity->GetHealth() > 0)
+    if (pm_passent->classServerEntity && pm_passent->classServerEntity->GetHealth() > 0)
         return gi.Trace(start, mins, maxs, end, pm_passent, CONTENTS_MASK_PLAYERSOLID);
     else
         return gi.Trace(start, mins, maxs, end, pm_passent, CONTENTS_MASK_DEADSOLID);
@@ -410,11 +410,11 @@ This will be called once for each client frame, which will
 usually be a couple times for each server frame.
 ==============
 */
-void SVG_ClientThink(Entity *serverEntity, ClientMoveCommand *moveCommand)
+void SVG_ClientThink(ServerEntity *serverEntity, ClientMoveCommand *moveCommand)
 {
     ServersClient* client = nullptr;
-    PlayerClient *classEntity = nullptr;
-    Entity* other = nullptr;
+    PlayerClient *classServerEntity = nullptr;
+    ServerEntity* other = nullptr;
 
 
     PlayerMove pm = {};
@@ -426,17 +426,17 @@ void SVG_ClientThink(Entity *serverEntity, ClientMoveCommand *moveCommand)
     if (!serverEntity->client)
         Com_Error(ErrorType::ERR_DROP, "%s: *ent has no client to think with!\n", __FUNCTION__);
 
-    if (!serverEntity->classEntity)
+    if (!serverEntity->classServerEntity)
         return;
 
-    // Store the current entity to be run from SVG_RunFrame.
-    level.currentEntity = serverEntity->classEntity;
+    // Store the current ServerEntity to be run from SVG_RunFrame.
+    level.currentServerEntity = serverEntity->classServerEntity;
 
-    // Fetch the entity client.
+    // Fetch the ServerEntity client.
     client = serverEntity->client;
 
-    // Fetch the class entity.
-    classEntity = (PlayerClient*)serverEntity->classEntity;
+    // Fetch the class ServerEntity.
+    classServerEntity = (PlayerClient*)serverEntity->classServerEntity;
 
     if (level.intermission.time) {
         client->playerState.pmove.type = EnginePlayerMoveType::Freeze;
@@ -459,13 +459,13 @@ void SVG_ClientThink(Entity *serverEntity, ClientMoveCommand *moveCommand)
         // set up for pmove
         memset(&pm, 0, sizeof(pm));
 
-        if ( classEntity->GetMoveType() == MoveType::NoClip )
+        if ( classServerEntity->GetMoveType() == MoveType::NoClip )
             client->playerState.pmove.type = PlayerMoveType::Noclip;
-        else if ( classEntity->GetMoveType() == MoveType::Spectator )
+        else if ( classServerEntity->GetMoveType() == MoveType::Spectator )
             client->playerState.pmove.type = PlayerMoveType::Spectator;
-        else if (classEntity->GetModelIndex() != 255 )
+        else if (classServerEntity->GetModelIndex() != 255 )
             client->playerState.pmove.type = EnginePlayerMoveType::Gib;
-        else if ( classEntity->GetDeadFlag() )
+        else if ( classServerEntity->GetDeadFlag() )
             client->playerState.pmove.type = EnginePlayerMoveType::Dead;
         else
             client->playerState.pmove.type = PlayerMoveType::Normal;
@@ -475,14 +475,14 @@ void SVG_ClientThink(Entity *serverEntity, ClientMoveCommand *moveCommand)
         // Copy over the latest playerstate its pmove state.
         pm.state = client->playerState.pmove;
 
-        // Move over entity state values into the player move state so it is up to date.
-        pm.state.origin = classEntity->GetOrigin();
-        pm.state.velocity = classEntity->GetVelocity();
+        // Move over ServerEntity state values into the player move state so it is up to date.
+        pm.state.origin = classServerEntity->GetOrigin();
+        pm.state.velocity = classServerEntity->GetVelocity();
         pm.moveCommand = *moveCommand;
-        if (classEntity->GetGroundEntity())
-            pm.groundEntityPtr = classEntity->GetGroundEntity()->GetServerEntity();
+        if (classServerEntity->GetGroundServerEntity())
+            pm.groundServerEntityPtr = classServerEntity->GetGroundServerEntity()->GetServerServerEntity();
         else
-            pm.groundEntityPtr = nullptr;
+            pm.groundServerEntityPtr = nullptr;
 
         pm.Trace = PM_Trace;
         pm.PointContents = gi.PointContents;
@@ -493,25 +493,25 @@ void SVG_ClientThink(Entity *serverEntity, ClientMoveCommand *moveCommand)
         // Save client pmove results.
         client->playerState.pmove = pm.state;
 
-        // Move over needed results to the entity and its state.
-        classEntity->SetOrigin(pm.state.origin);
-        classEntity->SetVelocity(pm.state.velocity);
-        classEntity->SetMins(pm.mins);
-        classEntity->SetMaxs(pm.maxs);
-        classEntity->SetViewHeight(pm.state.viewOffset[2]);
-        classEntity->SetWaterLevel(pm.waterLevel);
-        classEntity->SetWaterType(pm.waterType);
+        // Move over needed results to the ServerEntity and its state.
+        classServerEntity->SetOrigin(pm.state.origin);
+        classServerEntity->SetVelocity(pm.state.velocity);
+        classServerEntity->SetMins(pm.mins);
+        classServerEntity->SetMaxs(pm.maxs);
+        classServerEntity->SetViewHeight(pm.state.viewOffset[2]);
+        classServerEntity->SetWaterLevel(pm.waterLevel);
+        classServerEntity->SetWaterType(pm.waterType);
 
         // Check for jumping sound.
-        if (classEntity->GetGroundEntity() && !pm.groundEntityPtr && (pm.moveCommand.input.upMove >= 10) && (pm.waterLevel == 0)) {
+        if (classServerEntity->GetGroundServerEntity() && !pm.groundServerEntityPtr && (pm.moveCommand.input.upMove >= 10) && (pm.waterLevel == 0)) {
             gi.Sound(serverEntity, CHAN_VOICE, gi.SoundIndex("*jump1.wav"), 1, ATTN_NORM, 0);
-            SVG_PlayerNoise(classEntity, classEntity->GetOrigin(), PNOISE_SELF);
+            SVG_PlayerNoise(classServerEntity, classServerEntity->GetOrigin(), PNOISE_SELF);
         }
 
-        if (pm.groundEntityPtr)
-            classEntity->SetGroundEntity(pm.groundEntityPtr->classEntity);
+        if (pm.groundServerEntityPtr)
+            classServerEntity->SetGroundServerEntity(pm.groundServerEntityPtr->classServerEntity);
         else
-            classEntity->SetGroundEntity(nullptr);
+            classServerEntity->SetGroundServerEntity(nullptr);
 
         // Copy over the user command angles so they are stored for respawns.
         // (Used when going into a new map etc.)
@@ -519,12 +519,12 @@ void SVG_ClientThink(Entity *serverEntity, ClientMoveCommand *moveCommand)
         client->respawn.commandViewAngles[1] = moveCommand->input.viewAngles[1];
         client->respawn.commandViewAngles[2] = moveCommand->input.viewAngles[2];
 
-        // Store entity link count in case we have a ground entity pointer.
-        if (pm.groundEntityPtr)
-            classEntity->SetGroundEntityLinkCount(pm.groundEntityPtr->linkCount);
+        // Store ServerEntity link count in case we have a ground ServerEntity pointer.
+        if (pm.groundServerEntityPtr)
+            classServerEntity->SetGroundServerEntityLinkCount(pm.groundServerEntityPtr->linkCount);
 
-        // Special treatment for angles in case we are dead. Target the killer entity yaw angle.
-        if (classEntity->GetDeadFlag()) {
+        // Special treatment for angles in case we are dead. Target the killer ServerEntity yaw angle.
+        if (classServerEntity->GetDeadFlag()) {
             client->playerState.pmove.viewAngles[vec3_t::Roll] = 40;
             client->playerState.pmove.viewAngles[vec3_t::Pitch] = -15;
             client->playerState.pmove.viewAngles[vec3_t::Yaw] = client->killerYaw;
@@ -535,11 +535,11 @@ void SVG_ClientThink(Entity *serverEntity, ClientMoveCommand *moveCommand)
         }
 
         // Link it back in for collision testing.
-        classEntity->LinkEntity();
+        classServerEntity->LinkServerEntity();
 
         // Only check for trigger and object touches if not one of these movetypes.
-        if (classEntity->GetMoveType() != MoveType::NoClip && classEntity->GetMoveType() != MoveType::Spectator)
-            UTIL_TouchTriggers(classEntity);
+        if (classServerEntity->GetMoveType() != MoveType::NoClip && classServerEntity->GetMoveType() != MoveType::Spectator)
+            UTIL_TouchTriggers(classServerEntity);
 
         // touch other objects
         int32_t i = 0;
@@ -554,9 +554,9 @@ void SVG_ClientThink(Entity *serverEntity, ClientMoveCommand *moveCommand)
                             //if (!other->Touch)
                             //    continue;
                             //other->Touch(other, ent, NULL, NULL);
-            if (!other->classEntity)
+            if (!other->classServerEntity)
                 continue;
-            other->classEntity->Touch(other->classEntity, classEntity, NULL, NULL);
+            other->classServerEntity->Touch(other->classServerEntity, classServerEntity, NULL, NULL);
         }
 
     }
@@ -579,11 +579,11 @@ void SVG_ClientThink(Entity *serverEntity, ClientMoveCommand *moveCommand)
                 client->chaseTarget = NULL;
                 client->playerState.pmove.flags &= ~PMF_NO_PREDICTION;
             } else
-                SVG_GetChaseTarget(classEntity);
+                SVG_GetChaseTarget(classServerEntity);
 
         } else if (!client->weaponThunk) {
             client->weaponThunk = true;
-            SVG_ThinkWeapon(classEntity);
+            SVG_ThinkWeapon(classServerEntity);
         }
     }
 
@@ -592,9 +592,9 @@ void SVG_ClientThink(Entity *serverEntity, ClientMoveCommand *moveCommand)
             if (!(client->playerState.pmove.flags & PMF_JUMP_HELD)) {
                 client->playerState.pmove.flags |= PMF_JUMP_HELD;
                 if (client->chaseTarget)
-                    SVG_ChaseNext(classEntity);
+                    SVG_ChaseNext(classServerEntity);
                 else
-                    SVG_GetChaseTarget(classEntity);
+                    SVG_GetChaseTarget(classServerEntity);
             }
         } else
             client->playerState.pmove.flags &= ~PMF_JUMP_HELD;
@@ -604,6 +604,6 @@ void SVG_ClientThink(Entity *serverEntity, ClientMoveCommand *moveCommand)
     for (int i = 1; i <= maximumClients->value; i++) {
         other = g_entities + i;
         if (other->inUse && other->client->chaseTarget == serverEntity)
-            SVG_UpdateChaseCam(classEntity);
+            SVG_UpdateChaseCam(classServerEntity);
     }
 }

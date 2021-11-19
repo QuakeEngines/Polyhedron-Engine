@@ -6,7 +6,7 @@ class FuncDoor;
 
 class FuncDoorRotating : public FuncDoor {
 public:
-	FuncDoorRotating( Entity* entity );
+	FuncDoorRotating( ServerEntity* ServerEntity );
 	virtual ~FuncDoorRotating() = default;
 
 	DefineMapClass( "func_door_rotating", FuncDoorRotating, FuncDoor );

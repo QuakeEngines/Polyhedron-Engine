@@ -4,7 +4,7 @@
 //
 // WorldSpawn.h
 //
-// WorldSpawn entity definition.
+// WorldSpawn ServerEntity definition.
 //
 */
 #ifndef __SVGAME_ENTITIES_WORLDSPAWN_H__
@@ -15,7 +15,7 @@ class SVGBaseEntity;
 class WorldSpawn : public SVGBaseEntity {
 public:
     // Constructor/Deconstructor.
-    WorldSpawn(Entity* svEntity);
+    WorldSpawn(ServerEntity* svServerEntity);
     virtual ~WorldSpawn();
 
     DefineMapClass( "worldspawn", WorldSpawn, SVGBaseEntity );
@@ -24,9 +24,9 @@ public:
     // Interface functions. 
     //
     void Precache() override;    // Precaches data.
-    void Spawn() override;       // Spawns the entity.
-    void PostSpawn() override;   // PostSpawning is for handling entity references, since they may not exist yet during a spawn period.
-    void Think() override;       // General entity thinking routine.
+    void Spawn() override;       // Spawns the ServerEntity.
+    void PostSpawn() override;   // PostSpawning is for handling ServerEntity references, since they may not exist yet during a spawn period.
+    void Think() override;       // General ServerEntity thinking routine.
 
     void SpawnKey(const std::string& key, const std::string& value) override;
 

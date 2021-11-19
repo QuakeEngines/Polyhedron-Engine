@@ -4,7 +4,7 @@
 // clg_entities.c
 //
 //
-// Takes care of entity management.
+// Takes care of ServerEntity management.
 //
 #include "clg_local.h"
 #include "clg_effects.h"
@@ -19,7 +19,7 @@ extern qhandle_t cl_sfx_footsteps[4];
 //
 //==========================================================================
 //
-// ENTITY EVENTS
+// ServerEntity EVENTS
 //
 //==========================================================================
 //
@@ -34,7 +34,7 @@ extern qhandle_t cl_sfx_footsteps[4];
 //==========================================================================
 //
 
-// Use a static entity ID on some things because the renderer relies on eid to match between meshes
+// Use a static ServerEntity ID on some things because the renderer relies on eid to match between meshes
 // on the current and previous frames.
 #define RESERVED_ENTITIY_GUN 1
 #define RESERVED_ENTITIY_SHADERBALLS 2
@@ -85,12 +85,12 @@ static int adjust_shell_fx(int renderEffects)
 //
 void CLG_AddPacketEntities(void)
 {
-    r_entity_t            ent;
-    EntityState* s1;
+    r_ServerEntity_t            ent;
+    ServerEntityState* s1;
     float               autorotate;
     int                 i;
     int                 pnum;
-    cl_entity_t* cent;
+    ClientServerEntity* cent;
     int                 autoanim;
     ClientInfo* ci;
     unsigned int        effects, renderEffects;
@@ -105,10 +105,10 @@ void CLG_AddPacketEntities(void)
 
     for (pnum = 0; pnum < cl->frame.numEntities; pnum++) {
         // C++20: Had to be placed here because of label skip.
-        int base_entity_flags = 0;
+        int base_ServerEntity_flags = 0;
 
-        i = (cl->frame.firstEntity + pnum) & PARSE_ENTITIES_MASK;
-        s1 = &cl->entityStates[i];
+        i = (cl->frame.firstServerEntity + pnum) & PARSE_ENTITIES_MASK;
+        s1 = &cl->ServerEntityStates[i];
 
         cent = &cs->entities[s1->number];
         ent.id = cent->id + RESERVED_ENTITIY_COUNT;
@@ -119,13 +119,13 @@ void CLG_AddPacketEntities(void)
         //
         // Frame Animation Effects.
         //
-        if (effects & EntityEffectType::AnimCycleFrames01hz2)
+        if (effects & ServerEntityEffectType::AnimCycleFrames01hz2)
             ent.frame = autoanim & 1;
-        else if (effects & EntityEffectType::AnimCycleFrames23hz2)
+        else if (effects & ServerEntityEffectType::AnimCycleFrames23hz2)
             ent.frame = 2 + (autoanim & 1);
-        else if (effects & EntityEffectType::AnimCycleAll2hz)
+        else if (effects & ServerEntityEffectType::AnimCycleAll2hz)
             ent.frame = autoanim;
-        else if (effects & EntityEffectType::AnimCycleAll30hz)
+        else if (effects & ServerEntityEffectType::AnimCycleAll30hz)
             ent.frame = (cl->time / 33.33f); // 30 fps ( /50 would be 20 fps, etc. )
         else
             ent.frame = s1->frame;
@@ -153,8 +153,8 @@ void CLG_AddPacketEntities(void)
         else {
             if (s1->number == cl->frame.clientNumber + 1) {
                 // use predicted origin
-                VectorCopy(cl->playerEntityOrigin, ent.origin);
-                VectorCopy(cl->playerEntityOrigin, ent.oldorigin);
+                VectorCopy(cl->playerServerEntityOrigin, ent.origin);
+                VectorCopy(cl->playerServerEntityOrigin, ent.oldorigin);
             }
             else {
                 // interpolate origin
@@ -164,7 +164,7 @@ void CLG_AddPacketEntities(void)
             }
         }
 
-        // create a new entity
+        // create a new ServerEntity
 
         // tweak the color of beams
         if (renderEffects & RenderEffects::Beam) {
@@ -206,18 +206,18 @@ void CLG_AddPacketEntities(void)
             ent.alpha = 0.70;
 
         // render effects (fullbright, translucent, etc)
-        if ((effects & EntityEffectType::ColorShell))
-            ent.flags = 0;  // renderEffects go on color shell entity
+        if ((effects & ServerEntityEffectType::ColorShell))
+            ent.flags = 0;  // renderEffects go on color shell ServerEntity
         else
             ent.flags = renderEffects;
 
         // calculate angles
-        if (effects & EntityEffectType::Rotate) {  // some bonus items auto-rotate
+        if (effects & ServerEntityEffectType::Rotate) {  // some bonus items auto-rotate
             ent.angles[0] = 0;
             ent.angles[1] = autorotate;
             ent.angles[2] = 0;
         } else if (s1->number == cl->frame.clientNumber + 1) {
-            VectorCopy(cl->playerEntityAngles, ent.angles);      // use predicted angles
+            VectorCopy(cl->playerServerEntityAngles, ent.angles);      // use predicted angles
         } else { // interpolate angles
             LerpAngles(cent->prev.angles, cent->current.angles,
                 cl->lerpFraction, ent.angles);
@@ -228,12 +228,12 @@ void CLG_AddPacketEntities(void)
             }
         }
 
-        // Entity Effects for in case the entity is the actual client.
+        // ServerEntity Effects for in case the ServerEntity is the actual client.
         if (s1->number == cl->frame.clientNumber + 1) {
             if (!cl->thirdPersonView)
             {
                 if (vid_rtx->integer)
-                    base_entity_flags |= RenderEffects::ViewerModel;    // only draw from mirrors
+                    base_ServerEntity_flags |= RenderEffects::ViewerModel;    // only draw from mirrors
                 else
                     goto skip;
             }
@@ -256,16 +256,16 @@ void CLG_AddPacketEntities(void)
             goto skip;
         }
 
-        ent.flags |= base_entity_flags;
+        ent.flags |= base_ServerEntity_flags;
 
-        // in rtx mode, the base entity has the renderEffects for shells
-        if ((effects & EntityEffectType::ColorShell) && vid_rtx->integer) {
+        // in rtx mode, the base ServerEntity has the renderEffects for shells
+        if ((effects & ServerEntityEffectType::ColorShell) && vid_rtx->integer) {
             renderEffects = adjust_shell_fx(renderEffects);
             ent.flags |= renderEffects;
         }
 
         // add to refresh list
-        V_AddEntity(&ent);
+        V_AddServerEntity(&ent);
 
         // add dlights for flares
         model_t* model;
@@ -288,20 +288,20 @@ void CLG_AddPacketEntities(void)
             }
         }
 
-        // color shells generate a separate entity for the main model
-        if ((effects & EntityEffectType::ColorShell) && !vid_rtx->integer) {
+        // color shells generate a separate ServerEntity for the main model
+        if ((effects & ServerEntityEffectType::ColorShell) && !vid_rtx->integer) {
             renderEffects = adjust_shell_fx(renderEffects);
-            ent.flags = renderEffects | RenderEffects::Translucent | base_entity_flags;
+            ent.flags = renderEffects | RenderEffects::Translucent | base_ServerEntity_flags;
             ent.alpha = 0.30;
-            V_AddEntity(&ent);
+            V_AddServerEntity(&ent);
         }
 
         ent.skin = 0;       // never use a custom skin on others
         ent.skinNumber = 0;
-        ent.flags = base_entity_flags;
+        ent.flags = base_ServerEntity_flags;
         ent.alpha = 0;
 
-        // Add an entity to the current rendering frame that has model index 2 attached to it.
+        // Add an ServerEntity to the current rendering frame that has model index 2 attached to it.
         // Duplicate for linked models
         if (s1->modelIndex2) {
             if (s1->modelIndex2 == 255) {
@@ -327,38 +327,38 @@ void CLG_AddPacketEntities(void)
                 ent.flags = RenderEffects::Translucent;
             }
 
-            if ((effects & EntityEffectType::ColorShell) && vid_rtx->integer) {
+            if ((effects & ServerEntityEffectType::ColorShell) && vid_rtx->integer) {
                 ent.flags |= renderEffects;
             }
 
-            V_AddEntity(&ent);
+            V_AddServerEntity(&ent);
 
             //PGM - make sure these get reset.
-            ent.flags = base_entity_flags;
+            ent.flags = base_ServerEntity_flags;
             ent.alpha = 0;
         }
 
-        // Add an entity to the current rendering frame that has model index 3 attached to it.
+        // Add an ServerEntity to the current rendering frame that has model index 3 attached to it.
         if (s1->modelIndex3) {
             ent.model = cl->drawModels[s1->modelIndex3];
-            V_AddEntity(&ent);
+            V_AddServerEntity(&ent);
         }
 
-        // Add an entity to the current rendering frame that has model index 4 attached to it.
+        // Add an ServerEntity to the current rendering frame that has model index 4 attached to it.
         if (s1->modelIndex4) {
             ent.model = cl->drawModels[s1->modelIndex4];
-            V_AddEntity(&ent);
+            V_AddServerEntity(&ent);
         }
 
 
         // Add automatic particle trail effects where desired.
-        if (effects & ~EntityEffectType::Rotate) {
-            if (effects & EntityEffectType::Blaster) {
+        if (effects & ~ServerEntityEffectType::Rotate) {
+            if (effects & ServerEntityEffectType::Blaster) {
                 CLG_BlasterTrail(cent->lerpOrigin, ent.origin);
                 V_AddLight(ent.origin, 200, 0.6f, 0.4f, 0.12f);
-            } else if (effects & EntityEffectType::Gib) {
+            } else if (effects & ServerEntityEffectType::Gib) {
                 CLG_DiminishingTrail(cent->lerpOrigin, ent.origin, cent, effects);
-            } else if (effects & EntityEffectType::Torch) {
+            } else if (effects & ServerEntityEffectType::Torch) {
                 const float anim = sinf((float)ent.id + ((float)cl->time / 60.f + frand() * 3.3)) / (3.14356 - (frand() / 3.14356));
                 const float offset = anim * 0.0f;
                 const float brightness = anim * 1.2f + 1.6f;
@@ -374,11 +374,11 @@ void CLG_AddPacketEntities(void)
             }
         }
 
-        //Com_DPrint("[NORMAL] entity ID =%i - origin = [%f, %f, %f]\n", ent.id, ent.origin[0], ent.origin[1], ent.origin[1]);
+        //Com_DPrint("[NORMAL] ServerEntity ID =%i - origin = [%f, %f, %f]\n", ent.id, ent.origin[0], ent.origin[1], ent.origin[1]);
     skip:
         VectorCopy(ent.origin, cent->lerpOrigin);
 
-        //Com_DPrint("[SKIP] entity ID =%i - origin = [%f, %f, %f]\n", ent.id, ent.origin[0], ent.origin[1], ent.origin[1]);
+        //Com_DPrint("[SKIP] ServerEntity ID =%i - origin = [%f, %f, %f]\n", ent.id, ent.origin[0], ent.origin[1], ent.origin[1]);
     }
 }
 
@@ -412,7 +412,7 @@ void CLG_AddViewWeapon(void)
     PlayerState *oldPlayerState= &cl->oldframe.playerState;
 
     // Gun ViewModel.
-    r_entity_t gun = {
+    r_ServerEntity_t gun = {
         .model = (gun_model ? gun_model : 
         (cl->drawModels[currentPlayerState->gunIndex] ? cl->drawModels[currentPlayerState->gunIndex] : 0)),
         .id = RESERVED_ENTITIY_GUN,
@@ -488,18 +488,18 @@ void CLG_AddViewWeapon(void)
         gun.flags |= RenderEffects::Translucent;
     }
 
-    // same entity in rtx mode
+    // same ServerEntity in rtx mode
     if (vid_rtx->integer) {
         gun.flags |= shell_flags;
     }
 
-    V_AddEntity(&gun);
+    V_AddServerEntity(&gun);
 
-    // separate entity in non-rtx mode
+    // separate ServerEntity in non-rtx mode
     if (shell_flags && !vid_rtx->integer) {
         gun.alpha = 0.30f * cl_gunalpha->value;
         gun.flags |= shell_flags | RenderEffects::Translucent;
-        V_AddEntity(&gun);
+        V_AddServerEntity(&gun);
     }
 }
 
@@ -519,16 +519,16 @@ void CLG_AddEntities(void)
 
 //
 //===============
-// CLG_GetClientViewEntity
+// CLG_GetClientViewServerEntity
 // 
-// Returns the entity that is bound to the client's view.
+// Returns the ServerEntity that is bound to the client's view.
 //===============
 //
-cl_entity_t* CLG_GetClientViewEntity(void) {
+ClientServerEntity* CLG_GetClientViewServerEntity(void) {
     // Fetch clientnumber by default.
     int32_t index = cl->clientNumber;
 
-    // Fetch the chasing entity index if we are chasing.
+    // Fetch the chasing ServerEntity index if we are chasing.
     if (cl->frame.playerState.stats[STAT_CHASE]) {
         index = cl->frame.playerState.stats[STAT_CHASE] - ConfigStrings::PlayerSkins;
     }
@@ -538,19 +538,19 @@ cl_entity_t* CLG_GetClientViewEntity(void) {
 
 //
 //===============
-// CLG_IsClientViewEntity
+// CLG_IsClientViewServerEntity
 // 
-// Returns true if the specified entity is bound to the local client's view.
+// Returns true if the specified ServerEntity is bound to the local client's view.
 //===============
 //
-qboolean CLG_IsClientViewEntity(const cl_entity_t* ent) {
-    // If the entity number matches, then we're good.
+qboolean CLG_IsClientViewServerEntity(const clientServerEntity* ent) {
+    // If the ServerEntity number matches, then we're good.
     if (ent->current.number == cl->clientNumber + 1) {
         return true;
     }
 
-    // If not, then we are viewing an other client entity, check whether it is in corpse mode.
-    if ((ent->current.effects & EntityEffectType::Corpse) == 0) {
+    // If not, then we are viewing an other client ServerEntity, check whether it is in corpse mode.
+    if ((ent->current.effects & ServerEntityEffectType::Corpse) == 0) {
         // In case of no model index, we still want to validate some other cases.
         if (ent->current.modelIndex == 255) {
             if (ent->current.number == cl->clientNumber) {
@@ -566,51 +566,51 @@ qboolean CLG_IsClientViewEntity(const cl_entity_t* ent) {
         }
     }
 
-    // And if we came to this point, all bets are off, this is no client entity which we are viewing.
+    // And if we came to this point, all bets are off, this is no client ServerEntity which we are viewing.
     return false;
 }
 
 //
 //=============================================================================
 //
-// CLIENT MODULE ENTITY ENTRY FUNCTIONS.
+// CLIENT MODULE ServerEntity ENTRY FUNCTIONS.
 //
 //=============================================================================}
 //
 //===============
-// CLG_EntityEvent
+// CLG_ServerEntityEvent
 //
-// Handles specific events on an entity.
+// Handles specific events on an ServerEntity.
 //===============
 //
-void CLG_EntityEvent(int number) {
-    cl_entity_t *cent = &cs->entities[number];
+void CLG_ServerEntityEvent(int number) {
+    clientServerEntity *cent = &cs->entities[number];
     
     // EF_TELEPORTER acts like an event, but is not cleared each frame
-    if ((cent->current.effects & EntityEffectType::Teleporter) && CLG_FRAMESYNC()) {
+    if ((cent->current.effects & ServerEntityEffectType::Teleporter) && CLG_FRAMESYNC()) {
         CLG_TeleporterParticles(cent->current.origin);
     }
         
     switch (cent->current.eventID) {
-    case EntityEvent::ItemRespawn:
+    case ServerEntityEvent::ItemRespawn:
         clgi.S_StartSound(NULL, number, CHAN_WEAPON, clgi.S_RegisterSound("items/respawn1.wav"), 1, ATTN_IDLE, 0);
         CLG_ItemRespawnParticles(cent->current.origin);
         break;
-    case EntityEvent::PlayerTeleport:
+    case ServerEntityEvent::PlayerTeleport:
         clgi.S_StartSound(NULL, number, CHAN_WEAPON, clgi.S_RegisterSound("misc/tele1.wav"), 1, ATTN_IDLE, 0);
         CLG_TeleportParticles(cent->current.origin);
         break;
-    case EntityEvent::Footstep:
+    case ServerEntityEvent::Footstep:
         //if (cl_footsteps->integer)
             clgi.S_StartSound(NULL, number, CHAN_BODY, cl_sfx_footsteps[rand() & 3], 1, ATTN_NORM, 0);
         break;
-    case EntityEvent::FallShort:
+    case ServerEntityEvent::FallShort:
         clgi.S_StartSound(NULL, number, CHAN_AUTO, clgi.S_RegisterSound("player/land1.wav"), 1, ATTN_NORM, 0);
         break;
-    case EntityEvent::Fall:
+    case ServerEntityEvent::Fall:
         clgi.S_StartSound(NULL, number, CHAN_AUTO, clgi.S_RegisterSound("*fall2.wav"), 1, ATTN_NORM, 0);
         break;
-    case EntityEvent::FallFar:
+    case ServerEntityEvent::FallFar:
         clgi.S_StartSound(NULL, number, CHAN_AUTO, clgi.S_RegisterSound("*fall1.wav"), 1, ATTN_NORM, 0);
         break;
     }
@@ -725,15 +725,15 @@ void CLG_UpdateOrigin(void)
     // Calculate new client forward, right, and up vectors.
     vec3_vectors(cl->refdef.viewAngles, &cl->v_forward, &cl->v_right, &cl->v_up);
 
-    // Setup player entity origin and angles accordingly to update the client's listener origins with.
-    cl->playerEntityOrigin = cl->refdef.vieworg;
-    cl->playerEntityAngles = cl->refdef.viewAngles;
+    // Setup player ServerEntity origin and angles accordingly to update the client's listener origins with.
+    cl->playerServerEntityOrigin = cl->refdef.vieworg;
+    cl->playerServerEntityAngles = cl->refdef.viewAngles;
 
-    if (cl->playerEntityAngles[vec3_t::Pitch] > 180) {
-        cl->playerEntityAngles[vec3_t::Pitch] -= 360;
+    if (cl->playerServerEntityAngles[vec3_t::Pitch] > 180) {
+        cl->playerServerEntityAngles[vec3_t::Pitch] -= 360;
     }
 
-    cl->playerEntityAngles[vec3_t::Pitch] = cl->playerEntityAngles[vec3_t::Pitch] / 3;
+    cl->playerServerEntityAngles[vec3_t::Pitch] = cl->playerServerEntityAngles[vec3_t::Pitch] / 3;
 
     // Update the client's listener origin values.
     clgi.UpdateListenerOrigin();

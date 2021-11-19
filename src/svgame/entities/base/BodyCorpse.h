@@ -4,7 +4,7 @@
 //
 // BodyCorpse.h
 //
-// Class entity to accommodate body corpses with.
+// Class ServerEntity to accommodate body corpses with.
 // These serve for client entities when they die, and go into the body queue.
 //
 */
@@ -16,7 +16,7 @@ class SVGBaseEntity;
 class BodyCorpse : public SVGBaseEntity {
 public:
     // Constructor/Deconstructor.
-    BodyCorpse(Entity* svEntity);
+    BodyCorpse(ServerEntity* svServerEntity);
     virtual ~BodyCorpse();
 
     DefineClass(BodyCorpse, SVGBaseEntity);
@@ -25,10 +25,10 @@ public:
     // Interface functions. 
     //
     void Precache() override;    // Precaches data.
-    void Spawn() override;       // Spawns the entity.
-    void Respawn() override;     // Respawns the entity.
-    void PostSpawn() override;   // PostSpawning is for handling entity references, since they may not exist yet during a spawn period.
-    void Think() override;       // General entity thinking routine.
+    void Spawn() override;       // Spawns the ServerEntity.
+    void Respawn() override;     // Respawns the ServerEntity.
+    void PostSpawn() override;   // PostSpawning is for handling ServerEntity references, since they may not exist yet during a spawn period.
+    void Think() override;       // General ServerEntity thinking routine.
 
     void SpawnKey(const std::string& key, const std::string& value)  override;
 

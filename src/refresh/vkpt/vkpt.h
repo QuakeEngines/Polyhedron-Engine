@@ -433,7 +433,7 @@ typedef struct sun_light_s {
 
 void mult_matrix_matrix(mat4_t p, const mat4_t a, const mat4_t b);
 void mult_matrix_vector(mat4_t p, const mat4_t a, const vec4_t b);
-void create_entity_matrix(mat4_t matrix, r_entity_t* e, qboolean enable_left_hand);
+void create_ServerEntity_matrix(mat4_t matrix, r_ServerEntity_t* e, qboolean enable_left_hand);
 void create_projection_matrix(mat4_t matrix, float znear, float zfar, float fov_x, float fov_y);
 void create_view_matrix(mat4_t matrix, refdef_t* fd);
 void inverse(const mat4_t m, mat4_t inv);
@@ -483,7 +483,7 @@ typedef enum {
 	PROFILER_STOP,
 } VKPTProfilerAction;
 
-typedef struct EntityUploadInfo
+typedef struct ServerEntityUploadInfo
 {
 	uint32_t num_instances;
 	uint32_t num_vertices;
@@ -499,7 +499,7 @@ typedef struct EntityUploadInfo
 	uint32_t explosions_vertex_offset;
 	uint32_t explosions_vertex_num;
 	qboolean weapon_left_handed;
-} EntityUploadInfo;
+} ServerEntityUploadInfo;
 
 VkDescriptorSet qvk_get_current_desc_set_textures();
 
@@ -622,7 +622,7 @@ VkResult vkpt_pt_trace_primary_rays(VkCommandBuffer cmd_buf);
 VkResult vkpt_pt_trace_reflections(VkCommandBuffer cmd_buf, int bounce);
 VkResult vkpt_pt_trace_lighting(VkCommandBuffer cmd_buf, float num_bounce_rays);
 VkResult vkpt_pt_update_descripter_set_bindings(int idx);
-VkResult vkpt_pt_create_all_dynamic(VkCommandBuffer cmd_buf, int idx, const EntityUploadInfo* upload_info);
+VkResult vkpt_pt_create_all_dynamic(VkCommandBuffer cmd_buf, int idx, const ServerEntityUploadInfo* upload_info);
 
 VkResult vkpt_asvgf_initialize();
 VkResult vkpt_asvgf_destroy();
@@ -676,7 +676,7 @@ qboolean initialize_transparency();
 void destroy_transparency();
 
 void update_transparency(VkCommandBuffer command_buffer, const float* view_matrix,
-	const rparticle_t* particles, int particle_num, const r_entity_t* entities, int entity_num);
+	const rparticle_t* particles, int particle_num, const r_ServerEntity_t* entities, int ServerEntity_num);
 
 typedef enum {
 	VKPT_TRANSPARENCY_PARTICLES,
@@ -703,7 +703,7 @@ VkBufferView get_transparency_beam_color_buffer_view();
 VkBufferView get_transparency_sprite_info_buffer_view();
 VkBufferView get_transparency_beam_intersect_buffer_view();
 void get_transparency_counts(int* particle_num, int* beam_num, int* sprite_num);
-void vkpt_build_beam_lights(light_poly_t* light_list, int* num_lights, int max_lights, bsp_t *bsp, r_entity_t* entities, int num_entites, float adapted_luminance);
+void vkpt_build_beam_lights(light_poly_t* light_list, int* num_lights, int max_lights, bsp_t *bsp, r_ServerEntity_t* entities, int num_entites, float adapted_luminance);
 qboolean vkpt_build_cylinder_light(light_poly_t* light_list, int* num_lights, int max_lights, bsp_t *bsp, const vec3_t &begin, const vec3_t &end, const vec3_t &color, float radius);
 qboolean get_triangle_off_center(const float* positions, float* center, float* anti_center, float offset);
 

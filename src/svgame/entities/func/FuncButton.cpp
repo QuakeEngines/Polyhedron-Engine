@@ -20,8 +20,8 @@
 //===============
 // FuncButton::ctor
 //===============
-FuncButton::FuncButton( Entity* svEntity )
-	: SVGBaseMover( svEntity ) {
+FuncButton::FuncButton( ServerEntity* svServerEntity )
+	: SVGBaseMover( svServerEntity ) {
 
 }
 
@@ -39,7 +39,7 @@ void FuncButton::Spawn() {
 	Base::Spawn();
 
 	// Mappers set angles to determine the movement direction of the button,
-	// so we gotta set the movement direction, then zero the entity's angles
+	// so we gotta set the movement direction, then zero the ServerEntity's angles
 	SetMoveDirection( GetAngles() );
 	SetAngles( vec3_zero() );
 
@@ -70,7 +70,7 @@ void FuncButton::Spawn() {
 	SetStartPosition( GetOrigin() );
 	SetEndPosition( CalculateEndPosition() );
 
-	SetEffects( EntityEffectType::AnimCycleFrames01hz2 );
+	SetEffects( ServerEntityEffectType::AnimCycleFrames01hz2 );
 
 	if ( GetHealth() ) {
 		SetMaxHealth( GetHealth() );
@@ -94,7 +94,7 @@ void FuncButton::Spawn() {
 	moveInfo.endOrigin		= GetEndPosition();
 	moveInfo.endAngles		= GetAngles();
 
-	LinkEntity();
+	LinkServerEntity();
 }
 
 //===============
@@ -102,7 +102,7 @@ void FuncButton::Spawn() {
 //===============
 void FuncButton::SpawnKey( const std::string& key, const std::string& value ) {
 	// I think serverEntity variables should just be set in SVGBaseEntity::SpawnKey
-	// It doesn't make sense to set them only here, if these variables are available to every entity
+	// It doesn't make sense to set them only here, if these variables are available to every ServerEntity
 	if ( key == "speed" ) {
 		ParseFloatKeyValue( key, value, serverEntity->speed );
 	} else if ( key == "lip" ) {
@@ -115,8 +115,8 @@ void FuncButton::SpawnKey( const std::string& key, const std::string& value ) {
 //===============
 // FuncButton::OnButtonDone
 //===============
-void FuncButton::OnButtonDone( Entity* self ) {
-	FuncButton* button = static_cast<FuncButton*>(self->classEntity);
+void FuncButton::OnButtonDone( ServerEntity* self ) {
+	FuncButton* button = static_cast<FuncButton*>(self->classServerEntity);
 	button->ButtonDone();
 }
 
@@ -125,8 +125,8 @@ void FuncButton::OnButtonDone( Entity* self ) {
 //===============
 void FuncButton::ButtonDone() {
 	moveInfo.state = MoverState::Bottom;
-	serverEntity->state.effects &= ~(EntityEffectType::AnimCycleFrames23hz2);
-	serverEntity->state.effects |= EntityEffectType::AnimCycleFrames01hz2;
+	serverEntity->state.effects &= ~(ServerEntityEffectType::AnimCycleFrames23hz2);
+	serverEntity->state.effects |= ServerEntityEffectType::AnimCycleFrames01hz2;
 }
 
 //===============
@@ -145,8 +145,8 @@ void FuncButton::ButtonReturn() {
 //===============
 // FuncButton::OnButtonWait
 //===============
-void FuncButton::OnButtonWait( Entity* self ) {
-	FuncButton* button = static_cast<FuncButton*>(self->classEntity);
+void FuncButton::OnButtonWait( ServerEntity* self ) {
+	FuncButton* button = static_cast<FuncButton*>(self->classServerEntity);
 	button->ButtonWait();
 }
 
@@ -155,8 +155,8 @@ void FuncButton::OnButtonWait( Entity* self ) {
 //===============
 void FuncButton::ButtonWait() {
 	moveInfo.state = MoverState::Top;
-	serverEntity->state.effects &= ~(EntityEffectType::AnimCycleFrames01hz2);
-	serverEntity->state.effects |= EntityEffectType::AnimCycleFrames23hz2;
+	serverEntity->state.effects &= ~(ServerEntityEffectType::AnimCycleFrames01hz2);
+	serverEntity->state.effects |= ServerEntityEffectType::AnimCycleFrames23hz2;
 	SetFrame( 1 );
 
 	UseTargets( GetActivator() );
@@ -176,7 +176,7 @@ void FuncButton::ButtonFire() {
 	}
 
 	moveInfo.state = MoverState::Up;
-	if ( moveInfo.startSoundIndex && !(flags & EntityFlags::TeamSlave) ) {
+	if ( moveInfo.startSoundIndex && !(flags & ServerEntityFlags::TeamSlave) ) {
 		gi.Sound( serverEntity, CHAN_NO_PHS_ADD + CHAN_VOICE, moveInfo.startSoundIndex, 1, ATTN_STATIC, 0 );
 	}
 	

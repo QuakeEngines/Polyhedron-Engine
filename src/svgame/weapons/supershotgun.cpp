@@ -41,7 +41,7 @@ void weapon_supershotgun_fire(PlayerClient * ent)
     int         damage = 6;
     int         kick = 12;
 
-    ServersClient* client = ent->GetClient();
+    ServerClient* client = ent->GetClient();
 
     vec3_vectors(client->aimAngles, &forward, &right, NULL);
 
@@ -69,7 +69,7 @@ void weapon_supershotgun_fire(PlayerClient * ent)
 
     // send muzzle flash
     gi.WriteByte(SVG_CMD_MUZZLEFLASH);
-    gi.WriteShort(ent->GetServerEntity() - g_entities);
+    gi.WriteShort(ent->GetServerServerEntity() - g_entities);
     gi.WriteByte(MuzzleFlashType::SuperShotgun | is_silenced);
     vec3_t origin = ent->GetOrigin();
     gi.Multicast(origin, MultiCast::PVS);

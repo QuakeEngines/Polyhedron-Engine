@@ -55,7 +55,7 @@ qboolean static inline NAC_PROTOCOL_SUPPORTED(uint32_t x) {
 //
 // Protocol Configuration.
 //
-// Number of copies of EntityState to keep buffered.
+// Number of copies of ServerEntityState to keep buffered.
 constexpr int32_t UPDATE_BACKUP = 256;  // Must be Power Of Two. 
 constexpr int32_t UPDATE_MASK = (UPDATE_BACKUP - 1);
 
@@ -97,7 +97,7 @@ typedef enum {
     // these ops are known to the game dll
     //SVG_CMD_MUZZLEFLASH,
     //SVG_CMD_MUZZLEFLASH2,
-    //SVG_CMD_TEMP_ENTITY,
+    //SVG_CMD_TEMP_ServerEntity,
     //SVG_CMD_LAYOUT,
     //SVG_CMD_INVENTORY,
 
@@ -211,7 +211,7 @@ typedef enum {
 #define SND_VOLUME          (1<<0)  // a byte
 #define SND_ATTENUATION     (1<<1)  // a byte
 #define SND_POS             (1<<2)  // three coordinates
-#define SND_ENT             (1<<3)  // a short 0-2: channel, 3-12: entity
+#define SND_ENT             (1<<3)  // a short 0-2: channel, 3-12: ServerEntity
 #define SND_OFFSET          (1<<4)  // a byte, msec offset from frame start
 
 #define DEFAULT_SOUND_PACKET_VOLUME    1.0
@@ -219,7 +219,7 @@ typedef enum {
 
 //==============================================
 
-// EntityState communication
+// ServerEntityState communication
 
 // Try to pack the common update flags into the first byte
 #define U_ORIGIN_X   (1<<0)         // was named: U_ORIGIN_X
@@ -228,7 +228,7 @@ typedef enum {
 #define U_ANGLE_Z    (1<<3)         // was named: U_ANGLE_Z
 #define U_FRAME8    (1<<4)          // frame is a byte
 #define U_EVENT     (1<<5)
-#define U_REMOVE    (1<<6)          // REMOVE this entity, don't add it
+#define U_REMOVE    (1<<6)          // REMOVE this ServerEntity, don't add it
 #define U_MOREBITS1 (1<<7)          // read one additional byte
 
 // Second byte
@@ -289,7 +289,7 @@ struct FrameFlags {
     static constexpr int32_t OldFrame = (1 << 6);
     // Server sent a delta compressed frame whose entities are too
     // old and can't be recovered.
-    static constexpr int32_t OldEntity = (1 << 7);
+    static constexpr int32_t OldServerEntity = (1 << 7);
     // Server sent an uncompressed frame. Typically occurs during
     // a heavy lag, when a lot of packets are dropped by the network.
     static constexpr int32_t NoDeltaFrame = (1 << 8);

@@ -29,7 +29,7 @@ glStatic_t gl_static;
 glConfig_t gl_config;
 statCounters_t  c;
 
-r_entity_t gl_world;
+r_ServerEntity_t gl_world;
 
 // regular variables
 cvar_t *gl_partscale;
@@ -300,7 +300,7 @@ void GL_MultMatrix(GLfloat *p, const GLfloat *a, const GLfloat *b)
     }
 }
 
-void GL_RotateForEntity(vec3_t origin, float scale)
+void GL_RotateForServerEntity(vec3_t origin, float scale)
 {
     GLfloat matrix[16];
 
@@ -334,7 +334,7 @@ void GL_RotateForEntity(vec3_t origin, float scale)
 static void GL_DrawSpriteModel(model_t *model)
 {
     static const vec_t tcoords[8] = { 0, 1, 0, 0, 1, 1, 1, 0 };
-    r_entity_t *e = glr.ent;
+    r_ServerEntity_t *e = glr.ent;
     mspriteframe_t *frame = &model->spriteframes[e->frame % model->numframes];
     image_t *image = frame->image;
     float alpha = (e->flags & RenderEffects::Translucent) ? e->alpha : 1;
@@ -393,7 +393,7 @@ static void GL_DrawNullModel(void)
         U32_GREEN, U32_GREEN,
         U32_BLUE, U32_BLUE
     };
-    r_entity_t *e = glr.ent;
+    r_ServerEntity_t *e = glr.ent;
     vec3_t points[6];
 
     VectorCopy(e->origin, points[0]);
@@ -415,7 +415,7 @@ static void GL_DrawNullModel(void)
 
 static void GL_DrawEntities(int mask)
 {
-    r_entity_t *ent, *last;
+    r_ServerEntity_t *ent, *last;
     model_t *model;
 
     if (!gl_drawentities->integer) {
@@ -709,7 +709,7 @@ static void gl_lightmap_changed(cvar_t *self)
 
 static void gl_modulate_entities_changed(cvar_t *self)
 {
-    gl_static.entity_modulate = gl_modulate->value * gl_modulate_entities->value;
+    gl_static.ServerEntity_modulate = gl_modulate->value * gl_modulate_entities->value;
 }
 
 static void gl_modulate_changed(cvar_t *self)

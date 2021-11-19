@@ -470,7 +470,7 @@ vkpt_uniform_precomputed_buffer_update()
 
 #define MATRIX(row, col) (row * 4 + col)
 
-void create_identity_matrix(float matrix[16])
+void create_idServerEntity_matrix(float matrix[16])
 {
 	uint32_t size = 16 * sizeof(float);
 	memset(matrix, 0, size);
@@ -496,8 +496,8 @@ void create_look_at_matrix(float matrix[16], vec3_t EyePosition, vec3_t EyeDirec
 	float D1 = DotProduct(u, EyePosition);
 	float D2 = DotProduct(f, EyePosition);
 
-	// Set identity
-	create_identity_matrix(matrix);
+	// Set idServerEntity
+	create_idServerEntity_matrix(matrix);
 
 	matrix[MATRIX(0, 0)] = s[0];
 	matrix[MATRIX(1, 0)] = s[1];

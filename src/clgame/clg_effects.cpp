@@ -328,19 +328,19 @@ void CLG_MuzzleFlash() {
     vec3_t      fv, rv;
     cdlight_t* dl;
 #endif
-    cl_entity_t* pl;
+    clientServerEntity* pl;
     float       volume;
     char        soundname[MAX_QPATH];
 
     //#ifdef _DEBUG
     //    if (developer->integer)
-    //        CL_CheckEntityPresent(mzParameters.entity, "muzzleflash");
+    //        CL_CheckServerEntityPresent(mzParameters.ServerEntity, "muzzleflash");
     //#endif
 
-    pl = &cs->entities[mzParameters.entity];
+    pl = &cs->entities[mzParameters.ServerEntity];
 
 #if USE_DLIGHTS
-    dl = CLG_AllocDLight(mzParameters.entity);
+    dl = CLG_AllocDLight(mzParameters.ServerEntity);
     VectorCopy(pl->current.origin, dl->origin);
     AngleVectors(pl->current.angles, &fv, &rv, NULL);
     VectorMA(dl->origin, 18, fv, dl->origin);
@@ -368,38 +368,38 @@ void CLG_MuzzleFlash() {
     switch (mzParameters.weapon) {
     case MuzzleFlashType::Blaster:
         DL_COLOR(1, 1, 0);
-        clgi.S_StartSound(NULL, mzParameters.entity, CHAN_WEAPON, clgi.S_RegisterSound("weapons/blastf1a.wav"), volume, ATTN_NORM, 0);
+        clgi.S_StartSound(NULL, mzParameters.ServerEntity, CHAN_WEAPON, clgi.S_RegisterSound("weapons/blastf1a.wav"), volume, ATTN_NORM, 0);
         break;
     case MuzzleFlashType::MachineGun:
         DL_COLOR(1, 1, 0);
         Q_snprintf(soundname, sizeof(soundname), "weapons/machgf%ib.wav", (rand() % 5) + 1);
-        clgi.S_StartSound(NULL, mzParameters.entity, CHAN_WEAPON, clgi.S_RegisterSound(soundname), volume, ATTN_NORM, 0);
+        clgi.S_StartSound(NULL, mzParameters.ServerEntity, CHAN_WEAPON, clgi.S_RegisterSound(soundname), volume, ATTN_NORM, 0);
         break;
     case MuzzleFlashType::Shotgun:
         DL_COLOR(1, 1, 0);
-        clgi.S_StartSound(NULL, mzParameters.entity, CHAN_WEAPON, clgi.S_RegisterSound("weapons/shotgf1b.wav"), volume, ATTN_NORM, 0);
-        //  S_StartSound(NULL, mzParameters.entity, CHAN_AUTO,   S_RegisterSound("weapons/shotgr1b.wav"), volume, ATTN_NORM, 0.1);
+        clgi.S_StartSound(NULL, mzParameters.ServerEntity, CHAN_WEAPON, clgi.S_RegisterSound("weapons/shotgf1b.wav"), volume, ATTN_NORM, 0);
+        //  S_StartSound(NULL, mzParameters.ServerEntity, CHAN_AUTO,   S_RegisterSound("weapons/shotgr1b.wav"), volume, ATTN_NORM, 0.1);
         break;
     case MuzzleFlashType::SuperShotgun:
         DL_COLOR(1, 1, 0);
-        clgi.S_StartSound(NULL, mzParameters.entity, CHAN_WEAPON, clgi.S_RegisterSound("weapons/sshotf1b.wav"), volume, ATTN_NORM, 0);
+        clgi.S_StartSound(NULL, mzParameters.ServerEntity, CHAN_WEAPON, clgi.S_RegisterSound("weapons/sshotf1b.wav"), volume, ATTN_NORM, 0);
         break;
     case MuzzleFlashType::Login:
         DL_COLOR(0, 1, 0);
         DL_DIE(1.0);
-        clgi.S_StartSound(NULL, mzParameters.entity, CHAN_WEAPON, clgi.S_RegisterSound("weapons/grenlf1a.wav"), 1, ATTN_NORM, 0);
+        clgi.S_StartSound(NULL, mzParameters.ServerEntity, CHAN_WEAPON, clgi.S_RegisterSound("weapons/grenlf1a.wav"), 1, ATTN_NORM, 0);
         CLG_LogoutEffect(pl->current.origin, mzParameters.weapon);
         break;
     case MuzzleFlashType::Logout:
         DL_COLOR(1, 0, 0);
         DL_DIE(1.0);
-        clgi.S_StartSound(NULL, mzParameters.entity, CHAN_WEAPON, clgi.S_RegisterSound("weapons/grenlf1a.wav"), 1, ATTN_NORM, 0);
+        clgi.S_StartSound(NULL, mzParameters.ServerEntity, CHAN_WEAPON, clgi.S_RegisterSound("weapons/grenlf1a.wav"), 1, ATTN_NORM, 0);
         CLG_LogoutEffect(pl->current.origin, mzParameters.weapon);
         break;
     case MuzzleFlashType::Respawn:
         DL_COLOR(1, 1, 0);
         DL_DIE(1.0);
-        clgi.S_StartSound(NULL, mzParameters.entity, CHAN_WEAPON, clgi.S_RegisterSound("weapons/grenlf1a.wav"), 1, ATTN_NORM, 0);
+        clgi.S_StartSound(NULL, mzParameters.ServerEntity, CHAN_WEAPON, clgi.S_RegisterSound("weapons/grenlf1a.wav"), 1, ATTN_NORM, 0);
         CLG_LogoutEffect(pl->current.origin, mzParameters.weapon);
         break;
     }
@@ -419,7 +419,7 @@ void CLG_MuzzleFlash() {
 //===============
 //
 void CLG_MuzzleFlash2() {
-    cl_entity_t* ent;
+    ClientServerEntity *ent;
     vec3_t      origin;
     const vec_t* ofs;
 #if USE_DLIGHTS
@@ -428,7 +428,7 @@ void CLG_MuzzleFlash2() {
     vec3_t      forward, right;
 
     // locate the origin
-    ent = &cs->entities[mzParameters.entity];
+    ent = &cs->entities[mzParameters.ServerEntity];
     AngleVectors(ent->current.angles, &forward, &right, NULL);
     ofs = vec3_t { 10.6f * 1.2f, 7.7f * 1.2f, 7.8f * 1.2f };
     origin[0] = ent->current.origin[0] + forward[0] * ofs[0] + right[0] * ofs[1];
@@ -436,7 +436,7 @@ void CLG_MuzzleFlash2() {
     origin[2] = ent->current.origin[2] + forward[2] * ofs[0] + right[2] * ofs[1] + ofs[2];
 
 #if USE_DLIGHTS
-    dl = CLG_AllocDLight(mzParameters.entity);
+    dl = CLG_AllocDLight(mzParameters.ServerEntity);
     VectorCopy(origin, dl->origin);
     dl->radius = 200 + (rand() & 31);
     //dl->minlight = 32;
@@ -455,7 +455,7 @@ void CLG_MuzzleFlash2() {
         DL_COLOR(1, 1, 0);
         CLG_ParticleEffect(origin, forward, 0, 40);
         CLG_SmokeAndFlash(origin);
-        clgi.S_StartSound(NULL, mzParameters.entity, CHAN_WEAPON, clgi.S_RegisterSound("soldier/solatck3.wav"), 1, ATTN_NORM, 0);
+        clgi.S_StartSound(NULL, mzParameters.ServerEntity, CHAN_WEAPON, clgi.S_RegisterSound("soldier/solatck3.wav"), 1, ATTN_NORM, 0);
         break;
 
     case MZ2_SOLDIER_BLASTER_1:
@@ -467,7 +467,7 @@ void CLG_MuzzleFlash2() {
     case MZ2_SOLDIER_BLASTER_7:
     case MZ2_SOLDIER_BLASTER_8:
         DL_COLOR(1, 1, 0);
-        clgi.S_StartSound(NULL, mzParameters.entity, CHAN_WEAPON, clgi.S_RegisterSound("soldier/solatck2.wav"), 1, ATTN_NORM, 0);
+        clgi.S_StartSound(NULL, mzParameters.ServerEntity, CHAN_WEAPON, clgi.S_RegisterSound("soldier/solatck2.wav"), 1, ATTN_NORM, 0);
         break;
 
     case MZ2_SOLDIER_SHOTGUN_1:
@@ -480,7 +480,7 @@ void CLG_MuzzleFlash2() {
     case MZ2_SOLDIER_SHOTGUN_8:
         DL_COLOR(1, 1, 0);
         CLG_SmokeAndFlash(origin);
-        clgi.S_StartSound(NULL, mzParameters.entity, CHAN_WEAPON, clgi.S_RegisterSound("soldier/solatck1.wav"), 1, ATTN_NORM, 0);
+        clgi.S_StartSound(NULL, mzParameters.ServerEntity, CHAN_WEAPON, clgi.S_RegisterSound("soldier/solatck1.wav"), 1, ATTN_NORM, 0);
         break;
     }
 }
@@ -1057,7 +1057,7 @@ CLG_DiminishingTrail
 
 ===============
 */
-void CLG_DiminishingTrail(vec3_t start, vec3_t end, cl_entity_t* old, int flags)
+void CLG_DiminishingTrail(vec3_t start, vec3_t end, clientServerEntity* old, int flags)
 {
     vec3_t      move;
     vec3_t      vec;
@@ -1100,7 +1100,7 @@ void CLG_DiminishingTrail(vec3_t start, vec3_t end, cl_entity_t* old, int flags)
 
             p->time = cl->time;
 
-            if (flags & EntityEffectType::Gib) {
+            if (flags & ServerEntityEffectType::Gib) {
                 p->alpha = 1.0;
                 p->alphavel = -1.0 / (1 + frand() * 0.4);
 

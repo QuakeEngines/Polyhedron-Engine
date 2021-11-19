@@ -674,14 +674,14 @@ R_ComputeIQMTransforms
 Compute matrices for this model, returns [model->num_poses] 3x4 matrices in the (pose_matrices) array
 =================
 */
-qboolean R_ComputeIQMTransforms(const iqm_model_t* model, const r_entity_t* entity, float* pose_matrices) {
+qboolean R_ComputeIQMTransforms(const iqm_model_t* model, const r_ServerEntity_t* ServerEntity, float* pose_matrices) {
 	iqm_transform_t relativeJoints[IQM_MAX_JOINTS];
 
 	iqm_transform_t* relativeJoint = relativeJoints;
 
-	const int frame = model->num_frames ? entity->frame % (int)model->num_frames : 0;
-	const int oldframe = model->num_frames ? entity->oldframe % (int)model->num_frames : 0;
-	const float backlerp = entity->backlerp;
+	const int frame = model->num_frames ? ServerEntity->frame % (int)model->num_frames : 0;
+	const int oldframe = model->num_frames ? ServerEntity->oldframe % (int)model->num_frames : 0;
+	const float backlerp = ServerEntity->backlerp;
 
 	// copy or lerp animation frame pose
 	if (oldframe == frame) {

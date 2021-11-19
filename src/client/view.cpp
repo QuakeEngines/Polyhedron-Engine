@@ -57,7 +57,7 @@ rdlight_t    r_dlights[MAX_DLIGHTS];
 #endif
 
 int         r_numentities;
-r_entity_t    r_entities[MAX_ENTITIES];
+r_ServerEntity_t    r_entities[MAX_ENTITIES];
 
 int         r_numparticles;
 rparticle_t  r_particles[MAX_PARTICLES];
@@ -124,7 +124,7 @@ static void V_TestEntities(void)
 {
     int         i, j;
     float       f, r;
-    r_entity_t    *ent;
+    r_ServerEntity_t    *ent;
 
     r_numentities = 32;
     memset(r_entities, 0, sizeof(r_entities));
@@ -224,10 +224,10 @@ static void V_Gun_Model_f(void)
 
 //============================================================================
 
-static int entitycmpfnc(const void *_a, const void *_b)
+static int ServerEntitycmpfnc(const void *_a, const void *_b)
 {
-    const r_entity_t *a = (const r_entity_t *)_a;
-    const r_entity_t *b = (const r_entity_t *)_b;
+    const r_ServerEntity_t *a = (const r_ServerEntity_t *)_a;
+    const r_ServerEntity_t *b = (const r_ServerEntity_t *)_b;
 
     // all other models are sorted by model then skin
     if (a->model == b->model)
@@ -305,7 +305,7 @@ void V_RenderView(void)
         cl.refdef.rdflags = cl.frame.playerState.rdflags;
 
         // sort entities for better cache locality
-        qsort(cl.refdef.entities, cl.refdef.num_entities, sizeof(cl.refdef.entities[0]), entitycmpfnc);
+        qsort(cl.refdef.entities, cl.refdef.num_entities, sizeof(cl.refdef.entities[0]), ServerEntitycmpfnc);
     }
 
     // Pass the actual scene render definiiton over to the Renderer for rendering.  
@@ -368,7 +368,7 @@ void V_Init(void)
 	cl_show_lights = Cvar_Get("cl_show_lights", "0", 0);
 #endif
     cl_add_particles = Cvar_Get("cl_particles", "1", 0);
-    cl_add_entities = Cvar_Get("cl_entities", "1", 0);
+    cl_add_entities = Cvar_Get("clientEntities", "1", 0);
     cl_add_blend = Cvar_Get("cl_blend", "1", 0);
 
     cl_adjustfov = Cvar_Get("cl_adjustfov", "1", 0);
