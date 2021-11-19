@@ -309,7 +309,7 @@ SVGBaseEntity* SVG_FindServerEntityByKeyValue(const std::string& fieldKey, const
             continue;
 
         // Start preparing for checking IF, its dictionary HAS fieldKey.
-        auto dictionary = serverEnt->ServerEntityDictionary;
+        auto dictionary = serverEnt->serverEntityDictionary;
 
         if (dictionary.find(fieldKey) != dictionary.end()) {
             if (dictionary[fieldKey] == fieldValue) {

@@ -415,7 +415,7 @@ SET(HEADERS_SHARED
 
 	# Entities lib.
 	#../inc/shared/entities/gclient_t.h
-	../inc/shared/entities/ServerEntity.h
+	../inc/shared/entities/Server/ServerEntity.h
 
 	# Interfaces
 	../inc/shared/interfaces/IClientGameExports.h

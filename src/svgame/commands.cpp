@@ -70,7 +70,7 @@ qboolean SVG_OnSameTeam(SVGBaseEntity *ent1, SVGBaseEntity *ent2)
 
 void SelectNextItem(PlayerClient *ent, int itflags)
 {
-    ServersClient   *cl;
+    ServerClient   *cl;
     int         i, index;
     gitem_t     *it;
 

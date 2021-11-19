@@ -94,10 +94,7 @@ void UTIL_TouchTriggers(SVGBaseEntity *ent)
         if (!hit->inUse)
             continue;
 
-        if (!hit->classServerEntity)
-            continue;
-
-        hit->classServerEntity->Touch(hit->classServerEntity, ent, NULL, NULL);
+        hit->Touch(hit, ent, NULL, NULL);
         //if (!hit->touch)
         //    continue;
         //hit->touch(hit, ent, NULL, NULL);

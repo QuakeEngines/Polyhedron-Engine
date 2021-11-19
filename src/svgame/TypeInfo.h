@@ -2,10 +2,8 @@
 
 #include <string>
 
-//class SVGBaseEntity;
-//class ServerEntity;
-#include "shared/entities/ServerEntity.h"
-#include "entities/base/SVGBaseEntity.h"
+class SVGBaseEntity;
+class ServerEntity;
 
 //===============
 // A static counter, used by TypeInfo to get compile-time IDs

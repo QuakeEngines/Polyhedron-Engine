@@ -64,7 +64,7 @@ public:
 
     // Client.
     // Sets the 'client' pointer.
-    void SetClient(gclient_s* client) {
+    void SetClient(ServerClient* client) {
         serverEntity->client = client;
     }
 

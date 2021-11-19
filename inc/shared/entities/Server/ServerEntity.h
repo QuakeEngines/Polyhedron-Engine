@@ -4,20 +4,51 @@
 #include "sharedgame/pmove.h"
 #include "sharedgame/protocol.h"
 
-#include "shared/entities/Server/ServerEntity.h"
+struct  gitem_t{
+    char        *classname; // spawning name
+    qboolean    (*pickup)(ServerEntity*ent, ServerEntity*other);
+    void        (*use)(ServerEntity*ent, gitem_t *item);
+    void        (*drop)(ServerEntity*ent, gitem_t *item);
+    void        (*weaponthink)(ServerEntity*ent);
+    char        *pickup_sound;
+    char        *world_model;
+    int         world_model_flags;
+    char        *view_model;
+
+    // client side info
+    char        *icon;
+    char        *pickup_name;   // for printing on pickup
+    int         count_width;    // number of digits to display by icon
+
+    int         quantity;       // for ammo how much, for weapons how much is used per shot
+    char        *ammo;          // for weapons
+    int         flags;          // IT_* flags
+
+    int         weapmodel;      // weapon model index (for weapons)
+
+    void        *info;
+    int         tag;
+
+    char        *precaches;     // string of all models, sounds, and images this item will use
+};
+
+
 #include "shared/entities/Server/ClientPersistentData.h"
 #include "shared/entities/Server/ClientRespawnData.h"
 
 class ServerClient {
 public:
     // The client's current player state. (Communicated by server to clients.)
-    PlayerState playerStates;
+    PlayerState playerState;
 
     // Current ping.
     int32_t ping;
 
     // Client index number.
     int32_t clientNumber;
+
+    ClientRespawnData respawn;
+    ClientPersistentData persistent;
 };
 
 //-------------------
@@ -170,6 +201,7 @@ private:
 
     // If numClusters is -1, use headNodew instead.
     int32_t numClusters;    // if -1, use headNode instead
+    static constexpr uint32_t MAX_ENT_CLUSTERS = 8;
     int32_t clusterNumbers[MAX_ENT_CLUSTERS];
 
     // Only use this instead of numClusters if numClusters == -1

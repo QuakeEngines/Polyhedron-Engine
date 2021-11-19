@@ -12,6 +12,10 @@
 
 // It makes sense to include TypeInfo in SVGBaseEntity.h, 
 // because this class absolutely requires it
+#include "shared/entities/Server/ClientPersistentData.h"
+#include "shared/entities/Server/ClientRespawnData.h"
+#include "shared/entities/Server/ServerEntity.h"
+#include "entities/base/SVGBaseEntity.h"
 #include "../../TypeInfo.h"
 
 class SVGBaseEntity {
@@ -46,14 +50,14 @@ public:
 
     // Checks if this ServerEntity class is exactly the given class
     // @param ServerEntityClass: an ServerEntity class which must inherint from SVGBaseEntity
-    template<typename SVGBaseEntity>
+    template<typename ServerEntity>
     bool IsClass() const { // every ServerEntity has a ClassInfo, thanks to the DefineXYZ macro
         return GetTypeInfo()->IsClass( SVGBaseEntity::ClassInfo );
     }
 
     // Checks if this ServerEntity class is a subclass of another, or is the same class
     // @param ServerEntityClass: an ServerEntity class which must inherint from SVGBaseEntity
-    template<typename SVGBaseEntity>
+    template<typename ServerEntity>
     bool IsSubclassOf() const {
         return GetTypeInfo()->IsSubclassOf( SVGBaseEntity::ClassInfo );
     }
@@ -306,7 +310,7 @@ public:
 
     // Return the 'noiseIndex2' value.
     inline const int32_t GetNoiseIndex2() {
-        return oiseIndex2;
+        return noiseIndex2;
     }
 
     inline const int32_t GetNumber() {
@@ -400,7 +404,7 @@ public:
 
     // Return the 'team' ServerEntity value.
     inline char* GetTeam() {
-        return serverEntity->team;
+        return team;
     }
 
     // Return the 'teamChain' ServerEntity value.

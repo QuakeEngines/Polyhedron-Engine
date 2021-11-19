@@ -30,8 +30,6 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #define SVGAME_API_VERSION_MINOR VERSION_MINOR
 #define SVGAME_API_VERSION_POINT VERSION_POINT
 
-class gitem_t;
-
 // Maxmum ServerEntity clsters.
 static constexpr uint32_t MAX_ENT_CLUSTERS = 8;
 
@@ -40,7 +38,7 @@ static constexpr uint32_t MAX_TOTAL_ENT_LEAFS = 128;
 s
 //#include"shared/entities/gclient_t.h"
 #ifdef GAME_INCLUDE
-#include"shared/entities/ServerEntity.h"
+#include"shared/entities/Server/ServerEntity.h"
 #include "entities/base/SVGBaseEntity.h"
 #else
 

@@ -277,7 +277,6 @@ inline ServerEntityClass* SVG_CreateClassServerEntity(ServerEntity* edict = null
     if (ServerEntityClass::ClassInfo.AllocateInstance) {
         ServerEntity = static_cast<ServerEntityClass*>(ServerEntityClass::ClassInfo.AllocateInstance(edict)); // Entities that aren't in the type info system will error out here
         edict->className = ServerEntity->GetTypeInfo()->className;
-        edict->classServerEntity = ServerEntity;
         if (nullptr == g_baseEntities[edict->state.number]) {
             g_baseEntities[edict->state.number] = ServerEntity;
         } else {
