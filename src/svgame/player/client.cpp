@@ -97,7 +97,7 @@ void SP_FixCoopSpots(ServerEntity *self)
 
 void SVG_TossClientWeapon(PlayerClient *playerClient)
 {
-    gitem_t     *item;
+    GameItem     *item;
     ServerEntity     *drop;
     float       spread = 1.5f;
 
@@ -412,7 +412,7 @@ usually be a couple times for each server frame.
 */
 void SVG_ClientThink(ServerEntity *serverEntity, ClientMoveCommand *moveCommand)
 {
-    ServersClient* client = nullptr;
+    ServerClient* client = nullptr;
     PlayerClient *classServerEntity = nullptr;
     ServerEntity* other = nullptr;
 

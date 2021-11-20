@@ -27,8 +27,8 @@ LIST_DECL(sv_cmdlist_begin);
 LIST_DECL(sv_filterlist);
 LIST_DECL(sv_clientlist);   // linked list of non-free clients
 
-client_t    *sv_client;         // current client
-ServerEntity      *sv_player;         // current client edict
+ServerClient    *sv_client;         // current client
+ServerEntity    *sv_player;         // current client entity
 
 qboolean    sv_pending_autosave = 0;
 
@@ -97,7 +97,7 @@ qboolean sv_registered;
 
 //============================================================================
 
-void SV_RemoveClient(client_t *client)
+void SV_RemoveClient(ServerClient *client)
 {
     if (client->msg_pool) {
         SV_ShutdownClientSend(client);

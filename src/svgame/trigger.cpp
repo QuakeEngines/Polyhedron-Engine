@@ -63,7 +63,7 @@ void multi_trigger(ServerEntity *ent)
 void Use_Multi(ServerEntity *ent, ServerEntity *other, ServerEntity *activator)
 {
     //ent->activator = activator;
-    multi_trigger(ent);
+    //multi_trigger(ent);
 }
 
 void Touch_Multi(ServerEntity *self, ServerEntity *other, cplane_t *plane, csurface_t *surf)
@@ -77,14 +77,14 @@ void Touch_Multi(ServerEntity *self, ServerEntity *other, cplane_t *plane, csurf
     //} else
     //    return;
 
-    if (!VectorCompare(self->moveDirection, vec3_zero())) {
-        vec3_t  forward;
-
-        AngleVectors(other->state.angles, &forward, NULL, NULL);
-        if (DotProduct(forward, self->moveDirection) < 0)
-            return;
-    }
+    //if (!VectorCompare(self->moveDirection, vec3_zero())) {
+    //    vec3_t  forward;
+    //
+    //    AngleVectors(other->state.angles, &forward, NULL, NULL);
+     //   if (DotProduct(forward, self->moveDirection) < 0)
+     //       return;
+   // }
 
     //self->activator = other;
-    multi_trigger(self);
+    //multi_trigger(self);
 }

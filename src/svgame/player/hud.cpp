@@ -199,7 +199,7 @@ void SVG_HUD_GenerateDMScoreboardLayout(SVGBaseEntity *ent, SVGBaseEntity *kille
     int     sortedscores[MAX_CLIENTS];
     int     score, total;
     int     x, y;
-    ServersClient   *cl;
+    ServerClient   *cl;
     ServerEntity     *cl_ent;
     const char    *tag; // C++20: STRING: Added const to char*
 
@@ -304,7 +304,7 @@ void SVG_Command_Score_f(SVGBaseEntity*ent)
     if (!ent)
         return;
     
-    ServersClient* client = ent->GetClient();
+    ServerClient* client = ent->GetClient();
 
     // We obviously should not continue, for some reason it has no client...
     if (!client)
@@ -338,7 +338,7 @@ void SVG_Command_Score_f(SVGBaseEntity*ent)
 //
 void SVG_HUD_SetClientStats(ServerEntity* ent)
 {
-    gitem_t* item;
+    GameItem* item;
 
     // Ensure ent is valid.
     if (!ent || !ent->client) {
@@ -447,7 +447,7 @@ void SVG_HUD_CheckChaseStats(ServerEntity *ent)
     }
 
     for (i = 1; i <= maximumClients->value; i++) {
-        ServersClient* cl;
+        ServerClient* cl;
 
         cl = g_entities[i].client;
 
@@ -471,7 +471,7 @@ void SVG_HUD_SetSpectatorStats(ServerEntity *ent)
         return;
     }
 
-    ServersClient* cl = ent->client;
+    ServerClient* cl = ent->client;
 
     if (!cl->chaseTarget) {
         SVG_HUD_SetClientStats(ent);

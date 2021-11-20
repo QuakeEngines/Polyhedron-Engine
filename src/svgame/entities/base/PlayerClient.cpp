@@ -264,7 +264,7 @@ void PlayerClient::PlayerClientDie(SVGBaseEntity* inflictor, SVGBaseEntity* atta
 // 
 //===============
 void PlayerClient::SetEvent() {
-    ServersClient* client = GetClient();
+    ServerClient* client = GetClient();
 
     if (!client) {
         return;
@@ -314,7 +314,7 @@ void PlayerClient::SetSound() {
     const char    *weap; // C++20: STRING: Added const to char*
 
     // Check whether the PlayerClient is hooked up to a valid client.
-    ServersClient* client = GetClient();
+    ServerClient* client = GetClient();
 
     if (!client) {
         return;
@@ -403,7 +403,7 @@ void PlayerClient::CheckFallingDamage()
 
     // Check whether ent is valid, and a PlayerClient hooked up 
     // to a valid client.
-    ServersClient* client = GetClient();
+    ServerClient* client = GetClient();
 
     if (!client) {
         return;
@@ -483,7 +483,7 @@ void PlayerClient::CheckWorldEffects()
 
     // Check whether ent is valid, and a PlayerClient hooked up 
     // to a valid client.
-    ServersClient* client = GetClient();
+    ServerClient* client = GetClient();
 
     if (!client)
         return;
@@ -620,7 +620,7 @@ void PlayerClient::ApplyDamageFeedback() {
 
     // Check whether ent is valid, and a PlayerClient hooked up 
     // to a valid client.
-    ServersClient* client = GetClient();
+    ServerClient* client = GetClient();
     if (!client)
         return;
 
@@ -760,7 +760,7 @@ void PlayerClient::CalculateViewOffset()
 
     // Check whether ent is valid, and a PlayerClient hooked up 
     // to a valid client.
-    ServersClient* client = GetClient();
+    ServerClient* client = GetClient();
 
     if (!client) {
         return;
@@ -857,7 +857,7 @@ void PlayerClient::CalculateGunOffset() {
 
     // Check whether ent is valid, and a PlayerClient hooked up 
     // to a valid client.
-    ServersClient* client = GetClient();
+    ServerClient* client = GetClient();
 
     if (!client) {
         return;
@@ -908,7 +908,7 @@ void PlayerClient::CalculateGunOffset() {
 //===============
 //
 void PlayerClient::CalculateScreenBlend() {
-        ServersClient* client = GetClient();
+        ServerClient* client = GetClient();
 
     if (!client) {
         return;
@@ -959,7 +959,7 @@ void PlayerClient::SetAnimationFrame() {
 
     // Check whether ent is valid, and a PlayerClient hooked up 
     // to a valid client.
-    ServersClient* client = GetClient();
+    ServerClient* client = GetClient();
 
     if (!client) {
         return;

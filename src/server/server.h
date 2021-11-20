@@ -211,6 +211,16 @@ typedef struct {
     unsigned    cost;
 } RateLimit;
 
+//---------------------------------
+//  ServerEntity Pool.
+//---------------------------------
+struct ServerEntityPool {
+    struct Entity* edicts;
+    int         entitySize;
+    int         numberOfEntities;     // current number, <= maximumEntities
+    int         maximumEntities;
+};
+
 typedef struct client_s {
     list_t entry;
 
@@ -307,7 +317,7 @@ typedef struct client_s {
     size_t msg_dynamic_bytes;      // total size of dynamic memory allocated
 
     // per-client baseline chunks
-    PackedServerEntity *ServerEntityBaselines[SV_BASELINES_CHUNKS];
+    PackedServerEntity *serverEntityBaselines[SV_BASELINES_CHUNKS];
 
     // server state pointers (hack for MVD channels implementation)
     char *configstrings;

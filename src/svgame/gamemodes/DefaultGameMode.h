@@ -61,8 +61,8 @@ public:
     //
     // Client related functions/utilities.
     // 
-    virtual void InitializeClientPersistentData(ServersClient* client) override;
-    virtual void InitializeClientRespawnData(ServersClient *client) override;
+    virtual void InitializeClientPersistentData(ServerClient* client) override;
+    virtual void InitializeClientRespawnData(ServerClient *client) override;
 
     virtual void SelectClientSpawnPoint(ServerEntity* ent, vec3_t& origin, vec3_t& angles, const std::string &classname) override;
     virtual void PutClientInServer(ServerEntity *ent) override;

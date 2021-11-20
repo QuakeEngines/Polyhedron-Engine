@@ -14,11 +14,10 @@
 // networking.)
 //
 */
-#ifndef __SVGAME_ENTITIES_H__
-#define __SVGAME_ENTITIES_H__
+#pragma once
 
 // Include this guy here, gotta do so to make it work.
-#include "entities/base/SVGBaseEntity.h"
+#include "shared/entities/Server/ServerEntity.h"
 
 
 //
@@ -30,7 +29,7 @@ namespace ServerEntityFilterFunctions {
     // Returns true in case the (server-)ServerEntity has a client attached to it.
     inline bool ServerEntityHasClient(const ServerEntity& ent) { return static_cast<bool>(ent.client); }
     // Returns true in case the (server-)ServerEntity has a Class ServerEntity attached to it.
-    inline bool ServerEntityHasClassServerEntity(const ServerEntity& ent) { return static_cast<bool>(ent.classServerEntity); }
+    inline bool ServerEntityHasClassServerEntity(const ServerEntity& ent) { return static_cast<bool>(ent.className); }
 
     // Returns true in case the (server-)ServerEntity has a client attached to it.
     inline bool BaseServerEntityHasClient(SVGBaseEntity* ent) { return ent->GetClient(); }
@@ -73,7 +72,7 @@ namespace ServerEntityFilters {
     inline auto HasKeyValue(const std::string& fieldKey, const std::string &fieldValue) {
         return std::ranges::views::filter(
             [fieldKey, fieldValue /*need a copy!*/](ServerEntity& ent) {
-                auto& dictionary = ent.ServerEntityDictionary;
+                auto& dictionary = ent.serverEntityDictionary;
 
                 if (dictionary.find(fieldKey) != dictionary.end()) {
                     if (dictionary[fieldKey] == fieldValue) {
@@ -291,7 +290,7 @@ inline ServerEntityClass* SVG_CreateClassServerEntity(ServerEntity* edict = null
 // ClassServerEntity handling.
 //
 SVGBaseEntity* SVG_GetWorldClassServerEntity();
-SVGBaseEntity* SVG_SpawnClassServerEntity(ServerEntity* ent, const std::string& className);
+SVGBaseEntity* SVG_SpawnServerGameEntity(ServerEntity* ent, const std::string& className);
 void SVG_FreeClassServerEntity(ServerEntity* ent);
 
 #endif // __SVGAME_ENTITIES_H__

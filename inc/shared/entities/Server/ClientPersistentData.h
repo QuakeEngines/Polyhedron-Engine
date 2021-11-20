@@ -1,11 +1,14 @@
 
 #pragma once
 
+#include "GameItem.h"
+
 //-------------------
 // The ClientPersistentData struct manages data that has to stay persistent
 // across level changes.
 //-------------------
 class ClientPersistentData {
+public:
     char userinfo[MAX_INFO_STRING];
     char netname[16];
     int32_t hand;
@@ -29,8 +32,8 @@ class ClientPersistentData {
     int32_t maxCells;
     int32_t maxSlugs;
 
-    gitem_t *activeWeapon;
-    gitem_t *lastWeapon;
+    GameItem *activeWeapon;
+    GameItem *lastWeapon;
 
     int32_t powerCubes;    // Used for tracking the cubes in coop games
     int32_t score;         // For calculating total unit score in coop games

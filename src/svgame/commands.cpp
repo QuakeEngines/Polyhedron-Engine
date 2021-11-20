@@ -72,7 +72,7 @@ void SelectNextItem(PlayerClient *ent, int itflags)
 {
     ServerClient   *cl;
     int         i, index;
-    gitem_t     *it;
+    GameItem     *it;
 
     cl = ent->GetClient();
 
@@ -101,9 +101,9 @@ void SelectNextItem(PlayerClient *ent, int itflags)
 
 void SelectPrevItem(ServerEntity *ent, int itflags)
 {
-    ServersClient   *cl;
+    ServerClient   *cl;
     int         i, index;
-    gitem_t     *it;
+    GameItem     *it;
 
     cl = ent->client;
 
@@ -137,7 +137,7 @@ void HUD_ValidateSelectedItem(PlayerClient *ent)
         return;
     }
 
-    ServersClient* cl = ent->GetClient();
+    ServerClient* cl = ent->GetClient();
 
     if (cl->persistent.inventory[cl->persistent.selectedItem])
         return;     // valid
@@ -158,7 +158,7 @@ Give items to a client
 void Cmd_Give_f(ServerEntity *ent)
 {
     const char        *name;
-    gitem_t     *it;
+    GameItem     *it;
     int         index;
     int         i;
     qboolean    give_all;
@@ -343,7 +343,7 @@ Use an inventory item
 void Cmd_Use_f(PlayerClient *ent)
 {
     int         index;
-    gitem_t     *it;
+    GameItem     *it;
     const char        *s;
 
     s = gi.args(); // C++20: Added casts.
@@ -376,7 +376,7 @@ Drop an inventory item
 void Cmd_Drop_f(PlayerClient*ent)
 {
     int         index;
-    gitem_t     *it;
+    GameItem     *it;
     const char        *s;
 
     s = (const char*)gi.args(); // C++20: Added casts.
@@ -404,12 +404,12 @@ void Cmd_Drop_f(PlayerClient*ent)
 Cmd_Inven_f
 =================
 */
-void Cmd_Inven_f(ServerEntity *ent)
+void Cmd_Inven_f(ServerGameEntity *ent)
 {
     int         i;
-    ServersClient   *cl;
+    GameClient  *cl;
 
-    cl = ent->client;
+    cl = ent-=
 
     cl->showScores = false;
 
@@ -434,7 +434,7 @@ Cmd_InvUse_f
 */
 void Cmd_InvUse_f(PlayerClient *ent)
 {
-    gitem_t     *it;
+    GameItem     *it;
 
     HUD_ValidateSelectedItem(ent);
 
@@ -460,7 +460,7 @@ void Cmd_WeapPrev_f(PlayerClient *ent)
 {
     ServerClient   *cl;
     int         i, index;
-    gitem_t     *it;
+    GameItem     *it;
     int         selected_weapon;
 
     cl = ent->GetClient();
@@ -493,9 +493,9 @@ Cmd_WeapNext_f
 */
 void Cmd_WeapNext_f(PlayerClient *ent)
 {
-    ServersClient   *cl;
+    ServerClient   *cl;
     int         i, index;
-    gitem_t     *it;
+    GameItem     *it;
     int         selected_weapon;
 
     cl = ent->GetClient();
@@ -528,9 +528,9 @@ Cmd_WeapLast_f
 */
 void Cmd_WeapLast_f(PlayerClient *ent)
 {
-    ServersClient   *cl;
+    ServerClient   *cl;
     int         index;
-    gitem_t     *it;
+    GameItem     *it;
 
     cl = ent->GetClient();
 
@@ -555,7 +555,7 @@ Cmd_InvDrop_f
 */
 void Cmd_InvDrop_f(PlayerClient *ent)
 {
-    gitem_t     *it;
+    GameItem     *it;
 
     HUD_ValidateSelectedItem(ent);
 
@@ -719,7 +719,7 @@ void Cmd_Say_f(ServerEntity *ent, qboolean team, qboolean arg0)
     ServerEntity *other;
     char    *p; // C++20: Removed const.
     char    text[2048];
-    ServersClient *cl;
+    ServerClient *cl;
 
     if (gi.argc() < 2 && !arg0)
         return;

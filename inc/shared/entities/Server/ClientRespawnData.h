@@ -1,4 +1,8 @@
+// License here.
 #pragma once
+
+// Predef.
+class ClientPersistentData;
 
 //-------------------
 // The ClientRespawnData struct is used to store specific information about

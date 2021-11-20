@@ -8,7 +8,8 @@
 */
 #pragma once
 
-class SVGBaseEntity;
+//class SVGBaseEntity;
+#include ""
 
 class InfoPlayerStart : public SVGBaseEntity {
 public:

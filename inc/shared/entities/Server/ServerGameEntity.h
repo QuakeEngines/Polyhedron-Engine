@@ -10,13 +10,13 @@
 */
 #pragma once
 
+#include "ServerEntity.h"
+#include "ServerClient.h"
+#include "GameClient.h"
+
 // It makes sense to include TypeInfo in SVGBaseEntity.h, 
 // because this class absolutely requires it
-#include "shared/entities/Server/ClientPersistentData.h"
-#include "shared/entities/Server/ClientRespawnData.h"
-#include "shared/entities/Server/ServerEntity.h"
-#include "entities/base/SVGBaseEntity.h"
-#include "../../TypeInfo.h"
+#include "TypeInfo.h"
 
 class SVGBaseEntity {
 public:
@@ -50,14 +50,14 @@ public:
 
     // Checks if this ServerEntity class is exactly the given class
     // @param ServerEntityClass: an ServerEntity class which must inherint from SVGBaseEntity
-    template<typename ServerEntity>
+    template<typename SVGBaseEntity>
     bool IsClass() const { // every ServerEntity has a ClassInfo, thanks to the DefineXYZ macro
         return GetTypeInfo()->IsClass( SVGBaseEntity::ClassInfo );
     }
 
     // Checks if this ServerEntity class is a subclass of another, or is the same class
     // @param ServerEntityClass: an ServerEntity class which must inherint from SVGBaseEntity
-    template<typename ServerEntity>
+    template<typename SVGBaseEntity >
     bool IsSubclassOf() const {
         return GetTypeInfo()->IsSubclassOf( SVGBaseEntity::ClassInfo );
     }
@@ -380,7 +380,7 @@ public:
     }
     // Return the 'style' value.
     inline const int32_t GetStyle() {
-        return serverEntity->style;
+        return style;
     }
 
     // Return the 'sound' value.
@@ -403,7 +403,7 @@ public:
     }
 
     // Return the 'team' ServerEntity value.
-    inline char* GetTeam() {
+    inline const char* GetTeam() {
         return team;
     }
 
@@ -627,7 +627,7 @@ public:
 
     // Set the 'noiseIndex' value.
     inline void SetNoiseIndex(const int32_t& noiseIndex) {
-        this->serverEntity->noiseIndex = noiseIndex;
+        this->noiseIndex = noiseIndex;
     }
     
     inline void SetNumber(const int32_t number) {
@@ -696,7 +696,7 @@ public:
 
     // Set the 'style' value.
     inline void SetStyle(const int32_t &style) {
-        serverEntity->style = style;
+        this->style = style;
     }
 
     // Set the 'takeDamage' value.
@@ -781,12 +781,12 @@ public:
     // Link ServerEntity to the world for collision testing.
     void LinkServerEntity();
     
+    // Unlink the ServerEntity from the world for collision testing.
+    void UnlinkServerEntity();
+
     // Marks the ServerEntity to be removed in the next server frame
     // This is preferred to SVG_FreeServerEntity, as it is safer
     void Remove();
-
-    // Unlink the ServerEntity from the world for collision testing.
-    void UnlinkServerEntity();
 
     // Returns the server ServerEntity pointer.
     inline ServerEntity* GetServerServerEntity() {
@@ -872,6 +872,8 @@ protected:
     // The ServerEntity that activated this
     SVGBaseEntity* activator;
     
+    //------------------------------------
+    // -- Old monster stuff.
     // Yaw Speed. (Should be for monsters...)
     float yawSpeed;
     // Ideal Yaw Angle. (Should be for monsters...)
@@ -911,6 +913,21 @@ protected:
     // This one resides here... for now.
     //
     //float delay;
+
+    //-------------------------------------
+    // Noise Indexes
+    int32_t noiseIndex;
+    int32_t noiseIndex2;
+    float volume;
+    float attenuation;
+
+    //-------------------------------------
+    // Style
+    int32_t style;
+
+    //-------------------------------------
+    // Team
+    const char* team;
 
     //
     // ServerEntity pointers.

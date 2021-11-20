@@ -39,10 +39,10 @@ public:
     // Get/Set
     //
     // Active Weapon.
-    inline gitem_t* GetActiveWeapon() {
+    inline GameItem* GetActiveWeapon() {
         return GetClient()->persistent.activeWeapon;
     }
-    inline void GetActiveWeapon(gitem_t* weapon) {
+    inline void GetActiveWeapon(GameItem* weapon) {
         GetClient()->persistent.activeWeapon = weapon;
     }
 

@@ -24,7 +24,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "shared/list.h"
 
 // define GAME_INCLUDE so that game.h does not define the
-// short, server-visible ServersClient and gclient_t structures,
+// short, server-visible ServerClient and gclient_t structures,
 // because we define the full size ones in this file
 #define GAME_INCLUDE
 #include "shared/svgame.h"
@@ -40,9 +40,17 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 //-------------------
 class ServerEntity;
 class ServerClient;
+
+class ServerGameEntity;
+class GameClient;
+
+class SharedEntity;
+
+class SVGBaseEntity;
+
 class PlayerClient;
 class IGameMode;
-class SharedEntity;
+#include "shared/entities/Server/ServerEntity.h"
 
 //==================================================================
 
@@ -261,7 +269,7 @@ struct ItemFlags {
 };
 
 //-------------------
-// Weapon model indexes for: gitem_t->weaponModelIndex
+// Weapon model indexes for: GameItem->weaponModelIndex
 //-------------------
 constexpr int32_t WEAP_BLASTER = 1;
 constexpr int32_t WEAP_MACHINEGUN = 2;
@@ -452,7 +460,7 @@ extern ServerEntity* g_baseEntities[MAX_EDICTS];
 #define STOFS(x) q_offsetof(TemporarySpawnFields, x)
 #define LLOFS(x) q_offsetof(LevelLocals, x)
 #define GLOFS(x) q_offsetof(GameLocals, x)
-#define CLOFS(x) q_offsetof(ServersClient, x)
+#define CLOFS(x) q_offsetof(ServerClient, x)
 
 // Very ugly macros, need to rid ourselves and inline func them at the least.
 // Also, there should be alternatives in our utils for math lib as is.
@@ -540,7 +548,7 @@ typedef enum {
     F_IGNORE
 } fieldtype_t;
 
-extern  gitem_t itemlist[];
+extern  GameItem itemlist[];
 
 
 //
@@ -551,20 +559,20 @@ void SVG_Command_Score_f(ServerEntity *ent);
 //
 // g_items.c
 //
-void SVG_PrecacheItem(gitem_t *it);
+void SVG_PrecacheItem(GameItem *it);
 void SVG_InitItems(void);
 void SVG_SetItemNames(void);
-gitem_t *SVG_FindItemByPickupName(const char *pickup_name);
-gitem_t *SVG_FindItemByClassname(const char *className);
+GameItem *SVG_FindItemByPickupName(const char *pickup_name);
+GameItem *SVG_FindItemByClassname(const char *className);
 #define ITEM_INDEX(x) ((x)-itemlist)
-ServerClient *SVG_DropItem(ServerEntity *ent, gitem_t *item);
+ServerClient *SVG_DropItem(ServerEntity *ent, GameItem *item);
 void SVG_SetRespawn(ServerEntity *ent, float delay);
 void SVG_ChangeWeapon(PlayerClient* ent);
-void SVG_SpawnItem(ServerEntity *ent, gitem_t *item);
+void SVG_SpawnItem(ServerEntity *ent, GameItem *item);
 //void SVG_ThinkWeapon(gclient_t *ent);
 int32_t SVG_ArmorIndex(ServerEntity *ent);
-gitem_t *SVG_GetItemByIndex(int32_t index);
-qboolean SVG_AddAmmo(ServerEntity *ent, gitem_t *item, int32_t count);
+GameItem *SVG_GetItemByIndex(int32_t index);
+qboolean SVG_AddAmmo(ServerEntity *ent, GameItem *item, int32_t count);
 void SVG_TouchItem(ServerEntity* ent, ServerEntity* other, cplane_t *plane, csurface_t *surf);
 
 //
@@ -787,7 +795,7 @@ void SVG_Sound(ServerEntity* ent, int32_t channel, int32_t soundIndex, float vol
 //    // Custom lightstyle.
 //    char *customLightStyle;
 //
-//    gitem_t *item;          // for bonus items
+//    GameItem *item;          // for bonus items
 //};
 
 #endif

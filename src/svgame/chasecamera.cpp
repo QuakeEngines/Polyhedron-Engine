@@ -46,7 +46,7 @@ void SVG_UpdateChaseCam(PlayerClient *ent)
 
     VectorCopy(targ->state.origin, ownerv);
 
-    ownerv[2] += targ->classServerEntity->GetViewHeight();
+    ownerv[2] += targz->GetViewHeight();
 
     VectorCopy(targ->client->aimAngles, angles);
     if (angles[vec3_t::Pitch] > 56)
@@ -113,7 +113,7 @@ void SVG_ChaseNext(PlayerClient *ent)
 {
     int i;
     ServerEntity *e;
-    ServersClient* client = ent->GetClient();
+    ServerClient* client = ent->GetClient();
 
     if (!client->chaseTarget)
         return;
@@ -163,7 +163,7 @@ void SVG_GetChaseTarget(PlayerClient *ent)
 {
     int i;
     ServerEntity *other;
-    ServersClient* client = ent->GetClient();
+    ServerClient* client = ent->GetClient();
 
     for (i = 1; i <= maximumClients->value; i++) {
         other = g_entities + i;

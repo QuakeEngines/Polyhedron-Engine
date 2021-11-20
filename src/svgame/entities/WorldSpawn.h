@@ -18,7 +18,7 @@ public:
     WorldSpawn(ServerEntity* svServerEntity);
     virtual ~WorldSpawn();
 
-    DefineMapClass( "worldspawn", WorldSpawn, SVGBaseEntity );
+    DefineMapClass( "worldspawn", WorldSpawn, ServerEntity );
 
     //
     // Interface functions. 

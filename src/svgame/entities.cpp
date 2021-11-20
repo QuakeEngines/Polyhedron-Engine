@@ -13,7 +13,7 @@
 
 
 //
-// SVG_SpawnClassServerEntity
+// SVG_SpawnServerGameEntity
 //
 //
 #include "entities/base/SVGBaseEntity.h"
@@ -96,18 +96,23 @@ void DebugShitForEntitiesLulz() {
 }
 #endif
 //===============
-// SVG_SpawnClassServerEntity
+// SVG_SpawnServerGameEntity
 //
 //=================
-SVGBaseEntity* SVG_SpawnClassServerEntity(ServerEntity* ent, const std::string& className) {
+SVGBaseEntity* SVG_SpawnServerGameEntity(ServerEntity* ent, const std::string& className) {
     // Start with a nice nullptr.
     SVGBaseEntity* spawnServerEntity = nullptr;
-    if ( nullptr == ent ) {
+    if ( !ent ) {
         return nullptr;
     }
-
+    
     // Fetch ServerEntity number.
-    int32_t ServerEntityNumber = ent->state.number;
+    int32_t serverEntityNumber = ent->state.number;
+
+    if (ent->inUse) {
+        gi.DPrintf( "WARNING: ServerEntity '%i' is already in use.\n", ent->state.number );
+        return nullptr; // Bail out, we didn't find one
+    }
 
     // New type info-based spawning system, to replace endless string comparisons
     // First find it by the map name
@@ -122,7 +127,9 @@ SVGBaseEntity* SVG_SpawnClassServerEntity(ServerEntity* ent, const std::string& 
     // Don't freak out if the ServerEntity cannot be allocated, but do warn us about it, it's good to know
     // ServerEntity classes with 'DefineDummyMapClass' won't be reported here
     if ( nullptr != info->AllocateInstance && info->IsMapSpawnable() ) {
-        return (g_baseEntities[ServerEntityNumber] = info->AllocateInstance( ent ));
+        SVGBaseEntity *returnEntity = (g_baseEntities[serverEntityNumber] = info->AllocateInstance( ent ));
+        ent->inUse = true;
+        return returnEntity;
     } else {
         if ( info->IsAbstract() ) {
             gi.DPrintf( "WARNING: tried to allocate an abstract class '%s'\n", info->className );
@@ -131,6 +138,9 @@ SVGBaseEntity* SVG_SpawnClassServerEntity(ServerEntity* ent, const std::string& 
         }
         return nullptr;
     }
+
+    // Set server entity.
+    return nullptr;
 }
 
 //===============
@@ -141,13 +151,6 @@ SVGBaseEntity* SVG_SpawnClassServerEntity(ServerEntity* ent, const std::string& 
 // classEntities too.
 //=================
 void SVG_FreeClassServerEntity(ServerEntity* ent) {
-    // Special class ServerEntity handling IF it still has one.
-    if (ent->classServerEntity) {
-        // Remove the classServerEntity reference
-        ent->classServerEntity->SetServerServerEntity(nullptr);
-        ent->classServerEntity = nullptr;
-    }
-
     // Fetch ServerEntity number.
     int32_t ServerEntityNumber = ent->state.number;
 
@@ -289,36 +292,37 @@ ServerEntity* SVG_Find(ServerEntity* from, int fieldofs, const char* match)
 // ServerEntity dictionary.
 //===============
 SVGBaseEntity* SVG_FindServerEntityByKeyValue(const std::string& fieldKey, const std::string& fieldValue, SVGBaseEntity* lastServerEntity) {
-    ServerEntity* serverEnt = (lastServerEntity ? lastServerEntity->GetServerServerEntity() : nullptr);
+    for (auto &foundEntity : g_entities)
+    //ServerEntity* serverEnt = (lastServerEntity ? lastServerEntity->GetServerServerEntity() : nullptr);
 
-    if (!lastServerEntity)
-        serverEnt = g_entities;
-    else
-        serverEnt++;
+    //if (!lastServerEntity)
+    //    serverEnt = g_entities;
+    //else
+    //    serverEnt++;
 
-    for (; serverEnt < &g_entities[globals.numberOfEntities]; serverEnt++) {
-        // Fetch serverEntity its ClassServerEntity.
-        SVGBaseEntity* classServerEntity = serverEnt->classServerEntity;
+    //for (; serverEnt < &g_entities[globals.numberOfEntities]; serverEnt++) {
+    //    // Fetch serverEntity its ClassServerEntity.
+    //    SVGBaseEntity* classServerEntity = serverEnt->classServerEntity;
 
-        // Ensure it has a class ServerEntity.
-        if (!serverEnt->classServerEntity)
-            continue;
+    //    // Ensure it has a class ServerEntity.
+    //    if (!serverEnt->classServerEntity)
+    //        continue;
 
-        // Ensure it is in use.
-        if (!classServerEntity->IsInUse())
-            continue;
+    //    // Ensure it is in use.
+    //    if (!classServerEntity->IsInUse())
+    //        continue;
 
-        // Start preparing for checking IF, its dictionary HAS fieldKey.
-        auto dictionary = serverEnt->serverEntityDictionary;
+    //    // Start preparing for checking IF, its dictionary HAS fieldKey.
+    //    auto dictionary = serverEnt->serverEntityDictionary;
 
-        if (dictionary.find(fieldKey) != dictionary.end()) {
-            if (dictionary[fieldKey] == fieldValue) {
-                return classServerEntity;
-            }
-        }
-    }
+    //    if (dictionary.find(fieldKey) != dictionary.end()) {
+    //        if (dictionary[fieldKey] == fieldValue) {
+    //            return classServerEntity;
+    //        }
+    //    }
+    //}
 
-    return nullptr;
+    //return nullptr;
 }
 
 //===============

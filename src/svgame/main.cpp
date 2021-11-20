@@ -357,14 +357,14 @@ void SVG_InitializeServerEntities() {
 //=====================
 // SVG_AllocateGameClients
 //
-// Allocates the "ServersClient", aligned to the ServerClient data type array properly for
+// Allocates the "ServerClient", aligned to the ServerClient data type array properly for
 // the current game at play.
 //=====================
 //
 void SVG_AllocateGameClients() {
     // Initialize all clients for this game
     game.maximumClients = maximumClients->value;
-    game.clients = (ServersClient*)gi.TagMalloc(game.maximumClients * sizeof(game.clients[0]), TAG_GAME); // CPP: Cast
+    game.clients = (ServerClient*)gi.TagMalloc(game.maximumClients * sizeof(game.clients[0]), TAG_GAME); // CPP: Cast
     globals.numberOfEntities = game.maximumClients + 1;
 }
 
@@ -389,7 +389,7 @@ void SVG_AllocateGamePlayerClientEntities() {
         SVG_InitServerEntity(serverEntity);
 
         // Allocate their class entities appropriately.
-        serverEntity->classServerEntity = SVG_CreateClassServerEntity<PlayerClient>(serverEntity, false); //SVG_SpawnClassServerEntity(serverEntity, serverEntity->className);
+        serverEntity->classServerEntity = SVG_CreateClassServerEntity<PlayerClient>(serverEntity, false); //SVG_SpawnServerGameEntity(serverEntity, serverEntity->className);
         
         // Be sure to reset their inuse, after all, they aren't in use.
         serverEntity->classServerEntity->SetInUse(false);

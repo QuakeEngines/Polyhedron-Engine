@@ -62,7 +62,7 @@ SVGBaseEntity::SVGBaseEntity(ServerEntity* svServerEntity) : serverEntity(svServ
 	serverEntity = svServerEntity;
 }
 SVGBaseEntity::~SVGBaseEntity() {
-	svServerEntity->inUse = false;
+	serverEntity->inUse = false;
 }
 
 // Interface functions. 

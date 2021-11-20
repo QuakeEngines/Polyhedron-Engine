@@ -31,7 +31,7 @@ vec3_t SVG_ProjectSource(const vec3_t &point, const vec3_t &distance, const vec3
     };
 }
 
-vec3_t SVG_PlayerProjectSource(ServersClient* client, const vec3_t& point, const vec3_t& distance, const vec3_t& forward, const vec3_t& right)
+vec3_t SVG_PlayerProjectSource(ServerClient* client, const vec3_t& point, const vec3_t& distance, const vec3_t& forward, const vec3_t& right)
 {
     vec3_t  _distance = distance;;
 
@@ -147,10 +147,7 @@ void G_TouchSolids(SVGBaseEntity *ent)
         if (!hit->inUse)
             continue;
 
-        if (!hit->classServerEntity)
-            continue;
-
-        ent->Touch(ent, hit->classServerEntity, NULL, NULL);
+        ent->Touch(ent, hit, NULL, NULL);
         //if (!hit->touch)
         //    continue;
         //hit->touch(hit, ent, NULL, NULL);

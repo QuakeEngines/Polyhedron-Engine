@@ -19,363 +19,366 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "g_local.h"
 #include "functionpointers.h"
 
-#if 0
+struct save_field_t {
 
-//#define _DEBUG
-typedef struct {
-    fieldtype_t type;
-#ifdef _DEBUG
-    const char *name; // C++20: STRING: Added const to char*
-#endif
-    size_t ofs;
-    size_t size;
-} save_field_t;
-
-#ifdef _DEBUG
-#define _FA(type, name, size) { type, #name, _OFS(name), size }
-#else
-#define _FA(type, name, size) { type, _OFS(name), size }
-#endif
-#define _F(type, name) _FA(type, name, 1)
-#define SZ(name, size) _FA(F_ZSTRING, name, size)
-#define BA(name, size) _FA(F_BYTE, name, size)
-#define B(name) BA(name, 1)
-#define SA(name, size) _FA(F_SHORT, name, size)
-#define S(name) SA(name, 1)
-#define IA(name, size) _FA(F_INT, name, size)
-#define I(name) IA(name, 1)
-#define FA(name, size) _FA(F_FLOAT, name, size)
-#define F(name) FA(name, 1)
-#define L(name) _F(F_LSTRING, name)
-#define V(name) _F(F_VECTOR, name)
-#define T(name) _F(F_ITEM, name)
-#define E(name) _F(F_EDICT, name)
-#define P(name, type) _FA(F_POINTER, name, type)
-
-static const save_field_t ServerEntityfields[] = {
-#define _OFS FOFS
-    V(state.origin),
-    V(state.angles),
-    V(state.oldOrigin),
-    I(state.modelIndex),
-    I(state.modelIndex2),
-    I(state.modelIndex3),
-    I(state.modelIndex4),
-    I(state.frame),
-    I(state.skinNumber),
-    I(state.effects),
-    I(state.renderEffects),
-    I(state.solid),
-    I(state.sound),
-    I(state.eventID),
-
-    // [...]
-
-    I(serverFlags),
-    V(mins),
-    V(maxs),
-    V(absMin),
-    V(absMax),
-    V(size),
-    I(solid),
-    I(clipMask),
-    E(owner),
-
-    //I(classServerEntity->GetMoveType()),
-//    I(flags),
-
-//    L(model),
-    F(freeTime),
-
-    L(message),
-    L(className),
-//    I(spawnFlags),
-
-    F(timeStamp),
-
-    L(target),
-    L(targetName),
-    L(killTarget),
-    L(team),
-    L(pathTarget),
-    E(targetServerEntityPtr),
-
-    F(speed),
-    F(acceleration),
-    F(deceleration),
-    V(moveDirection),
-    V(position1),
-    V(position2),
-
-//    V(velocity),
-//    V(angularVelocity),
-//    I(mass),
-//    F(airFinishedTime),
-//    F(gravity),
-
-    E(goalServerEntityPtr),
-    E(moveTargetPtr),
-//    F(yawSpeed),
- //   F(idealYawAngle),
-
- //   F(nextThinkTime),
-    //P(PreThink, P_prethink),
-    //P(Think, P_think),
-    //P(Blocked, P_blocked),
-    //P(Touch, P_touch),
-    //P(Use, P_use),
-    //P(Pain, P_pain),
-    //P(Die, P_die),
-
-//    F(debounceTouchTime),
-//    F(debouncePainTime),
-//    F(debounceDamageTime),
-//    F(debounceSoundTime),
-//    F(lastMoveTime),
-
-//    I(health),
-//    I(maxHealth),
-//    I(gibHealth),
-//    I(deadFlag),
-//    I(showHostile),
-
- //   F(powerArmorTime),
-
-    L(map),
-
-    //I(viewHeight),
-    //I(takeDamage),
-    //I(damage),
-    //I(radiusDamage),
-    //F(damageRadius),
-    //I(sounds),
-    I(count),
-
-    E(chain),
-    //E(enemy),
-    //E(oldEnemyPtr),
-    //E(activator),
-    //E(groundServerEntityPtr),
-    //I(groundServerEntityLinkCount),
-    //E(teamChainPtr),
-    //E(teamMasterPtr),
-
-    E(myNoisePtr),
-    E(myNoise2Ptr),
-
-    I(noiseIndex),
-    I(noiseIndex2),
-    F(volume),
-    F(attenuation),
-
-//    F(wait),
-//    F(delay),
-    F(random),
-
-    F(teleportTime),
-
-//    I(waterType),
-//    I(waterLevel),
-
-    V(moveOrigin),
-    V(moveAngles),
-
-    I(lightLevel),
-
-    I(style),
-    L(customLightStyle),
-
-    T(item),
-
-//    V(moveInfo.startOrigin),
-    //V(moveInfo.startAngles),
-    //V(moveInfo.endOrigin),
-    //V(moveInfo.endAngles),
-
-    //I(moveInfo.startSoundIndex),
-    //I(moveInfo.middleSoundIndex),
-    //I(moveInfo.endSoundIndex),
-
-    //F(moveInfo.acceleration),
-    //F(moveInfo.speed),
-    //F(moveInfo.deceleration),
-    //F(moveInfo.distance),
-
-    //F(moveInfo.wait),
-
-    //I(moveInfo.state),
-    //V(moveInfo.dir),
-    //F(moveInfo.currentSpeed),
-    //F(moveInfo.moveSpeed),
-    //F(moveInfo.nextSpeed),
-    //F(moveInfo.remainingDistance),
-    //F(moveInfo.deceleratedDistance),
-    //P(moveInfo.OnEndFunction, P_moveinfo_endfunc),
-
-    {(fieldtype_t)0}
-#undef _OFS
 };
-
-static const save_field_t levelfields[] = {
-#define _OFS LLOFS
-    I(frameNumber),
-    F(time),
-
-    SZ(levelName, MAX_QPATH),
-    SZ(mapName, MAX_QPATH),
-    SZ(nextMap, MAX_QPATH),
-
-    F(intermission.time),
-    L(intermission.changeMap),
-    I(intermission.exitIntermission),
-    V(intermission.origin),
-    V(intermission.viewAngle),
-
-    E(sightClient),
-
-    E(sightServerEntity),
-    I(sightServerEntityFrameNumber),
-    E(soundServerEntity),
-    I(soundServerEntityFrameNumber),
-    E(sound2ServerEntity),
-    I(sound2ServerEntityFrameNumber),
-
-    I(pic_health),
-
-    I(totalMonsters),
-    I(killedMonsters),
-
-    I(bodyQue),
-
-    I(powerCubes),
-
-    {(fieldtype_t)0}
-#undef _OFS
-};
-
-static const save_field_t clientfields[] = {
-#define _OFS CLOFS
-    I(playerState.pmove.type),
-
-    V(playerState.pmove.origin),
-    V(playerState.pmove.velocity),
-    B(playerState.pmove.flags),
-    B(playerState.pmove.time),
-    S(playerState.pmove.gravity),
-    SA(playerState.pmove.deltaAngles, 3),
-
-    V(playerState.pmove.viewAngles),
-    V(playerState.pmove.viewOffset),
-    V(playerState.kickAngles),
-
-    V(playerState.gunAngles),
-    V(playerState.gunOffset),
-    I(playerState.gunIndex),
-    I(playerState.gunFrame),
-
-    FA(playerState.blend, 4),
-
-    F(playerState.fov),
-
-    I(playerState.rdflags),
-
-    SA(playerState.stats, MAX_STATS),
-
-    SZ(persistent.userinfo, MAX_INFO_STRING),
-    SZ(persistent.netname, 16),
-    I(persistent.hand),
-
-    I(persistent.isConnected),
-
-    I(persistent.health),
-    I(persistent.maxHealth),
-    I(persistent.savedFlags),
-
-    I(persistent.selectedItem),
-    IA(persistent.inventory, MAX_ITEMS),
-
-    I(persistent.maxBullets),
-    I(persistent.maxShells),
-    I(persistent.maxRockets),
-    I(persistent.maxGrenades),
-    I(persistent.maxCells),
-    I(persistent.maxSlugs),
-
-    T(persistent.activeWeapon),
-    T(persistent.lastWeapon),
-
-    I(persistent.powerCubes),
-    I(persistent.score),
-
-    I(persistent.isSpectator),
-
-    I(showScores),
-    I(showInventory),
-    I(showHelpIcon),
-
-    I(ammoIndex),
-
-    T(newWeapon),
-
-    I(damages.armor),
-    I(damages.powerArmor),
-    I(damages.blood),
-    I(damages.knockBack),
-    V(damages.from),
-
-    F(killerYaw),
-
-    I(weaponState),
-
-    V(kickAngles),
-    V(kickOrigin),
-    F(viewDamage.roll),
-    F(viewDamage.pitch),
-    F(viewDamage.time),
-    F(fallTime),
-    F(fallValue),
-    F(damageAlpha),
-    F(bonusAlpha),
-    V(damageBlend),
-    V(aimAngles),
-    F(bobTime),
-    V(oldViewAngles),
-    V(oldVelocity),
-
-    F(nextDrownTime),
-    I(oldWaterLevel),
-
-    I(machinegunShots),
-
-    I(animation.endFrame),
-    I(animation.priorityAnimation),
-    I(animation.isDucking),
-    I(animation.isRunning),
-
-    // powerup timers
-    I(weaponSound),
-
-    F(pickupMessageTime),
-
-    {(fieldtype_t)0}
-#undef _OFS
-};
-
-static const save_field_t gamefields[] = {
-#define _OFS GLOFS
-    I(maximumClients),
-    I(maxEntities),
-
-    I(serverflags),
-
-    I(numberOfItems),
-
-    I(autoSaved),
-
-    {(fieldtype_t)0}
-#undef _OFS
-};
-#endif
+//#if 0
+//
+////#define _DEBUG
+//typedef struct {
+//    fieldtype_t type;
+//#ifdef _DEBUG
+//    const char *name; // C++20: STRING: Added const to char*
+//#endif
+//    size_t ofs;
+//    size_t size;
+//} save_field_t;
+//
+//#ifdef _DEBUG
+//#define _FA(type, name, size) { type, #name, _OFS(name), size }
+//#else
+//#define _FA(type, name, size) { type, _OFS(name), size }
+//#endif
+//#define _F(type, name) _FA(type, name, 1)
+//#define SZ(name, size) _FA(F_ZSTRING, name, size)
+//#define BA(name, size) _FA(F_BYTE, name, size)
+//#define B(name) BA(name, 1)
+//#define SA(name, size) _FA(F_SHORT, name, size)
+//#define S(name) SA(name, 1)
+//#define IA(name, size) _FA(F_INT, name, size)
+//#define I(name) IA(name, 1)
+//#define FA(name, size) _FA(F_FLOAT, name, size)
+//#define F(name) FA(name, 1)
+//#define L(name) _F(F_LSTRING, name)
+//#define V(name) _F(F_VECTOR, name)
+//#define T(name) _F(F_ITEM, name)
+//#define E(name) _F(F_EDICT, name)
+//#define P(name, type) _FA(F_POINTER, name, type)
+//
+//static const save_field_t ServerEntityfields[] = {
+//#define _OFS FOFS
+//    V(state.origin),
+//    V(state.angles),
+//    V(state.oldOrigin),
+//    I(state.modelIndex),
+//    I(state.modelIndex2),
+//    I(state.modelIndex3),
+//    I(state.modelIndex4),
+//    I(state.frame),
+//    I(state.skinNumber),
+//    I(state.effects),
+//    I(state.renderEffects),
+//    I(state.solid),
+//    I(state.sound),
+//    I(state.eventID),
+//
+//    // [...]
+//
+//    I(serverFlags),
+//    V(mins),
+//    V(maxs),
+//    V(absMin),
+//    V(absMax),
+//    V(size),
+//    I(solid),
+//    I(clipMask),
+//    E(owner),
+//
+//    //I(classServerEntity->GetMoveType()),
+////    I(flags),
+//
+////    L(model),
+//    F(freeTime),
+//
+//    L(message),
+//    L(className),
+////    I(spawnFlags),
+//
+//    F(timeStamp),
+//
+//    L(target),
+//    L(targetName),
+//    L(killTarget),
+//    L(team),
+//    L(pathTarget),
+//    E(targetServerEntityPtr),
+//
+//    F(speed),
+//    F(acceleration),
+//    F(deceleration),
+//    V(moveDirection),
+//    V(position1),
+//    V(position2),
+//
+////    V(velocity),
+////    V(angularVelocity),
+////    I(mass),
+////    F(airFinishedTime),
+////    F(gravity),
+//
+//    E(goalServerEntityPtr),
+//    E(moveTargetPtr),
+////    F(yawSpeed),
+// //   F(idealYawAngle),
+//
+// //   F(nextThinkTime),
+//    //P(PreThink, P_prethink),
+//    //P(Think, P_think),
+//    //P(Blocked, P_blocked),
+//    //P(Touch, P_touch),
+//    //P(Use, P_use),
+//    //P(Pain, P_pain),
+//    //P(Die, P_die),
+//
+////    F(debounceTouchTime),
+////    F(debouncePainTime),
+////    F(debounceDamageTime),
+////    F(debounceSoundTime),
+////    F(lastMoveTime),
+//
+////    I(health),
+////    I(maxHealth),
+////    I(gibHealth),
+////    I(deadFlag),
+////    I(showHostile),
+//
+// //   F(powerArmorTime),
+//
+//    L(map),
+//
+//    //I(viewHeight),
+//    //I(takeDamage),
+//    //I(damage),
+//    //I(radiusDamage),
+//    //F(damageRadius),
+//    //I(sounds),
+//    I(count),
+//
+//    E(chain),
+//    //E(enemy),
+//    //E(oldEnemyPtr),
+//    //E(activator),
+//    //E(groundServerEntityPtr),
+//    //I(groundServerEntityLinkCount),
+//    //E(teamChainPtr),
+//    //E(teamMasterPtr),
+//
+//    E(myNoisePtr),
+//    E(myNoise2Ptr),
+//
+//    I(noiseIndex),
+//    I(noiseIndex2),
+//    F(volume),
+//    F(attenuation),
+//
+////    F(wait),
+////    F(delay),
+//    F(random),
+//
+//    F(teleportTime),
+//
+////    I(waterType),
+////    I(waterLevel),
+//
+//    V(moveOrigin),
+//    V(moveAngles),
+//
+//    I(lightLevel),
+//
+//    I(style),
+//    L(customLightStyle),
+//
+//    T(item),
+//
+////    V(moveInfo.startOrigin),
+//    //V(moveInfo.startAngles),
+//    //V(moveInfo.endOrigin),
+//    //V(moveInfo.endAngles),
+//
+//    //I(moveInfo.startSoundIndex),
+//    //I(moveInfo.middleSoundIndex),
+//    //I(moveInfo.endSoundIndex),
+//
+//    //F(moveInfo.acceleration),
+//    //F(moveInfo.speed),
+//    //F(moveInfo.deceleration),
+//    //F(moveInfo.distance),
+//
+//    //F(moveInfo.wait),
+//
+//    //I(moveInfo.state),
+//    //V(moveInfo.dir),
+//    //F(moveInfo.currentSpeed),
+//    //F(moveInfo.moveSpeed),
+//    //F(moveInfo.nextSpeed),
+//    //F(moveInfo.remainingDistance),
+//    //F(moveInfo.deceleratedDistance),
+//    //P(moveInfo.OnEndFunction, P_moveinfo_endfunc),
+//
+//    {(fieldtype_t)0}
+//#undef _OFS
+//};
+//
+//static const save_field_t levelfields[] = {
+//#define _OFS LLOFS
+//    I(frameNumber),
+//    F(time),
+//
+//    SZ(levelName, MAX_QPATH),
+//    SZ(mapName, MAX_QPATH),
+//    SZ(nextMap, MAX_QPATH),
+//
+//    F(intermission.time),
+//    L(intermission.changeMap),
+//    I(intermission.exitIntermission),
+//    V(intermission.origin),
+//    V(intermission.viewAngle),
+//
+//    E(sightClient),
+//
+//    E(sightServerEntity),
+//    I(sightServerEntityFrameNumber),
+//    E(soundServerEntity),
+//    I(soundServerEntityFrameNumber),
+//    E(sound2ServerEntity),
+//    I(sound2ServerEntityFrameNumber),
+//
+//    I(pic_health),
+//
+//    I(totalMonsters),
+//    I(killedMonsters),
+//
+//    I(bodyQue),
+//
+//    I(powerCubes),
+//
+//    {(fieldtype_t)0}
+//#undef _OFS
+//};
+//
+//static const save_field_t clientfields[] = {
+//#define _OFS CLOFS
+//    I(playerState.pmove.type),
+//
+//    V(playerState.pmove.origin),
+//    V(playerState.pmove.velocity),
+//    B(playerState.pmove.flags),
+//    B(playerState.pmove.time),
+//    S(playerState.pmove.gravity),
+//    SA(playerState.pmove.deltaAngles, 3),
+//
+//    V(playerState.pmove.viewAngles),
+//    V(playerState.pmove.viewOffset),
+//    V(playerState.kickAngles),
+//
+//    V(playerState.gunAngles),
+//    V(playerState.gunOffset),
+//    I(playerState.gunIndex),
+//    I(playerState.gunFrame),
+//
+//    FA(playerState.blend, 4),
+//
+//    F(playerState.fov),
+//
+//    I(playerState.rdflags),
+//
+//    SA(playerState.stats, MAX_STATS),
+//
+//    SZ(persistent.userinfo, MAX_INFO_STRING),
+//    SZ(persistent.netname, 16),
+//    I(persistent.hand),
+//
+//    I(persistent.isConnected),
+//
+//    I(persistent.health),
+//    I(persistent.maxHealth),
+//    I(persistent.savedFlags),
+//
+//    I(persistent.selectedItem),
+//    IA(persistent.inventory, MAX_ITEMS),
+//
+//    I(persistent.maxBullets),
+//    I(persistent.maxShells),
+//    I(persistent.maxRockets),
+//    I(persistent.maxGrenades),
+//    I(persistent.maxCells),
+//    I(persistent.maxSlugs),
+//
+//    T(persistent.activeWeapon),
+//    T(persistent.lastWeapon),
+//
+//    I(persistent.powerCubes),
+//    I(persistent.score),
+//
+//    I(persistent.isSpectator),
+//
+//    I(showScores),
+//    I(showInventory),
+//    I(showHelpIcon),
+//
+//    I(ammoIndex),
+//
+//    T(newWeapon),
+//
+//    I(damages.armor),
+//    I(damages.powerArmor),
+//    I(damages.blood),
+//    I(damages.knockBack),
+//    V(damages.from),
+//
+//    F(killerYaw),
+//
+//    I(weaponState),
+//
+//    V(kickAngles),
+//    V(kickOrigin),
+//    F(viewDamage.roll),
+//    F(viewDamage.pitch),
+//    F(viewDamage.time),
+//    F(fallTime),
+//    F(fallValue),
+//    F(damageAlpha),
+//    F(bonusAlpha),
+//    V(damageBlend),
+//    V(aimAngles),
+//    F(bobTime),
+//    V(oldViewAngles),
+//    V(oldVelocity),
+//
+//    F(nextDrownTime),
+//    I(oldWaterLevel),
+//
+//    I(machinegunShots),
+//
+//    I(animation.endFrame),
+//    I(animation.priorityAnimation),
+//    I(animation.isDucking),
+//    I(animation.isRunning),
+//
+//    // powerup timers
+//    I(weaponSound),
+//
+//    F(pickupMessageTime),
+//
+//    {(fieldtype_t)0}
+//#undef _OFS
+//};
+//
+//static const save_field_t gamefields[] = {
+//#define _OFS GLOFS
+//    I(maximumClients),
+//    I(maxEntities),
+//
+//    I(serverflags),
+//
+//    I(numberOfItems),
+//
+//    I(autoSaved),
+//
+//    {(fieldtype_t)0}
+//#undef _OFS
+//};
+//#endif
 //=========================================================
 
 static void write_data(void *buf, size_t len, FILE *f)
@@ -504,10 +507,10 @@ static void write_field(FILE *f, const save_field_t *field, void *base)
         write_index(f, *(void **)p, sizeof(ServerEntity), g_entities, MAX_EDICTS - 1);
         break;
     case F_CLIENT:
-        write_index(f, *(void **)p, sizeof(ServersClient), game.clients, game.maximumClients - 1);
+        write_index(f, *(void **)p, sizeof(ServerClient), game.clients, game.maximumClients - 1);
         break;
     case F_ITEM:
-        write_index(f, *(void **)p, sizeof(gitem_t), itemlist, game.numberOfItems - 1);
+        write_index(f, *(void **)p, sizeof(GameItem), itemlist, game.numberOfItems - 1);
         break;
 
     case F_POINTER:
@@ -652,68 +655,68 @@ static void *read_pointer(FILE *f, ptr_type_t type)
 
 static void read_field(FILE *f, const save_field_t *field, void *base)
 {
-    void *p = (byte *)base + field->ofs;
-    int i;
+    //void *p = (byte *)base + field->ofs;
+    //int i;
 
-    switch (field->type) {
-    case F_BYTE:
-        read_data(p, field->size, f);
-        break;
-    case F_SHORT:
-        for (i = 0; i < field->size; i++) {
-            ((short *)p)[i] = read_short(f);
-        }
-        break;
-    case F_INT:
-        for (i = 0; i < field->size; i++) {
-            ((int *)p)[i] = read_int(f);
-        }
-        break;
-    case F_FLOAT:
-        for (i = 0; i < field->size; i++) {
-            ((float *)p)[i] = read_float(f);
-        }
-        break;
-    case F_VECTOR:
-        read_vector(f, (vec_t *)p);
-        break;
-
-    case F_LSTRING:
-        *(char **)p = read_string(f);
-        break;
-    case F_ZSTRING:
-        read_zstring(f, (char *)p, field->size);
-        break;
-
-    case F_EDICT:
-        *(ServerEntity **)p = (ServerEntity*)read_index(f, sizeof(ServerEntity), g_entities, game.maxEntities - 1); // CPP: Cast
-        break;
-    case F_CLIENT:
-        *(ServersClient **)p = (ServersClient*)read_index(f, sizeof(ServersClient), game.clients, game.maximumClients - 1); // CPP: Cast
-        break;
-    case F_ITEM:
-        *(gitem_t **)p = (gitem_t*)read_index(f, sizeof(gitem_t), itemlist, game.numberOfItems - 1); // CPP: Cast
-        break;
-
-    // TODO: We aren't using this anymore...
-    case F_POINTER:
-        break;
-    //case F_POINTER:
-    //    *(void **)p = read_pointer(f, (ptr_type_t)field->size); // CPP: Cast
+    //switch (field->type) {
+    //case F_BYTE:
+    //    read_data(p, field->size, f);
+    //    break;
+    //case F_SHORT:
+    //    for (i = 0; i < field->size; i++) {
+    //        ((short *)p)[i] = read_short(f);
+    //    }
+    //    break;
+    //case F_INT:
+    //    for (i = 0; i < field->size; i++) {
+    //        ((int *)p)[i] = read_int(f);
+    //    }
+    //    break;
+    //case F_FLOAT:
+    //    for (i = 0; i < field->size; i++) {
+    //        ((float *)p)[i] = read_float(f);
+    //    }
+    //    break;
+    //case F_VECTOR:
+    //    read_vector(f, (vec_t *)p);
     //    break;
 
-    default:
-        gi.Error("%s: unknown field type", __func__);
-    }
+    //case F_LSTRING:
+    //    *(char **)p = read_string(f);
+    //    break;
+    //case F_ZSTRING:
+    //    read_zstring(f, (char *)p, field->size);
+    //    break;
+
+    //case F_EDICT:
+    //    *(ServerEntity **)p = (ServerEntity*)read_index(f, sizeof(ServerEntity), g_entities, game.maxEntities - 1); // CPP: Cast
+    //    break;
+    //case F_CLIENT:
+    //    *(ServerClient **)p = (ServerClient*)read_index(f, sizeof(ServerClient), game.clients, game.maximumClients - 1); // CPP: Cast
+    //    break;
+    //case F_ITEM:
+    //    *(GameItem **)p = (GameItem*)read_index(f, sizeof(GameItem), itemlist, game.numberOfItems - 1); // CPP: Cast
+    //    break;
+
+    //// TODO: We aren't using this anymore...
+    //case F_POINTER:
+    //    break;
+    ////case F_POINTER:
+    ////    *(void **)p = read_pointer(f, (ptr_type_t)field->size); // CPP: Cast
+    ////    break;
+
+    //default:
+    //    gi.Error("%s: unknown field type", __func__);
+    //}
 }
 
 static void read_fields(FILE *f, const save_field_t *fields, void *base)
 {
-    const save_field_t *field;
+    //const save_field_t *field;
 
-    for (field = fields; field->type; field++) {
-        read_field(f, field, base);
-    }
+    //for (field = fields; field->type; field++) {
+    //    read_field(f, field, base);
+    //}
 }
 
 //=========================================================
@@ -800,7 +803,7 @@ void SVG_ReadGame(const char *filename)
     globals.entities = g_entities;
     globals.maxEntities = game.maxEntities;
 
-    game.clients = (ServersClient*)gi.TagMalloc(game.maximumClients * sizeof(game.clients[0]), TAG_GAME); // CPP: Cast
+    game.clients = (ServerClient*)gi.TagMalloc(game.maximumClients * sizeof(game.clients[0]), TAG_GAME); // CPP: Cast
     for (i = 0; i < game.maximumClients; i++) {
         read_fields(f, clientfields, &game.clients[i]);
     }

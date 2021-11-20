@@ -20,7 +20,6 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "utils.h"           // Include Utilities funcs.
 #include "player/hud.h"      // Include HUD funcs.
 
-#include "entities/base/SVGBaseEntity.h"
 #include "entities/base/PlayerClient.h"
 
 #include "weapons/blaster.h"
@@ -29,8 +28,8 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "weapons/supershotgun.h"
 
 qboolean    Pickup_Weapon(SVGBaseEntity *ent, PlayerClient *other);
-void        Use_Weapon(PlayerClient *ent, gitem_t *inv);
-void        Drop_Weapon(PlayerClient *ent, gitem_t *inv);
+void        Use_Weapon(PlayerClient *ent, GameItem *inv);
+void        Drop_Weapon(PlayerClient *ent, GameItem *inv);
 
 gitem_armor_t bodyarmor_info    = {100, 200, .80f, .60f, ArmorType::Body};
 
@@ -45,7 +44,7 @@ static int  body_armor_index;
 SVG_GetItemByIndex
 ===============
 */
-gitem_t *SVG_GetItemByIndex(int index)
+GameItem *SVG_GetItemByIndex(int index)
 {
     if (index == 0 || index >= game.numberOfItems)
         return NULL;
@@ -60,10 +59,10 @@ SVG_FindItemByClassname
 
 ===============
 */
-gitem_t *SVG_FindItemByClassname(const char *className)
+GameItem *SVG_FindItemByClassname(const char *className)
 {
     int     i;
-    gitem_t *it;
+    GameItem *it;
 
     it = itemlist;
     for (i = 0 ; i < game.numberOfItems ; i++, it++) {
@@ -82,10 +81,10 @@ SVG_FindItemByPickupName
 
 ===============
 */
-gitem_t *SVG_FindItemByPickupName(const char *pickup_name) // C++20: STRING: Added const to char*
+GameItem *SVG_FindItemByPickupName(const char *pickup_name) // C++20: STRING: Added const to char*
 {
     int     i;
-    gitem_t *it;
+    GameItem *it;
 
     it = itemlist;
     for (i = 0 ; i < game.numberOfItems ; i++, it++) {
@@ -166,7 +165,7 @@ qboolean Pickup_Powerup(ServerEntity *ent, ServerEntity *other)
     return true;
 }
 
-void Drop_General(ServerEntity *ent, gitem_t *item)
+void Drop_General(ServerEntity *ent, GameItem *item)
 {
     SVG_DropItem(ent, item);
     ent->client->persistent.inventory[ITEM_INDEX(item)]--;
@@ -175,7 +174,7 @@ void Drop_General(ServerEntity *ent, gitem_t *item)
 
 //======================================================================
 
-qboolean SVG_AddAmmo(ServerEntity *ent, gitem_t *item, int count)
+qboolean SVG_AddAmmo(ServerEntity *ent, GameItem *item, int count)
 {
     int         index;
     int         max;
@@ -243,7 +242,7 @@ qboolean Pickup_Ammo(SVGBaseEntity *ent, PlayerClient*other)
     return true;
 }
 
-void Drop_Ammo(PlayerClient *ent, gitem_t *item)
+void Drop_Ammo(PlayerClient *ent, GameItem *item)
 {
     //ServerEntity *dropped;
     //int     index;
@@ -321,7 +320,7 @@ int SVG_ArmorIndex(SVGBaseEntity *ent)
         return 0;
 
     // Fetch client.
-    gclient_s* client = ent->GetClient();
+    ServerClient client = ent->GetClient();
     
     if (!client)
         return 0;
@@ -474,7 +473,7 @@ void drop_make_touchable(ServerEntity *ent)
     }
 }
 
-ServerClient *SVG_DropItem(ServerEntity *ent, gitem_t *item)
+ServerClient *SVG_DropItem(ServerEntity *ent, GameItem *item)
 {
     return NULL;
 //    ServerEntity *dropped;
@@ -611,12 +610,12 @@ This will be called for each item spawned in a level,
 and for each item in each client's inventory.
 ===============
 */
-void SVG_PrecacheItem(gitem_t *it)
+void SVG_PrecacheItem(GameItem *it)
 {
     const char    *s, *start; // C++20: STRING: Added const
     char    data[MAX_QPATH];
     int     len;
-    gitem_t *ammo;
+    GameItem *ammo;
 
     if (!it)
         return;
@@ -677,7 +676,7 @@ Items can't be immediately dropped to floor, because they might
 be on an ServerEntity that hasn't spawned yet.
 ============
 */
-void SVG_SpawnItem(ServerEntity *ent, gitem_t *item)
+void SVG_SpawnItem(ServerEntity *ent, GameItem *item)
 {
     SVG_PrecacheItem(item);
 
@@ -737,7 +736,7 @@ void SVG_SpawnItem(ServerEntity *ent, gitem_t *item)
 
 //======================================================================
 
-gitem_t itemlist[] = {
+GameItem itemlist[] = {
     {
         NULL
     },  // leave index 0 alone
@@ -1022,7 +1021,7 @@ Called by worldspawn
 void SVG_SetItemNames(void)
 {
     int     i;
-    gitem_t *it;
+    GameItem *it;
 
     for (i = 0 ; i < game.numberOfItems ; i++) {
         it = &itemlist[i];
