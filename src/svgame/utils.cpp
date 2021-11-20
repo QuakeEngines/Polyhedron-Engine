@@ -48,7 +48,7 @@ vec3_t SVG_PlayerProjectSource(GameClient* client, const vec3_t& point, const ve
 void Think_Delay(ServerGameEntity *ent)
 {
     //UTIL_UseTargets(ent, ent->GetActivator());
-    //SVG_FreeServerEntity(ent->GetServerServerEntity());
+    //SVG_FreeServerEntity(ent->GetServerEntity());
 }
 
 
@@ -79,7 +79,7 @@ UTIL_TouchTriggers
 void UTIL_TouchTriggers(ServerGameEntity *ent)
 {
     int         i, num;
-    ServerEntity* serverEntity = ent->GetServerServerEntity();
+    ServerEntity* serverEntity = ent->GetServerEntity();
     ServerEntity* touch[MAX_EDICTS], * hit;
 
     // dead things don't activate triggers!
@@ -132,7 +132,7 @@ to force all entities it covers to immediately touch it
 void G_TouchSolids(ServerGameEntity *ent)
 {
     int         i, num;
-    ServerEntity* serverEntity = ent->GetServerServerEntity();
+    ServerEntity* serverEntity = ent->GetServerEntity();
     ServerEntity* touch[MAX_EDICTS], * hit;
 
     // dead things don't activate triggers!

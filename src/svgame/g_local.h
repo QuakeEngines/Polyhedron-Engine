@@ -39,9 +39,9 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 // Forward Declaration.
 //-------------------
 class ServerEntity;
-class ServerClient;
-
 class ServerGameEntity;
+
+class ServerClient;
 class GameClient;
 
 class SharedEntity;
@@ -76,7 +76,7 @@ struct EntitySpawnFlags {
 };
 
 // entity->flags
-struct EntityFlags {
+struct ServerEntityFlags {
     static constexpr int32_t Fly = 1;
     static constexpr int32_t Swim = 2; // Implied immunity to drowining
     static constexpr int32_t ImmuneLaser = 4;

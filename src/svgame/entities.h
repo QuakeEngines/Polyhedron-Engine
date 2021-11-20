@@ -17,7 +17,9 @@
 #pragma once
 
 // Include this guy here, gotta do so to make it work.
+#include "shared/entities/Server/ServerClient.h"
 #include "shared/entities/Server/ServerEntity.h"
+#include "shared/entities/Server/GameClient.h"
 #include "shared/entities/Server/ServerGameEntity.h"
 
 // Externs.
@@ -40,7 +42,7 @@ namespace ServerEntityFilterFunctions {
     // Returns true in case the BaseServerEntity has a ground ServerEntity set to it.
     inline bool BaseServerEntityHasGroundServerEntity(ServerGameEntity* ent) { return ent->GetGroundServerEntity(); }
     // Returns true in case the BaseServerEntity is properly linked to a server ServerEntity.
-    inline bool BaseServerEntityHasServerServerEntity(ServerGameEntity* ent) { return ent->GetServerServerEntity(); }
+    inline bool BaseServerEntityHasServerServerEntity(ServerGameEntity* ent) { return ent->GetServerEntity(); }
     // Returns true if the BaseServerEntity contains the sought for targetname.
     inline bool BaseServerEntityHasTargetName(ServerGameEntity* ent) { return ent->GetTargetName() != "" && !ent->GetTargetName().empty(); }
     // Returns true in case the BaseServerEntity has a client attached to it.
@@ -296,5 +298,3 @@ inline ServerEntityClass* SVG_CreateClassServerEntity(ServerEntity* edict = null
 ServerGameEntity* SVG_GetWorldClassServerEntity();
 ServerGameEntity* SVG_SpawnServerGameEntity(ServerEntity* ent, const std::string& className);
 void SVG_FreeClassServerEntity(ServerEntity* ent);
-
-#endif // __SVGAME_ENTITIES_H__

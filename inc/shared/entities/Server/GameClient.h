@@ -15,6 +15,7 @@
 #include "shared/entities/Server/ClientPersistentData.h"
 #include "shared/entities/Server/ClientRespawnData.h"
 #include "shared/entities/Server/ServerClient.h"
+#include "shared/entities/Server/GameClient.h"
 #include "shared/entities/Server/ServerEntity.h"
 #include "shared/entities/Server/ServerGameEntity.h"
 #include "shared/entities/Server/GameItem.h"

@@ -14,7 +14,7 @@
 
 // Include class entities.
 //#include "../entities/base/ServerGameEntity.h"
-#include "../entities/base/PlayerClient.h"
+#include "../entities/base/PlayerEntity.h"
 
 // Include player headers.
 #include "../player/animations.h"
@@ -71,7 +71,7 @@ void weapon_supershotgun_fire(PlayerClient * ent)
 
     // send muzzle flash
     gi.WriteByte(SVG_CMD_MUZZLEFLASH);
-    gi.WriteShort(ent->GetServerServerEntity() - g_entities);
+    gi.WriteShort(ent->GetServerEntity() - g_entities);
     gi.WriteByte(MuzzleFlashType::SuperShotgun | is_silenced);
     vec3_t origin = ent->GetOrigin();
     gi.Multicast(origin, MultiCast::PVS);

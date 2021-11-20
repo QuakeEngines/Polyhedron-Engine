@@ -6,22 +6,22 @@
 //
 //
 */
-#include "g_local.h"			// Include SVGame header.
-#include "entities.h"			// Entities header.
-#include "player/client.h"		// Include Player Client header.
+// Include local game header.
+#include "g_local.h"
+#include "effects.h"
+#include "entities.h"
 
 
+// Shared Entities.
+#include "shared/entities/Server/ClientPersistentData.h"
+#include "shared/entities/Server/ClientRespawnData.h"
+#include "shared/entities/Server/ServerClient.h"
+#include "shared/entities/Server/ServerEntity.h"
+#include "shared/entities/Server/ServerGameEntity.h"
+#include "shared/entities/Server/GameItem.h"
+// Include super shotgun weapon header.
+#include "chasecamera.h"
 
-//
-// SVG_SpawnServerGameEntity
-//
-//
-#include "entities/base/ServerGameEntity.h"
-#include "entities/base/SVGBaseTrigger.h"
-#include "entities/base/SVGBaseMover.h"
-#include "entities/base/PlayerClient.h"
-#include "entities/info/InfoPlayerStart.h"
-#include "entities/Worldspawn.h"
 
 #include <ranges>
 
@@ -34,21 +34,13 @@
 // Array containing all our ServerGameEntity pointer objects.
 std::array<ServerGameEntity*, MAX_EDICTS> gameEntities;
 
-
-// Actual Server ServerEntity array.
-ServerEntity g_entities[MAX_EDICTS];
-
-// BaseServerEntity array, matches similarly index wise.
-ServerGameEntity* g_baseEntities[MAX_EDICTS];
-
-
 //
 // This is the old method, or at least, where we started off with.
 //
 //auto FetchModernMethod(std::size_t start, std::size_t end) {
 //    return BaseServerEntityRange(&g_baseEntities[start], &g_baseEntities[end]) |
 //        std::views::filter([](ServerGameEntity* ent) {
-//            return ent != nullptr && ent->GetServerServerEntity() && ent->IsInUse();
+//            return ent != nullptr && ent->GetServerEntity() && ent->IsInUse();
 //        }
 //    );
 //}
@@ -133,7 +125,7 @@ ServerGameEntity* SVG_SpawnServerGameEntity(ServerEntity* ent, const std::string
     // Don't freak out if the ServerEntity cannot be allocated, but do warn us about it, it's good to know
     // ServerEntity classes with 'DefineDummyMapClass' won't be reported here
     if ( nullptr != info->AllocateInstance && info->IsMapSpawnable() ) {
-        ServerGameEntity *returnEntity = (g_baseEntities[serverEntityNumber] = info->AllocateInstance( ent ));
+        ServerGameEntity *returnEntity = (gameEntities[serverEntityNumber] = info->AllocateInstance( ent ));
         ent->inUse = true;
         return returnEntity;
     } else {
@@ -174,19 +166,19 @@ void SVG_FreeClassServerEntity(ServerEntity* ent) {
 // Will remove the class ServerEntity, if it exists. Continues to then mark the
 // ServerEntity as "freed". (inUse = false)
 //=================
-void SVG_FreeServerEntity(ServerEntity* ent)
+void SVG_FreeGameServerEntity(ServerGameEntity* ent)
 {
     if (!ent)
         return;
 
     // Fetch ServerEntity number.
-    int32_t ServerEntityNumber = ent->state.number;
+    int32_t serverEntityNumber = ent->GetState().number;
 
     // First of all, unlink the ServerEntity from this world.
     gi.UnlinkServerEntity(ent);        // unlink from world
 
     // Prevent freeing "special edicts". Clients, and the dead "client body queue".
-    if ((ent - g_entities) <= (maximumClients->value + BODY_QUEUE_SIZE)) {
+    if ((ent - gameEntities) <= (maximumClients->value + BODY_QUEUE_SIZE)) {
         //      gi.DPrintf("tried to free special edict\n");
         return;
     }
@@ -299,7 +291,7 @@ ServerEntity* SVG_Find(ServerEntity* from, int fieldofs, const char* match)
 //===============
 ServerGameEntity* SVG_FindServerEntityByKeyValue(const std::string& fieldKey, const std::string& fieldValue, ServerGameEntity* lastServerEntity) {
     for (auto &foundEntity : g_entities)
-    //ServerEntity* serverEnt = (lastServerEntity ? lastServerEntity->GetServerServerEntity() : nullptr);
+    //ServerEntity* serverEnt = (lastServerEntity ? lastServerEntity->GetServerEntity() : nullptr);
 
     //if (!lastServerEntity)
     //    serverEnt = g_entities;

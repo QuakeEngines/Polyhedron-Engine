@@ -109,7 +109,7 @@ qboolean SVG_RunThink(ServerGameEntity *ent)
     if ( !ent->HasThinkCallback() ) {
         // Write the index, programmers may look at that thing first
         std::string errorString = "";
-        if (ent->GetServerServerEntity()) {
+        if (ent->GetServerEntity()) {
             errorString += "ServerEntity (index " + std::to_string(ent->GetNumber());
         } else {
             errorString += "ServerEntity has no ServerEntity ";
@@ -502,7 +502,7 @@ qboolean SVG_Push(ServerGameEntity *pusher, vec3_t move, vec3_t amove)
             || moveType == MoveType::Spectator)
             continue;
 
-        if (!check->GetServerServerEntity()->area.prev)
+        if (!check->GetServerEntity()->area.prev)
             continue;       // not linked in anywhere
 
         // if the ServerEntity is standing on the pusher, it will definitely be moved

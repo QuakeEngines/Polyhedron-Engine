@@ -487,7 +487,7 @@ void DeathMatchGameMode::RespawnClient(PlayerClient* ent) {
         SpawnClientCorpse(ent);
 
     ent->SetServerFlags(ent->GetServerFlags() & ~ServerEntityServerFlags::NoClient);
-    PutClientInServer(ent->GetServerServerEntity());
+    PutClientInServer(ent->GetServerEntity());
 
     // add a teleportation effect
     ent->SetEventID(ServerEntityEvent::PlayerTeleport);
@@ -512,7 +512,7 @@ void DeathMatchGameMode::RespawnSpectator(PlayerClient* ent) {
         SpawnClientCorpse(ent);
 
     ent->SetServerFlags(ent->GetServerFlags() & ~ServerEntityServerFlags::NoClient);
-    PutClientInServer(ent->GetServerServerEntity());
+    PutClientInServer(ent->GetServerEntity());
 
     // add a teleportation effect
     ent->SetEventID(ServerEntityEvent::PlayerTeleport);

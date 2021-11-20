@@ -9,7 +9,19 @@
 
 // Include local game header.
 #include "g_local.h"
+#include "effects.h"
+#include "entities.h"
 
+
+// Shared Entities.
+#include "shared/entities/Server/ClientPersistentData.h"
+#include "shared/entities/Server/ClientRespawnData.h"
+#include "shared/entities/Server/ServerClient.h"
+#include "shared/entities/Server/ServerEntity.h"
+#include "shared/entities/Server/ServerGameEntity.h"
+#include "shared/entities/Server/GameItem.h"
+
+// Include super shotgun weapon header.
 #include "brushfuncs.h"
 
 //=====================================================

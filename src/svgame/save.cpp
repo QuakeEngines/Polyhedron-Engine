@@ -16,8 +16,22 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
+// Include local game header.
 #include "g_local.h"
-#include "functionpointers.h"
+#include "effects.h"
+#include "entities.h"
+
+
+// Shared Entities.
+#include "shared/entities/Server/ClientPersistentData.h"
+#include "shared/entities/Server/ClientRespawnData.h"
+#include "shared/entities/Server/ServerClient.h"
+#include "shared/entities/Server/ServerEntity.h"
+#include "shared/entities/Server/ServerGameEntity.h"
+#include "shared/entities/Server/GameItem.h"
+// Include super shotgun weapon header.
+#include "chasecamera.h"
+
 
 struct save_field_t {
 

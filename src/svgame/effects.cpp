@@ -9,17 +9,23 @@
 
 #include "g_local.h"         // Include SVGame funcs.
 #include "entities.h"
-#include "utils.h"           // Include Utilities funcs.
 #include "effects.h"
+#include "utils.h"           // Include Utilities funcs.
+
 
 // Game Mode interface.
 #include "gamemodes/IGameMode.h"
 
+// Shared Entities.
+#include "shared/entities/Server/ServerClient.h"
+#include "shared/entities/Server/GameClient.h"
+#include "shared/entities/Server/ServerEntity.h"
+#include "shared/entities/Server/ServerGameEntity.h"
+
 // Class Entities.
-#include "entities/base/ServerGameEntity.h"
-#include "entities/base/PlayerClient.h"
-#include "entities/base/DebrisServerEntity.h"
-#include "entities/base/GibServerEntity.h"
+#include "entities/base/PlayerEntity.h"
+#include "entities/base/DebrisEntity.h"
+#include "entities/base/GibEntity.h"
 
 
 //=================
@@ -232,7 +238,7 @@ void SVG_BecomeExplosion1(ServerGameEntity *self)
 
     // Queue for removal.
     //self->Remove();
-    //SVG_FreeServerEntity(self->GetServerServerEntity());
+    //SVG_FreeServerEntity(self->GetServerEntity());
 }
 
 //=================

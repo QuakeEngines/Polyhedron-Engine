@@ -2,7 +2,7 @@
 // LICENSE HERE.
 
 //
-// PlayerClient.cpp
+// PlayerEntity.cpp
 //
 //
 */
@@ -14,38 +14,45 @@
 #include "../../player/view.h"          // Include Player View functions..
 #include "../../utils.h"                // Util funcs.
 
+// Shared Entities.
+#include "shared/entities/Server/ClientPersistentData.h"
+#include "shared/entities/Server/ClientRespawnData.h"
+#include "shared/entities/Server/ServerClient.h"
+#include "shared/entities/Server/ServerEntity.h"
+#include "shared/entities/Server/ServerGameEntity.h"
+#include "shared/entities/Server/GameItem.h"
+
 // Game Mode interface.
 #include "../../gamemodes/IGameMode.h"
 
 // Class Entities.
-#include "../base/ServerGameEntity.h"
-#include "PlayerClient.h"
+#include "PlayerEntity.h"
 
 // Constructor/Deconstructor.
-PlayerClient::PlayerClient(ServerEntity* svServerEntity) : ServerGameEntity(svServerEntity) {
+PlayerEntity::PlayerEntity(ServerEntity* svServerEntity) : ServerGameEntity(svServerEntity) {
 
 }
-PlayerClient::~PlayerClient() {
+PlayerEntity::~PlayerEntity() {
 
 }
 
 //
 //===============
-// PlayerClient::Precache
+// PlayerEntity::Precache
 //
 //===============
 //
-void PlayerClient::Precache() {
+void PlayerEntity::Precache() {
     Base::Precache();
 }
 
 //
 //===============
-// PlayerClient::Spawn
+// PlayerEntity::Spawn
 //
 //===============
 //
-void PlayerClient::Spawn() {
+void PlayerEntity::Spawn() {
     // Spawn.
     Base::Spawn();
 
@@ -80,90 +87,87 @@ void PlayerClient::Spawn() {
     SetVelocity(vec3_zero());
 
     // Set the die function.
-    SetDieCallback(&PlayerClient::PlayerClientDie);
+    SetDieCallback(&PlayerEntity::PlayerEntityDie);
 
     // Debug.
-    gi.DPrintf("PlayerClient::Spawn();");
+    gi.DPrintf("PlayerEntity::Spawn();");
 }
 
 //
 //===============
-// PlayerClient::Respawn
+// PlayerEntity::Respawn
 //
 //===============
 //
-void PlayerClient::Respawn() {
+void PlayerEntity::Respawn() {
     Base::Respawn();
-    gi.DPrintf("PlayerClient::Respawn();");
+    gi.DPrintf("PlayerEntity::Respawn();");
 }
 
 //
 //===============
-// PlayerClient::PostSpawn
+// PlayerEntity::PostSpawn
 //
 //===============
 //
-void PlayerClient::PostSpawn() {
+void PlayerEntity::PostSpawn() {
     Base::PostSpawn();
 }
 
 //
 //===============
-// PlayerClient::Think
+// PlayerEntity::Think
 //
 //===============
 //
-void PlayerClient::Think() {
+void PlayerEntity::Think() {
     // Parent class Think.
     Base::Think();
 }
 
 //
 //===============
-// PlayerClient::SpawnKey
+// PlayerEntity::SpawnKey
 //
-// PlayerClient spawn key handling.
+// PlayerEntity spawn key handling.
 //===============
 //
-void PlayerClient::SpawnKey(const std::string& key, const std::string& value) {
+void PlayerEntity::SpawnKey(const std::string& key, const std::string& value) {
     // Parent class spawnkey.
     Base::SpawnKey(key, value);
 }
 
 //
 //===============
-// PlayerClient::PlayerClientDie
+// PlayerEntity::PlayerEntityDie
 //
 // Callback that is fired any time the player dies. As such, it kindly takes care of doing this.
 //===============
 //
-void PlayerClient::PlayerClientDie(ServerGameEntity* inflictor, ServerGameEntity* attacker, int damage, const vec3_t& point) {
+void PlayerEntity::PlayerEntityDie(ServerGameEntity* inflictor, ServerGameEntity* attacker, int damage, const vec3_t& point) {
     // Fetch server ServerEntity.
-    ServerEntity* serverEntity = GetServerServerEntity();
-
-    // Fetch client.
-    gclient_s* client = GetClient();
+    ServerEntity* serverGameEntity = GetServerGameEntity();
 
     // Clear out angular velocity.
-    SetAngularVelocity(vec3_zero());
+    serverGameEntity->SetAngularVelocity(vec3_zero());
 
     // Can still take damage.
-    SetTakeDamage(TakeDamage::Yes);
+    serverGameEntity->SetTakeDamage(TakeDamage::Yes);
 
     // Let our dead body toss itself.
-    SetMoveType(MoveType::Toss);
+    serverGameEntity->SetMoveType(MoveType::Toss);
 
     // Remove the linked weapon model (third person thingy.)
-    SetModelIndex2(0);
+    serverGameEntity->SetModelIndex2(0);
 
     // Our effect type is now: CORPSE. Beautiful dead corpse :P
-    Base::SetEffects(ServerEntityEffectType::Corpse);
+    serverGameEntity->SetEffects(ServerEntityEffectType::Corpse);
 
     // Fetch angles, only maintain the yaw, reset the others.
-    SetAngles(vec3_t{ 0.f, GetAngles()[vec3_t::PYR::Yaw], 0.f });
+    serverGameEntity->SetAngles(vec3_t{ 0.f, serverGameEntity->GetAngles()[vec3_t::PYR::Yaw], 0.f });
 
     // Ensure our client ServerEntity is playing no sounds anymore.
-    Base::SetSound(0);
+    serverGameEntity->SetSound(0);
     client->weaponSound = 0;
 
     // Retreive maxes, adjust height (z)
@@ -263,7 +267,7 @@ void PlayerClient::PlayerClientDie(ServerGameEntity* inflictor, ServerGameEntity
 // SVG_Client_SetEvent
 // 
 //===============
-void PlayerClient::SetEvent() {
+void PlayerEntity::SetEvent() {
     ServerClient* client = GetClient();
 
     if (!client) {
@@ -288,10 +292,10 @@ void PlayerClient::SetEvent() {
 }
 
 //===============
-// PlayerClient::SetEffects
+// PlayerEntity::SetEffects
 // 
 //===============
-void PlayerClient::SetEffects()
+void PlayerEntity::SetEffects()
 {
     Base::SetEffects(0);
     Base::SetRenderEffects(0);
@@ -307,13 +311,13 @@ void PlayerClient::SetEffects()
 
 //
 //===============
-// PlayerClient::SetSound
+// PlayerEntity::SetSound
 //
 //===============
-void PlayerClient::SetSound() {
+void PlayerEntity::SetSound() {
     const char    *weap; // C++20: STRING: Added const to char*
 
-    // Check whether the PlayerClient is hooked up to a valid client.
+    // Check whether the PlayerEntity is hooked up to a valid client.
     ServerClient* client = GetClient();
 
     if (!client) {
@@ -339,12 +343,12 @@ void PlayerClient::SetSound() {
 
 //
 //===============
-// PlayerClient::LookAtKiller
+// PlayerEntity::LookAtKiller
 //
 // Sets the clients view to look at the killer.
 //===============
 //
-void PlayerClient::LookAtKiller(ServerGameEntity* inflictor, ServerGameEntity* attacker)
+void PlayerEntity::LookAtKiller(ServerGameEntity* inflictor, ServerGameEntity* attacker)
 {
     // Fetch client.
     gclient_s* client = GetClient();
@@ -369,10 +373,10 @@ void PlayerClient::LookAtKiller(ServerGameEntity* inflictor, ServerGameEntity* a
 // View/BobMove Functionality.
 //-------------------------------------------------------------
 //===============
-// PlayerClient::CalculateRoll
+// PlayerEntity::CalculateRoll
 //
 //===============
-float PlayerClient::CalculateRoll(const vec3_t& angles, const vec3_t& velocity) {
+float PlayerEntity::CalculateRoll(const vec3_t& angles, const vec3_t& velocity) {
     float   sign;
     float   side;
     float   value;
@@ -392,16 +396,16 @@ float PlayerClient::CalculateRoll(const vec3_t& angles, const vec3_t& velocity) 
 }
 
 //===============
-// PlayerClient::CheckFallingDamage
+// PlayerEntity::CheckFallingDamage
 //
 //===============
-void PlayerClient::CheckFallingDamage()
+void PlayerEntity::CheckFallingDamage()
 {
     float   delta;
     int     damage;
     vec3_t  dir;
 
-    // Check whether ent is valid, and a PlayerClient hooked up 
+    // Check whether ent is valid, and a PlayerEntity hooked up 
     // to a valid client.
     ServerClient* client = GetClient();
 
@@ -473,15 +477,15 @@ void PlayerClient::CheckFallingDamage()
 
 //
 //===============
-// PlayerClient::CheckWorldEffects
+// PlayerEntity::CheckWorldEffects
 // 
 //===============
 //
-void PlayerClient::CheckWorldEffects()
+void PlayerEntity::CheckWorldEffects()
 {
     int32_t waterLevel, oldWaterLevel;
 
-    // Check whether ent is valid, and a PlayerClient hooked up 
+    // Check whether ent is valid, and a PlayerEntity hooked up 
     // to a valid client.
     ServerClient* client = GetClient();
 
@@ -606,10 +610,10 @@ void PlayerClient::CheckWorldEffects()
 
 
 //===============
-// PlayerClient::ApplyDamageFeedback
+// PlayerEntity::ApplyDamageFeedback
 //
 //===============
-void PlayerClient::ApplyDamageFeedback() {
+void PlayerEntity::ApplyDamageFeedback() {
     float   side;
     float   realcount, count, kick;
     vec3_t  v;
@@ -618,7 +622,7 @@ void PlayerClient::ApplyDamageFeedback() {
     static  vec3_t  acolor = {1.0f, 1.0f, 1.0f};
     static  vec3_t  bcolor = {1.0f, 0.0f, 0.0f};
 
-    // Check whether ent is valid, and a PlayerClient hooked up 
+    // Check whether ent is valid, and a PlayerEntity hooked up 
     // to a valid client.
     ServerClient* client = GetClient();
     if (!client)
@@ -738,7 +742,7 @@ void PlayerClient::ApplyDamageFeedback() {
 
 //
 //===============
-// PlayerClient::CalculateViewOffset
+// PlayerEntity::CalculateViewOffset
 // 
 // Calculates t
 //
@@ -752,13 +756,13 @@ void PlayerClient::ApplyDamageFeedback() {
 // 
 //===============
 //
-void PlayerClient::CalculateViewOffset()
+void PlayerEntity::CalculateViewOffset()
 {
     float       bob;
     float       ratio;
     float       delta;
 
-    // Check whether ent is valid, and a PlayerClient hooked up 
+    // Check whether ent is valid, and a PlayerEntity hooked up 
     // to a valid client.
     ServerClient* client = GetClient();
 
@@ -851,11 +855,11 @@ void PlayerClient::CalculateViewOffset()
     );
 }
 
-void PlayerClient::CalculateGunOffset() {
+void PlayerEntity::CalculateGunOffset() {
     int     i;
     float   delta;
 
-    // Check whether ent is valid, and a PlayerClient hooked up 
+    // Check whether ent is valid, and a PlayerEntity hooked up 
     // to a valid client.
     ServerClient* client = GetClient();
 
@@ -903,11 +907,11 @@ void PlayerClient::CalculateGunOffset() {
 
 //
 //===============
-// PlayerClient::CalculateScreenBlend
+// PlayerEntity::CalculateScreenBlend
 // 
 //===============
 //
-void PlayerClient::CalculateScreenBlend() {
+void PlayerEntity::CalculateScreenBlend() {
         ServerClient* client = GetClient();
 
     if (!client) {
@@ -953,11 +957,11 @@ void PlayerClient::CalculateScreenBlend() {
         client->bonusAlpha = 0;
 }
 
-void PlayerClient::SetAnimationFrame() {
+void PlayerEntity::SetAnimationFrame() {
     qboolean isDucking = false;
     qboolean isRunning = false;
 
-    // Check whether ent is valid, and a PlayerClient hooked up 
+    // Check whether ent is valid, and a PlayerEntity hooked up 
     // to a valid client.
     ServerClient* client = GetClient();
 

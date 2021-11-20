@@ -233,7 +233,7 @@ void SVGBaseTrigger::UseTargets(ServerGameEntity* activator) {
 			| bef::HasKeyValue("targetname", GetKillTarget())) {
 
 			// It is going to die, free it.
-			SVG_FreeServerEntity(triggerServerEntity->GetServerServerEntity());
+			SVG_FreeServerEntity(triggerServerEntity->GetServerEntity());
 
 			if (!IsInUse()) {
 				gi.DPrintf("ServerEntity was removed while using killtargets\n");
@@ -261,14 +261,14 @@ void SVGBaseTrigger::UseTargets(ServerGameEntity* activator) {
 
 			// Do not ALLOW an ServerEntity to use ITSELF. :)
 			if (triggerServerEntity == this) {
-				gi.DPrintf("WARNING: ServerEntity #%i used itself.\n", GetServerServerEntity()->state.number);
+				gi.DPrintf("WARNING: ServerEntity #%i used itself.\n", GetServerEntity()->state.number);
 			} else {
 				triggerServerEntity->Use(this, activator);
 			}
 
 			// Make sure it is in use, if not, debug.
 			if (!triggerServerEntity->IsInUse()) {
-                gi.DPrintf("WARNING: ServerEntity #%i was removed while using targets\n", GetServerServerEntity()->state.number);
+                gi.DPrintf("WARNING: ServerEntity #%i was removed while using targets\n", GetServerEntity()->state.number);
                 return;
 			}
 		}

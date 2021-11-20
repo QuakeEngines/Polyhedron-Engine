@@ -20,9 +20,10 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "g_local.h"          // Include SVGame header.
 
 // Entities.
-#include "entities.h"
+#include "entities.h
+#include "shared/entities/Server/ServerEntity.h"
 #include "shared/entities/Server/ServerGameEntity.h"
-#include "entities/base/PlayerClient.h"
+#include "entities/base/PlayerEntity.h"
 
 // Gamemodes.
 #include "gamemodes/IGameMode.h"
@@ -650,12 +651,12 @@ void SVG_RunFrame(void)
         if (!ServerEntity->IsInUse())
             continue;
 
-        if (!ServerEntity->GetServerServerEntity())
+        if (!ServerEntity->GetServerEntity())
             continue;
 
         // Admer: ServerEntity was marked for removal at the previous tick
         if (ServerEntity->GetServerFlags() & ServerEntityServerFlags::Remove) {
-            SVG_FreeServerEntity(ServerEntity->GetServerServerEntity());
+            SVG_FreeServerEntity(ServerEntity->GetServerEntity());
             continue;
         }
 
@@ -666,7 +667,7 @@ void SVG_RunFrame(void)
         ServerEntity->SetOldOrigin(ServerEntity->GetOrigin());
 
         // If the ground ServerEntity moved, make sure we are still on it
-        if ((ServerEntity->GetGroundServerEntity() && ServerEntity->GetGroundServerEntity()->GetServerServerEntity())
+        if ((ServerEntity->GetGroundServerEntity() && ServerEntity->GetGroundServerEntity()->GetServerEntity())
             && (ServerEntity->GetGroundServerEntity()->GetLinkCount() != ServerEntity->GetGroundServerEntityLinkCount())) {
             // Reset ground ServerEntity.
             ServerEntity->SetGroundServerEntity(nullptr);
@@ -681,7 +682,7 @@ void SVG_RunFrame(void)
         if (i > 0 && i <= maximumClients->value) {
             // Ensure the ServerEntity actually is owned by a client. 
             if (ServerEntity->GetClient())
-                game.gameMode->ClientBeginServerFrame(ServerEntity->GetServerServerEntity());
+                game.gameMode->ClientBeginServerFrame(ServerEntity->GetServerEntity());
             continue;
         }
 

@@ -9,14 +9,15 @@
 #pragma once
 
 class ServerGameEntity;
+class GameClient;
 
-class PlayerClient : public ServerClient {
+class PlayerEntity : public ServerGameEntity {
 public:
     // Constructor/Deconstructor.
-    PlayerClient(ServerEntity* svServerEntity);
-    virtual ~PlayerClient();
+    PlayerEntity(ServerEntity* svServerEntity);
+    virtual ~PlayerEntity();
 
-    DefineMapClass("PlayerClient", PlayerClient, ServerClient);
+    DefineMapClass("PlayerEntity", PlayerEntity, ServerGameEntity);
 
     //
     // Interface functions. 

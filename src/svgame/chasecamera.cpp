@@ -15,14 +15,26 @@ You should have received a copy of the GNU General Public License along
 with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
+// Include local game header.
 #include "g_local.h"
-#include "chasecamera.h"
+#include "effects.h"
+#include "entities.h"
 
+
+// Shared Entities.
+#include "shared/entities/Server/ClientPersistentData.h"
+#include "shared/entities/Server/ClientRespawnData.h"
+#include "shared/entities/Server/ServerClient.h"
 #include "shared/entities/Server/ServerEntity.h"
 #include "shared/entities/Server/ServerGameEntity.h"
-#include "entities/base/PlayerClient.h"
+#include "shared/entities/Server/GameItem.h"
 
-void SVG_UpdateChaseCam(PlayerClient *ent)
+#include "entities/base/PlayerEntity.h"
+
+// Include super shotgun weapon header.
+#include "chasecamera.h"
+
+void SVG_UpdateChaseCam(PlayerEntity *ent)
 {
     vec3_t o, ownerv, goal;
     ServerEntity *targ;
@@ -110,7 +122,7 @@ void SVG_UpdateChaseCam(PlayerClient *ent)
     ent->LinkServerEntity();
 }
 
-void SVG_ChaseNext(PlayerClient *ent)
+void SVG_ChaseNext(PlayerEntity *ent)
 {
     int i;
     ServerEntity *e;
@@ -135,7 +147,7 @@ void SVG_ChaseNext(PlayerClient *ent)
     client->updateChase = true;
 }
 
-void SVG_ChasePrev(PlayerClient*ent)
+void SVG_ChasePrev(PlayerEntity *ent)
 {
     int i;
     ServerEntity *e;
@@ -160,14 +172,14 @@ void SVG_ChasePrev(PlayerClient*ent)
     client->updateChase = true;
 }
 
-void SVG_GetChaseTarget(PlayerClient *ent)
+void SVG_GetChaseTarget(PlayerEntity *ent)
 {
     int i;
     ServerEntity *other;
-    ServerClient* client = ent->GetClient();
+    GameClient* client = ent->GetClient();
 
     for (i = 1; i <= maximumClients->value; i++) {
-        other = g_entities + i;
+        other = gameEntities[i];
         if (other->inUse && !other->client->respawn.isSpectator) {
             client->chaseTarget = other;
             client->updateChase = true;
@@ -175,6 +187,6 @@ void SVG_GetChaseTarget(PlayerClient *ent)
             return;
         }
     }
-    gi.CenterPrintf(ent->GetServerServerEntity(), "No other players to chase.");
+    gi.CenterPrintf(ent->GetServerEntity(), "No other players to chase.");
 }
 

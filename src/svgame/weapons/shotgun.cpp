@@ -13,8 +13,13 @@
 #include "../entities.h"
 
 // Include class entities.
-//#include "../entities/base/ServerGameEntity.h"
-#include "../entities/base/PlayerClient.h"
+#include "../entities/base/ServerClient.h"
+#include "../entities/base/ServerGameClient.h"
+
+#include "../entities/base/ServerEntity.h"
+#include "../entities/base/ServerGameEntity.h"
+
+#include "../entities/base/PlayerEntity.h"
 
 // Include player headers.
 #include "../player/animations.h"
@@ -37,13 +42,13 @@ static constexpr int32_t SHOTGUN_BULLET_COUNT_DEFAULT = 12;
 static constexpr int32_t SHOTGUN_HSPREAD = 500;
 static constexpr int32_t SHOTGUN_VSPREAD = 500;
 
-void weapon_shotgun_fire(PlayerClient * ent)
+void weapon_shotgun_fire(PlayerEntity * ent)
 {
     vec3_t      forward, right;
     int         damage = 4;
     int         kick = 8;
 
-    /*ServerClient* client = ent->GetClient();*/
+    GameClient* client = ent->GetClient();
 
     if (client->playerState.gunFrame == 9) {
         client->playerState.gunFrame++;
@@ -72,7 +77,7 @@ void weapon_shotgun_fire(PlayerClient * ent)
 
     // send muzzle flash
     gi.WriteByte(SVG_CMD_MUZZLEFLASH);
-    gi.WriteShort(ent->GetServerServerEntity() - g_entities);
+    gi.WriteShort(ent->GetServerEntity() - g_entities);
     gi.WriteByte(MuzzleFlashType::Shotgun | is_silenced);
     vec3_t origin = ent->GetOrigin();
     gi.Multicast(origin, MultiCast::PVS);

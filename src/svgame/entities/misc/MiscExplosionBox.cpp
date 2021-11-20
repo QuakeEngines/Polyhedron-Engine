@@ -359,7 +359,7 @@ void MiscExplosionBox::ExplosionBoxTouch(ServerGameEntity* self, ServerGameEntit
 
     // Last but not least, move a step ahead.
     SVG_StepMove_Walk(this, yaw, 40 * ratio );
-    //gi.DPrintf("self: '%i' is TOUCHING other: '%i'\n", self->GetServerServerEntity()->state.number, other->GetServerServerEntity()->state.number);
+    //gi.DPrintf("self: '%i' is TOUCHING other: '%i'\n", self->GetServerEntity()->state.number, other->GetServerEntity()->state.number);
 }
 
 

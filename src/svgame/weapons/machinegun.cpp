@@ -60,7 +60,7 @@ void Machinegun_Fire(PlayerClient* ent)
     if (client->persistent.inventory[client->ammoIndex] < 1) {
         client->playerState.gunFrame = 6;
         if (level.time >= ent->GetDebouncePainTime()) {
-            gi.Sound(ent->GetServerServerEntity(), CHAN_VOICE, gi.SoundIndex("weapons/noammo.wav"), 1, ATTN_NORM, 0);
+            gi.Sound(ent->GetServerEntity(), CHAN_VOICE, gi.SoundIndex("weapons/noammo.wav"), 1, ATTN_NORM, 0);
             ent->SetDebouncePainTime(level.time + 1);
         }
         NoAmmoWeaponChange(ent);
@@ -96,7 +96,7 @@ void Machinegun_Fire(PlayerClient* ent)
     SVG_FireBullet(ent, start, forward, damage, kick, DEFAULT_MACHINEGUN_BULLET_HSPREAD, DEFAULT_MACHINEGUN_BULLET_VSPREAD, MeansOfDeath::Machinegun);
 
     gi.WriteByte(SVG_CMD_MUZZLEFLASH);
-    gi.WriteShort(ent->GetServerServerEntity() - g_entities);
+    gi.WriteShort(ent->GetServerEntity() - g_entities);
     gi.WriteByte(MuzzleFlashType::MachineGun | is_silenced);
     vec3_t origin = ent->GetOrigin();
     gi.Multicast(origin, MultiCast::PVS);

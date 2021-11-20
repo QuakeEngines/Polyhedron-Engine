@@ -253,8 +253,8 @@ void FuncDoor::DoorTouch( ServerGameEntity* self, ServerGameEntity* other, cplan
     debounceTouchTime = level.time + 5.0f;
 
     if ( !messageStr.empty() ) {
-        gi.CenterPrintf( other->GetServerServerEntity(), "%s", messageStr.c_str() );
-        gi.Sound( other->GetServerServerEntity(), CHAN_AUTO, gi.SoundIndex( MessageSoundPath ), 1.0f, ATTN_NORM, 0.0f );
+        gi.CenterPrintf( other->GetServerEntity(), "%s", messageStr.c_str() );
+        gi.Sound( other->GetServerEntity(), CHAN_AUTO, gi.SoundIndex( MessageSoundPath ), 1.0f, ATTN_NORM, 0.0f );
     }
 }
 
@@ -276,7 +276,7 @@ void FuncDoor::DoorGoUp( ServerGameEntity* activator ) {
 
     if ( !(GetFlags() & ServerEntityFlags::TeamSlave) ) {
         if ( moveInfo.startSoundIndex ) {
-            gi.Sound( GetServerServerEntity(), CHAN_NO_PHS_ADD + CHAN_VOICE, moveInfo.startSoundIndex, 1, ATTN_STATIC, 0.0f );
+            gi.Sound( GetServerEntity(), CHAN_NO_PHS_ADD + CHAN_VOICE, moveInfo.startSoundIndex, 1, ATTN_STATIC, 0.0f );
         }
         SetSound( moveInfo.middleSoundIndex );
     }
@@ -294,7 +294,7 @@ void FuncDoor::DoorGoUp( ServerGameEntity* activator ) {
 void FuncDoor::DoorGoDown() {
     if ( !(GetFlags() & ServerEntityFlags::TeamSlave) ) {
         if ( moveInfo.startSoundIndex ) {
-            gi.Sound( GetServerServerEntity(), CHAN_NO_PHS_ADD + CHAN_VOICE, moveInfo.startSoundIndex, 1, ATTN_STATIC, 0 );
+            gi.Sound( GetServerEntity(), CHAN_NO_PHS_ADD + CHAN_VOICE, moveInfo.startSoundIndex, 1, ATTN_STATIC, 0 );
         }
         SetSound( moveInfo.middleSoundIndex );
     }
@@ -328,7 +328,7 @@ void FuncDoor::DoGoDown() {
 void FuncDoor::HitTop() {
     if ( !(GetFlags() & ServerEntityFlags::TeamSlave) ) {
         if ( moveInfo.endSoundIndex ) {
-            gi.Sound( GetServerServerEntity(), CHAN_NO_PHS_ADD + CHAN_VOICE, moveInfo.endSoundIndex, 1.0f, ATTN_STATIC, 0.0f );
+            gi.Sound( GetServerEntity(), CHAN_NO_PHS_ADD + CHAN_VOICE, moveInfo.endSoundIndex, 1.0f, ATTN_STATIC, 0.0f );
         }
         SetSound( 0 );
     }
@@ -350,7 +350,7 @@ void FuncDoor::HitTop() {
 void FuncDoor::HitBottom() {
     if ( !(GetFlags() & ServerEntityFlags::TeamSlave) ) {
         if ( moveInfo.endSoundIndex ) {
-            gi.Sound( GetServerServerEntity(), CHAN_NO_PHS_ADD + CHAN_VOICE, moveInfo.endSoundIndex, 1.0f, ATTN_STATIC, 0.0f );
+            gi.Sound( GetServerEntity(), CHAN_NO_PHS_ADD + CHAN_VOICE, moveInfo.endSoundIndex, 1.0f, ATTN_STATIC, 0.0f );
         }
         SetSound( 0 );
     }

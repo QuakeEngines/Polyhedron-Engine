@@ -101,7 +101,7 @@ static const spawn_field_t temp_fields[] = {
 // SVG_SpawnServerGameEntity
 //
 //
-#include "entities/base/ServerGameEntity.h"
+#include "shared/entities/Server/ServerGameEntity.h"
 
 /*
 =============
@@ -157,8 +157,8 @@ void ED_CallSpawn(ServerEntity *ent)
         gameEntity->SpawnKey( keyValueEntry.first, keyValueEntry.second );
     }
     // Precache and spawn, to set the ServerEntity up
-    ent->classServerEntity->Precache();
-    ent->classServerEntity->Spawn();
+    gameEntity->Precache();
+    gameEntity->Spawn();
 }
 
 /*
@@ -368,20 +368,21 @@ void SVG_SpawnEntities(const char *mapName, const char *entities, const char *sp
     // Clear out entities.
     for (int32_t i = 0; i < game.maxEntities; i++) {
         // Delete class entities, if any.
-        if (g_baseEntities[i]) {
-            delete g_baseEntities[i];
-            g_baseEntities[i] = NULL;
+        if (gameEntities[i]) {
+            delete gameEntities[i];
+            gameEntities[i] = NULL;
         }
 
-        g_entities[i] = {};
+        //g_entities[i] = {};
+        //gi.ResetServerEntity(i);
     }
 
     strncpy(level.mapName, mapName, sizeof(level.mapName) - 1);
     strncpy(game.spawnpoint, spawnpoint, sizeof(game.spawnpoint) - 1);
 
     // Set client fields on player ents
-    for (i = 0 ; i < game.maximumClients ; i++)
-        g_entities[i + 1].client = game.clients + i;
+    for (i = 0; i < game.maximumClients; i++)
+        gameEntities[i + 1]->SetClient(game.clients[i]);
 
     ent = NULL;
     inhibit = 0;
@@ -396,7 +397,7 @@ void SVG_SpawnEntities(const char *mapName, const char *entities, const char *sp
             gi.Error("ED_LoadFromFile: found %s when expecting {", com_token);
 
         if (!ent)
-            ent = g_entities;
+            ent = gameEntities;
         else
             ent = SVG_Spawn();
         ED_ParseServerEntity(&entities, ent);
@@ -435,8 +436,8 @@ void SVG_SpawnEntities(const char *mapName, const char *entities, const char *sp
 
     // Post spawn entities.
     for (int32_t i = 0; i < MAX_EDICTS; i++) {
-        if (g_baseEntities[i])
-            g_baseEntities[i]->PostSpawn();
+        if (gameEntities[i])
+            gameEntities[i]->PostSpawn();
     }
 
     // Spawn PlayerClient entities first.

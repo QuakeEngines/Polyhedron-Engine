@@ -152,8 +152,8 @@ public:
     }
 
     // @returns A pointer to the client belonging to this ServerEntity. (If any.)
-    ServerClient* GetClient() {
-        return serverEntity->client;
+    GameClient* GetClient() {
+        return static_cast<GameClient*>(serverEntity->client);
     }
 
     // @returns the ServerEntity's current Clipping Mask.
@@ -481,6 +481,11 @@ public:
         serverEntity->maxs = maxs;
     }
 
+    // @sets A pointer to the client belonging to this ServerEntity. (If any.)
+    void SetClient(ServerClient *client) {
+        this->serverEntity->client = client;
+    }
+
     // Return the 'clipmask' value.
     inline void SetClipMask(const int32_t &clipMask) {
         serverEntity->clipMask = clipMask;
@@ -793,7 +798,7 @@ public:
     void Remove();
 
     // Returns the server ServerEntity pointer.
-    inline ServerEntity* GetServerServerEntity() {
+    inline ServerEntity* GetServerEntity() {
         return serverEntity;
     }
 

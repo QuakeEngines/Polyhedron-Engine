@@ -588,7 +588,7 @@ void SVG_Client_SetSound(PlayerClient *ent)
 //        // FIXME: add view drifting here?
 //        client->playerState.blend[3] = 0;
 //        client->playerState.fov = 90;
-//        SVG_HUD_SetClientStats(ent->GetServerServerEntity());
+//        SVG_HUD_SetClientStats(ent->GetServerEntity());
 //        return;
 //    }
 //
@@ -675,11 +675,11 @@ void SVG_Client_SetSound(PlayerClient *ent)
 //
 //    // Set the stats to display for this client (one of the chase isSpectator stats or...)
 //    if (client->respawn.isSpectator)
-//        SVG_HUD_SetSpectatorStats(ent->GetServerServerEntity());
+//        SVG_HUD_SetSpectatorStats(ent->GetServerEntity());
 //    else
-//        SVG_HUD_SetClientStats(ent->GetServerServerEntity());
+//        SVG_HUD_SetClientStats(ent->GetServerEntity());
 //
-//    SVG_HUD_CheckChaseStats(ent->GetServerServerEntity());
+//    SVG_HUD_CheckChaseStats(ent->GetServerEntity());
 //
 //    SVG_Client_SetEvent(ent);
 //
@@ -700,7 +700,7 @@ void SVG_Client_SetSound(PlayerClient *ent)
 //    // if the scoreboard is up, update it
 //    if (client->showScores && !(level.frameNumber & 31)) {
 //        SVG_HUD_GenerateDMScoreboardLayout(ent, ent->GetEnemy());
-//        gi.Unicast(ent->GetServerServerEntity(), false);
+//        gi.Unicast(ent->GetServerEntity(), false);
 //    }
 //}
 

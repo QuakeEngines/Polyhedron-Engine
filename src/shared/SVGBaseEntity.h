@@ -789,7 +789,7 @@ public:
     void Remove();
 
     // Returns the server ServerEntity pointer.
-    inline ServerEntity* GetServerServerEntity() {
+    inline ServerEntity* GetServerEntity() {
         return serverEntity;
     }
 
