@@ -1,6 +1,6 @@
 #pragma once
 
-class SVGBaseEntity;
+class ServerGameEntity;
 class SVGBaseMover;
 class FuncDoor;
 

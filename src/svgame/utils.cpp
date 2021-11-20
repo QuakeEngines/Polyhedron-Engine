@@ -18,9 +18,11 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 // g_utils.c -- misc utility functions for game module
 
 #include "g_local.h"
+#include "effects.h"
 #include "entities.h"
 #include "utils.h"
-#include "entities/base/SVGBaseEntity.h"
+
+//#include "entities/base/ServerGameEntity.h"
 
 vec3_t SVG_ProjectSource(const vec3_t &point, const vec3_t &distance, const vec3_t &forward, const vec3_t &right)
 {
@@ -31,7 +33,7 @@ vec3_t SVG_ProjectSource(const vec3_t &point, const vec3_t &distance, const vec3
     };
 }
 
-vec3_t SVG_PlayerProjectSource(ServerClient* client, const vec3_t& point, const vec3_t& distance, const vec3_t& forward, const vec3_t& right)
+vec3_t SVG_PlayerProjectSource(GameClient* client, const vec3_t& point, const vec3_t& distance, const vec3_t& forward, const vec3_t& right)
 {
     vec3_t  _distance = distance;;
 
@@ -43,7 +45,7 @@ vec3_t SVG_PlayerProjectSource(ServerClient* client, const vec3_t& point, const 
     return SVG_ProjectSource(point, _distance, forward, right);
 }
 
-void Think_Delay(SVGBaseEntity *ent)
+void Think_Delay(ServerGameEntity *ent)
 {
     //UTIL_UseTargets(ent, ent->GetActivator());
     //SVG_FreeServerEntity(ent->GetServerServerEntity());
@@ -74,7 +76,7 @@ UTIL_TouchTriggers
 
 ============
 */
-void UTIL_TouchTriggers(SVGBaseEntity *ent)
+void UTIL_TouchTriggers(ServerGameEntity *ent)
 {
     int         i, num;
     ServerEntity* serverEntity = ent->GetServerServerEntity();
@@ -104,7 +106,7 @@ void UTIL_TouchTriggers(SVGBaseEntity *ent)
     //    return;
 
     //// Fetch the boxed entities.
-    //std::vector<SVGBaseEntity*> touched = SVG_BoxEntities(ent->GetAbsoluteMin(), ent->GetAbsoluteMax(), MAX_EDICTS, AREA_TRIGGERS);
+    //std::vector<ServerGameEntity*> touched = SVG_BoxEntities(ent->GetAbsoluteMin(), ent->GetAbsoluteMax(), MAX_EDICTS, AREA_TRIGGERS);
     //int32_t size = touched.size();
 
     //// be careful, it is possible to have an ServerEntity in this
@@ -127,7 +129,7 @@ Call after linking a new trigger in during gameplay
 to force all entities it covers to immediately touch it
 ============
 */
-void G_TouchSolids(SVGBaseEntity *ent)
+void G_TouchSolids(ServerGameEntity *ent)
 {
     int         i, num;
     ServerEntity* serverEntity = ent->GetServerServerEntity();
@@ -153,7 +155,7 @@ void G_TouchSolids(SVGBaseEntity *ent)
         //hit->touch(hit, ent, NULL, NULL);
     }
     //// Fetch the boxed entities.
-    //std::vector<SVGBaseEntity*> touched = SVG_BoxEntities(ent->GetAbsoluteMin(), ent->GetAbsoluteMax(), MAX_EDICTS, AREA_SOLID);
+    //std::vector<ServerGameEntity*> touched = SVG_BoxEntities(ent->GetAbsoluteMin(), ent->GetAbsoluteMax(), MAX_EDICTS, AREA_SOLID);
 
     //// be careful, it is possible to have an ServerEntity in this
     //// list removed before we get to it (killtriggered)
@@ -199,7 +201,7 @@ Kills all entities that would touch the proposed new positioning
 of ent.  Ent should be unlinked before calling this!
 =================
 */
-qboolean SVG_KillBox(SVGBaseEntity *ent)
+qboolean SVG_KillBox(ServerGameEntity *ent)
 {
     SVGTrace tr;
 

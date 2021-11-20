@@ -9,7 +9,7 @@
 #include "../../g_local.h"     // SVGame.
 #include "../../effects.h"     // Effects.
 #include "../../utils.h"       // Util funcs.
-#include "../base/SVGBaseEntity.h"
+#include "../base/ServerGameEntity.h"
 #include "../base/SVGBaseTrigger.h"
 #include "TriggerHurt.h"
 
@@ -136,7 +136,7 @@ void TriggerHurt::SpawnKey(const std::string& key, const std::string& value) {
 // 'Touch' callback, to hurt the entities touching it.
 //===============
 //
-void TriggerHurt::TriggerHurtTouch(SVGBaseEntity* self, SVGBaseEntity* other, cplane_t* plane, csurface_t* surf) {
+void TriggerHurt::TriggerHurtTouch(ServerGameEntity* self, ServerGameEntity* other, cplane_t* plane, csurface_t* surf) {
 	gi.DPrintf("TriggerHurtTouch!\n");
 
 	if (this == other)
@@ -174,7 +174,7 @@ void TriggerHurt::TriggerHurtTouch(SVGBaseEntity* self, SVGBaseEntity* other, cp
 // 'Use' callback, to trigger it on/off.
 //===============
 //
-void TriggerHurt::TriggerHurtUse(SVGBaseEntity* other, SVGBaseEntity* activator) {
+void TriggerHurt::TriggerHurtUse(ServerGameEntity* other, ServerGameEntity* activator) {
 	gi.DPrintf("TriggerHurtUse!\n");
 
 	// Switch states.
@@ -214,7 +214,7 @@ void TriggerHurt::TriggerHurtUse(SVGBaseEntity* other, SVGBaseEntity* activator)
 // Execute the 'Use' callback in case we ran into any.
 //===============
 //
-//void Base::Use(SVGBaseEntity* other, SVGBaseEntity* activator) {
+//void Base::Use(ServerGameEntity* other, ServerGameEntity* activator) {
 //	// Safety check.
 //	if (useFunction == nullptr)
 //		return;

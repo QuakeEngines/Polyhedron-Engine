@@ -9,7 +9,7 @@
 #ifndef __SVGAME_ENTITIES_MISC_MISCEXPLOSIONBOX_H__
 #define __SVGAME_ENTITIES_MISC_MISCEXPLOSIONBOX_H__
 
-class SVGBaseEntity;
+class ServerGameEntity;
 class SVGBaseTrigger;
 
 class MiscExplosionBox : public SVGBaseTrigger {
@@ -32,10 +32,10 @@ public:
     //
     // Callback Functions.
     //
-    void ExplosionBoxUse( SVGBaseEntity* caller, SVGBaseEntity* activator );
+    void ExplosionBoxUse( ServerGameEntity* caller, ServerGameEntity* activator );
     void ExplosionBoxThink(void);
-    void ExplosionBoxDie(SVGBaseEntity* inflictor, SVGBaseEntity* attacker, int damage, const vec3_t& point);
-    void ExplosionBoxTouch(SVGBaseEntity* self, SVGBaseEntity* other, cplane_t* plane, csurface_t* surf);
+    void ExplosionBoxDie(ServerGameEntity* inflictor, ServerGameEntity* attacker, int damage, const vec3_t& point);
+    void ExplosionBoxTouch(ServerGameEntity* self, ServerGameEntity* other, cplane_t* plane, csurface_t* surf);
 
     // Set when exploding, after a minor delay.
     void MiscExplosionBoxExplode(void);

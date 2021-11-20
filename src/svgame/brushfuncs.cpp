@@ -100,7 +100,7 @@
 //    ent->moveInfo.remainingDistance -= frames * ent->moveInfo.speed * FRAMETIME;
 //    ent->classServerEntity->SetNextThinkTime( level.time + (frames * FRAMETIME) );
 //    
-//    // FIXME: Mayhaps Brush_Move_Begin et al should be moved to SVGBaseEntity
+//    // FIXME: Mayhaps Brush_Move_Begin et al should be moved to ServerGameEntity
 //    //ent->Think = Brush_Move_Final;
 //}
 //

@@ -1,6 +1,6 @@
 #pragma once
 
-class SVGBaseEntity;
+class ServerGameEntity;
 class SVGBaseMover;
 
 class FuncRotating : public SVGBaseMover {
@@ -22,7 +22,7 @@ public:
 
 	void Spawn() override;
 
-	void RotatorBlocked( SVGBaseEntity* other );
-	void RotatorHurtTouch( SVGBaseEntity* self, SVGBaseEntity* other, cplane_t* plane, csurface_t* surf );
-	void RotatorUse( SVGBaseEntity* other, SVGBaseEntity* activator );
+	void RotatorBlocked( ServerGameEntity* other );
+	void RotatorHurtTouch( ServerGameEntity* self, ServerGameEntity* other, cplane_t* plane, csurface_t* surf );
+	void RotatorUse( ServerGameEntity* other, ServerGameEntity* activator );
 };

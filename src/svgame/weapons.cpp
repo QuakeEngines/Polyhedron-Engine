@@ -19,7 +19,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "entities.h"
 #include "utils.h"
 
-#include "entities/base/SVGBaseEntity.h"
+#include "entities/base/ServerGameEntity.h"
 #include "entities/weaponry/BlasterBolt.h"
 
 /*
@@ -62,7 +62,7 @@ SVG_FireHit
 Used for all impact (hit/punch/slash) attacks
 =================
 */
-qboolean SVG_FireHit(SVGBaseEntity *self, vec3_t &aim, int32_t damage, int32_t kick)
+qboolean SVG_FireHit(ServerGameEntity *self, vec3_t &aim, int32_t damage, int32_t kick)
 {
     SVGTrace     tr;
     vec3_t      forward, right, up;
@@ -132,7 +132,7 @@ fire_lead
 This is an internal support routine used for bullet/pellet based weapons.
 =================
 */
-static void fire_lead(SVGBaseEntity *self, const vec3_t& start, const vec3_t& aimdir, int damage, int kick, int te_impact, int hspread, int vspread, int mod)
+static void fire_lead(ServerGameEntity *self, const vec3_t& start, const vec3_t& aimdir, int damage, int kick, int te_impact, int hspread, int vspread, int mod)
 {
     SVGTrace     tr;
     vec3_t      dir;
@@ -260,7 +260,7 @@ Fires a single round.  Used for machinegun and chaingun.  Would be fine for
 pistols, rifles, etc....
 =================
 */
-void SVG_FireBullet(SVGBaseEntity *self, const vec3_t& start, const vec3_t& aimdir, int damage, int kick, int hspread, int vspread, int mod)
+void SVG_FireBullet(ServerGameEntity *self, const vec3_t& start, const vec3_t& aimdir, int damage, int kick, int hspread, int vspread, int mod)
 {
     fire_lead(self, start, aimdir, damage, kick, TempServerEntityEvent::Gunshot, hspread, vspread, mod);
 }
@@ -272,7 +272,7 @@ void SVG_FireBullet(SVGBaseEntity *self, const vec3_t& start, const vec3_t& aimd
 // Shoots shotgun pellets.  Used by shotgun and super shotgun.
 //===============
 //
-void SVG_FireShotgun(SVGBaseEntity* self, const vec3_t &start, const vec3_t &aimdir, int damage, int kick, int hspread, int vspread, int count, int mod)
+void SVG_FireShotgun(ServerGameEntity* self, const vec3_t &start, const vec3_t &aimdir, int damage, int kick, int hspread, int vspread, int count, int mod)
 {
     int		i;
 
@@ -290,7 +290,7 @@ void SVG_FireShotgun(SVGBaseEntity* self, const vec3_t &start, const vec3_t &aim
 // predicted against the shots.
 //===============
 //
-void SVG_FireBlaster(SVGBaseEntity *self, const vec3_t& start, const vec3_t &aimdir, int damage, int speed, int effect, qboolean hyper)
+void SVG_FireBlaster(ServerGameEntity *self, const vec3_t& start, const vec3_t &aimdir, int damage, int speed, int effect, qboolean hyper)
 {
     // Calculate direction vector.
     vec3_t dir = vec3_normalize(aimdir);
@@ -337,7 +337,7 @@ void SVG_FireBlaster(SVGBaseEntity *self, const vec3_t& start, const vec3_t &aim
 
     // Set think.
     boltServerEntity->SetNextThinkTime(level.time + 2); // Admer: should this really be a thing?
-    boltServerEntity->SetThinkCallback(&SVGBaseEntity::SVGBaseServerEntityThinkRemove);
+    boltServerEntity->SetThinkCallback(&ServerGameEntity::SVGBaseServerEntityThinkRemove);
 
     // Link Bolt into world.
     boltServerEntity->LinkServerEntity();

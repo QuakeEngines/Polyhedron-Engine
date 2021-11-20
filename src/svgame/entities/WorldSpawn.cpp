@@ -8,7 +8,7 @@
 */
 #include "../g_local.h"              // SVGame.
 
-#include "base/SVGBaseEntity.h"
+#include "base/ServerGameEntity.h"
 #include "WorldSpawn.h"
 
 static const char single_statusbar[] =
@@ -149,7 +149,7 @@ static const char dm_statusbar[] =
 ;
 
 // Constructor/Deconstructor.
-WorldSpawn::WorldSpawn(ServerEntity* svServerEntity) : SVGBaseEntity(svServerEntity) {
+WorldSpawn::WorldSpawn(ServerEntity* svServerEntity) : ServerGameEntity(svServerEntity) {
 
 }
 WorldSpawn::~WorldSpawn() {

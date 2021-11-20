@@ -1,6 +1,15 @@
 // License here.
 #pragma once
 
+// Shared.
+#include "shared/shared.h"
+
+// Predefine.
+class ServerEntity;
+
+//
+// Game item structure -- Might as well become an entity,...
+// 
 struct GameItem {
     char        *classname; // spawning name
     qboolean    (*pickup)(ServerEntity*ent, ServerEntity*other);

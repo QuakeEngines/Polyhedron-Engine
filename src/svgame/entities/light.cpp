@@ -8,7 +8,7 @@
 */
 #include "../g_local.h"              // SVGame.
 
-#include "base/SVGBaseEntity.h"
+#include "base/ServerGameEntity.h"
 #include "base/SVGBaseTrigger.h"
 #include "Light.h"
 
@@ -66,7 +66,7 @@ void Light::Think() {
     Base::Think();
 }
 
-void Light::LightUse(SVGBaseEntity* other, SVGBaseEntity* activator) {
+void Light::LightUse(ServerGameEntity* other, ServerGameEntity* activator) {
     // Get spawnflags.
     int32_t spawnFlags = GetSpawnFlags();
 
@@ -117,7 +117,7 @@ void Light::SpawnKey(const std::string& key, const std::string& value) {
     }
     // Parent class spawnkey.
     else {
-        SVGBaseEntity::SpawnKey(key, value);
+        ServerGameEntity::SpawnKey(key, value);
     }
 }
 

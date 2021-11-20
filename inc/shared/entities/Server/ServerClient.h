@@ -1,12 +1,16 @@
 // License here.
 #pragma once
 
+// Shared.
+#include "shared/shared.h"
+
+// Other.
 #include "shared/list.h"
 #include "sharedgame/pmove.h"
 #include "sharedgame/protocol.h"
 
-#include "shared/entities/Server/ClientPersistentData.h"
-#include "shared/entities/Server/ClientRespawnData.h"
+// Predefine.
+struct PlayerState;
 
 class ServerClient {
 public:

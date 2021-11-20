@@ -11,15 +11,15 @@
 #ifndef __SVGAME_ENTITIES_BASE_BODYCORPSE_H__
 #define __SVGAME_ENTITIES_BASE_BODYCORPSE_H__
 
-class SVGBaseEntity;
+class ServerGameEntity;
 
-class BodyCorpse : public SVGBaseEntity {
+class BodyCorpse : public ServerGameEntity {
 public:
     // Constructor/Deconstructor.
     BodyCorpse(ServerEntity* svServerEntity);
     virtual ~BodyCorpse();
 
-    DefineClass(BodyCorpse, SVGBaseEntity);
+    DefineClass(BodyCorpse, ServerGameEntity);
 
     //
     // Interface functions. 
@@ -36,8 +36,8 @@ public:
     // Callback functions.
     //
     //
-    void BodyCorpseDie(SVGBaseEntity* inflictor, SVGBaseEntity* attacker, int damage, const vec3_t& point);
-    void BodyCorpseTouch(SVGBaseEntity* self, SVGBaseEntity* other, cplane_t* plane, csurface_t* surf);
+    void BodyCorpseDie(ServerGameEntity* inflictor, ServerGameEntity* attacker, int damage, const vec3_t& point);
+    void BodyCorpseTouch(ServerGameEntity* self, ServerGameEntity* other, cplane_t* plane, csurface_t* surf);
 
     //
     // Get/Set

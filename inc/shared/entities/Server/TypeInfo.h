@@ -2,7 +2,7 @@
 
 #include <string>
 
-class SVGBaseEntity;
+class ServerGameEntity;
 
 //===============
 // A static counter, used by TypeInfo to get compile-time IDs
@@ -26,7 +26,7 @@ private:
 	size_t localID;
 };
 
-using ServerGameEntityAllocatorFn = SVGBaseEntity* ( ServerEntity* );
+using ServerGameEntityAllocatorFn = ServerGameEntity* ( ServerEntity* );
 
 //===============
 // TypeInfo, a system for getting runtime information about classes
@@ -175,7 +175,7 @@ __DeclareTypeInfo( #className, #className, #superClass, TypeInfo::TypeFlag_Abstr
 // @param superClass (symbol) - the class this ServerEntity class inherits from
 #define DefineMapClass( mapClassName, className, superClass )	\
 using Base = superClass;										\
-static SVGBaseEntity* AllocateInstance( ServerEntity* serverEntity ) {		\
+static ServerGameEntity* AllocateInstance( ServerEntity* serverEntity ) {		\
 	return new className( serverEntity );								\
 }																\
 __DeclareTypeInfo( mapClassName, #className, #superClass, TypeInfo::TypeFlag_MapSpawn, &className::AllocateInstance );
@@ -194,7 +194,7 @@ __DeclareTypeInfo( mapClassName, #className, #superClass, TypeInfo::TypeFlag_Map
 // @param superClass (symbol) - the class this ServerEntity class inherits from
 #define DefineClass( className, superClass )					\
 using Base = superClass;										\
-static SVGBaseEntity* AllocateInstance( ServerEntity* ServerEntity ) {		\
+static ServerGameEntity* AllocateInstance( ServerEntity* ServerEntity ) {		\
 	return new className( ServerEntity );								\
 }																\
 __DeclareTypeInfo( #className, #className, #superClass, TypeInfo::TypeFlag_None, &className::AllocateInstance );

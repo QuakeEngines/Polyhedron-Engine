@@ -62,7 +62,7 @@ void FuncTrain::PostSpawn() {
 		return;
 	}
 
-	SVGBaseEntity* ent = SVG_FindServerEntityByKeyValue( "targetname", targetStr );
+	ServerGameEntity* ent = SVG_FindServerEntityByKeyValue( "targetname", targetStr );
 	if ( nullptr == ent ) {
 		gi.DPrintf( "FuncTrain: target '%s' not found, maybe you made a typo?\n", targetStr.c_str() );
 		return;
@@ -106,7 +106,7 @@ void FuncTrain::SpawnKey( const std::string& key, const std::string& value ) {
 //===============
 // FuncTrain::TrainUse
 //===============
-void FuncTrain::TrainUse( SVGBaseEntity* other, SVGBaseEntity* activator ) {
+void FuncTrain::TrainUse( ServerGameEntity* other, ServerGameEntity* activator ) {
 	this->activator = activator;
 
 	if ( spawnFlags & SF_StartOn ) {
@@ -131,7 +131,7 @@ void FuncTrain::TrainUse( SVGBaseEntity* other, SVGBaseEntity* activator ) {
 // FuncTrain::NextCornerThink
 //===============
 void FuncTrain::NextCornerThink() {
-	SVGBaseEntity* ServerEntity = nullptr;
+	ServerGameEntity* ServerEntity = nullptr;
 	vec3_t destination;
 	bool first = true;
 	bool again = true;
@@ -254,7 +254,7 @@ void FuncTrain::OnWaitAtCorner( ServerEntity* ent ) {
 //===============
 // FuncTrain::TrainBlocked
 //===============
-void FuncTrain::TrainBlocked( SVGBaseEntity* other ) {
+void FuncTrain::TrainBlocked( ServerGameEntity* other ) {
 	if ( !(other->GetServerFlags() & ServerEntityServerFlags::Monster) && !other->GetClient() ) {
 		// Give it a chance to go away on its own terms (like gibs)
 		SVG_InflictDamage( other, this, this, vec3_zero(), other->GetOrigin(), vec3_zero(), 100000, 1, 0, MeansOfDeath::Crush );

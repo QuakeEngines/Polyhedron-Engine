@@ -18,7 +18,8 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "g_local.h"
 #include "chasecamera.h"
 
-#include "entities/base/SVGBaseEntity.h"
+#include "shared/entities/Server/ServerEntity.h"
+#include "shared/entities/Server/ServerGameEntity.h"
 #include "entities/base/PlayerClient.h"
 
 void SVG_UpdateChaseCam(PlayerClient *ent)
@@ -42,7 +43,7 @@ void SVG_UpdateChaseCam(PlayerClient *ent)
         }
     }
 
-    targ = ent->GetClient()->chaseTarget;
+    targ = ent->chaseTarget;
 
     VectorCopy(targ->state.origin, ownerv);
 

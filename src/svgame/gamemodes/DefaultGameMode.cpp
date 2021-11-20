@@ -12,7 +12,7 @@
 #include "../utils.h"       // Util funcs.
 
 // Server Game Base ServerEntity.
-#include "../entities/base/SVGBaseEntity.h"
+#include "../entities/base/ServerGameEntity.h"
 #include "../entities/base/BodyCorpse.h"
 #include "../entities/base/PlayerClient.h"
 #include "../entities/info/InfoPlayerStart.h"
@@ -47,7 +47,7 @@ DefaultGameMode::~DefaultGameMode() {
 // Assigns the teamname to the string passed, returns false in case the ServerEntity
 // is not part of a team at all.
 //===============
-qboolean DefaultGameMode::GetServerEntityTeamName(SVGBaseEntity* ent, std::string &teamName) {
+qboolean DefaultGameMode::GetServerEntityTeamName(ServerGameEntity* ent, std::string &teamName) {
     // Placeholder.
     teamName = "";
 
@@ -85,7 +85,7 @@ qboolean DefaultGameMode::GetServerEntityTeamName(SVGBaseEntity* ent, std::strin
 // Returns false either way, because yes, there is no... team in this case.
 // PS: ClientTeam <-- weird function, needs C++-fying and oh.. it stinks anyhow.
 //===============
-qboolean DefaultGameMode::OnSameTeam(SVGBaseEntity* ent1, SVGBaseEntity* ent2) {
+qboolean DefaultGameMode::OnSameTeam(ServerGameEntity* ent1, ServerGameEntity* ent2) {
     //// There is only a reason to check for this in case these specific
     //// game mode flags are set.
     //if (!((int)(gamemodeflags->value) & (GameModeFlags::ModelTeams | GameModeFlags::SkinTeams)))
@@ -109,7 +109,7 @@ qboolean DefaultGameMode::OnSameTeam(SVGBaseEntity* ent1, SVGBaseEntity* ent2) {
 // DefaultGameMode::CanDamage
 //
 //===============
-qboolean DefaultGameMode::CanDamage(SVGBaseEntity* target, SVGBaseEntity* inflictor) {
+qboolean DefaultGameMode::CanDamage(ServerGameEntity* target, ServerGameEntity* inflictor) {
     vec3_t  destination;
     SVGTrace trace;
 
@@ -177,7 +177,7 @@ qboolean DefaultGameMode::CanDamage(SVGBaseEntity* target, SVGBaseEntity* inflic
 //===============
 BaseServerEntityVector DefaultGameMode::FindBaseEnitiesWithinRadius(const vec3_t& origin, float radius, uint32_t excludeSolidFlags) {
     // List of base entities to return.
-    std::vector<SVGBaseEntity*> baseServerEntityList;
+    std::vector<ServerGameEntity*> baseServerEntityList;
 
     // Iterate over all entities, see who is nearby, and who is not.
     for (auto* radiusBaseServerEntity : GetBaseServerEntityRange<0, MAX_EDICTS>()
@@ -198,7 +198,7 @@ BaseServerEntityVector DefaultGameMode::FindBaseEnitiesWithinRadius(const vec3_t
 // Called when an ServerEntity is killed, or at least, about to be.
 // Determine how to deal with it, usually resides in a callback to Die.
 //===============
-void DefaultGameMode::ServerEntityKilled(SVGBaseEntity* target, SVGBaseEntity* inflictor, SVGBaseEntity* attacker, int32_t damage, vec3_t point) {
+void DefaultGameMode::ServerEntityKilled(ServerGameEntity* target, ServerGameEntity* inflictor, ServerGameEntity* attacker, int32_t damage, vec3_t point) {
     // Ensure health isn't exceeding limits.
     if (target->GetHealth() < -999)
         target->SetHealth(-999);
@@ -248,7 +248,7 @@ void DefaultGameMode::ServerEntityKilled(SVGBaseEntity* target, SVGBaseEntity* i
 // DefaultGameMode::InflictDamage
 // 
 //===============
-void DefaultGameMode::InflictDamage(SVGBaseEntity* target, SVGBaseEntity* inflictor, SVGBaseEntity* attacker, const vec3_t& dmgDir, const vec3_t& point, const vec3_t& normal, int32_t damage, int32_t knockBack, int32_t damageFlags, int32_t mod) {
+void DefaultGameMode::InflictDamage(ServerGameEntity* target, ServerGameEntity* inflictor, ServerGameEntity* attacker, const vec3_t& dmgDir, const vec3_t& point, const vec3_t& normal, int32_t damage, int32_t knockBack, int32_t damageFlags, int32_t mod) {
     int32_t damageTaken = 0;   // Damage taken.
     int32_t damageSaved = 0;   // Damaged saved, from being taken.
 
@@ -395,12 +395,12 @@ void DefaultGameMode::InflictDamage(SVGBaseEntity* target, SVGBaseEntity* inflic
 // DefaultGameMode::InflictDamage
 // 
 //===============
-void DefaultGameMode::InflictRadiusDamage(SVGBaseEntity* inflictor, SVGBaseEntity* attacker, float damage, SVGBaseEntity* ignore, float radius, int32_t mod) {
+void DefaultGameMode::InflictRadiusDamage(ServerGameEntity* inflictor, ServerGameEntity* attacker, float damage, ServerGameEntity* ignore, float radius, int32_t mod) {
     // Damage point counter for radius sum ups.
     float   points = 0.f;
 
     // Actual ServerEntity loop pointer.
-    SVGBaseEntity* ent = nullptr;
+    ServerGameEntity* ent = nullptr;
 
     // N&C: From Yamagi Q2, to prevent issues.
     if (!inflictor || !attacker) {
@@ -465,7 +465,7 @@ const int32_t& DefaultGameMode::GetCurrentMeansOfDeath() {
 // 
 // Spawns a dead body ServerEntity for the given client.
 //===============
-void DefaultGameMode::SpawnClientCorpse(SVGBaseEntity* ent) {
+void DefaultGameMode::SpawnClientCorpse(ServerGameEntity* ent) {
     // Ensure it is an ServerEntity.
     if (!ent)
         return;
@@ -493,7 +493,7 @@ void DefaultGameMode::SpawnClientCorpse(SVGBaseEntity* ent) {
     }
 
     // Create the class ServerEntity for this queued bodyServerEntity.
-    SVGBaseEntity *bodyClassServerEntity = SVG_CreateClassServerEntity<BodyCorpse>(bodyServerEntity, false);
+    ServerGameEntity *bodyClassServerEntity = SVG_CreateClassServerEntity<BodyCorpse>(bodyServerEntity, false);
 
     // Unlink the body ServerEntity, in case it was linked before.
     bodyClassServerEntity->UnlinkServerEntity();
@@ -607,7 +607,7 @@ void DefaultGameMode::OnLevelExit() {
         uint32_t stateNumber = serverEntity->state.number;
 
         // Fetch the corresponding base ServerEntity.
-        SVGBaseEntity* ServerEntity = g_baseEntities[stateNumber];
+        ServerGameEntity* ServerEntity = g_baseEntities[stateNumber];
 
         // Ensure an ServerEntity its health is reset to default.
         if (ServerEntity->GetHealth() > ServerEntity->GetClient()->persistent.maxHealth)
@@ -1092,7 +1092,7 @@ void DefaultGameMode::ClientUserinfoChanged(ServerEntity* ent, char* userinfo) {
 // DefaultGameMode::ClientUpdateObituary
 // 
 //===============
-void DefaultGameMode::ClientUpdateObituary(SVGBaseEntity* self, SVGBaseEntity* inflictor, SVGBaseEntity* attacker) {
+void DefaultGameMode::ClientUpdateObituary(ServerGameEntity* self, ServerGameEntity* inflictor, ServerGameEntity* attacker) {
     std::string message = ""; // String stating what happened to whichever ServerEntity. "suicides", "was squished" etc.
     std::string messageAddition = ""; // String stating what is additioned to it, "'s shrapnell" etc. Funny stuff.
 
@@ -1280,7 +1280,7 @@ void DefaultGameMode::InitializeClientRespawnData(ServerClient* client) {
 // those who have inherited from info_player_start. (info_player_deathmatch, etc).
 //===============
 void DefaultGameMode::SelectClientSpawnPoint(ServerEntity* ent, vec3_t& origin, vec3_t& angles, const std::string& classname) {
-    SVGBaseEntity *spawnPoint = nullptr;
+    ServerGameEntity *spawnPoint = nullptr;
 
     //// Find a single player start spot
     if (!spawnPoint) {

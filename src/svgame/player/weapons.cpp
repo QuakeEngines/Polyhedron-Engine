@@ -20,7 +20,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "../g_local.h"
 #include "animations.h"
 
-#include "../entities/base/SVGBaseEntity.h"
+#include "../entities/base/ServerGameEntity.h"
 #include "../entities/base/PlayerClient.h"
 
 #include "sharedgame/sharedgame.h" // Include SG Base.
@@ -40,7 +40,7 @@ Monsters that don't directly see the player can move
 to a noise in hopes of seeing the player from there.
 ===============
 */
-void SVG_PlayerNoise(SVGBaseEntity *who, vec3_t where, int type)
+void SVG_PlayerNoise(ServerGameEntity *who, vec3_t where, int type)
 {
     ServerEntity     *noise;
 
@@ -87,7 +87,7 @@ void SVG_PlayerNoise(SVGBaseEntity *who, vec3_t where, int type)
 }
 
 
-qboolean Pickup_Weapon(SVGBaseEntity *ent, PlayerClient *other)
+qboolean Pickup_Weapon(ServerGameEntity *ent, PlayerClient *other)
 {
     //int         index;
     //GameItem     *ammo;

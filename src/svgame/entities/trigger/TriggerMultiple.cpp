@@ -10,7 +10,7 @@
 #include "../../g_local.h"     // SVGame.
 #include "../../effects.h"     // Effects.
 #include "../../utils.h"       // Util funcs.
-#include "../base/SVGBaseEntity.h"
+#include "../base/ServerGameEntity.h"
 #include "../base/SVGBaseTrigger.h"
 #include "TriggerMultiple.h"
 
@@ -127,7 +127,7 @@ void TriggerMultiple::SpawnKey(const std::string& key, const std::string& value)
 	Base::SpawnKey(key, value);
 }
 
-void TriggerMultiple::Trigger(SVGBaseEntity *activator) {
+void TriggerMultiple::Trigger(ServerGameEntity *activator) {
 	// We've already been triggered.
 	if (GetNextThinkTime())
 		return;
@@ -169,7 +169,7 @@ void TriggerMultiple::TriggerMultipleThinkWait() {
 // 'Touch' callback, to hurt the entities touching it.
 //===============
 //
-void TriggerMultiple::TriggerMultipleTouch(SVGBaseEntity* self, SVGBaseEntity* other, cplane_t* plane, csurface_t* surf) {
+void TriggerMultiple::TriggerMultipleTouch(ServerGameEntity* self, ServerGameEntity* other, cplane_t* plane, csurface_t* surf) {
 	if (this == other)
 		return;
 
@@ -205,7 +205,7 @@ void TriggerMultiple::TriggerMultipleTouch(SVGBaseEntity* self, SVGBaseEntity* o
 // 'Use' callback, whenever the trigger is activated.
 //===============
 //
-void TriggerMultiple::TriggerMultipleUse(SVGBaseEntity* other, SVGBaseEntity* activator) {
+void TriggerMultiple::TriggerMultipleUse(ServerGameEntity* other, ServerGameEntity* activator) {
 	// Trigger itself.
 	Trigger(activator);
 }
@@ -217,7 +217,7 @@ void TriggerMultiple::TriggerMultipleUse(SVGBaseEntity* other, SVGBaseEntity* ac
 // 'Use' callback, whenever the trigger wasn't, but still has to be activated.
 //===============
 //
-void TriggerMultiple::TriggerMultipleEnable(SVGBaseEntity* other, SVGBaseEntity* activator) {
+void TriggerMultiple::TriggerMultipleEnable(ServerGameEntity* other, ServerGameEntity* activator) {
 	// Set the new solid, since it wasn't Solid::Trigger when disabled.
 	SetSolid(Solid::Trigger);
 

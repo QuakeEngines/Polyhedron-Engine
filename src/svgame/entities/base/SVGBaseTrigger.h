@@ -10,7 +10,7 @@
 #ifndef __SVGAME_ENTITIES_BASE_SVGBASETRIGGER_H__
 #define __SVGAME_ENTITIES_BASE_SVGBASETRIGGER_H__
 
-class SVGBaseTrigger : public SVGBaseEntity {
+class SVGBaseTrigger : public ServerGameEntity {
 public:
     //
     // Constructor/Deconstructor.
@@ -18,7 +18,7 @@ public:
     SVGBaseTrigger(ServerEntity* svServerEntity);
     virtual ~SVGBaseTrigger();
 
-    DefineAbstractClass( SVGBaseTrigger, SVGBaseEntity );
+    DefineAbstractClass( SVGBaseTrigger, ServerGameEntity );
 
     //
     // Interface functions. 
@@ -34,13 +34,13 @@ public:
     //
     // Trigger functions.
     //
-    void UseTargets(SVGBaseEntity* activator);
+    void UseTargets(ServerGameEntity* activator);
 
     //
     // Get/Set
     // 
     // Return the 'activatorServerEntity' ServerEntity pointer.
-    SVGBaseEntity* GetActivator() {
+    ServerGameEntity* GetActivator() {
         return activatorServerEntity;
     }
 
@@ -48,7 +48,7 @@ public:
     // ServerEntity Set Functions.
     //
     // Set the 'activatorServerEntity' pointer.
-    inline void SetActivator(SVGBaseEntity* activator) {
+    inline void SetActivator(ServerGameEntity* activator) {
         this->activatorServerEntity = activator;
     }
 
@@ -87,17 +87,17 @@ protected:
     // ServerEntity pointers.
     // 
     //// ServerEntity that activated this ServerEntity, NULL if none.
-    SVGBaseEntity* activatorServerEntity;
+    ServerGameEntity* activatorServerEntity;
     //// Current active enemy, NULL if not any.    
-    //SVGBaseEntity* enemyServerEntity;
+    //ServerGameEntity* enemyServerEntity;
     //// Ground ServerEntity we're standing on.
-    //SVGBaseEntity* groundServerEntity;
+    //ServerGameEntity* groundServerEntity;
     //// Old enemy, NULL if not any.
-    //SVGBaseEntity* oldEnemyServerEntity;
+    //ServerGameEntity* oldEnemyServerEntity;
     //// Team Chain Pointer.
-    //SVGBaseEntity* teamChainServerEntity;
+    //ServerGameEntity* teamChainServerEntity;
     //// Master Pointer.
-    //SVGBaseEntity* teamMasterServerEntity;
+    //ServerGameEntity* teamMasterServerEntity;
 
 public:
 

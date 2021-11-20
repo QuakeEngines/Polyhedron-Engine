@@ -27,7 +27,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "weapons/shotgun.h"
 #include "weapons/supershotgun.h"
 
-qboolean    Pickup_Weapon(SVGBaseEntity *ent, PlayerClient *other);
+qboolean    Pickup_Weapon(ServerGameEntity *ent, PlayerClient *other);
 void        Use_Weapon(PlayerClient *ent, GameItem *inv);
 void        Drop_Weapon(PlayerClient *ent, GameItem *inv);
 
@@ -213,7 +213,7 @@ qboolean SVG_AddAmmo(ServerEntity *ent, GameItem *item, int count)
     return true;
 }
 
-qboolean Pickup_Ammo(SVGBaseEntity *ent, PlayerClient*other)
+qboolean Pickup_Ammo(ServerGameEntity *ent, PlayerClient*other)
 {
     //int         oldcount;
     //int         count;
@@ -314,7 +314,7 @@ qboolean Pickup_Health(ServerEntity *ent, ServerEntity *other)
 
 //======================================================================
 
-int SVG_ArmorIndex(SVGBaseEntity *ent)
+int SVG_ArmorIndex(ServerGameEntity *ent)
 {
     if (!ent)
         return 0;
@@ -331,7 +331,7 @@ int SVG_ArmorIndex(SVGBaseEntity *ent)
     return 0;
 }
 
-qboolean Pickup_Armor(SVGBaseEntity *ent, PlayerClient *other)
+qboolean Pickup_Armor(ServerGameEntity *ent, PlayerClient *other)
 {
     //int             old_armor_index;
     //gitem_armor_t   *oldinfo;
@@ -398,7 +398,7 @@ qboolean Pickup_Armor(SVGBaseEntity *ent, PlayerClient *other)
 SVG_TouchItem
 ===============
 */
-void SVG_TouchItem(SVGBaseEntity *ent, SVGBaseEntity *other, cplane_t *plane, csurface_t *surf)
+void SVG_TouchItem(ServerGameEntity *ent, ServerGameEntity *other, cplane_t *plane, csurface_t *surf)
 {
     //qboolean    taken;
 

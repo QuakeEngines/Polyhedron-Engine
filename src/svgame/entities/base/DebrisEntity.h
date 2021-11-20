@@ -10,15 +10,15 @@
 #ifndef __SVGAME_ENTITIES_BASE_DEBRISServerEntity_H__
 #define __SVGAME_ENTITIES_BASE_DEBRISServerEntity_H__
 
-class SVGBaseEntity;
+class ServerGameEntity;
 
-class DebrisServerEntity : public SVGBaseEntity {
+class DebrisServerEntity : public ServerGameEntity {
 public:
     // Constructor/Deconstructor.
     DebrisServerEntity(ServerEntity* svServerEntity);
     virtual ~DebrisServerEntity();
 
-    DefineClass(DebrisServerEntity, SVGBaseEntity);
+    DefineClass(DebrisServerEntity, ServerGameEntity);
 
     //
     // Interface functions. 
@@ -34,13 +34,13 @@ public:
     //
     // DebrisServerEntity functions.
     // 
-    void CalculateVelocity(SVGBaseEntity* other, const int32_t& damage);
+    void CalculateVelocity(ServerGameEntity* other, const int32_t& damage);
 
     //
     // Callback functions.
     //
     //
-    void DebrisServerEntityDie(SVGBaseEntity* inflictor, SVGBaseEntity* attacker, int damage, const vec3_t& point);
+    void DebrisServerEntityDie(ServerGameEntity* inflictor, ServerGameEntity* attacker, int damage, const vec3_t& point);
    
 protected:
 

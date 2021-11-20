@@ -16,7 +16,7 @@
 #include "gamemodes/IGameMode.h"
 
 // Class Entities.
-#include "entities/base/SVGBaseEntity.h"
+#include "entities/base/ServerGameEntity.h"
 #include "entities/base/PlayerClient.h"
 #include "entities/base/DebrisServerEntity.h"
 #include "entities/base/GibServerEntity.h"
@@ -27,7 +27,7 @@
 // 
 // Throws a gib ServerEntity around at the location of "self".
 //=================
-void SVG_ThrowGib(SVGBaseEntity*self, const char *gibname, int damage, int type)
+void SVG_ThrowGib(ServerGameEntity*self, const char *gibname, int damage, int type)
 {
     // Create a gib ServerEntity.
     GibServerEntity* gibClassServerEntity = SVG_CreateClassServerEntity<GibServerEntity>();
@@ -99,7 +99,7 @@ void SVG_ThrowGib(SVGBaseEntity*self, const char *gibname, int damage, int type)
     gibClassServerEntity->SetAngularVelocity(angularVelocity);
 
     // Setup the Gib think function and its think time.
-    gibClassServerEntity->SetThinkCallback(&SVGBaseEntity::SVGBaseServerEntityThinkRemove);
+    gibClassServerEntity->SetThinkCallback(&ServerGameEntity::SVGBaseServerEntityThinkRemove);
     gibClassServerEntity->SetNextThinkTime(level.time + 10 + random() * 10);
 
     // Link ServerEntity into the world.
@@ -169,10 +169,10 @@ void SVG_ThrowClientHead(PlayerClient* self, int damage) {
 // 
 // Thorws a debris piece around.
 //=================
-void SVG_ThrowDebris(SVGBaseEntity *self, const char *modelname, float speed, const vec3_t &origin) // C++20: STRING: Added const to char*
+void SVG_ThrowDebris(ServerGameEntity *self, const char *modelname, float speed, const vec3_t &origin) // C++20: STRING: Added const to char*
 {
     // Chunk ServerEntity.
-    SVGBaseEntity* chunkServerEntity = SVG_CreateClassServerEntity<DebrisServerEntity>();
+    ServerGameEntity* chunkServerEntity = SVG_CreateClassServerEntity<DebrisServerEntity>();
 
     // Set the origin.
     chunkServerEntity->SetOrigin(origin);
@@ -201,7 +201,7 @@ void SVG_ThrowDebris(SVGBaseEntity *self, const char *modelname, float speed, co
     chunkServerEntity->SetAngularVelocity(angularVelocity);
 
     // Set up the thinking machine.
-    chunkServerEntity->SetThinkCallback(&SVGBaseEntity::SVGBaseServerEntityThinkRemove);
+    chunkServerEntity->SetThinkCallback(&ServerGameEntity::SVGBaseServerEntityThinkRemove);
     chunkServerEntity->SetNextThinkTime(level.time + 5 + random() * 5);
 
     // Setup the other properties.
@@ -219,7 +219,7 @@ void SVG_ThrowDebris(SVGBaseEntity *self, const char *modelname, float speed, co
 // 
 // Sends an explosion effect as a TE cmd, and queues the ServerEntity up for removal.
 //=================
-void SVG_BecomeExplosion1(SVGBaseEntity *self)
+void SVG_BecomeExplosion1(ServerGameEntity *self)
 {
     // Fetch origin.
     vec3_t origin = self->GetOrigin();
@@ -240,7 +240,7 @@ void SVG_BecomeExplosion1(SVGBaseEntity *self)
 // 
 // Sends an explosion effect as a TE cmd, and queues the ServerEntity up for removal.
 //=================
-void SVG_BecomeExplosion2(SVGBaseEntity*self)
+void SVG_BecomeExplosion2(ServerGameEntity*self)
 {
     // Fetch origin.
     vec3_t origin = self->GetOrigin();

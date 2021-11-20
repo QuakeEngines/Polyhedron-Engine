@@ -12,7 +12,7 @@
 #include "../../utils.h"		// Util funcs.
 
 // Class Entities.
-#include "SVGBaseEntity.h"
+#include "ServerGameEntity.h"
 #include "SVGBaseTrigger.h"
 #include "SVGBaseMover.h"
 

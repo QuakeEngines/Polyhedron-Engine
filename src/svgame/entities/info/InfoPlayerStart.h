@@ -8,16 +8,16 @@
 */
 #pragma once
 
-//class SVGBaseEntity;
+//class ServerGameEntity;
 #include ""
 
-class InfoPlayerStart : public SVGBaseEntity {
+class InfoPlayerStart : public ServerGameEntity {
 public:
     // Constructor/Deconstructor.
     InfoPlayerStart(ServerEntity* svServerEntity);
     virtual ~InfoPlayerStart();
 
-    DefineMapClass( "info_player_start", InfoPlayerStart, SVGBaseEntity );
+    DefineMapClass( "info_player_start", InfoPlayerStart, ServerGameEntity );
 
     // Interface functions. 
     void Precache();    // Precaches data.

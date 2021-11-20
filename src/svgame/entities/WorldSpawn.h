@@ -10,9 +10,9 @@
 #ifndef __SVGAME_ENTITIES_WORLDSPAWN_H__
 #define __SVGAME_ENTITIES_WORLDSPAWN_H__
 
-class SVGBaseEntity;
+class ServerGameEntity;
 
-class WorldSpawn : public SVGBaseEntity {
+class WorldSpawn : public ServerGameEntity {
 public:
     // Constructor/Deconstructor.
     WorldSpawn(ServerEntity* svServerEntity);

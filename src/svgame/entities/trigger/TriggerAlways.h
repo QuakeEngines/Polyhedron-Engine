@@ -36,8 +36,8 @@ public:
     //
 
     // Callback functions.
-    void TriggerAlwaysTouch(SVGBaseEntity* self, SVGBaseEntity* other, cplane_t* plane, csurface_t* surf);
-    void TriggerAlwaysUse(SVGBaseEntity* other, SVGBaseEntity* activator);
+    void TriggerAlwaysTouch(ServerGameEntity* self, ServerGameEntity* other, cplane_t* plane, csurface_t* surf);
+    void TriggerAlwaysUse(ServerGameEntity* other, ServerGameEntity* activator);
 
     //
     // Get/Set

@@ -28,7 +28,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "weapons.h"
 
 // ClassEntities.
-#include "../entities/base/SVGBaseEntity.h"
+#include "../entities/base/ServerGameEntity.h"
 #include "../entities/base/PlayerClient.h"
 #include "../entities/info/InfoPlayerStart.h"
 

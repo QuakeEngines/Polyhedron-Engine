@@ -1,12 +1,12 @@
 
 #pragma once
 
-class FuncExplosive : public SVGBaseEntity {
+class FuncExplosive : public ServerGameEntity {
 public:
 	FuncExplosive( ServerEntity* ServerEntity );
 	virtual ~FuncExplosive() = default;
 
-	DefineMapClass( "func_explosive", FuncExplosive, SVGBaseEntity );
+	DefineMapClass( "func_explosive", FuncExplosive, ServerGameEntity );
 
 	// Spawn flags
 	static constexpr int32_t SF_StartDeactivated = 1 << 0;
@@ -15,7 +15,7 @@ public:
 
 	void Spawn() override;
 
-	void ExplosiveDeath( SVGBaseEntity* inflictor, SVGBaseEntity* attacker, int damage, const vec3_t& point );
-	void ExplosiveUse( SVGBaseEntity* other, SVGBaseEntity* activator );
-	void ExplosiveAppearUse( SVGBaseEntity* other, SVGBaseEntity* activator );
+	void ExplosiveDeath( ServerGameEntity* inflictor, ServerGameEntity* attacker, int damage, const vec3_t& point );
+	void ExplosiveUse( ServerGameEntity* other, ServerGameEntity* activator );
+	void ExplosiveAppearUse( ServerGameEntity* other, ServerGameEntity* activator );
 };

@@ -12,7 +12,7 @@
 #include "../../physics/stepmove.h" // Stepmove funcs.
 
 // Server Game Base ServerEntity.
-#include "../base/SVGBaseEntity.h"
+#include "../base/ServerGameEntity.h"
 #include "../base/SVGBaseTrigger.h"
 
 // Misc Explosion Box ServerEntity.
@@ -165,7 +165,7 @@ void MiscExplosionBox::Think() {
 // 
 // So that mappers can trigger this ServerEntity in order to blow it up
 // ==============
-void MiscExplosionBox::ExplosionBoxUse( SVGBaseEntity* caller, SVGBaseEntity* activator )
+void MiscExplosionBox::ExplosionBoxUse( ServerGameEntity* caller, ServerGameEntity* activator )
 {
     ExplosionBoxDie( caller, activator, 999, GetOrigin() );
 }
@@ -311,7 +311,7 @@ void MiscExplosionBox::MiscExplosionBoxExplode(void)
 // 'Die' callback, the explosion box has been damaged too much.
 //===============
 //
-void MiscExplosionBox::ExplosionBoxDie(SVGBaseEntity* inflictor, SVGBaseEntity* attacker, int damage, const vec3_t& point) {
+void MiscExplosionBox::ExplosionBoxDie(ServerGameEntity* inflictor, ServerGameEntity* attacker, int damage, const vec3_t& point) {
     // ServerEntity is dying, it can't take any more damage.
     SetTakeDamage(TakeDamage::Yes);
 
@@ -333,7 +333,7 @@ void MiscExplosionBox::ExplosionBoxDie(SVGBaseEntity* inflictor, SVGBaseEntity* 
 // 'Touch' callback, to calculate the direction to move into.
 //===============
 //
-void MiscExplosionBox::ExplosionBoxTouch(SVGBaseEntity* self, SVGBaseEntity* other, cplane_t* plane, csurface_t* surf) {
+void MiscExplosionBox::ExplosionBoxTouch(ServerGameEntity* self, ServerGameEntity* other, cplane_t* plane, csurface_t* surf) {
     // Safety checks.
     if (!self)
         return;

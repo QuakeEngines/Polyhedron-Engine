@@ -470,83 +470,83 @@ static void write_pointer(FILE *f, void *p, ptr_type_t type)
 
 static void write_field(FILE *f, const save_field_t *field, void *base)
 {
-    void *p = (byte *)base + field->ofs;
-    int i;
+    //void *p = (byte *)base + field->ofs;
+    //int i;
 
-    switch (field->type) {
-    case F_BYTE:
-        write_data(p, field->size, f);
-        break;
-    case F_SHORT:
-        for (i = 0; i < field->size; i++) {
-            write_short(f, ((short *)p)[i]);
-        }
-        break;
-    case F_INT:
-        for (i = 0; i < field->size; i++) {
-            write_int(f, ((int *)p)[i]);
-        }
-        break;
-    case F_FLOAT:
-        for (i = 0; i < field->size; i++) {
-            write_float(f, ((float *)p)[i]);
-        }
-        break;
-    case F_VECTOR:
-        write_vector(f, (vec_t *)p);
-        break;
-
-    case F_ZSTRING:
-        write_string(f, (char *)p);
-        break;
-    case F_LSTRING:
-        write_string(f, *(char **)p);
-        break;
-
-    case F_EDICT:
-        write_index(f, *(void **)p, sizeof(ServerEntity), g_entities, MAX_EDICTS - 1);
-        break;
-    case F_CLIENT:
-        write_index(f, *(void **)p, sizeof(ServerClient), game.clients, game.maximumClients - 1);
-        break;
-    case F_ITEM:
-        write_index(f, *(void **)p, sizeof(GameItem), itemlist, game.numberOfItems - 1);
-        break;
-
-    case F_POINTER:
-        // TODO: We aren't using this anymore...
-        break;
-    //case F_POINTER:
-    //    write_pointer(f, *(void **)p, (ptr_type_t)field->size); // CPP: Cast
+    //switch (field->type) {
+    //case F_BYTE:
+    //    write_data(p, field->size, f);
+    //    break;
+    //case F_SHORT:
+    //    for (i = 0; i < field->size; i++) {
+    //        write_short(f, ((short *)p)[i]);
+    //    }
+    //    break;
+    //case F_INT:
+    //    for (i = 0; i < field->size; i++) {
+    //        write_int(f, ((int *)p)[i]);
+    //    }
+    //    break;
+    //case F_FLOAT:
+    //    for (i = 0; i < field->size; i++) {
+    //        write_float(f, ((float *)p)[i]);
+    //    }
+    //    break;
+    //case F_VECTOR:
+    //    write_vector(f, (vec_t *)p);
     //    break;
 
-    default:
-        gi.Error("%s: unknown field type", __func__);
-    }
+    //case F_ZSTRING:
+    //    write_string(f, (char *)p);
+    //    break;
+    //case F_LSTRING:
+    //    write_string(f, *(char **)p);
+    //    break;
+
+    //case F_EDICT:
+    //    write_index(f, *(void **)p, sizeof(ServerEntity), g_entities, MAX_EDICTS - 1);
+    //    break;
+    //case F_CLIENT:
+    //    write_index(f, *(void **)p, sizeof(ServerClient), game.clients, game.maximumClients - 1);
+    //    break;
+    //case F_ITEM:
+    //    write_index(f, *(void **)p, sizeof(GameItem), itemlist, game.numberOfItems - 1);
+    //    break;
+
+    //case F_POINTER:
+    //    // TODO: We aren't using this anymore...
+    //    break;
+    ////case F_POINTER:
+    ////    write_pointer(f, *(void **)p, (ptr_type_t)field->size); // CPP: Cast
+    ////    break;
+
+    //default:
+    //    gi.Error("%s: unknown field type", __func__);
+    //}
 }
 
 static void write_fields(FILE *f, const save_field_t *fields, void *base)
 {
-    const save_field_t *field;
+    //const save_field_t *field;
 
-    for (field = fields; field->type; field++) {
-        write_field(f, field, base);
-    }
+    //for (field = fields; field->type; field++) {
+    //    write_field(f, field, base);
+    //}
 }
 
 static void read_data(void *buf, size_t len, FILE *f)
 {
-    if (fread(buf, 1, len, f) != len) {
-        gi.Error("%s: couldn't read %" PRIz " bytes", __func__, len); // CPP: String fix.
-    }
+    //if (fread(buf, 1, len, f) != len) {
+    //    gi.Error("%s: couldn't read %" PRIz " bytes", __func__, len); // CPP: String fix.
+    //}
 }
 
 static int read_short(FILE *f)
 {
     short v;
 
-    read_data(&v, sizeof(v), f);
-    v = LittleShort(v);
+    //read_data(&v, sizeof(v), f);
+    //v = LittleShort(v);
 
     return v;
 }
@@ -555,8 +555,8 @@ static int read_int(FILE *f)
 {
     int v;
 
-    read_data(&v, sizeof(v), f);
-    v = LittleLong(v);
+    //read_data(&v, sizeof(v), f);
+    //v = LittleLong(v);
 
     return v;
 }
@@ -565,81 +565,83 @@ static float read_float(FILE *f)
 {
     float v;
 
-    read_data(&v, sizeof(v), f);
-    v = LittleFloat(v);
+    /*read_data(&v, sizeof(v), f);
+    v = LittleFloat(v);*/
 
     return v;
 }
 
 
-static char *read_string(FILE *f)
+static const char *read_string(FILE *f)
 {
-    int len;
-    char *s;
+    //int len;
+    //char *s;
 
-    len = read_int(f);
-    if (len == -1) {
-        return NULL;
-    }
+    //len = read_int(f);
+    //if (len == -1) {
+    //    return NULL;
+    //}
 
-    if (len < 0 || len > 65536) {
-        gi.Error("%s: bad length", __func__);
-    }
+    //if (len < 0 || len > 65536) {
+    //    gi.Error("%s: bad length", __func__);
+    //}
 
-    s = (char*)gi.TagMalloc(len + 1, TAG_LEVEL); // CPP: Casts
-    read_data(s, len, f);
-    s[len] = 0;
+    //s = (char*)gi.TagMalloc(len + 1, TAG_LEVEL); // CPP: Casts
+    //read_data(s, len, f);
+    //s[len] = 0;
 
-    return s;
+    return "";
 }
 
 static void read_zstring(FILE *f, char *s, size_t size)
 {
-    int len;
+    //int len;
 
-    len = read_int(f);
-    if (len < 0 || len >= size) {
-        gi.Error("%s: bad length", __func__);
-    }
+    //len = 32;
+    ////if (len < 0 || len >= size) {
+    ////    gi.Error("%s: bad length", __func__);
+    ////}
 
-    read_data(s, len, f);
-    s[len] = 0;
+    //read_data(s, len, f);
+    //s[len] = 0;
 }
 
 static void read_vector(FILE *f, vec_t *v)
 {
-    v[0] = read_float(f);
-    v[1] = read_float(f);
-    v[2] = read_float(f);
+    //v[0] = read_float(f);
+    //v[1] = read_float(f);
+    //v[2] = read_float(f);
 }
 
 static void *read_index(FILE *f, size_t size, void *start, int max_index)
 {
-    int index;
-    byte *p;
+    //int index;
+    //byte *p;
 
-    index = read_int(f);
-    if (index == -1) {
-        return NULL;
-    }
+    //index = read_int(f);
+    //if (index == -1) {
+    //    return NULL;
+    //}
 
-    if (index < 0 || index > max_index) {
-        gi.Error("%s: bad index", __func__);
-    }
+    //if (index < 0 || index > max_index) {
+    //    gi.Error("%s: bad index", __func__);
+    //}
 
-    p = (byte *)start + index * size;
-    return p;
+    //p = (byte *)start + index * size;
+    //return p;
+    return 0;
 }
 
 static void *read_pointer(FILE *f, ptr_type_t type)
 {
-    int index;
-    const save_ptr_t *ptr;
+    //int index;
+    //const save_ptr_t *ptr;
 
-    index = read_int(f);
-    if (index == -1) {
-        return NULL;
-    }
+    //index = read_int(f);
+    //if (index == -1) {
+    //    return NULL;
+    //}
+    return nullptr;
 
     //if (index < 0 || index >= num_save_ptrs) {
     //    gi.Error("%s: bad index", __func__);
@@ -649,8 +651,6 @@ static void *read_pointer(FILE *f, ptr_type_t type)
     //if (ptr->type != type) {
     //    gi.Error("%s: type mismatch", __func__);
     //}
-
-    return ptr->ptr;
 }
 
 static void read_field(FILE *f, const save_field_t *field, void *base)
@@ -748,19 +748,19 @@ void SVG_WriteGame(const char *filename, qboolean autosave)
         SVG_SaveClientData();
 
     f = fopen(filename, "wb");
-    if (!f)
-        gi.Error("Couldn't open %s", filename);
+    //if (!f)
+    //    gi.Error("Couldn't open %s", filename);
 
-    write_int(f, SAVE_MAGIC1);
-    write_int(f, SAVE_VERSION);
+    //write_int(f, SAVE_MAGIC1);
+    //write_int(f, SAVE_VERSION);
 
-    game.autoSaved = autosave;
-    write_fields(f, gamefields, &game);
-    game.autoSaved = false;
+    //game.autoSaved = autosave;
+    //write_fields(f, gamefields, &game);
+    //game.autoSaved = false;
 
-    for (i = 0; i < game.maximumClients; i++) {
-        write_fields(f, clientfields, &game.clients[i]);
-    }
+    //for (i = 0; i < game.maximumClients; i++) {
+    //    write_fields(f, clientfields, &game.clients[i]);
+    //}
 
     fclose(f);
 }
@@ -773,40 +773,40 @@ void SVG_ReadGame(const char *filename)
     gi.FreeTags(TAG_GAME);
 
     f = fopen(filename, "rb");
-    if (!f)
-        gi.Error("Couldn't open %s", filename);
+    //if (!f)
+    //    gi.Error("Couldn't open %s", filename);
 
-    i = read_int(f);
-    if (i != SAVE_MAGIC1) {
-        fclose(f);
-        gi.Error("Not a save game");
-    }
+    //i = read_int(f);
+    //if (i != SAVE_MAGIC1) {
+    //    fclose(f);
+    //    gi.Error("Not a save game");
+    //}
 
-    i = read_int(f);
-    if (i != SAVE_VERSION) {
-        fclose(f);
-        gi.Error("Savegame from an older version");
-    }
+    //i = read_int(f);
+    //if (i != SAVE_VERSION) {
+    //    fclose(f);
+    //    gi.Error("Savegame from an older version");
+    //}
 
-    read_fields(f, gamefields, &game);
+    //read_fields(f, gamefields, &game);
 
-    // should agree with server's version
-    if (game.maximumClients != (int)maximumClients->value) {
-        fclose(f);
-        gi.Error("Savegame has bad maximumClients");
-    }
-    if (game.maxEntities <= game.maximumClients || game.maxEntities > MAX_EDICTS) {
-        fclose(f);
-        gi.Error("Savegame has bad maxEntities");
-    }
+    //// should agree with server's version
+    //if (game.maximumClients != (int)maximumClients->value) {
+    //    fclose(f);
+    //    gi.Error("Savegame has bad maximumClients");
+    //}
+    //if (game.maxEntities <= game.maximumClients || game.maxEntities > MAX_EDICTS) {
+    //    fclose(f);
+    //    gi.Error("Savegame has bad maxEntities");
+    //}
 
-    globals.entities = g_entities;
-    globals.maxEntities = game.maxEntities;
+    //globals.entities = g_entities;
+    //globals.maxEntities = game.maxEntities;
 
-    game.clients = (ServerClient*)gi.TagMalloc(game.maximumClients * sizeof(game.clients[0]), TAG_GAME); // CPP: Cast
-    for (i = 0; i < game.maximumClients; i++) {
-        read_fields(f, clientfields, &game.clients[i]);
-    }
+    //game.clients = (ServerClient*)gi.TagMalloc(game.maximumClients * sizeof(game.clients[0]), TAG_GAME); // CPP: Cast
+    //for (i = 0; i < game.maximumClients; i++) {
+    //    read_fields(f, clientfields, &game.clients[i]);
+    //}
 
     fclose(f);
 }
@@ -830,21 +830,21 @@ void SVG_WriteLevel(const char *filename)
     if (!f)
         gi.Error("Couldn't open %s", filename);
 
-    write_int(f, SAVE_MAGIC2);
-    write_int(f, SAVE_VERSION);
+    //write_int(f, SAVE_MAGIC2);
+    //write_int(f, SAVE_VERSION);
 
-    // write out LevelLocals
-    write_fields(f, levelfields, &level);
+    //// write out LevelLocals
+    //write_fields(f, levelfields, &level);
 
-    // write out all the entities
-    for (i = 0; i < globals.numberOfEntities; i++) {
-        ent = &g_entities[i];
-        if (!ent->inUse)
-            continue;
-        write_int(f, i);
-        write_fields(f, ServerEntityfields, ent);
-    }
-    write_int(f, -1);
+    //// write out all the entities
+    //for (i = 0; i < globals.numberOfEntities; i++) {
+    //    ent = &g_entities[i];
+    //    if (!ent->inUse)
+    //        continue;
+    //    write_int(f, i);
+    //    write_fields(f, ServerEntityfields, ent);
+    //}
+    //write_int(f, -1);
 
     fclose(f);
 }
@@ -881,81 +881,79 @@ void SVG_ReadLevel(const char *filename)
     if (!f)
         gi.Error("Couldn't open %s", filename);
 
-    // Ensure all entities have a clean slate in memory.
-    for (int32_t i = 0; i < game.maxEntities; i++) {
-        g_entities[i] = {};
-    }
-    //memset(g_entities, 0, game.maxEntities * sizeof(g_entities[0]));
+    //// Ensure all entities have a clean slate in memory.
+    //for (int32_t i = 0; i < game.maxEntities; i++) {
+    //    g_entities[i] = {};
+    //}
+    ////memset(g_entities, 0, game.maxEntities * sizeof(g_entities[0]));
 
-    // Set the number of edicts to be maximumClients + 1. (They are soon to be in-use after all)
-    globals.numberOfEntities = maximumClients->value + 1;
+    //// Set the number of edicts to be maximumClients + 1. (They are soon to be in-use after all)
+    //globals.numberOfEntities = maximumClients->value + 1;
 
-    i = read_int(f);
-    if (i != SAVE_MAGIC2) {
-        fclose(f);
-        gi.Error("Not a save game");
-    }
+    //i = read_int(f);
+    //if (i != SAVE_MAGIC2) {
+    //    fclose(f);
+    //    gi.Error("Not a save game");
+    //}
 
-    i = read_int(f);
-    if (i != SAVE_VERSION) {
-        fclose(f);
-        gi.Error("Savegame from an older version");
-    }
+    //i = read_int(f);
+    //if (i != SAVE_VERSION) {
+    //    fclose(f);
+    //    gi.Error("Savegame from an older version");
+    //}
 
-    // load the level locals
-    read_fields(f, levelfields, &level);
+    //// load the level locals
+    //read_fields(f, levelfields, &level);
 
-    // load all the entities
-    while (1) {
-        entnum = read_int(f);
-        if (entnum == -1)
-            break;
-        if (entnum < 0 || entnum >= game.maxEntities) {
-            gi.Error("%s: bad ServerEntity number", __func__);
-        }
-        if (entnum >= globals.numberOfEntities)
-            globals.numberOfEntities = entnum + 1;
+    //// load all the entities
+    //while (1) {
+    //    entnum = read_int(f);
+    //    if (entnum == -1)
+    //        break;
+    //    if (entnum < 0 || entnum >= game.maxEntities) {
+    //        gi.Error("%s: bad ServerEntity number", __func__);
+    //    }
+    //    if (entnum >= globals.numberOfEntities)
+    //        globals.numberOfEntities = entnum + 1;
 
-        ent = &g_entities[entnum];
-        read_fields(f, ServerEntityfields, ent);
-        ent->inUse = true;
-        ent->state.number = entnum;
+    //    ent = &g_entities[entnum];
+    //    read_fields(f, ServerEntityfields, ent);
+    //    ent->inUse = true;
+    //    ent->state.number = entnum;
 
-        // let the server rebuild world links for this ent
-        memset(&ent->area, 0, sizeof(ent->area));
-        gi.LinkServerEntity(ent);
-    }
+    //    // let the server rebuild world links for this ent
+    //    memset(&ent->area, 0, sizeof(ent->area));
+    //    gi.LinkServerEntity(ent);
+    //}
 
     fclose(f);
 
-    // mark all clients as unconnected
-    for (i = 0 ; i < maximumClients->value ; i++) {
-        ent = &g_entities[i + 1];
-        ent->client = game.clients + i;
-        ent->client->persistent.isConnected = false;
-    }
+    //// mark all clients as unconnected
+    //for (i = 0 ; i < maximumClients->value ; i++) {
+    //    ent = &g_entities[i + 1];
+    //    ent->client = game.clients + i;
+    //    ent->client->persistent.isConnected = false;
+    //}
 
-    // do any load time things at this point
-    for (i = 0 ; i < globals.numberOfEntities ; i++) {
-        ent = &g_entities[i];
+    //// do any load time things at this point
+    //for (i = 0 ; i < globals.numberOfEntities ; i++) {
+    //    ent = &g_entities[i];
 
-        if (!ent->inUse)
-            continue;
+    //    if (!ent->inUse)
+    //        continue;
 
-        // fire any cross-level triggers
-        //if (ent->className)
-        //    if (strcmp(ent->className, "target_crosslevel_target") == 0)
-        //        ent->nextThinkTime = level.time + ent->delay;
+    //    // fire any cross-level triggers
+    //    //if (ent->className)
+    //    //    if (strcmp(ent->className, "target_crosslevel_target") == 0)
+    //    //        ent->nextThinkTime = level.time + ent->delay;
 
-        //if (ent->Think == func_clock_think || ent->Use == func_clock_use) {
-        //    const char *msg = ent->message;
-        //    ent->message = (const char)gi.TagMalloc(CLOCK_MESSAGE_SIZE, TAG_LEVEL); // CPP: Cast
-        //    if (msg) {
-        //        Q_strlcpy((char*)ent->message, msg, CLOCK_MESSAGE_SIZE); // C++20: STRING: Dangerous (const char*) to (char*)..?
-        //        gi.TagFree((void*)msg);
-        //    }
-        //}
-    }
+    //    //if (ent->Think == func_clock_think || ent->Use == func_clock_use) {
+    //    //    const char *msg = ent->message;
+    //    //    ent->message = (const char)gi.TagMalloc(CLOCK_MESSAGE_SIZE, TAG_LEVEL); // CPP: Cast
+    //    //    if (msg) {
+    //    //        Q_strlcpy((char*)ent->message, msg, CLOCK_MESSAGE_SIZE); // C++20: STRING: Dangerous (const char*) to (char*)..?
+    //    //        gi.TagFree((void*)msg);
+    //    //    }
+    //    //}
+    //}
 }
-
-#endif

@@ -1,12 +1,12 @@
 
 #pragma once
 
-class TargetSpeaker : public SVGBaseEntity {
+class TargetSpeaker : public ServerGameEntity {
 public:
 	TargetSpeaker( ServerEntity* ServerEntity );
 	virtual ~TargetSpeaker() = default;
 
-	DefineMapClass( "target_speaker", TargetSpeaker, SVGBaseEntity );
+	DefineMapClass( "target_speaker", TargetSpeaker, ServerGameEntity );
 	
 	static constexpr int32_t SF_LoopedOn = 1 << 0;
 	static constexpr int32_t SF_LoopedOff = 1 << 1;
@@ -15,7 +15,7 @@ public:
 	void Spawn() override;
 	void SpawnKey( const std::string& key, const std::string& value ) override;
 
-	void SpeakerUse( SVGBaseEntity* other, SVGBaseEntity* activator );
+	void SpeakerUse( ServerGameEntity* other, ServerGameEntity* activator );
 
 private:
 	std::string soundFile;

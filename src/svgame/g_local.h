@@ -46,11 +46,18 @@ class GameClient;
 
 class SharedEntity;
 
-class SVGBaseEntity;
+class ServerGameEntity;
 
 class PlayerClient;
 class IGameMode;
+
+#include "shared/entities/Server/ClientPersistentData.h"
+#include "shared/entities/Server/ClientRespawnData.h"
+#include "shared/entities/Server/ServerClient.h"
+#include "shared/entities/Server/GameClient.h"
+#include "shared/entities/Server/GameItem.h"
 #include "shared/entities/Server/ServerEntity.h"
+#include "shared/entities/Server/ServerGameEntity.h"
 
 //==================================================================
 
@@ -310,7 +317,7 @@ struct GameLocals {
     qboolean autoSaved;
 
     // Our class base entity instances.
-    SVGBaseEntity *serverEntities[MAX_EDICTS];
+    ServerGameEntity *serverEntities[MAX_EDICTS];
 };
 
 
@@ -449,6 +456,7 @@ struct MeansOfDeath {
     static constexpr int32_t FriendlyFire = 27;
 };
 
+// TODO: Remove.
 extern ServerEntity* g_baseEntities[MAX_EDICTS];
 
 

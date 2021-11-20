@@ -9,5 +9,5 @@ public:
 	DefineMapClass( "trigger_relay", TriggerRelay, SVGBaseTrigger );
 
 	void Spawn() override;
-	void RelayUse( SVGBaseEntity* other, SVGBaseEntity* activator );
+	void RelayUse( ServerGameEntity* other, ServerGameEntity* activator );
 };

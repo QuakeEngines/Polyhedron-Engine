@@ -12,14 +12,14 @@
 #include "../../utils.h"		// Util funcs.
 
 // Class Entities.
-#include "SVGBaseEntity.h"
+#include "ServerGameEntity.h"
 #include "SVGBaseTrigger.h"
 
 // Included for delayed use.
 #include "../trigger/TriggerDelayedUse.h"
 
 // Constructor/Deconstructor.
-SVGBaseTrigger::SVGBaseTrigger(ServerEntity* svServerEntity) : SVGBaseEntity(svServerEntity) {
+SVGBaseTrigger::SVGBaseTrigger(ServerEntity* svServerEntity) : ServerGameEntity(svServerEntity) {
 	//
 	// All callback functions best be nullptr.
 	//
@@ -180,7 +180,7 @@ void SVGBaseTrigger::SpawnKey(const std::string& key, const std::string& value) 
 // calls their Use function.
 //===============
 //
-void SVGBaseTrigger::UseTargets(SVGBaseEntity* activator) {
+void SVGBaseTrigger::UseTargets(ServerGameEntity* activator) {
 	//
 	// Check for a delay
 	//
@@ -222,7 +222,7 @@ void SVGBaseTrigger::UseTargets(SVGBaseEntity* activator) {
 	// Kill killtargets
 	//
 	if (GetKillTarget().length()) {
-		SVGBaseEntity* triggerServerEntity = nullptr;
+		ServerGameEntity* triggerServerEntity = nullptr;
 
 		//while (triggerServerEntity = SVG_FindServerEntityByKeyValue("targetname", GetKillTarget(), triggerServerEntity))
 		// Loop over the total ServerEntity range, ensure that we're checking for the right filters.

@@ -13,15 +13,15 @@
 extern qboolean is_quad;
 extern byte     is_silenced;
 
-class SVGBaseEntity;
+class ServerGameEntity;
 class PlayerClient;
 
 // Player project source.
 vec3_t SVG_PlayerProjectSource(ServerClient* client, const vec3_t &point, const vec3_t& distance, const vec3_t& forward, const vec3_t& right);
 
-void SVG_PlayerNoise(SVGBaseEntity* who, vec3_t where, int type);
+void SVG_PlayerNoise(ServerGameEntity* who, vec3_t where, int type);
 
-qboolean    Pickup_Weapon(SVGBaseEntity* ent, PlayerClient* other);
+qboolean    Pickup_Weapon(ServerGameEntity* ent, PlayerClient* other);
 void        SVG_ChangeWeapon(PlayerClient* ent);
 void        NoAmmoWeaponChange(PlayerClient* ent);
 void        SVG_ThinkWeapon(PlayerClient* ent);

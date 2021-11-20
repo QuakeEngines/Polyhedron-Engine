@@ -18,7 +18,11 @@
 
 // Include this guy here, gotta do so to make it work.
 #include "shared/entities/Server/ServerEntity.h"
+#include "shared/entities/Server/ServerGameEntity.h"
 
+// Externs.
+// Array containing all our ServerGameEntity pointer objects.
+extern std::array<ServerGameEntity*, MAX_EDICTS> gameEntities;
 
 //
 // Filter function namespace that actually contains the ServerEntity filter implementations.
@@ -32,20 +36,20 @@ namespace ServerEntityFilterFunctions {
     inline bool ServerEntityHasClassServerEntity(const ServerEntity& ent) { return static_cast<bool>(ent.className); }
 
     // Returns true in case the (server-)ServerEntity has a client attached to it.
-    inline bool BaseServerEntityHasClient(SVGBaseEntity* ent) { return ent->GetClient(); }
+    inline bool BaseServerEntityHasClient(ServerGameEntity* ent) { return ent->GetClient(); }
     // Returns true in case the BaseServerEntity has a ground ServerEntity set to it.
-    inline bool BaseServerEntityHasGroundServerEntity(SVGBaseEntity* ent) { return ent->GetGroundServerEntity(); }
+    inline bool BaseServerEntityHasGroundServerEntity(ServerGameEntity* ent) { return ent->GetGroundServerEntity(); }
     // Returns true in case the BaseServerEntity is properly linked to a server ServerEntity.
-    inline bool BaseServerEntityHasServerServerEntity(SVGBaseEntity* ent) { return ent->GetServerServerEntity(); }
+    inline bool BaseServerEntityHasServerServerEntity(ServerGameEntity* ent) { return ent->GetServerServerEntity(); }
     // Returns true if the BaseServerEntity contains the sought for targetname.
-    inline bool BaseServerEntityHasTargetName(SVGBaseEntity* ent) { return ent->GetTargetName() != "" && !ent->GetTargetName().empty(); }
+    inline bool BaseServerEntityHasTargetName(ServerGameEntity* ent) { return ent->GetTargetName() != "" && !ent->GetTargetName().empty(); }
     // Returns true in case the BaseServerEntity has a client attached to it.
-    inline bool BaseServerEntityInUse(SVGBaseEntity* ent) { return ent->IsInUse(); }
+    inline bool BaseServerEntityInUse(ServerGameEntity* ent) { return ent->IsInUse(); }
     // Returns true if the BaseServerEntity is NOT a nullptr.
-    inline bool BaseServerEntityIsValidPointer(SVGBaseEntity* ent) { return ent != nullptr; }
+    inline bool BaseServerEntityIsValidPointer(ServerGameEntity* ent) { return ent != nullptr; }
 
     // Returns true in case the BaseServerEntity has the queried for classname.
-    //inline bool BaseServerEntityHasClass(SVGBaseEntity* ent, std::string classname) { return ent->GetClassName() == classname; }
+    //inline bool BaseServerEntityHasClass(ServerGameEntity* ent, std::string classname) { return ent->GetClassName() == classname; }
 };
 
 
@@ -135,7 +139,7 @@ namespace BaseServerEntityFilters {
     // be referred to from here. However, I am unsure how to do that as of yet.
     inline auto HasClassName(const std::string& classname) {
         return std::ranges::views::filter(
-            [classname /*need a copy!*/](SVGBaseEntity* ent) {
+            [classname /*need a copy!*/](ServerGameEntity* ent) {
                 return ent->GetClassName() == classname;
             }
         );
@@ -145,7 +149,7 @@ namespace BaseServerEntityFilters {
     // be referred to from here. However, I am unsure how to do that as of yet.
     inline auto HasKeyValue(const std::string& fieldKey, const std::string& fieldValue) {
         return std::ranges::views::filter(
-            [fieldKey, fieldValue /*need a copy!*/](SVGBaseEntity *ent) {
+            [fieldKey, fieldValue /*need a copy!*/](ServerGameEntity *ent) {
                 auto& dictionary = ent->GetServerEntityDictionary();
 
                 if (dictionary.find(fieldKey) != dictionary.end()) {
@@ -164,7 +168,7 @@ namespace BaseServerEntityFilters {
     template <typename ClassType>
     auto IsClassOf() {
         return std::ranges::views::filter(
-            [](SVGBaseEntity* ent) {
+            [](ServerGameEntity* ent) {
                 return ent->IsClass<ClassType>();
             }
         );
@@ -173,7 +177,7 @@ namespace BaseServerEntityFilters {
     template <typename ClassType>
     auto IsSubclassOf() {
         return std::ranges::views::filter(
-            [](SVGBaseEntity* ent) {
+            [](ServerGameEntity* ent) {
                 return ent->IsSubclassOf<ClassType>();
             }
         );
@@ -183,7 +187,7 @@ namespace BaseServerEntityFilters {
     // be referred to from here. However, I am unsure how to do that as of yet.
     inline auto WithinRadius(vec3_t origin, float radius, uint32_t excludeSolidFlags) {
         return std::ranges::views::filter(
-            [origin, radius, excludeSolidFlags/*need a copy!*/](SVGBaseEntity* ent) {
+            [origin, radius, excludeSolidFlags/*need a copy!*/](ServerGameEntity* ent) {
                 // Find distances between ServerEntity origins.
                 vec3_t ServerEntityOrigin = origin - (ent->GetOrigin() + vec3_scale(ent->GetMins() + ent->GetMaxs(), 0.5f));
 
@@ -210,27 +214,27 @@ namespace bef = BaseServerEntityFilters; // Shortcut, lesser typing.
 // C++ using magic.
 //
 using ServerEntitySpan = std::span<ServerEntity>;
-using BaseServerEntitySpan = std::span<SVGBaseEntity*>;
-
-using BaseServerEntityVector = std::vector<SVGBaseEntity*>;
+using ServerEntityVector = std::span<ServerEntity>;
+using ServerGameEntitySpan = std::span<ServerGameEntity*>;
+using ServerGameEntityVector = std::vector<ServerGameEntity*>;
 
 // Returns a span containing all the entities in the range of [start] to [start + count].
-template <std::size_t start, std::size_t count>
-inline auto GetServerEntityRange() -> std::span<ServerEntity, count> {
-    return std::span(g_entities).subspan<start, count>();
-}
+//template <std::size_t start, std::size_t count>
+//inline auto GetServerEntityRange() -> std::span<ServerEntity, count> {
+//    return std::span(g_entities).subspan<start, count>();
+//}
+//inline ServerEntitySpan GetServerEntityRange(std::size_t start, std::size_t count) {
+//    return ServerEntitySpan(g_entities).subspan(start, count);
+//}
 
-// Returns a span containing all base entities in the range of [start] to [start + count].
+// Templated version of: Returns a span containing all game entities in the range of [start] to [start + count].
 template <std::size_t start, std::size_t count>
-inline auto GetBaseServerEntityRange() -> std::span<SVGBaseEntity*, count> {
-    return std::span(g_baseEntities).subspan<start, count>();
+inline auto GetServerGameEntityRange() -> std::span<ServerGameEntity*, count> {
+    return std::span(gameEntities).subspan<start, count>();
 }
-
-inline ServerEntitySpan GetServerEntityRange(std::size_t start, std::size_t count) {
-    return ServerEntitySpan(g_entities).subspan(start, count);
-}
-inline BaseServerEntitySpan GetBaseServerEntityRange(std::size_t start, std::size_t count) {
-    return BaseServerEntitySpan(g_baseEntities).subspan(start, count);
+// Non templated version of: Returns a span containing all game entities in the range of [start] to [start + count].
+inline ServerGameEntitySpan GetServerGameEntityRange(std::size_t start, std::size_t count) {
+    return ServerGameEntitySpan(gameEntities).subspan(start, count);
 }
 
 
@@ -245,7 +249,7 @@ ServerEntity* SVG_Find(ServerEntity* from, int32_t fieldofs, const char* match);
 // All that might sound silly, but the key here is customization.
 //BaseServerEntityVector SVG_FindEntitiesWithinRadius(vec3_t org, float rad, uint32_t excludeSolidFlags = Solid::Not);
 // Find entities based on their field(key), and field(value).
-SVGBaseEntity* SVG_FindServerEntityByKeyValue(const std::string& fieldKey, const std::string& fieldValue, SVGBaseEntity* lastServerEntity = nullptr);
+ServerGameEntity* SVG_FindServerEntityByKeyValue(const std::string& fieldKey, const std::string& fieldValue, ServerGameEntity* lastServerEntity = nullptr);
 
 
 //
@@ -289,8 +293,8 @@ inline ServerEntityClass* SVG_CreateClassServerEntity(ServerEntity* edict = null
 //
 // ClassServerEntity handling.
 //
-SVGBaseEntity* SVG_GetWorldClassServerEntity();
-SVGBaseEntity* SVG_SpawnServerGameEntity(ServerEntity* ent, const std::string& className);
+ServerGameEntity* SVG_GetWorldClassServerEntity();
+ServerGameEntity* SVG_SpawnServerGameEntity(ServerEntity* ent, const std::string& className);
 void SVG_FreeClassServerEntity(ServerEntity* ent);
 
 #endif // __SVGAME_ENTITIES_H__

@@ -12,7 +12,7 @@
 #include "../utils.h"       // Util funcs.
 
 // Server Game Base ServerEntity.
-#include "../entities/base/SVGBaseEntity.h"
+#include "../entities/base/ServerGameEntity.h"
 
 // Game Mode.
 #include "CoopGameMode.h"
@@ -39,7 +39,7 @@ CoopGameMode::~CoopGameMode() {
 // Template function serves as an example atm.
 //===============
 //
-qboolean CoopGameMode::CanDamage(SVGBaseEntity* target, SVGBaseEntity* inflictor) {
+qboolean CoopGameMode::CanDamage(ServerGameEntity* target, ServerGameEntity* inflictor) {
     // Let it be to DefaultGameMode. :)
     return DefaultGameMode::CanDamage(target, inflictor);
 }
@@ -48,7 +48,7 @@ qboolean CoopGameMode::CanDamage(SVGBaseEntity* target, SVGBaseEntity* inflictor
 // CoopGameMode::ClientUpdateObituary.
 // 
 //===============
-void CoopGameMode::ClientUpdateObituary(SVGBaseEntity* self, SVGBaseEntity* inflictor, SVGBaseEntity* attacker) {
+void CoopGameMode::ClientUpdateObituary(ServerGameEntity* self, ServerGameEntity* inflictor, ServerGameEntity* attacker) {
     std::string message; // String stating what happened to whichever ServerEntity. "suicides", "was squished" etc.
     std::string messageAddition; // String stating what is additioned to it, "'s shrapnell" etc. Funny stuff.
 

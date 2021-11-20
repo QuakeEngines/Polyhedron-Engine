@@ -21,7 +21,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 // Entities.
 #include "entities.h"
-#include "entities/base/SVGBaseEntity.h"
+#include "shared/entities/Server/ServerGameEntity.h"
 #include "entities/base/PlayerClient.h"
 
 // Gamemodes.
@@ -111,7 +111,7 @@ void SVG_AllocateGameClients();
 void SVG_AllocateGamePlayerClientEntities();
 void SVG_InitializeCVars();
 
-void SVG_RunServerEntity(SVGBaseEntity *ent);
+void SVG_RunServerEntity(ServerGameEntity *ent);
 void SVG_WriteGame(const char *filename, qboolean autosave);
 void SVG_ReadGame(const char *filename);
 void SVG_WriteLevel(const char *filename);
@@ -632,7 +632,7 @@ void SVG_RunFrame(void)
     int32_t stateNumber = g_entities[0].state.number;
 
     // Fetch the corresponding base ServerEntity.
-    SVGBaseEntity* ServerEntity = g_baseEntities[stateNumber];
+    ServerGameEntity* ServerEntity = g_baseEntities[stateNumber];
 
     // Loop through the server entities, and run the base ServerEntity frame if any exists.
     for (int32_t i = 0; i < globals.numberOfEntities; i++) {
@@ -640,7 +640,7 @@ void SVG_RunFrame(void)
         stateNumber = g_entities[i].state.number;
 
         // Fetch the corresponding base ServerEntity.
-        SVGBaseEntity* ServerEntity = g_baseEntities[stateNumber];
+        ServerGameEntity* ServerEntity = g_baseEntities[stateNumber];
 
         // Is it even valid?
         if (ServerEntity == nullptr)

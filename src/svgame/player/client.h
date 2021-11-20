@@ -23,7 +23,7 @@ void SVG_ClientBegin(ServerEntity* ent);
 void SVG_ClientCommand(ServerEntity* ent);
 void SVG_ClientUserinfoChanged(ServerEntity* ent, char* userinfo);
 
-//void SVG_ClientBeginServerFrame(SVGBaseEntity* ent); // WID: Moved to gamemodes.
+//void SVG_ClientBeginServerFrame(ServerGameEntity* ent); // WID: Moved to gamemodes.
 void SVG_ClientThink(ServerEntity* ent, ClientMoveCommand* cmd);
 
 void SVG_ClientEndServerFrames(void);

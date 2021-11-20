@@ -11,7 +11,7 @@
 #ifndef __SVGAME_CHASECAMERA_H__
 #define __SVGAME_CHASECAMERA_H__
 
-class SVGBaseEntity;
+class ServerGameEntity;
 class PlayerClient;
 
 void SVG_UpdateChaseCam(PlayerClient* ent);

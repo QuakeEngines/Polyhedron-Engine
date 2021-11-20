@@ -10,15 +10,15 @@
 #ifndef __SVGAME_ENTITIES_BASE_GIBServerEntity_H__
 #define __SVGAME_ENTITIES_BASE_GIBServerEntity_H__
 
-class SVGBaseEntity;
+class ServerGameEntity;
 
-class GibServerEntity : public SVGBaseEntity {
+class GibServerEntity : public ServerGameEntity {
 public:
     // Constructor/Deconstructor.
     GibServerEntity(ServerEntity* svServerEntity);
     virtual ~GibServerEntity();
 
-    DefineClass(GibServerEntity, SVGBaseEntity);
+    DefineClass(GibServerEntity, ServerGameEntity);
 
     //
     // Interface functions. 
@@ -44,8 +44,8 @@ public:
     //
     //
     void GibServerEntityThink();
-    void GibServerEntityDie(SVGBaseEntity* inflictor, SVGBaseEntity* attacker, int damage, const vec3_t& point);
-    void GibServerEntityTouch(SVGBaseEntity* self, SVGBaseEntity* other, cplane_t* plane, csurface_t* surf);
+    void GibServerEntityDie(ServerGameEntity* inflictor, ServerGameEntity* attacker, int damage, const vec3_t& point);
+    void GibServerEntityTouch(ServerGameEntity* self, ServerGameEntity* other, cplane_t* plane, csurface_t* surf);
 
 protected:
 

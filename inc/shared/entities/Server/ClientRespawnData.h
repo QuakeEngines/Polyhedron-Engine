@@ -1,6 +1,10 @@
 // License here.
 #pragma once
+// Shared.
+#include "shared/shared.h"
 
+// Other.
+// 
 // Predef.
 class ClientPersistentData;
 

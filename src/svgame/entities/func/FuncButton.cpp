@@ -11,7 +11,7 @@
 #include "../../physics/stepmove.h"
 #include "../../brushfuncs.h"
 
-#include "../base/SVGBaseEntity.h"
+#include "../base/ServerGameEntity.h"
 #include "../base/SVGBaseTrigger.h"
 #include "../base/SVGBaseMover.h"
 
@@ -101,7 +101,7 @@ void FuncButton::Spawn() {
 // FuncButton::SpawnKey
 //===============
 void FuncButton::SpawnKey( const std::string& key, const std::string& value ) {
-	// I think serverEntity variables should just be set in SVGBaseEntity::SpawnKey
+	// I think serverEntity variables should just be set in ServerGameEntity::SpawnKey
 	// It doesn't make sense to set them only here, if these variables are available to every ServerEntity
 	if ( key == "speed" ) {
 		ParseFloatKeyValue( key, value, serverEntity->speed );
@@ -186,7 +186,7 @@ void FuncButton::ButtonFire() {
 //===============
 // FuncButton::ButtonUse
 //===============
-void FuncButton::ButtonUse( SVGBaseEntity* other, SVGBaseEntity* activator ) {
+void FuncButton::ButtonUse( ServerGameEntity* other, ServerGameEntity* activator ) {
 	this->activator = activator;
 	ButtonFire();
 }
@@ -194,7 +194,7 @@ void FuncButton::ButtonUse( SVGBaseEntity* other, SVGBaseEntity* activator ) {
 //===============
 // FuncButton::ButtonTouch
 //===============
-void FuncButton::ButtonTouch( SVGBaseEntity* self, SVGBaseEntity* other, cplane_t* plane, csurface_t* surf ) {
+void FuncButton::ButtonTouch( ServerGameEntity* self, ServerGameEntity* other, cplane_t* plane, csurface_t* surf ) {
 	if ( !other->GetClient() || other->GetHealth() <= 0 ) {
 		return;
 	}
@@ -206,7 +206,7 @@ void FuncButton::ButtonTouch( SVGBaseEntity* self, SVGBaseEntity* other, cplane_
 //===============
 // FuncButton::ButtonDie
 //===============
-void FuncButton::ButtonDie( SVGBaseEntity* inflictor, SVGBaseEntity* attacker, int damage, const vec3_t& point ) {
+void FuncButton::ButtonDie( ServerGameEntity* inflictor, ServerGameEntity* attacker, int damage, const vec3_t& point ) {
 	activator = attacker;
 	SetHealth( GetMaxHealth() );
 	SetTakeDamage( TakeDamage::No );

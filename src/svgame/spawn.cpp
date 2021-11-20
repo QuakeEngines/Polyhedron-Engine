@@ -101,7 +101,7 @@ static const spawn_field_t temp_fields[] = {
 // SVG_SpawnServerGameEntity
 //
 //
-#include "entities/base/SVGBaseEntity.h"
+#include "entities/base/ServerGameEntity.h"
 
 /*
 =============
@@ -145,7 +145,7 @@ void ED_CallSpawn(ServerEntity *ent)
     auto dictionary = &ent->serverEntityDictionary;
     ent->className = ED_NewString( ent->serverEntityDictionary["classname"].c_str() );
     
-    SVGBaseEntity *gameEntity = SVG_SpawnServerGameEntity( ent, ent->className );
+    ServerGameEntity *gameEntity = SVG_SpawnServerGameEntity( ent, ent->className );
 
     // If we did not find the classname, then give up
     if ( gameEntity != nullptr ) {
@@ -279,7 +279,7 @@ All but the last will have the teamchain field set to the next one
 void SVG_FindTeams(void)
 {
     ServerEntity* e, * e2;
-    SVGBaseEntity *chain;
+    ServerGameEntity *chain;
     int     i, j;
     int     c, c2;
 
@@ -287,7 +287,7 @@ void SVG_FindTeams(void)
     c2 = 0;
     for (i = 1, e = g_entities + i; i < globals.numberOfEntities; i++, e++) {
         // Fetch class ServerEntity.
-        SVGBaseEntity *classServerEntity = g_baseEntities[e->state.number];
+        ServerGameEntity *classServerEntity = g_baseEntities[e->state.number];
 
         if (classServerEntity == NULL)
             continue;
@@ -304,7 +304,7 @@ void SVG_FindTeams(void)
         c2++;
         for (j = i + 1, e2 = e + 1 ; j < globals.numberOfEntities ; j++, e2++) {
             // Fetch class ServerEntity.
-            SVGBaseEntity* classServerEntity2 = g_baseEntities[e->state.number];
+            ServerGameEntity* classServerEntity2 = g_baseEntities[e->state.number];
 
             if (classServerEntity2 == NULL)
                 continue;

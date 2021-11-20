@@ -16,7 +16,7 @@
 // SVG_SpawnServerGameEntity
 //
 //
-#include "entities/base/SVGBaseEntity.h"
+#include "entities/base/ServerGameEntity.h"
 #include "entities/base/SVGBaseTrigger.h"
 #include "entities/base/SVGBaseMover.h"
 #include "entities/base/PlayerClient.h"
@@ -30,18 +30,24 @@
 //
 // TODO: Explain shit, lol.
 //-----------------
+
+// Array containing all our ServerGameEntity pointer objects.
+std::array<ServerGameEntity*, MAX_EDICTS> gameEntities;
+
+
 // Actual Server ServerEntity array.
 ServerEntity g_entities[MAX_EDICTS];
 
 // BaseServerEntity array, matches similarly index wise.
-SVGBaseEntity* g_baseEntities[MAX_EDICTS];
+ServerGameEntity* g_baseEntities[MAX_EDICTS];
+
 
 //
 // This is the old method, or at least, where we started off with.
 //
 //auto FetchModernMethod(std::size_t start, std::size_t end) {
 //    return BaseServerEntityRange(&g_baseEntities[start], &g_baseEntities[end]) |
-//        std::views::filter([](SVGBaseEntity* ent) {
+//        std::views::filter([](ServerGameEntity* ent) {
 //            return ent != nullptr && ent->GetServerServerEntity() && ent->IsInUse();
 //        }
 //    );
@@ -99,9 +105,9 @@ void DebugShitForEntitiesLulz() {
 // SVG_SpawnServerGameEntity
 //
 //=================
-SVGBaseEntity* SVG_SpawnServerGameEntity(ServerEntity* ent, const std::string& className) {
+ServerGameEntity* SVG_SpawnServerGameEntity(ServerEntity* ent, const std::string& className) {
     // Start with a nice nullptr.
-    SVGBaseEntity* spawnServerEntity = nullptr;
+    ServerGameEntity* spawnServerEntity = nullptr;
     if ( !ent ) {
         return nullptr;
     }
@@ -127,7 +133,7 @@ SVGBaseEntity* SVG_SpawnServerGameEntity(ServerEntity* ent, const std::string& c
     // Don't freak out if the ServerEntity cannot be allocated, but do warn us about it, it's good to know
     // ServerEntity classes with 'DefineDummyMapClass' won't be reported here
     if ( nullptr != info->AllocateInstance && info->IsMapSpawnable() ) {
-        SVGBaseEntity *returnEntity = (g_baseEntities[serverEntityNumber] = info->AllocateInstance( ent ));
+        ServerGameEntity *returnEntity = (g_baseEntities[serverEntityNumber] = info->AllocateInstance( ent ));
         ent->inUse = true;
         return returnEntity;
     } else {
@@ -291,7 +297,7 @@ ServerEntity* SVG_Find(ServerEntity* from, int fieldofs, const char* match)
 // Returns an ServerEntity that matches the given fieldKey and fieldValue in its 
 // ServerEntity dictionary.
 //===============
-SVGBaseEntity* SVG_FindServerEntityByKeyValue(const std::string& fieldKey, const std::string& fieldValue, SVGBaseEntity* lastServerEntity) {
+ServerGameEntity* SVG_FindServerEntityByKeyValue(const std::string& fieldKey, const std::string& fieldValue, ServerGameEntity* lastServerEntity) {
     for (auto &foundEntity : g_entities)
     //ServerEntity* serverEnt = (lastServerEntity ? lastServerEntity->GetServerServerEntity() : nullptr);
 
@@ -302,7 +308,7 @@ SVGBaseEntity* SVG_FindServerEntityByKeyValue(const std::string& fieldKey, const
 
     //for (; serverEnt < &g_entities[globals.numberOfEntities]; serverEnt++) {
     //    // Fetch serverEntity its ClassServerEntity.
-    //    SVGBaseEntity* classServerEntity = serverEnt->classServerEntity;
+    //    ServerGameEntity* classServerEntity = serverEnt->classServerEntity;
 
     //    // Ensure it has a class ServerEntity.
     //    if (!serverEnt->classServerEntity)
@@ -435,6 +441,6 @@ ServerEntity* SVG_GetWorldServerServerEntity() {
 // 
 // Returns a pointer to the 'Worldspawn' ClassServerEntity.
 //===============
-SVGBaseEntity* SVG_GetWorldClassServerEntity() {
+ServerGameEntity* SVG_GetWorldClassServerEntity() {
     return g_baseEntities[0];
 };

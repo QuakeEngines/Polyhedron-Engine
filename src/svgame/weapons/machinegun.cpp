@@ -9,16 +9,18 @@
 
 // Include local game header.
 #include "../g_local.h"
+#include "../effects.h"
+#include "../entities.h"
 
 // Include class entities.
-#include "../entities/base/SVGBaseEntity.h"
+//#include "../entities/base/ServerGameEntity.h"
 #include "../entities/base/PlayerClient.h"
 
 // Include player headers.
 #include "../player/animations.h"
 #include "../player/weapons.h"
 
-// Include machinegun weapon header.
+// Include super shotgun weapon header.
 #include "machinegun.h"
 
 //

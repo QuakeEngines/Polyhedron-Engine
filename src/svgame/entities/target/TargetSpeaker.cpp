@@ -9,7 +9,7 @@
 #include "../../entities.h"
 #include "../../utils.h"
 
-#include "../base/SVGBaseEntity.h"
+#include "../base/ServerGameEntity.h"
 
 #include "TargetSpeaker.h"
 
@@ -69,7 +69,7 @@ void TargetSpeaker::SpawnKey( const std::string& key, const std::string& value )
 //===============
 // TargetSpeaker::SpeakerUse
 //===============
-void TargetSpeaker::SpeakerUse( SVGBaseEntity* other, SVGBaseEntity* activator ) {
+void TargetSpeaker::SpeakerUse( ServerGameEntity* other, ServerGameEntity* activator ) {
     int channel = CHAN_VOICE;
 
     if ( GetSpawnFlags() & (SF_LoopedOn | SF_LoopedOn) ) {

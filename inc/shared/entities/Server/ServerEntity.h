@@ -1,6 +1,10 @@
 // License here.
 #pragma once
 
+// Shared.
+#include "shared/shared.h"
+
+// Other.
 #include "shared/ServerGameImports.h"
 
 #include "shared/list.h"
@@ -16,7 +20,7 @@
 // ServerEntity_s, the server side ServerEntity structure. If you know what an ServerEntity is,
 // then you know what this is.
 // 
-// The actual SVGBaseEntity class is a member. It is where the magic happens.
+// The actual ServerGameEntity class is a member. It is where the magic happens.
 // Entities can be linked to their "classname", this will in turn make sure that
 // the proper inheritance ServerEntity is allocated.
 //-------------------

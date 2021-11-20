@@ -1,13 +1,13 @@
 #pragma once
 
-class SVGBaseEntity;
+class ServerGameEntity;
 
-class PathCorner : public SVGBaseEntity {
+class PathCorner : public ServerGameEntity {
 public:
 	PathCorner( ServerEntity* ServerEntity );
 	virtual ~PathCorner() = default;
 
-	DefineMapClass( "path_corner", PathCorner, SVGBaseEntity );
+	DefineMapClass( "path_corner", PathCorner, ServerGameEntity );
 
 	const vec3_t	BboxSize = vec3_t( 8.0f, 8.0f, 8.0f );
 
@@ -18,7 +18,7 @@ public:
 	void			SpawnKey( const std::string& key, const std::string& value ) override;
 
 	// For AI
-	virtual void	OnReachedCorner( SVGBaseEntity* traveler );
+	virtual void	OnReachedCorner( ServerGameEntity* traveler );
 
 	inline const char* GetPathTarget() override {
 		return pathTarget.c_str();

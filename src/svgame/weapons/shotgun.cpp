@@ -9,16 +9,18 @@
 
 // Include local game header.
 #include "../g_local.h"
+#include "../effects.h"
+#include "../entities.h"
 
 // Include class entities.
-#include "../entities/base/SVGBaseEntity.h"
+//#include "../entities/base/ServerGameEntity.h"
 #include "../entities/base/PlayerClient.h"
 
 // Include player headers.
 #include "../player/animations.h"
 #include "../player/weapons.h"
 
-// Include shotgun weapon header.
+// Include super shotgun weapon header.
 #include "shotgun.h"
 
 
@@ -41,7 +43,7 @@ void weapon_shotgun_fire(PlayerClient * ent)
     int         damage = 4;
     int         kick = 8;
 
-    ServerClient* client = ent->GetClient();
+    /*ServerClient* client = ent->GetClient();*/
 
     if (client->playerState.gunFrame == 9) {
         client->playerState.gunFrame++;

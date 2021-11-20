@@ -12,5 +12,5 @@ public:
 
 	void SpawnKey( const std::string& key, const std::string& value ) override;
 
-	void GravityTouch( SVGBaseEntity* self, SVGBaseEntity* other, cplane_t* plane, csurface_t* surf );
+	void GravityTouch( ServerGameEntity* self, ServerGameEntity* other, cplane_t* plane, csurface_t* surf );
 };

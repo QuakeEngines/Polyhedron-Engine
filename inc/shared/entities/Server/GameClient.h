@@ -1,16 +1,23 @@
 #pragma once
 
+// Core shared.
+#include "shared/shared.h"
+
+// Shared common.
 #include "shared/list.h"
+#include "shared/messaging.h"
+
+// Shared Game.
 #include "sharedgame/pmove.h"
 #include "sharedgame/protocol.h"
 
+// Shared Entities.
 #include "shared/entities/Server/ClientPersistentData.h"
 #include "shared/entities/Server/ClientRespawnData.h"
-#include "shared/entities/Server/ServerEntity.h"
 #include "shared/entities/Server/ServerClient.h"
-#include "shared/entities/Server/GameItem.h"
+#include "shared/entities/Server/ServerEntity.h"
 #include "shared/entities/Server/ServerGameEntity.h"
-
+#include "shared/entities/Server/GameItem.h"
 
 
 //-------------------
@@ -23,12 +30,12 @@
 //-------------------
 class GameClient : public ServerClient {
 public:
-    // private to game
+    // These are private to the game, hence do not reside in ServerClient
     ClientPersistentData persistent;
     ClientRespawnData respawn;
 
     qboolean showScores;         // set layout stat
-    qboolean showInventory;      // set layout stat
+    qboolean showInventory;      // set inventory stat
     qboolean showHelpIcon;
 
     int32_t ammoIndex;

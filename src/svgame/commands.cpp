@@ -21,13 +21,13 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "player/animations.h"
 
 // Class Entities.
-#include "entities/base/SVGBaseEntity.h"
+#include "entities/base/ServerGameEntity.h"
 #include "entities/base/PlayerClient.h"
 
 // Game Modes.
 #include "gamemodes/IGameMode.h"
 
-char *ClientTeam(SVGBaseEntity *ent)
+char *ClientTeam(ServerGameEntity *ent)
 {
     char        *p;
     static char value[512];
@@ -51,7 +51,7 @@ char *ClientTeam(SVGBaseEntity *ent)
     return ++p;
 }
 
-qboolean SVG_OnSameTeam(SVGBaseEntity *ent1, SVGBaseEntity *ent2)
+qboolean SVG_OnSameTeam(ServerGameEntity *ent1, ServerGameEntity *ent2)
 {
     char    ent1Team [512];
     char    ent2Team [512];
@@ -270,7 +270,7 @@ Sets client to godmode
 argv(0) god
 ==================
 */
-void Cmd_God_f(SVGBaseEntity *ent)
+void Cmd_God_f(ServerGameEntity *ent)
 {
     if (deathmatch->value && !sv_cheats->value) {
         gi.CPrintf(ent->GetServerServerEntity(), PRINT_HIGH, "You must run the server with '+set cheats 1' to enable this command.\n");
@@ -294,7 +294,7 @@ Sets client to notarget
 argv(0) notarget
 ==================
 */
-void Cmd_Notarget_f(SVGBaseEntity *ent)
+void Cmd_Notarget_f(ServerGameEntity *ent)
 {
     if (deathmatch->value && !sv_cheats->value) {
         gi.CPrintf(ent->GetServerServerEntity(), PRINT_HIGH, "You must run the server with '+set cheats 1' to enable this command.\n");
@@ -316,7 +316,7 @@ Cmd_Noclip_f
 argv(0) noclip
 ==================
 */
-void Cmd_Noclip_f(SVGBaseEntity *ent)
+void Cmd_Noclip_f(ServerGameEntity *ent)
 {
     if (deathmatch->value && !sv_cheats->value) {
         gi.CPrintf(ent->GetServerServerEntity(), PRINT_HIGH, "You must run the server with '+set cheats 1' to enable this command.\n");

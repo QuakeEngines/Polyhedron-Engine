@@ -1,6 +1,6 @@
 #pragma once
 
-class SVGBaseEntity;
+class ServerGameEntity;
 
 //=============================================
 // FuncTimer
@@ -10,12 +10,12 @@ class SVGBaseEntity;
 // 
 // NOTE: pausetime is currently always 0
 //=============================================
-class FuncTimer : public SVGBaseEntity {
+class FuncTimer : public ServerGameEntity {
 public:
 	FuncTimer( ServerEntity* ServerEntity );
 	virtual ~FuncTimer() = default;
 
-	DefineMapClass( "func_timer", FuncTimer, SVGBaseEntity );
+	DefineMapClass( "func_timer", FuncTimer, ServerGameEntity );
 
 	// Spawn flags
 	static constexpr int32_t SF_StartOn = 1 << 0;
@@ -24,7 +24,7 @@ public:
 	void SpawnKey( const std::string& key, const std::string& value ) override;
 
 	void TimerThink();
-	void TimerUse( SVGBaseEntity* other, SVGBaseEntity* activator );
+	void TimerUse( ServerGameEntity* other, ServerGameEntity* activator );
 
 protected:
 	float randomTime{ 0.0f };

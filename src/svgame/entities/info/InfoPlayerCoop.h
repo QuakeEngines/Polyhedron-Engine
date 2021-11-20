@@ -8,7 +8,7 @@
 */
 #pragma once
 
-class SVGBaseEntity;
+class ServerGameEntity;
 class InfoPlayerStart;
 
 class InfoPlayerCoop : public InfoPlayerStart {

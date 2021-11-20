@@ -9,15 +9,15 @@
 #ifndef __SVGAME_ENTITIES_WEAPONRY_BLASTERBOLT_H__
 #define __SVGAME_ENTITIES_WEAPONRY_BLASTERBOLT_H__
 
-class SVGBaseEntity;
+class ServerGameEntity;
 
-class BlasterBolt : public SVGBaseEntity {
+class BlasterBolt : public ServerGameEntity {
 public:
     // Constructor/Deconstructor.
     BlasterBolt(ServerEntity* svServerEntity);
     virtual ~BlasterBolt();
 
-    DefineClass( BlasterBolt, SVGBaseEntity );
+    DefineClass( BlasterBolt, ServerGameEntity );
 
     //
     // Interface functions. 
@@ -34,7 +34,7 @@ public:
     // Callback functions.
     //
     //
-    void BlasterBoltTouch(SVGBaseEntity* self, SVGBaseEntity* other, cplane_t* plane, csurface_t* surf);
+    void BlasterBoltTouch(ServerGameEntity* self, ServerGameEntity* other, cplane_t* plane, csurface_t* surf);
 
     //
     // Get/Set

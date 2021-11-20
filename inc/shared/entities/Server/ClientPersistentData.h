@@ -1,6 +1,10 @@
 
 #pragma once
 
+// Shared.
+#include "shared/shared.h"
+
+// Other.
 #include "GameItem.h"
 
 //-------------------

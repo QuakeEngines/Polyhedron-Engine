@@ -12,23 +12,23 @@
 //
 // Forward declaration.
 //
-class SVGBaseEntity;
+class ServerGameEntity;
 
 //
 // Debris.
 //
-void SVG_ThrowDebris(SVGBaseEntity* self, const char* modelname, float speed, const vec3_t& origin);
+void SVG_ThrowDebris(ServerGameEntity* self, const char* modelname, float speed, const vec3_t& origin);
 
 //
 // Explosions.
 //
-void SVG_BecomeExplosion1(SVGBaseEntity* self);
-void SVG_BecomeExplosion2(SVGBaseEntity* self);
+void SVG_BecomeExplosion1(ServerGameEntity* self);
+void SVG_BecomeExplosion2(ServerGameEntity* self);
 
 //
 // Gibs.
 //
 void SVG_ThrowClientHead(PlayerClient* self, int damage);
-void SVG_ThrowGib(SVGBaseEntity* self, const char* gibname, int damage, int type);
+void SVG_ThrowGib(ServerGameEntity* self, const char* gibname, int damage, int type);
 
 #endif // __SVGAME_PLAYER_WEAPONS_H__
