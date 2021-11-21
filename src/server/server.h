@@ -71,11 +71,14 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 
 //=============================================================================
+//#define EDICT_POOL(c, n) ((Entity *)((byte *)(c)->pool->entities + (c)->pool->entitySize*(n)))
+//
+//#define EDICT_NUM(n) ((Entity *)((byte *)ge->entities + ge->entitySize*(n)))
+//#define NUM_FOR_EDICT(e) ((int)(((byte *)(e) - (byte *)svEntities) / sizeof(Entity))
 #define EDICT_POOL(c, n) ((Entity *)((byte *)(c)->pool->entities + (c)->pool->entitySize*(n)))
 
-#define EDICT_NUM(n) ((Entity *)((byte *)ge->entities + ge->entitySize*(n)))
-#define NUM_FOR_EDICT(e) ((int)(((byte *)(e) - (byte *)ge->entities) / ge->entitySize))
-
+#define EDICT_NUM(n) ((Entity *)((byte *)svEntityPool.entities + svEntityPool.entitySize*(n)))
+#define NUM_FOR_EDICT(e) ((int32_t)(((byte *)(e) - (byte *)svEntityPool.entities) / svEntityPool.entitySize)
 
 //=============================================================================
 // Master/heartbeat settings.

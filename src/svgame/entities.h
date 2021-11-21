@@ -20,7 +20,6 @@
 // Include this guy here, gotta do so to make it work.
 #include "entities/base/SVGBaseEntity.h"
 
-
 //
 // Filter function namespace that actually contains the entity filter implementations.
 // 

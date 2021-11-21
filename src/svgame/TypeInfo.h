@@ -102,7 +102,7 @@ public:
 
 	// Get type info by name
 	static TypeInfo* GetInfoByName( const char* name ) {
-		if ( nullptr == name ) {
+		if ( !name ) {
 			return nullptr;
 		}
 

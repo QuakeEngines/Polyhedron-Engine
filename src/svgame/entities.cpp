@@ -30,9 +30,6 @@
 //
 // TODO: Explain shit, lol.
 //-----------------
-// Actual Server Entity array.
-Entity g_entities[MAX_EDICTS];
-
 // BaseEntity array, matches similarly index wise.
 SVGBaseEntity* g_baseEntities[MAX_EDICTS];
 

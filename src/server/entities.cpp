@@ -19,6 +19,52 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "server.h"
 
+//=============================================================================
+//
+// Server Side Entity containment management.
+//
+//=============================================================================
+struct ServerEntityPool {
+    std::array<Entity, MAX_EDICTS> entities;
+    int32_t entitySize : sizeof(Entity);
+    int32_t numberOfEntities{0};     // current number, <= maxEntities
+    int32_t maxEntities : MAX_EDICTS;
+} svEntityPool;
+
+// Seeks the server entity pool for a free entity (aka inUse = false), and returns
+// a pointer to it.
+Entity* FindFreePoolEntity() {
+    // Callback to find an entity that is not in use.
+    auto findFunc  = [](Entity &e) -> size_t {
+        return !e.inUse;
+    };
+    
+    // See if there is still an entity left with no inUse == true, if so, return it.
+    auto result = std::find_if(svEntityPool.entities.begin(), svEntityPool.entities.end(), findFunc);
+    if (result != svEntityPool.entities.end()) {
+        return &(*result);
+    }
+
+    return nullptr;
+}
+
+// Returns a pointer to the ID in the entity pool in case it is inUse
+Entity* FetchPoolEntityByID(uint32_t index) {
+    return (svEntityPool.entities[index].inUse ? &svEntityPool.entities[index] : nullptr);
+}
+
+//// Actual Server Entity array.
+//std::array<Entity, MAX_EDICTS> svEntities;
+
+
+
+//-----------------------
+//
+//-----------------------
+Entity* SV_QueryFreeEntity() {
+    
+}
+
 /*
 =============================================================================
 

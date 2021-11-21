@@ -59,12 +59,12 @@ typedef struct gclient_s ServersClient;
 #ifndef GAME_INCLUDE
 
 struct gclient_s {
-    PlayerState  playerState;     // communicated by server to clients
-    int             ping;
+    PlayerState playerState;     // communicated by server to clients
+    int         ping;
 
     // the game dll can add anything it wants after
     // this point in the structure
-    int             clientNumber;
+    int         clientNumber;
 };
 
 
@@ -75,20 +75,20 @@ struct entity_s {
     int         linkCount;
 
     // FIXME: move these fields to a server private sv_entity_t
-    list_t      area;               // linked to a division node or leaf
+    list_t      area;       // linked to a division node or leaf
 
-    int         numClusters;       // if -1, use headNode instead
-    int         clusterNumbers[MAX_ENT_CLUSTERS];
-    int         headNode;           // unused if numClusters != -1
-    int         areaNumber, areaNumber2;
+    int32_t numClusters;    // if -1, use headNode instead
+    int32_t clusterNumbers[MAX_ENT_CLUSTERS];
+    int32_t headNode;       // unused if numClusters != -1
+    int32_t areaNumber, areaNumber2;
 
     //================================
 
-    int         serverFlags;            // EntityServerFlags::NoClient, EntityServerFlags::DeadMonster, EntityServerFlags::Monster, etc
+    int32_t         serverFlags;            // EntityServerFlags::NoClient, EntityServerFlags::DeadMonster, EntityServerFlags::Monster, etc
     vec3_t      mins, maxs;
     vec3_t      absMin, absMax, size;
     uint32_t    solid;
-    int         clipMask;
+    int32_t     clipMask;
     Entity     *owner;
 
     // the game dll can add anything it wants after
@@ -98,11 +98,11 @@ struct entity_s {
 #endif      // GAME_INCLUDE
 
 //===============================================================
-
 //
-// functions provided by the main engine
+// Functions provided by the Main Engine
 //
-typedef struct {
+//===============================================================
+struct ServerGameImports {
     //---------------------------------------------------------------------
     // API Version.
     // 
@@ -133,25 +133,34 @@ typedef struct {
     void (* q_printf(1, 2) DPrintf)(const char *fmt, ...);
     void (* q_printf(3, 4) CPrintf)(Entity *ent, int printlevel, const char *fmt, ...);
     void (* q_printf(2, 3) CenterPrintf)(Entity *ent, const char *fmt, ...);
-    void (*Sound)(Entity *ent, int channel, int soundindex, float volume, float attenuation, float timeofs);
-    void (*PositionedSound)(vec3_t origin, Entity *ent, int channel, int soundinedex, float volume, float attenuation, float timeofs);
+    void (* q_noreturn q_printf(1, 2) Error)(const char *fmt, ...);
 
-    // config strings hold all the index strings, the lightstyles,
+    //---------------------------------------------------------------------
+    // Config strings hold all the index strings, the lightstyles,
     // and misc data like the sky definition and cdtrack.
     // All of the current configstrings are sent to clients when
     // they connect, and changes are sent to all connected clients.
+    //---------------------------------------------------------------------
     void (*configstring)(int num, const char *string);
 
-    void (* q_noreturn q_printf(1, 2) Error)(const char *fmt, ...);
-
+    //---------------------------------------------------------------------
     // the *index functions create configstrings and some internal server state
+    //---------------------------------------------------------------------
     int (*ModelIndex)(const char *name);
     int (*SoundIndex)(const char *name);
     int (*ImageIndex)(const char *name);
 
     void (*SetModel)(Entity *ent, const char *name);
 
-    // collision detection
+    //---------------------------------------------------------------------
+    // Sound.
+    //---------------------------------------------------------------------
+    void (*Sound)(Entity *ent, int channel, int soundindex, float volume, float attenuation, float timeofs);
+    void (*PositionedSound)(vec3_t origin, Entity *ent, int channel, int soundinedex, float volume, float attenuation, float timeofs);
+
+    //---------------------------------------------------------------------
+    // Collision Detection
+    //---------------------------------------------------------------------
     trace_t (* q_gameabi Trace)(const vec3_t &start, const vec3_t &mins, const vec3_t &maxs, const vec3_t &end, Entity *passent, int contentmask);
     int (*PointContents)(const vec3_t &point);
     qboolean (*InPVS)(const vec3_t &p1, const vec3_t &p2);
@@ -159,14 +168,18 @@ typedef struct {
     void (*SetAreaPortalState)(int portalnum, qboolean open);
     qboolean (*AreasConnected)(int area1, int area2);
 
-    // an entity will never be sent to a client or used for collision
+    //---------------------------------------------------------------------
+    // An entity will never be sent to a client or used for collision
     // if it is not passed to LinkEntity.  If the size, position, or
     // solidity changes, it must be relinked.
+    //---------------------------------------------------------------------
     void (*LinkEntity)(Entity *ent);
     void (*UnlinkEntity)(Entity *ent);     // call before removing an interactive edict
     int (*BoxEntities)(const vec3_t &mins, const vec3_t &maxs, Entity **list, int maxcount, int areatype);
-
-    // network messaging
+    
+    //---------------------------------------------------------------------
+    // Network Messaging
+    //---------------------------------------------------------------------
     void (*Multicast)(const vec3_t &origin, int32_t to);
     void (*Unicast)(Entity *ent, qboolean reliable);
     void (*WriteChar)(int c);
@@ -177,17 +190,23 @@ typedef struct {
     void (*WriteString)(const char *s);
     void (*WriteVector3)(const vec3_t &pos);
 
-    // managed memory allocation
+    //---------------------------------------------------------------------
+    // Managed Memory Allocation
+    //---------------------------------------------------------------------
     void *(*TagMalloc)(size_t size, unsigned tag);
     void (*TagFree)(void *block);
     void (*FreeTags)(unsigned tag);
 
-    // console variable interaction
+    //---------------------------------------------------------------------
+    // Console Variable Interaction
+    //---------------------------------------------------------------------
     cvar_t *(*cvar)(const char *var_name, const char *value, int flags);
     cvar_t *(*cvar_set)(const char *var_name, const char *value);
     cvar_t *(*cvar_forceset)(const char *var_name, const char *value);
 
+    //---------------------------------------------------------------------
     // ClientCommand and SVG_ServerCommand parameter access
+    //---------------------------------------------------------------------
     int (*argc)(void);
     const char *(*argv)(int n);     // C++20: char*
     const char *(*args)(void);      // concatenation of all argv >= 1 // C++20: char*
@@ -195,25 +214,37 @@ typedef struct {
     // N&C: Stuff Cmd.
     void (*StuffCmd) (Entity* pent, const char* pszCommand); // C++20: STRING: Added const to char*
     
-    // add commands to the server console as if they were typed in
+    //---------------------------------------------------------------------
+    // Add commands to the server console as if they were typed in
     // for map changing, etc
+    //---------------------------------------------------------------------
     void (*AddCommandString)(const char *text);
 
     void (*DebugGraph)(float value, int color);
-} ServerGameImports;
+
+    //---------------------------------------------------------------------
+    // Entity Pool
+    //---------------------------------------------------------------------
+    // Seeks the server entity pool for a free entity (aka inUse = false), and returns
+    // a pointer to it.
+    Entity* FindFreePoolEntity();
+
+    // Returns a pointer to the ID in the entity pool in case it is inUse
+    Entity* FetchPoolEntityID(uint32_t index);
+};
 
 //
 // functions exported by the game subsystem
 //
 
-typedef struct {
-    struct entity_s  *entities;
-    int         entitySize;
-    int         numberOfEntities;     // current number, <= maxEntities
-    int         maxEntities;
-} EntityPool;
+struct ServerEntityPool {
+    std::array<Entity, MAX_EDICTS> entities;
+    int32_t entitySize : sizeof(Entity);
+    int32_t numberOfEntities{0};     // current number, <= maxEntities
+    int32_t maxEntities : MAX_EDICTS;
+} svEntityPool;
 
-typedef struct {
+struct ServerGameExports {
     //---------------------------------------------------------------------
     // API Version.
     // 
@@ -283,12 +314,12 @@ typedef struct {
     // can vary in size from one game to another.
     //
     // The size will be fixed when ge->Init() is called
-//    EntityPool pool;
-
-    struct entity_s  *entities;
-    int         entitySize;
-    int         numberOfEntities;     // current number, <= maxEntities
-    int         maxEntities;
-} ServerGameExports;
+    EntityPool pool;
+    
+    //struct entity_s  *entities;
+    //int         entitySize;
+    //int         numberOfEntities;     // current number, <= maxEntities
+    //int         maxEntities;
+};
 
 #endif // __INC_SHARED__SVGAME_H__

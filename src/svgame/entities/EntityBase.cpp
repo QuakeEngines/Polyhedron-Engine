@@ -22,7 +22,8 @@ EntityBase::~EntityBase()
     handle->inUse = false;
 }
 
-// Set handle.
+// Sets a handle pointer to the given server entity, and automatically tells it
+// that it is in use.
 void EntityBase::SetHandle(Entity *handle)
 {
     if (handle == nullptr) {

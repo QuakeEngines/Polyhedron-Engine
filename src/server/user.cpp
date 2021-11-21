@@ -538,7 +538,7 @@ void SV_Begin_f(void)
 
     stuff_cmds(&sv_cmdlist_begin);
 
-    // call the game begin function
+    // Call the game's ClientBegin function
     ge->ClientBegin(sv_player);
 
 	// Try binding light here with message
