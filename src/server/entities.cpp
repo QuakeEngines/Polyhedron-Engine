@@ -25,6 +25,9 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 //
 //=============================================================================
 
+// Server Entity Pool.
+EntityPool entityPool;
+
 // Seeks the server entity pool for a free entity (aka inUse = false), and returns
 // a pointer to it.
 Entity* FindFreePoolEntity() {
@@ -34,8 +37,8 @@ Entity* FindFreePoolEntity() {
     };
     
     // See if there is still an entity left with no inUse == true, if so, return it.
-    auto result = std::find_if(serverEntityPool.entities.begin(), serverEntityPool.entities.end(), findFunc);
-    if (result != serverEntityPool.entities.end()) {
+    auto result = std::find_if(entityPool.entities.begin(), entityPool.entities.end(), findFunc);
+    if (result != entityPool.entities.end()) {
         return &(*result);
     }
 
@@ -44,7 +47,7 @@ Entity* FindFreePoolEntity() {
 
 // Returns a pointer to the ID in the entity pool in case it is inUse
 Entity* FetchPoolEntityByID(uint32_t index) {
-    return (serverEntityPool.entities[index].inUse ? &serverEntityPool.entities[index] : nullptr);
+    return (entityPool.entities[index].inUse ? &entityPool.entities[index] : nullptr);
 }
 
 //// Actual Server Entity array.

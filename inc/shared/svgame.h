@@ -52,7 +52,6 @@ struct Solid {
 #define MAX_ENT_CLUSTERS    16
 
 
-typedef struct Entity Entity;
 typedef struct gclient_s ServersClient;
 
 
@@ -67,35 +66,69 @@ struct gclient_s {
     int         clientNumber;
 };
 
+#endif
+
+//-------------------
+// Entity, the server side entity structure. If you know what an entity is,
+// then you know what this is.
+// 
+// The actual SVGBaseEntity class is a member. It is where the magic happens.
+// Entities can be linked to their "classname", this will in turn make sure that
+// the proper inheritance entity is allocated.
+//-------------------
+using EntityDictionary = std::map<std::string, std::string>;
 
 struct Entity {
+public:
+    // Actual entity state member. Contains all data that is actually networked.
     EntityState  state;
-    struct gclient_s    *client;
-    qboolean    inUse;
-    int         linkCount;
+
+    // NULL if not a player the server expects the first part of gclient_s to
+    // be a PlayerState but the rest of it is opaque
+    struct gclient_s* client;
+
+    // An entity is in no use, in case it complies to the INUSE macro.
+    qboolean inUse;
+    int32_t linkCount;
 
     // FIXME: move these fields to a server private sv_entity_t
-    list_t      area;       // linked to a division node or leaf
+    list_t area; // Linked to a division node or leaf
 
-    int32_t numClusters;    // if -1, use headNode instead
+                 // If numClusters is -1, use headNodew instead.
+    int32_t numClusters;       // if -1, use headNode instead
     int32_t clusterNumbers[MAX_ENT_CLUSTERS];
-    int32_t headNode;       // unused if numClusters != -1
-    int32_t areaNumber, areaNumber2;
+
+    // Only use this instead of numClusters if numClusters == -1
+    int32_t headNode;
+    int32_t areaNumber;
+    int32_t areaNumber2;
 
     //================================
+    int32_t serverFlags;
+    vec3_t mins, maxs;
+    vec3_t absMin, absMax, size;
+    uint32_t solid;
+    int32_t clipMask;
+    Entity* owner;
 
-    int32_t         serverFlags;            // EntityServerFlags::NoClient, EntityServerFlags::DeadMonster, EntityServerFlags::Monster, etc
-    vec3_t      mins, maxs;
-    vec3_t      absMin, absMax, size;
-    uint32_t    solid;
-    int32_t     clipMask;
-    Entity     *owner;
+    // !!!!!!!!!!!!!!!!!
+    // !! DO NOT MODIFY ANYTHING ABOVE THIS, THE SERVER
+    // !! EXPECTS THE FIELDS IN THAT ORDER!
+    // !!!!!!!!!!!!!!!!!
+    //================================
+    // Pointer to the actual game class entity belonging to this server entity.
+    //SVGBaseEntity* classEntity;
+    std::string className;
 
-    // the game dll can add anything it wants after
-    // this point in the structure
+    // Hashmap containing the key:value entity properties.
+    EntityDictionary entityDictionary;
+
+    //const char *model;       // C++20: STRING: Added const to char*
+    float freeTime;     // sv.time when the object was freed
 };
+//#endif      // GAME_INCLUDE
 
-#endif      // GAME_INCLUDE
+
 
 //===============================================================
 //
@@ -127,6 +160,16 @@ struct ServerGameImports {
         int32_t minor;
         int32_t point;
     } apiversion;
+
+    //---------------------------------------------------------------------
+    // Entity Pool
+    //---------------------------------------------------------------------
+    struct ServerEntityPool {
+        std::array<Entity, MAX_EDICTS> entities{};
+        int32_t entitySize{sizeof(Entity)};
+        int32_t numberOfEntities{0};     // current number, <= maxEntities
+        int32_t maxEntities{MAX_EDICTS};
+    } entityPool;
 
     //---------------------------------------------------------------------
     // Special messages
@@ -227,13 +270,7 @@ struct ServerGameImports {
     //---------------------------------------------------------------------
     // Entity Pool
     //---------------------------------------------------------------------
-    struct ServerEntityPool{
-        std::array<Entity, MAX_EDICTS> entities{};
-        int32_t entitySize{sizeof(Entity)};
-        int32_t numberOfEntities{0};     // current number, <= maxEntities
-        int32_t maxEntities{MAX_EDICTS};
-    } entityPool;
-
+    ServerEntityPool* pool;
     // Returns a pointer to the ID in the entity pool in case it is inUse
     Entity* FetchPoolEntityID(uint32_t index);
 };

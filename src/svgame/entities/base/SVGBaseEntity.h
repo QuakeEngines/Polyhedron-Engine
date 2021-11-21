@@ -134,13 +134,13 @@ public:
     }
 
     // @returns The entity's classname. Example: info_player_start
-    inline const char* GetClassName() {
-        return serverEntity->className;
+    inline const std::string &GetClassName() {
+        return this->className;
     }
 
     // Set the 'className' value.
     inline void SetClassName(const char* className) {
-        serverEntity->className = className;
+        this->className = className;
     }
 
     // @returns A pointer to the client belonging to this entity. (If any.)
@@ -301,12 +301,12 @@ public:
 
     // Return the 'noiseIndex' value.
     inline const int32_t GetNoiseIndex() {
-        return serverEntity->noiseIndex;
+        return noiseIndex;
     }
 
     // Return the 'noiseIndex2' value.
     inline const int32_t GetNoiseIndex2() {
-        return serverEntity->noiseIndex2;
+        return noiseIndex2;
     }
 
     inline const int32_t GetNumber() {
@@ -376,7 +376,7 @@ public:
     }
     // Return the 'style' value.
     inline const int32_t GetStyle() {
-        return serverEntity->style;
+        return style;
     }
 
     // Return the 'sound' value.
@@ -399,8 +399,8 @@ public:
     }
 
     // Return the 'team' entity value.
-    inline char* GetTeam() {
-        return serverEntity->team;
+    inline const std::string &GetTeam() {
+        return teamStr;
     }
 
     // Return the 'teamChain' entity value.
@@ -623,7 +623,7 @@ public:
 
     // Set the 'noiseIndex' value.
     inline void SetNoiseIndex(const int32_t& noiseIndex) {
-        this->serverEntity->noiseIndex = noiseIndex;
+        this->noiseIndex = noiseIndex;
     }
     
     inline void SetNumber(const int32_t number) {
@@ -692,7 +692,7 @@ public:
 
     // Set the 'style' value.
     inline void SetStyle(const int32_t &style) {
-        serverEntity->style = style;
+        this->style = style;
     }
 
     // Set the 'takeDamage' value.
@@ -825,9 +825,21 @@ protected:
     int32_t spawnFlags;
 
     //---------------------------------
+    // -- Classname.
+    std::string className;
+
+    //---------------------------------
+    // Sounds.
+    int32_t noiseIndex;
+    int32_t noiseIndex2;
+
+    //---------------------------------
     // -- Strings.
     // Entity MODEL filename.
     std::string model;
+    // Entity team Str.
+    std::string teamStr;
+
     // Trigger kill target string.
     std::string killTargetStr;
     // Trigger target string.
@@ -909,6 +921,10 @@ protected:
     //float delay;
 
     //
+    // Style/
+    // 
+    int32_t style;
+
     // Entity pointers.
     // 
     // Current active enemy, NULL if not any.    

@@ -72,21 +72,12 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 //=============================================================================
 
-struct ServerEntityPool{
-    std::array<Entity, MAX_EDICTS> entities{};
-    int32_t entitySize{sizeof(Entity)};
-    int32_t numberOfEntities{0};     // current number, <= maxEntities
-    int32_t maxEntities{MAX_EDICTS};
-} serverEntityPool;
-
 // Reads more clearly.
-using ServerEntityPoolArray = std::array<Entity, MAX_EDICTS>;
-
 
 #define EDICT_POOL(c, n) ((Entity *)((byte *)(c)->pool->entities.data() + (c)->pool->entitySize*(n)))
 
-#define EDICT_NUM(n) ((Entity *)((byte *)serverEntityPool.entities.data() + serverEntityPool.entitySize*(n)))
-#define NUM_FOR_EDICT(e) ((int32_t)(((byte *)(e) - (byte *)serverEntityPool.entities.data()) / serverEntityPool.entitySize))
+#define EDICT_NUM(n) ((Entity *)((byte *)entityPool.entities.data() + entityPool.entitySize*(n)))
+#define NUM_FOR_EDICT(e) ((int32_t)(((byte *)(e) - (byte *)entityPool.entities.data()) / entityPool.entitySize))
 
 //=============================================================================
 // Master/heartbeat settings.

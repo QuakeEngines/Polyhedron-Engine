@@ -189,7 +189,7 @@ using BaseEntityVector = std::vector<SVGBaseEntity*>;
 // Returns a span containing all the entities in the range of [start] to [start + count].
 template <std::size_t start, std::size_t count>
 inline auto GetEntityRange() -> std::span<Entity, count> {
-    return std::span(g_entities).subspan<start, count>();
+    return std::span(gi.entityPool.entities).subspan<start, count>();
 }
 
 // Returns a span containing all base entities in the range of [start] to [start + count].
@@ -199,7 +199,7 @@ inline auto GetBaseEntityRange() -> std::span<SVGBaseEntity*, count> {
 }
 
 inline EntitySpan GetEntityRange(std::size_t start, std::size_t count) {
-    return EntitySpan(g_entities).subspan(start, count);
+    return EntitySpan(gi.serverEntityPool.entities).subspan(start, count);
 }
 inline BaseEntitySpan GetBaseEntityRange(std::size_t start, std::size_t count) {
     return BaseEntitySpan(g_baseEntities).subspan(start, count);

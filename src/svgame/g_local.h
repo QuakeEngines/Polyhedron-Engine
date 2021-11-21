@@ -41,7 +41,6 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 class SVGBaseEntity;
 class PlayerClient;
 class IGameMode;
-struct Entity;
 
 //==================================================================
 
@@ -488,7 +487,6 @@ struct MeansOfDeath {
 };
 
 // Once again, ugly.
-extern Entity g_entities[MAX_EDICTS];
 extern SVGBaseEntity* g_baseEntities[MAX_EDICTS];
 
 
@@ -935,114 +933,114 @@ struct gclient_s {
 //-------------------
 using EntityDictionary = std::map<std::string, std::string>;
 
-struct Entity {
-    // Actual entity state member. Contains all data that is actually networked.
-    EntityState  state;
-
-    // NULL if not a player the server expects the first part of gclient_s to
-    // be a PlayerState but the rest of it is opaque
-    struct gclient_s *client;       
-
-    // An entity is in no use, in case it complies to the INUSE macro.
-    qboolean inUse;
-    int32_t linkCount;
-
-    // FIXME: move these fields to a server private sv_entity_t
-    list_t area; // Linked to a division node or leaf
-
-    // If numClusters is -1, use headNodew instead.
-    int32_t numClusters;       // if -1, use headNode instead
-    int32_t clusterNumbers[MAX_ENT_CLUSTERS];
-
-    // Only use this instead of numClusters if numClusters == -1
-    int32_t headNode;           
-    int32_t areaNumber;
-    int32_t areaNumber2;
-
-    //================================
-    int32_t serverFlags;
-    vec3_t mins, maxs;
-    vec3_t absMin, absMax, size;
-    uint32_t solid;
-    int32_t clipMask;
-    Entity *owner;
-
-    // !!!!!!!!!!!!!!!!!
-    // !! DO NOT MODIFY ANYTHING ABOVE THIS, THE SERVER
-    // !! EXPECTS THE FIELDS IN THAT ORDER!
-    // !!!!!!!!!!!!!!!!!
-    //================================
-    // Pointer to the actual game class entity belonging to this server entity.
-    SVGBaseEntity* classEntity;
-
-    // Hashmap containing the key:value entity properties.
-    EntityDictionary entityDictionary;
-
-    //const char *model;       // C++20: STRING: Added const to char*
-    float freeTime;     // sv.time when the object was freed
-
-    //
-    // only used locally in game, not by server
-    //
-    const char *message;     // C++20: STRING: Added const to char *
-    const char *className;   // C++20: STRING: Made const.
-    
-    float timeStamp;
-
-    char *target;
-    const char *targetName;
-    char *killTarget;
-    char *team;
-    char *pathTarget;
-    Entity *targetEntityPtr;
-
-    // For moving objects(plats, etc)
-    float speed;
-    float acceleration;
-    float deceleration;
-    vec3_t moveDirection;
-    vec3_t position1, position2;
-
-    // Regular entity velocity, gravity, mass.
-    Entity *goalEntityPtr;
-    Entity *moveTargetPtr;
-
-    const char *map;           // target_changelevel // C++20: STRING: Added const to char *
-    int32_t count;
-
-    // Chain, enemy, old enemy, and activator entity pointers.
-    Entity *chain;
-    
-    // Ground pointers.
-    Entity *groundEntityPtr;
-
-    Entity *myNoisePtr;       // can go in client only
-    Entity *myNoise2Ptr;
-
-    int32_t noiseIndex;
-    int32_t noiseIndex2;
-    float volume;
-    float attenuation;
-
-    // Timing variables
-    float random;
-
-    float teleportTime;
-
-
-
-    vec3_t moveOrigin;
-    vec3_t moveAngles;
-
-    // move this to clientInfo?
-    int32_t lightLevel;
-
-    int32_t style;          // also used as areaportal number
-
-    // Custom lightstyle.
-    char *customLightStyle;
-
-    gitem_t *item;          // for bonus items
-};
+//struct Entity {
+//    // Actual entity state member. Contains all data that is actually networked.
+//    EntityState  state;
+//
+//    // NULL if not a player the server expects the first part of gclient_s to
+//    // be a PlayerState but the rest of it is opaque
+//    struct gclient_s *client;       
+//
+//    // An entity is in no use, in case it complies to the INUSE macro.
+//    qboolean inUse;
+//    int32_t linkCount;
+//
+//    // FIXME: move these fields to a server private sv_entity_t
+//    list_t area; // Linked to a division node or leaf
+//
+//    // If numClusters is -1, use headNodew instead.
+//    int32_t numClusters;       // if -1, use headNode instead
+//    int32_t clusterNumbers[MAX_ENT_CLUSTERS];
+//
+//    // Only use this instead of numClusters if numClusters == -1
+//    int32_t headNode;           
+//    int32_t areaNumber;
+//    int32_t areaNumber2;
+//
+//    //================================
+//    int32_t serverFlags;
+//    vec3_t mins, maxs;
+//    vec3_t absMin, absMax, size;
+//    uint32_t solid;
+//    int32_t clipMask;
+//    Entity *owner;
+//
+//    // !!!!!!!!!!!!!!!!!
+//    // !! DO NOT MODIFY ANYTHING ABOVE THIS, THE SERVER
+//    // !! EXPECTS THE FIELDS IN THAT ORDER!
+//    // !!!!!!!!!!!!!!!!!
+//    //================================
+//    // Pointer to the actual game class entity belonging to this server entity.
+//    SVGBaseEntity* classEntity;
+//
+//    // Hashmap containing the key:value entity properties.
+//    EntityDictionary entityDictionary;
+//
+//    //const char *model;       // C++20: STRING: Added const to char*
+//    float freeTime;     // sv.time when the object was freed
+//
+//    //
+//    // only used locally in game, not by server
+//    //
+//    const char *message;     // C++20: STRING: Added const to char *
+//    const char *className;   // C++20: STRING: Made const.
+//    
+//    float timeStamp;
+//
+//    char *target;
+//    const char *targetName;
+//    char *killTarget;
+//    char *team;
+//    char *pathTarget;
+//    Entity *targetEntityPtr;
+//
+//    // For moving objects(plats, etc)
+//    float speed;
+//    float acceleration;
+//    float deceleration;
+//    vec3_t moveDirection;
+//    vec3_t position1, position2;
+//
+//    // Regular entity velocity, gravity, mass.
+//    Entity *goalEntityPtr;
+//    Entity *moveTargetPtr;
+//
+//    const char *map;           // target_changelevel // C++20: STRING: Added const to char *
+//    int32_t count;
+//
+//    // Chain, enemy, old enemy, and activator entity pointers.
+//    Entity *chain;
+//    
+//    // Ground pointers.
+//    Entity *groundEntityPtr;
+//
+//    Entity *myNoisePtr;       // can go in client only
+//    Entity *myNoise2Ptr;
+//
+//    int32_t noiseIndex;
+//    int32_t noiseIndex2;
+//    float volume;
+//    float attenuation;
+//
+//    // Timing variables
+//    float random;
+//
+//    float teleportTime;
+//
+//
+//
+//    vec3_t moveOrigin;
+//    vec3_t moveAngles;
+//
+//    // move this to clientInfo?
+//    int32_t lightLevel;
+//
+//    int32_t style;          // also used as areaportal number
+//
+//    // Custom lightstyle.
+//    char *customLightStyle;
+//
+//    gitem_t *item;          // for bonus items
+//};
 
 #endif

@@ -77,14 +77,14 @@ void Touch_Multi(Entity *self, Entity *other, cplane_t *plane, csurface_t *surf)
     //} else
     //    return;
 
-    if (!VectorCompare(self->moveDirection, vec3_zero())) {
-        vec3_t  forward;
+    //if (!VectorCompare(self->moveDirection, vec3_zero())) {
+    //    vec3_t  forward;
 
-        AngleVectors(other->state.angles, &forward, NULL, NULL);
-        if (DotProduct(forward, self->moveDirection) < 0)
-            return;
-    }
+    //    AngleVectors(other->state.angles, &forward, NULL, NULL);
+    //    if (DotProduct(forward, self->moveDirection) < 0)
+    //        return;
+    //}
 
-    //self->activator = other;
-    multi_trigger(self);
+    ////self->activator = other;
+    //multi_trigger(self);
 }

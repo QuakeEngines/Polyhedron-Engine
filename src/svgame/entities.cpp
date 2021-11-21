@@ -174,10 +174,10 @@ void SVG_FreeEntity(Entity* ent)
     gi.UnlinkEntity(ent);        // unlink from world
 
     // Prevent freeing "special edicts". Clients, and the dead "client body queue".
-    if ((ent - g_entities) <= (maximumClients->value + BODY_QUEUE_SIZE)) {
-        //      gi.DPrintf("tried to free special edict\n");
-        return;
-    }
+    //if ((ent - g_entities) <= (maximumClients->value + BODY_QUEUE_SIZE)) {
+    //    //      gi.DPrintf("tried to free special edict\n");
+    //    return;
+    //}
 
     // Delete the actual entity pointer.
     SVG_FreeClassEntity(ent);
@@ -259,22 +259,22 @@ Entity* SVG_PickTarget(char* targetName)
 //===============
 Entity* SVG_Find(Entity* from, int fieldofs, const char* match)
 {
-    char* s;
+    //char* s;
 
-    if (!from)
-        from = g_entities;
-    else
-        from++;
+    //if (!from)
+    //    from = g_entities;
+    //else
+    //    from++;
 
-    for (; from < &g_entities[globals.numberOfEntities]; from++) {
-        if (!from->inUse)
-            continue;
-        s = *(char**)((byte*)from + fieldofs);
-        if (!s)
-            continue;
-        if (!Q_stricmp(s, match))
-            return from;
-    }
+    //for (; from < &g_entities[globals.serverEntityPool->numberOfEntities]; from++) {
+    //    if (!from->inUse)
+    //        continue;
+    //    s = *(char**)((byte*)from + fieldofs);
+    //    if (!s)
+    //        continue;
+    //    if (!Q_stricmp(s, match))
+    //        return from;
+    //}
 
     return NULL;
 }
@@ -286,34 +286,34 @@ Entity* SVG_Find(Entity* from, int fieldofs, const char* match)
 // entity dictionary.
 //===============
 SVGBaseEntity* SVG_FindEntityByKeyValue(const std::string& fieldKey, const std::string& fieldValue, SVGBaseEntity* lastEntity) {
-    Entity* serverEnt = (lastEntity ? lastEntity->GetServerEntity() : nullptr);
+    //Entity* serverEnt = (lastEntity ? lastEntity->GetServerEntity() : nullptr);
 
-    if (!lastEntity)
-        serverEnt = g_entities;
-    else
-        serverEnt++;
+    //if (!lastEntity)
+    //    serverEnt = g_entities;
+    //else
+    //    serverEnt++;
 
-    for (; serverEnt < &g_entities[globals.numberOfEntities]; serverEnt++) {
-        // Fetch serverEntity its ClassEntity.
-        SVGBaseEntity* classEntity = serverEnt->classEntity;
+    //for (; serverEnt < &g_entities[globals.serverEntityPool->numberOfEntities]; serverEnt++) {
+    //    // Fetch serverEntity its ClassEntity.
+    //    SVGBaseEntity* classEntity = serverEnt->classEntity;
 
-        // Ensure it has a class entity.
-        if (!serverEnt->classEntity)
-            continue;
+    //    // Ensure it has a class entity.
+    //    if (!serverEnt->classEntity)
+    //        continue;
 
-        // Ensure it is in use.
-        if (!classEntity->IsInUse())
-            continue;
+    //    // Ensure it is in use.
+    //    if (!classEntity->IsInUse())
+    //        continue;
 
-        // Start preparing for checking IF, its dictionary HAS fieldKey.
-        auto dictionary = serverEnt->entityDictionary;
+    //    // Start preparing for checking IF, its dictionary HAS fieldKey.
+    //    auto dictionary = serverEnt->entityDictionary;
 
-        if (dictionary.find(fieldKey) != dictionary.end()) {
-            if (dictionary[fieldKey] == fieldValue) {
-                return classEntity;
-            }
-        }
-    }
+    //    if (dictionary.find(fieldKey) != dictionary.end()) {
+    //        if (dictionary[fieldKey] == fieldValue) {
+    //            return classEntity;
+    //        }
+    //    }
+    //}
 
     return nullptr;
 }
@@ -361,7 +361,7 @@ void SVG_InitEntity(Entity* e)
     //s->gravity = 1.0;
 
     // Last but not least, give it that ID number it so badly deserves for being initialized.
-    e->state.number = e - g_entities;
+   // e->state.number = e - g_entities;
 }
 
 //===============
@@ -379,7 +379,7 @@ Entity* SVG_Spawn(void)
     int32_t i = 0;
     // Acquire a pointer to the entity we'll check for.
     serverEntity = &g_entities[game.maximumClients + 1];
-    for (i = game.maximumClients + 1; i < globals.numberOfEntities; i++, serverEntity++) {
+    for (i = game.maximumClients + 1; i < globals.serverEntityPoolnumberOfEntities; i++, serverEntity++) {
         // The first couple seconds of server time can involve a lot of
         // freeing and allocating, so relax the replacement policy
         if (!serverEntity->inUse && (serverEntity->freeTime < 2 || level.time - serverEntity->freeTime > 0.5)) {
@@ -393,7 +393,7 @@ Entity* SVG_Spawn(void)
         gi.Error("ED_Alloc: no free edicts");
 
     // If we've gotten past the gi.Error, it means we can safely increase the number of entities.
-    globals.numberOfEntities++;
+    //globals.serverEntityPoolnumberOfEntities++;
     SVG_InitEntity(serverEntity);
 
     return serverEntity;
@@ -420,7 +420,7 @@ Entity* SVG_CreateTargetChangeLevel(char* map) {
 // Returns a pointer to the 'Worldspawn' ServerEntity.
 //===============
 Entity* SVG_GetWorldServerEntity() {
-    return &g_entities[0];
+    return NULL;// &g_entities[0];
 };
 
 //===============

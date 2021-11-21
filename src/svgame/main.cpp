@@ -216,7 +216,7 @@ ServerGameExports* GetServerGameAPI(ServerGameImports* import)
 
     globals.ServerCommand = SVG_ServerCommand;
 
-    globals.entitySize = sizeof(Entity);
+    //globals.entitySize = sizeof(Entity);
 
     return &globals;
 }
