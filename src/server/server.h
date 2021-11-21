@@ -71,14 +71,22 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 
 //=============================================================================
-//#define EDICT_POOL(c, n) ((Entity *)((byte *)(c)->pool->entities + (c)->pool->entitySize*(n)))
-//
-//#define EDICT_NUM(n) ((Entity *)((byte *)ge->entities + ge->entitySize*(n)))
-//#define NUM_FOR_EDICT(e) ((int)(((byte *)(e) - (byte *)svEntities) / sizeof(Entity))
-#define EDICT_POOL(c, n) ((Entity *)((byte *)(c)->pool->entities + (c)->pool->entitySize*(n)))
 
-#define EDICT_NUM(n) ((Entity *)((byte *)svEntityPool.entities + svEntityPool.entitySize*(n)))
-#define NUM_FOR_EDICT(e) ((int32_t)(((byte *)(e) - (byte *)svEntityPool.entities) / svEntityPool.entitySize)
+struct ServerEntityPool{
+    std::array<Entity, MAX_EDICTS> entities{};
+    int32_t entitySize{sizeof(Entity)};
+    int32_t numberOfEntities{0};     // current number, <= maxEntities
+    int32_t maxEntities{MAX_EDICTS};
+} serverEntityPool;
+
+// Reads more clearly.
+using ServerEntityPoolArray = std::array<Entity, MAX_EDICTS>;
+
+
+#define EDICT_POOL(c, n) ((Entity *)((byte *)(c)->pool->entities.data() + (c)->pool->entitySize*(n)))
+
+#define EDICT_NUM(n) ((Entity *)((byte *)serverEntityPool.entities.data() + serverEntityPool.entitySize*(n)))
+#define NUM_FOR_EDICT(e) ((int32_t)(((byte *)(e) - (byte *)serverEntityPool.entities.data()) / serverEntityPool.entitySize))
 
 //=============================================================================
 // Master/heartbeat settings.
@@ -315,7 +323,7 @@ typedef struct client_s {
     // server state pointers (hack for MVD channels implementation)
     char *configstrings;
     char *gamedir, *mapName;
-    EntityPool *pool;
+    ServerEntityPool *pool;
     cm_t *cm;
     int32_t slot;
     int32_t spawncount;

@@ -41,7 +41,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 class SVGBaseEntity;
 class PlayerClient;
 class IGameMode;
-struct entity_s;
+struct Entity;
 
 //==================================================================
 
@@ -926,7 +926,7 @@ struct gclient_s {
 };
 
 //-------------------
-// entity_s, the server side entity structure. If you know what an entity is,
+// Entity, the server side entity structure. If you know what an entity is,
 // then you know what this is.
 // 
 // The actual SVGBaseEntity class is a member. It is where the magic happens.
@@ -935,7 +935,7 @@ struct gclient_s {
 //-------------------
 using EntityDictionary = std::map<std::string, std::string>;
 
-struct entity_s {
+struct Entity {
     // Actual entity state member. Contains all data that is actually networked.
     EntityState  state;
 

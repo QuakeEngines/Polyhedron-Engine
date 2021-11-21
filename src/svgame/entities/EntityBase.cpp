@@ -29,6 +29,7 @@ void EntityBase::SetHandle(Entity *handle)
     if (handle == nullptr) {
         gi.BPrintf(PRINT_WARNING, "EntityBase::SetHandle called with a 'nullptr' handle. %s\n", __FUNCTION__);
     }
+
     this->handle = handle;
     this->handle->inUse = true;
 }

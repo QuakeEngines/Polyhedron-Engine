@@ -15,8 +15,8 @@
 class EntityBase
 {
 public:
-    EntityBase();
     EntityBase(Entity* handle);
+    ~EntityBase();
 
 protected:
     // Handle to the server entity. (Assumed to be internal)
@@ -31,6 +31,7 @@ protected:
     // and nullifies our pointer to it.
     void UnsetHandle();
 
+    // Destructor.
     virtual ~EntityBase();
 
 public:

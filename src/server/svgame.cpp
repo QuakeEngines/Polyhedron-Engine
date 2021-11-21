@@ -934,17 +934,7 @@ void SV_InitGameProgs(void)
             ge->apiversion.major, ge->apiversion.minor, ge->apiversion.point, SVGAME_API_VERSION_MAJOR, SVGAME_API_VERSION_MINOR, SVGAME_API_VERSION_POINT);
     }
 
-    // initialize
+    // Initialize
     ge->Init();
-
-    // sanitize entitySize
-    if (ge->entitySize < sizeof(Entity) || ge->entitySize > SIZE_MAX / MAX_EDICTS) {
-        Com_Error(ERR_DROP, "Server Game DLL returned bad size of Entity");
-    }
-
-    // sanitize maxEntities
-    if (ge->entitySize <= sv_maxclients->integer || ge->entitySize > MAX_EDICTS) {
-        Com_Error(ERR_DROP, "Server Game DLL returned bad number of maxEntities %i   %i", ge->entitySize, sizeof(Entity));
-    }
 }
 

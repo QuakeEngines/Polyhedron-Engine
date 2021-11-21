@@ -106,7 +106,7 @@ static void CLG_ClipMoveToEntities(const vec3_t &start, const vec3_t &mins, cons
             mins, maxs, headNode, CONTENTS_MASK_PLAYERSOLID,
             ent->current.origin, ent->current.angles);
 
-        clgi.CM_ClipEntity(tr, &trace, (struct entity_s*)ent);
+        clgi.CM_ClipEntity(tr, &trace, (struct Entity*)ent);
     }
 }
 
@@ -122,7 +122,7 @@ trace_t q_gameabi CLG_Trace(const vec3_t &start, const vec3_t &mins, const vec3_
     // check against world
     clgi.CM_BoxTrace(&t, start, end, mins, maxs, cl->bsp->nodes, CONTENTS_MASK_PLAYERSOLID);
     if (t.fraction < 1.0)
-        t.ent = (struct entity_s*)1;
+        t.ent = (struct Entity*)1;
 
     // check all other solid models
     CLG_ClipMoveToEntities(start, mins, maxs, end, &t);

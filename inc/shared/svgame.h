@@ -52,7 +52,7 @@ struct Solid {
 #define MAX_ENT_CLUSTERS    16
 
 
-typedef struct entity_s Entity;
+typedef struct Entity Entity;
 typedef struct gclient_s ServersClient;
 
 
@@ -68,7 +68,7 @@ struct gclient_s {
 };
 
 
-struct entity_s {
+struct Entity {
     EntityState  state;
     struct gclient_s    *client;
     qboolean    inUse;
@@ -128,7 +128,9 @@ struct ServerGameImports {
         int32_t point;
     } apiversion;
 
-    // special messages
+    //---------------------------------------------------------------------
+    // Special messages
+    //---------------------------------------------------------------------
     void (* q_printf(2, 3) BPrintf)(int printlevel, const char *fmt, ...);
     void (* q_printf(1, 2) DPrintf)(const char *fmt, ...);
     void (* q_printf(3, 4) CPrintf)(Entity *ent, int printlevel, const char *fmt, ...);
@@ -225,9 +227,12 @@ struct ServerGameImports {
     //---------------------------------------------------------------------
     // Entity Pool
     //---------------------------------------------------------------------
-    // Seeks the server entity pool for a free entity (aka inUse = false), and returns
-    // a pointer to it.
-    Entity* FindFreePoolEntity();
+    struct ServerEntityPool{
+        std::array<Entity, MAX_EDICTS> entities{};
+        int32_t entitySize{sizeof(Entity)};
+        int32_t numberOfEntities{0};     // current number, <= maxEntities
+        int32_t maxEntities{MAX_EDICTS};
+    } entityPool;
 
     // Returns a pointer to the ID in the entity pool in case it is inUse
     Entity* FetchPoolEntityID(uint32_t index);
@@ -236,14 +241,6 @@ struct ServerGameImports {
 //
 // functions exported by the game subsystem
 //
-
-struct ServerEntityPool {
-    std::array<Entity, MAX_EDICTS> entities;
-    int32_t entitySize : sizeof(Entity);
-    int32_t numberOfEntities{0};     // current number, <= maxEntities
-    int32_t maxEntities : MAX_EDICTS;
-} svEntityPool;
-
 struct ServerGameExports {
     //---------------------------------------------------------------------
     // API Version.
@@ -314,9 +311,10 @@ struct ServerGameExports {
     // can vary in size from one game to another.
     //
     // The size will be fixed when ge->Init() is called
-    EntityPool pool;
-    
-    //struct entity_s  *entities;
+    //EntityPool pool;
+
+
+    //struct Entity  *entities;
     //int         entitySize;
     //int         numberOfEntities;     // current number, <= maxEntities
     //int         maxEntities;

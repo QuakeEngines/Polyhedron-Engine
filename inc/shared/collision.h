@@ -106,7 +106,7 @@ typedef struct {
     int         contents;
 
     // The impacted entity, or `NULL`.
-    struct entity_s* ent;   // Not set by CM_*() functions
+    struct Entity* ent;   // Not set by CM_*() functions
 
     // N&C: Custom added.
     vec3_t		offsets[8];	// [signbits][x] = either size[0][x] or size[1][x]

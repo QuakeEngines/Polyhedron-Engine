@@ -862,7 +862,7 @@ void CM_TransformedBoxTrace(trace_t *trace, const vec3_t &start, const vec3_t &e
     LerpVector(start, end, trace->fraction, trace->endPosition);
 }
 
-void CM_ClipEntity(trace_t *dst, const trace_t *src, struct entity_s *ent)
+void CM_ClipEntity(trace_t *dst, const trace_t *src, struct Entity *ent)
 {
     dst->allSolid |= src->allSolid;
     dst->startSolid |= src->startSolid;

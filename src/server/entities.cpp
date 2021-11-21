@@ -24,12 +24,6 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 // Server Side Entity containment management.
 //
 //=============================================================================
-struct ServerEntityPool {
-    std::array<Entity, MAX_EDICTS> entities;
-    int32_t entitySize : sizeof(Entity);
-    int32_t numberOfEntities{0};     // current number, <= maxEntities
-    int32_t maxEntities : MAX_EDICTS;
-} svEntityPool;
 
 // Seeks the server entity pool for a free entity (aka inUse = false), and returns
 // a pointer to it.
@@ -40,8 +34,8 @@ Entity* FindFreePoolEntity() {
     };
     
     // See if there is still an entity left with no inUse == true, if so, return it.
-    auto result = std::find_if(svEntityPool.entities.begin(), svEntityPool.entities.end(), findFunc);
-    if (result != svEntityPool.entities.end()) {
+    auto result = std::find_if(serverEntityPool.entities.begin(), serverEntityPool.entities.end(), findFunc);
+    if (result != serverEntityPool.entities.end()) {
         return &(*result);
     }
 
@@ -50,7 +44,7 @@ Entity* FindFreePoolEntity() {
 
 // Returns a pointer to the ID in the entity pool in case it is inUse
 Entity* FetchPoolEntityByID(uint32_t index) {
-    return (svEntityPool.entities[index].inUse ? &svEntityPool.entities[index] : nullptr);
+    return (serverEntityPool.entities[index].inUse ? &serverEntityPool.entities[index] : nullptr);
 }
 
 //// Actual Server Entity array.
@@ -62,7 +56,7 @@ Entity* FetchPoolEntityByID(uint32_t index) {
 //
 //-----------------------
 Entity* SV_QueryFreeEntity() {
-    
+    return NULL;
 }
 
 /*
