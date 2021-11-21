@@ -21,7 +21,7 @@
 #include "entities/base/SVGBaseMover.h"
 #include "entities/base/PlayerClient.h"
 #include "entities/info/InfoPlayerStart.h"
-#include "entities/Worldspawn.h"
+#include "entities/world/Worldspawn.h"
 
 #include <ranges>
 

@@ -81,6 +81,11 @@ SET( SRC_SVGAME
 	svgame/trigger.cpp
 	svgame/utils.cpp
 	svgame/weapons.cpp 
+
+	svgame/entities/EntityBase.cpp
+	svgame/entities/PrivateEntityBase.cpp
+	svgame/entities/SynchedEntityBase.cpp
+
 	svgame/ai/MonsterAI.cpp
 	svgame/entities/base/SVGBaseEntity.cpp
 	svgame/entities/base/SVGBaseTrigger.cpp
@@ -143,8 +148,8 @@ SET( SRC_SVGAME
 	svgame/entities/trigger/TriggerOnce.cpp
 	svgame/entities/trigger/TriggerRelay.cpp
 	svgame/entities/weaponry/BlasterBolt.cpp
-	svgame/entities/Light.cpp
-	svgame/entities/WorldSpawn.cpp
+	svgame/entities/world/Light.cpp
+	svgame/entities/world/WorldSpawn.cpp
 	svgame/gamemodes/DefaultGameMode.cpp
 	svgame/gamemodes/CoopGameMode.cpp
 	svgame/gamemodes/DeathMatchGameMode.cpp
@@ -209,8 +214,8 @@ SET( SRC_SVGAME
 	svgame/entities/trigger/TriggerPush.h
 	svgame/entities/trigger/TriggerRelay.h
 	svgame/entities/weaponry/BlasterBolt.h
-	svgame/entities/Light.h
-	svgame/entities/WorldSpawn.h
+	svgame/entities/world/Light.h
+	svgame/entities/world/WorldSpawn.h
 	svgame/gamemodes/DefaultGameMode.h
 	svgame/gamemodes/CoopGameMode.h
 	svgame/gamemodes/DeathMatchGameMode.h

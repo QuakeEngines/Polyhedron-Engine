@@ -6,10 +6,10 @@
 //
 //
 */
-#include "../g_local.h"              // SVGame.
+#include "../../g_local.h"              // SVGame.
 
-#include "base/SVGBaseEntity.h"
-#include "base/SVGBaseTrigger.h"
+#include "../base/SVGBaseEntity.h"
+#include "../base/SVGBaseTrigger.h"
 #include "Light.h"
 
 // SpawnFlags.
