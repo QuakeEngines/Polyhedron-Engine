@@ -23,10 +23,18 @@ protected:
     Entity  *handle;
 
 protected:
-    void SetHandle(Entity* handle);
+    // Sets the handle to a server entity so it can be safely made use of
+    // in our server game module.
+    void SetHandle(Entity* handleEntity);
+    
+    // Unsets the handle if any, meaning it also sets the old handle back to inUse = false,
+    // and nullifies our pointer to it.
+    void UnsetHandle();
+
     virtual ~EntityBase();
 
 public:
+
     //vec3 &GetOrigin() { return handle->origin; }
     //void SetOrigin(const vec3 &o) { handle->origin = o; }
 };

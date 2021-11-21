@@ -12,10 +12,12 @@
 class PrivateEntityBase abstract : public EntityBase
 {
 public:
-    // Internal memory 
-    Entity handleMemory;
     PrivateEntityBase();
+    // Deconstructor
+    virtual ~PrivateEntityBase();
 
 protected:
-    ~PrivateEntityBase();
+
+    // Internal memory 
+    Entity handleMemory;
 };

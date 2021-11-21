@@ -13,6 +13,8 @@ class SynchedEntityBase abstract : public EntityBase {
 public:
     SynchedEntityBase();
     SynchedEntityBase(Entity* entityHandle);
+
+protected:
     virtual ~SynchedEntityBase();
 
 protected:
