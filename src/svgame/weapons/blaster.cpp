@@ -11,7 +11,7 @@
 #include "../g_local.h"
 
 // Include class entities.
-#include "../entities/base/SVGBaseEntity.h"
+#include "../entities/base/ServerGameEntity.h"
 #include "../entities/base/PlayerClient.h"
 
 // Include player headers.

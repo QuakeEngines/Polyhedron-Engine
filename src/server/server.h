@@ -74,9 +74,9 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 // Reads more clearly.
 
-#define EDICT_POOL(c, n) ((Entity *)((byte *)(c)->pool->entities.data() + (c)->pool->entitySize*(n)))
+#define EDICT_POOL(c, n) ((ServerEntity *)((byte *)(c)->pool->entities.data() + (c)->pool->entitySize*(n)))
 
-#define EDICT_NUM(n) ((Entity *)((byte *)entityPool.entities.data() + entityPool.entitySize*(n)))
+#define EDICT_NUM(n) ((ServerEntity *)((byte *)entityPool.entities.data() + entityPool.entitySize*(n)))
 #define NUM_FOR_EDICT(e) ((int32_t)(((byte *)(e) - (byte *)entityPool.entities.data()) / entityPool.entitySize))
 
 //=============================================================================
@@ -97,7 +97,7 @@ constexpr uint32_t SV_FRAMEDIV = 1;
 constexpr uint32_t SV_FRAMESYNC = 1;
 #define SV_CLIENTSYNC(cl)   1
 
-// Entity leaf settings.
+// ServerEntity leaf settings.
 static constexpr uint32_t MAX_TOTAL_ENT_LEAFS = 128;
 //=============================================================================
 
@@ -117,7 +117,7 @@ typedef struct {
 } ClientFrame;
 
 //-----------------
-// Server side Entity.
+// Server side ServerEntity.
 //-----------------
 typedef struct {
     int         solid32;
@@ -218,7 +218,7 @@ typedef struct client_s {
 
     // core info
     int32_t connectionState;
-    Entity *edict;     // EDICT_NUM(clientnum+1)
+    ServerEntity *edict;     // EDICT_NUM(clientnum+1)
     int number;     // client slot number
 
     // client flags
@@ -298,7 +298,7 @@ typedef struct client_s {
     int32_t protocolVersion;        // Major version
     int32_t protocolMinorVersion;   // Minor version
 
-    EntityStateMessageFlags esFlags; // Entity protocol flags
+    EntityStateMessageFlags esFlags; // ServerEntity protocol flags
 
     // packetized messages
     list_t msg_free_list;
@@ -494,7 +494,7 @@ extern cvar_t       *sv_zombietime;
 extern cvar_t       *sv_ghostime;
 
 extern client_t     *sv_client;
-extern Entity       *sv_player;
+extern ServerEntity       *sv_player;
 
 extern qboolean     sv_pending_autosave;
 
@@ -597,7 +597,7 @@ extern    ServerGameExports    *ge;
 
 void SV_InitGameProgs(void);
 void SV_ShutdownGameProgs(void);
-void SV_InitEntity(Entity *e);
+void SV_InitEntity(ServerEntity *e);
 
 //void PF_PMove(PlayerMove *pm);
 
@@ -619,19 +619,19 @@ int SV_NoSaveGames(void);
 void SV_ClearWorld(void);
 // called after the world model has been loaded, before linking any entities
 
-void PF_UnlinkEntity(Entity *ent);
+void PF_UnlinkEntity(ServerEntity *ent);
 // call before removing an entity, and before trying to move one,
 // so it doesn't clip against itself
 
-void SV_LinkEntity(cm_t *cm, Entity *ent);
-void PF_LinkEntity(Entity *ent);
+void SV_LinkEntity(cm_t *cm, ServerEntity *ent);
+void PF_LinkEntity(ServerEntity *ent);
 // Needs to be called any time an entity changes origin, mins, maxs,
 // or solid.  Automatically unlinks if needed.
 // sets ent->v.absMin and ent->v.absMax
 // sets ent->leafnums[] for pvs determination even if the entity
 // is not solid
 
-int SV_AreaEntities(const vec3_t &mins, const vec3_t &maxs, Entity **list, int maxcount, int areatype);
+int SV_AreaEntities(const vec3_t &mins, const vec3_t &maxs, ServerEntity **list, int maxcount, int areatype);
 // fills in a table of edict pointers with edicts that have bounding boxes
 // that intersect the given area.  It is possible for a non-axial bmodel
 // to be returned that doesn't actually intersect the area on an exact
@@ -639,7 +639,7 @@ int SV_AreaEntities(const vec3_t &mins, const vec3_t &maxs, Entity **list, int m
 // returns the number of pointers filled in
 // ??? does this always return the world?
 
-qboolean SV_EntityIsVisible(cm_t *cm, Entity *ent, byte *mask);
+qboolean SV_EntityIsVisible(cm_t *cm, ServerEntity *ent, byte *mask);
 
 //===================================================================
 
@@ -651,7 +651,7 @@ int SV_PointContents(const vec3_t &p);
 // Quake 2 extends this to also check entities, to allow moving liquids
 
 trace_t q_gameabi SV_Trace(const vec3_t &start, const vec3_t &mins, const vec3_t &maxs, const vec3_t &end,
-                           Entity *passedict, int contentmask);
+                           ServerEntity *passedict, int contentmask);
 // mins and maxs are relative
 
 // if the entire move stays in a solid volume, trace.allSolid will be set,

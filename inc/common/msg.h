@@ -77,7 +77,7 @@ enum PlayerStateMessageFlags {
 };
 
 //---------------
-// Entity state messaging flags.
+// ServerEntity state messaging flags.
 //---------------
 enum EntityStateMessageFlags {
     MSG_ES_FORCE = (1 << 0),

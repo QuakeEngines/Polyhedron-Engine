@@ -11,8 +11,8 @@
 #include "../entities.h"    // Entities.
 #include "../utils.h"       // Util funcs.
 
-// Server Game Base Entity.
-#include "../entities/base/SVGBaseEntity.h"
+// Server Game Base ServerEntity.
+#include "../entities/base/ServerGameEntity.h"
 #include "../entities/base/PlayerClient.h"
 
 // Weapons.h
@@ -46,7 +46,7 @@ DeathMatchGameMode::~DeathMatchGameMode() {
 // Template function serves as an example atm.
 //===============
 //
-qboolean DeathMatchGameMode::CanDamage(SVGBaseEntity* target, SVGBaseEntity* inflictor) {
+qboolean DeathMatchGameMode::CanDamage(ServerGameEntity* target, ServerGameEntity* inflictor) {
     // Let it be to DefaultGameMode. :)
     return DefaultGameMode::CanDamage(target, inflictor);
 }
@@ -56,7 +56,7 @@ qboolean DeathMatchGameMode::CanDamage(SVGBaseEntity* target, SVGBaseEntity* inf
 // 
 // Called when a client is ready to be placed in the game after connecting.
 //===============
-void DeathMatchGameMode::ClientBegin(Entity* serverEntity) {
+void DeathMatchGameMode::ClientBegin(ServerEntity* serverEntity) {
     if (!serverEntity) {
         gi.DPrintf("ClientBegin executed with invalid (nullptr) serverEntity");
         return;
@@ -100,7 +100,7 @@ void DeathMatchGameMode::ClientBegin(Entity* serverEntity) {
     ClientEndServerFrame(serverEntity);
 }
 
-void DeathMatchGameMode::PutClientInServer(Entity *ent) {
+void DeathMatchGameMode::PutClientInServer(ServerEntity *ent) {
     // Find a spawn point for this client to be "placed"/"put" at.
     vec3_t  mins = PM_MINS;
     vec3_t  maxs = PM_MAXS;
@@ -264,7 +264,7 @@ void DeathMatchGameMode::PutClientInServer(Entity *ent) {
 // This basically allows for the game to disable fetching user input that makes
 // our movement tick. And/or shoot weaponry while in intermission time.
 //===============
-void DeathMatchGameMode::ClientBeginServerFrame(Entity* serverEntity) {
+void DeathMatchGameMode::ClientBeginServerFrame(ServerEntity* serverEntity) {
     // Ensure we aren't in an intermission time.
     if (level.intermission.time)
         return;
@@ -322,7 +322,7 @@ void DeathMatchGameMode::ClientBeginServerFrame(Entity* serverEntity) {
 // DeathMatchGameMode::ClientUpdateObituary.
 // 
 //===============
-void DeathMatchGameMode::ClientUpdateObituary(SVGBaseEntity* self, SVGBaseEntity* inflictor, SVGBaseEntity* attacker) {
+void DeathMatchGameMode::ClientUpdateObituary(ServerGameEntity* self, ServerGameEntity* inflictor, ServerGameEntity* attacker) {
     std::string message = ""; // String stating what happened to whichever entity. "suicides", "was squished" etc.
     std::string messageAddition = ""; // String stating what is additioned to it, "'s shrapnell" etc. Funny stuff.
 

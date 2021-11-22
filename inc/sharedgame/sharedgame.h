@@ -74,9 +74,9 @@ struct EntityEffectType {
 
     static constexpr uint32_t Rotate                  = (1 << 8); // Rotate (Items.)
 
-    // Entity 'type' Effects that dictate special entity 'type' treatment.
-    static constexpr uint32_t Gib     = (1 << 10);    // Entity is of type 'gib', and needs special treatment.
-    static constexpr uint32_t Corpse  = (1 << 11);    // Entity is of type 'corpse', and needs special treatment.
+    // ServerEntity 'type' Effects that dictate special entity 'type' treatment.
+    static constexpr uint32_t Gib     = (1 << 10);    // ServerEntity is of type 'gib', and needs special treatment.
+    static constexpr uint32_t Corpse  = (1 << 11);    // ServerEntity is of type 'corpse', and needs special treatment.
 
     // 'Other' Effects. (Mostly null model entity stuff, weapon particles.)
     static constexpr uint32_t Blaster     = (1 << 16);
@@ -143,7 +143,7 @@ struct MuzzleFlashType {
 #define MZ2_SOLDIER_MACHINEGUN_8        100
 
 //-----------------
-// Temp Entity Events (TE)
+// Temp ServerEntity Events (TE)
 //
 // Temp entity events are for things that happen at a location seperate from 
 // any existing entity. Temporary entity messages are explicitly constructed

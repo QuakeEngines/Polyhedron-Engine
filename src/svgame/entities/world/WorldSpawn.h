@@ -10,15 +10,15 @@
 #ifndef __SVGAME_ENTITIES_WORLDSPAWN_H__
 #define __SVGAME_ENTITIES_WORLDSPAWN_H__
 
-class SVGBaseEntity;
+class ServerGameEntity;
 
-class WorldSpawn : public SVGBaseEntity {
+class WorldSpawn : public ServerGameEntity {
 public:
     // Constructor/Deconstructor.
-    WorldSpawn(Entity* svEntity);
+    WorldSpawn(ServerEntity* svEntity);
     virtual ~WorldSpawn();
 
-    DefineMapClass( "worldspawn", WorldSpawn, SVGBaseEntity );
+    DefineMapClass( "worldspawn", WorldSpawn, ServerGameEntity );
 
     //
     // Interface functions. 

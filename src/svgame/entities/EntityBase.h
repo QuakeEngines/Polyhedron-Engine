@@ -15,17 +15,17 @@
 class EntityBase
 {
 public:
-    EntityBase(Entity* handle);
+    EntityBase(ServerEntity* handle);
     ~EntityBase();
 
 protected:
     // Handle to the server entity. (Assumed to be internal)
-    Entity  *handle;
+    ServerEntity  *handle;
 
 protected:
     // Sets the handle to a server entity so it can be safely made use of
     // in our server game module.
-    void SetHandle(Entity* handleEntity);
+    void SetHandle(ServerEntity* handleEntity);
     
     // Unsets the handle if any, meaning it also sets the old handle back to inUse = false,
     // and nullifies our pointer to it.

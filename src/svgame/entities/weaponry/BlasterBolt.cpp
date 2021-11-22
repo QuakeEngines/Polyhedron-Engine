@@ -15,12 +15,12 @@
 #include "../../utils.h"                // Util funcs.
 
 // Class Entities.
-#include "../base/SVGBaseEntity.h"
+#include "../base/ServerGameEntity.h"
 #include "BlasterBolt.h"
 
 // Constructor/Deconstructor.
-BlasterBolt::BlasterBolt(Entity* svEntity) 
-    : SVGBaseEntity(svEntity) {
+BlasterBolt::BlasterBolt(ServerEntity* svEntity) 
+    : ServerGameEntity(svEntity) {
 
 }
 BlasterBolt::~BlasterBolt() {
@@ -98,7 +98,7 @@ void BlasterBolt::SpawnKey(const std::string& key, const std::string& value) {
 // 'Touch' callback, to hurt the entities touching it.
 //===============
 //
-void BlasterBolt::BlasterBoltTouch(SVGBaseEntity* self, SVGBaseEntity* other, cplane_t* plane, csurface_t* surf) {
+void BlasterBolt::BlasterBoltTouch(ServerGameEntity* self, ServerGameEntity* other, cplane_t* plane, csurface_t* surf) {
     // N&C: From Yamagi Q2, this seems to resolve our random crashes at times.
     if (!self || !other) { // Plane and Surf can be NULL
         Remove();

@@ -12,16 +12,16 @@
 class SynchedEntityBase abstract : public EntityBase {
 public:
     SynchedEntityBase();
-    SynchedEntityBase(Entity* entityHandle);
+    SynchedEntityBase(ServerEntity* entityHandle);
 
 protected:
     virtual ~SynchedEntityBase();
 
 protected:
-    static Entity* QueryFreeServerEntity()
+    static ServerEntity* QueryFreeServerEntity()
     {
         //for (int32_t i = Cvar_Get("maxclients")->integer; i < MAX_EDICTS; i++) {
-        //    Entity* entity = gi.GetEntityHandle(i);
+        //    ServerEntity* entity = gi.GetEntityHandle(i);
         //    if (!entity->inuse)
         //        return entity;
         //}

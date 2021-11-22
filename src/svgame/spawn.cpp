@@ -23,7 +23,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 typedef struct {
     const char    *name; // C++20: STRING: Added const
-    void (*spawn)(Entity *ent);
+    void (*spawn)(ServerEntity *ent);
 } spawn_func_t;
 
 typedef struct {
@@ -167,7 +167,7 @@ static const spawn_field_t temp_fields[] = {
 // SVG_SpawnClassEntity
 //
 //
-#include "entities/base/SVGBaseEntity.h"
+#include "entities/base/ServerGameEntity.h"
 
 /*
 =============
@@ -205,7 +205,7 @@ ED_CallSpawn
 Allocates the proper server game entity class. Then spawns the entity.
 ===============
 */
-void ED_CallSpawn(Entity *ent)
+void ED_CallSpawn(ServerEntity *ent)
 {
     auto dictionary = ent->entityDictionary;
     ent->className = ED_NewString( ent->entityDictionary["classname"].c_str() );
@@ -232,7 +232,7 @@ Parses an edict out of the given string, returning the new position
 ed should be a properly initialized empty edict.
 ====================
 */
-void ED_ParseEntity(const char** data, Entity* ent) {
+void ED_ParseEntity(const char** data, ServerEntity* ent) {
     qboolean    init;
     char* key, * value;
 
@@ -341,8 +341,8 @@ All but the last will have the teamchain field set to the next one
 */
 void SVG_FindTeams(void)
 {
-    Entity* e, * e2;
-    SVGBaseEntity *chain;
+    ServerEntity* e, * e2;
+    ServerGameEntity *chain;
     int     i, j;
     int     c, c2;
 
@@ -350,7 +350,7 @@ void SVG_FindTeams(void)
     c2 = 0;
     for (i = 1, e = g_entities + i; i < globals.numberOfEntities; i++, e++) {
         // Fetch class entity.
-        SVGBaseEntity *classEntity = g_baseEntities[e->state.number];
+        ServerGameEntity *classEntity = g_baseEntities[e->state.number];
 
         if (classEntity == NULL)
             continue;
@@ -367,7 +367,7 @@ void SVG_FindTeams(void)
         c2++;
         for (j = i + 1, e2 = e + 1 ; j < globals.numberOfEntities ; j++, e2++) {
             // Fetch class entity.
-            SVGBaseEntity* classEntity2 = g_baseEntities[e->state.number];
+            ServerGameEntity* classEntity2 = g_baseEntities[e->state.number];
 
             if (classEntity2 == NULL)
                 continue;
@@ -404,7 +404,7 @@ extern void SVG_AllocateGamePlayerClientEntities();
 
 void SVG_SpawnEntities(const char *mapName, const char *entities, const char *spawnpoint)
 {
-    Entity     *ent;
+    ServerEntity     *ent;
     int         inhibit;
     char        *com_token;
     int         i;

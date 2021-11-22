@@ -15,12 +15,12 @@
 #include "../../utils.h"                // Util funcs.
 
 // Class Entities.
-#include "../base/SVGBaseEntity.h"
+#include "../base/ServerGameEntity.h"
 #include "BodyCorpse.h"
 
 // Constructor/Deconstructor.
-BodyCorpse::BodyCorpse(Entity* svEntity)
-    : SVGBaseEntity(svEntity) {
+BodyCorpse::BodyCorpse(ServerEntity* svEntity)
+    : ServerGameEntity(svEntity) {
 
 }
 BodyCorpse::~BodyCorpse() {
@@ -95,7 +95,7 @@ void BodyCorpse::SpawnKey(const std::string& key, const std::string& value) {
 // 'Touch' callback, I am unsure what to use it for but I can imagine it being...
 // like picking up their items or something? I suppose we could do that...
 //===============
-void BodyCorpse::BodyCorpseTouch(SVGBaseEntity* self, SVGBaseEntity* other, cplane_t* plane, csurface_t* surf) {
+void BodyCorpse::BodyCorpseTouch(ServerGameEntity* self, ServerGameEntity* other, cplane_t* plane, csurface_t* surf) {
 
 }
 
@@ -104,7 +104,7 @@ void BodyCorpse::BodyCorpseTouch(SVGBaseEntity* self, SVGBaseEntity* other, cpla
 //
 // Spawn gibs to make things gore like :P
 //===============
-void BodyCorpse::BodyCorpseDie(SVGBaseEntity* inflictor, SVGBaseEntity* attacker, int damage, const vec3_t& point) {
+void BodyCorpse::BodyCorpseDie(ServerGameEntity* inflictor, ServerGameEntity* attacker, int damage, const vec3_t& point) {
     //int n;
 
     // In case health is low enough...
@@ -130,7 +130,7 @@ void BodyCorpse::BodyCorpseDie(SVGBaseEntity* inflictor, SVGBaseEntity* attacker
 
 
     // Set the ehrm.. think free thing.
-    //SetThinkCallback(&SVGBaseEntity::SVGBaseEntityThinkRemove);
+    //SetThinkCallback(&ServerGameEntity::SVGBaseEntityThinkRemove);
     //SetNextThinkTime(level.time + FRAMETIME);
     // Remove body.
     SetModelIndex(0);

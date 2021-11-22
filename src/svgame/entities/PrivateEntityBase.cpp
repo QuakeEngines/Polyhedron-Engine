@@ -4,7 +4,7 @@
 #include "../entities.h"    // Entities.
 #include "../utils.h"		// Util funcs.
 
-// Entity Bases.
+// ServerEntity Bases.
 #include "EntityBase.h"
 #include "PrivateEntityBase.h"
 

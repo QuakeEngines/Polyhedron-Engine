@@ -8,13 +8,13 @@
 */
 #pragma once
 
-class SVGBaseEntity;
+class ServerGameEntity;
 class SVGBaseTrigger;
 
 class MiscServerModel : public SVGBaseTrigger {
 public:
     // Constructor/Deconstructor.
-    MiscServerModel(Entity* svEntity);
+    MiscServerModel(ServerEntity* svEntity);
     virtual ~MiscServerModel();
 
     DefineMapClass("misc_servermodel", MiscServerModel, SVGBaseTrigger);
@@ -71,10 +71,10 @@ public:
     //
     // Callback Functions.
     //
-    //void MiscServerModelBoxUse(SVGBaseEntity* caller, SVGBaseEntity* activator);
+    //void MiscServerModelBoxUse(ServerGameEntity* caller, ServerGameEntity* activator);
     void MiscServerModelThink(void);
-    void MiscServerModelDie(SVGBaseEntity* inflictor, SVGBaseEntity* attacker, int damage, const vec3_t& point);
-    //void MiscServerModelTouch(SVGBaseEntity* self, SVGBaseEntity* other, cplane_t* plane, csurface_t* surf);
+    void MiscServerModelDie(ServerGameEntity* inflictor, ServerGameEntity* attacker, int damage, const vec3_t& point);
+    //void MiscServerModelTouch(ServerGameEntity* self, ServerGameEntity* other, cplane_t* plane, csurface_t* surf);
 
     // Set when exploding, after a minor delay.
     //void MiscServerModelBoxExplode(void);

@@ -11,10 +11,10 @@
 #ifndef __SVGAME_GAMEMODES_IGAMEMODE_H__
 #define __SVGAME_GAMEMODES_IGAMEMODE_H__
 
-class SVGBaseEntity;
+class ServerGameEntity;
 class PlayerClient;
 
-using BaseEntityVector = std::vector<SVGBaseEntity*>;
+using BaseEntityVector = std::vector<ServerGameEntity*>;
 
 class IGameMode {
 public:
@@ -41,16 +41,16 @@ public:
     // Called when a client connects. This does not get called between
     // load games, of course. A client is still connected to the current
     // game session in that case.
-    virtual qboolean ClientConnect(Entity* serverEntity, char *userinfo) = 0;
+    virtual qboolean ClientConnect(ServerEntity* serverEntity, char *userinfo) = 0;
     // Called when a client has finished connecting, and is ready
     // to be placed into the game.This will happen every map load.
-    virtual void ClientBegin(Entity* serverEntity) = 0;
+    virtual void ClientBegin(ServerEntity* serverEntity) = 0;
     // This will be called once for all clients at the start of each server 
     // frame. Before running any other entities in the world.
-    virtual void ClientBeginServerFrame(Entity* serverEntity) = 0;
+    virtual void ClientBeginServerFrame(ServerEntity* serverEntity) = 0;
     // Called for each player at the end of the server frame and right 
     // after spawning.
-    virtual void ClientEndServerFrame(Entity *serverEntity) = 0;
+    virtual void ClientEndServerFrame(ServerEntity *serverEntity) = 0;
     // Called when a client disconnects. This does not get called between
     // load games.
     virtual void ClientDisconnect(PlayerClient* ent) = 0;
@@ -58,10 +58,10 @@ public:
 
     // The game can override any of the settings in place
     // (forcing skins or names, etc) before copying it off.
-    virtual void ClientUserinfoChanged(Entity* ent, char *userinfo) = 0;
+    virtual void ClientUserinfoChanged(ServerEntity* ent, char *userinfo) = 0;
     // Called in order to process "obituary" updates, aka with what weapon did this client
     // or did other clients, kill any other client/entity.
-    virtual void ClientUpdateObituary(SVGBaseEntity* self, SVGBaseEntity* inflictor, SVGBaseEntity* attacker) = 0;
+    virtual void ClientUpdateObituary(ServerGameEntity* self, ServerGameEntity* inflictor, ServerGameEntity* attacker) = 0;
     
 
     //
@@ -76,13 +76,13 @@ public:
 
     // Choose any info_player_start or its derivates, it'll do a subclassof check, so the only valid classnames are
     // those who have inherited from info_player_start. (info_player_deathmatch, etc).
-    virtual void SelectClientSpawnPoint(Entity* ent, vec3_t& origin, vec3_t& angles, const std::string &classname) = 0;
+    virtual void SelectClientSpawnPoint(ServerEntity* ent, vec3_t& origin, vec3_t& angles, const std::string &classname) = 0;
     // Called when a player connects to a single and multiplayer. 
     // In the case of a SP mode death, the loadmenu pops up and selecting a load game
     // will restart the server.
     // In thecase of a MP mode death however, after a small intermission time, it'll
     // call this function again to respawn our player.
-    virtual void PutClientInServer(Entity* ent) = 0;
+    virtual void PutClientInServer(ServerEntity* ent) = 0;
     // Respawns a client (if that is what the game mode wants).
     virtual void RespawnClient(PlayerClient* ent) = 0;
 
@@ -92,7 +92,7 @@ public:
     // edicts are wiped.
     virtual void SaveClientEntityData(void) = 0;
     // Fetch client data that was stored between previous entity wipe session.
-    virtual void FetchClientEntityData(Entity* ent) = 0;
+    virtual void FetchClientEntityData(ServerEntity* ent) = 0;
 
 
     //
@@ -100,11 +100,11 @@ public:
     //
     // Assigns the teamname to 'teamName', returns false/true if they are
     // on the same specific team.
-    virtual qboolean GetEntityTeamName(SVGBaseEntity* ent, std::string &teamName) = 0;
+    virtual qboolean GetEntityTeamName(ServerGameEntity* ent, std::string &teamName) = 0;
     // Returns true if these two entities are on a same team.
-    virtual qboolean OnSameTeam(SVGBaseEntity* ent1, SVGBaseEntity* ent2) = 0;
+    virtual qboolean OnSameTeam(ServerGameEntity* ent1, ServerGameEntity* ent2) = 0;
     // Returns true if the target entity can be damaged by the inflictor enemy.
-    virtual qboolean CanDamage(SVGBaseEntity * target, SVGBaseEntity * inflictor) = 0;
+    virtual qboolean CanDamage(ServerGameEntity * target, ServerGameEntity * inflictor) = 0;
     // Returns the entities found within a radius. Great for game mode fun times,
     // and that is why it resides here. Allows for customization.
     virtual BaseEntityVector FindBaseEnitiesWithinRadius(const vec3_t &origin, float radius, uint32_t excludeSolidFlags) = 0;
@@ -115,14 +115,14 @@ public:
     //
     // Called when an entity is killed, or at least, about to be.
     // Determine how to deal with it, usually resides in a callback to Die.
-    virtual void EntityKilled(SVGBaseEntity* target, SVGBaseEntity* inflictor, SVGBaseEntity* attacker, int32_t damage, vec3_t point) = 0;
+    virtual void EntityKilled(ServerGameEntity* target, ServerGameEntity* inflictor, ServerGameEntity* attacker, int32_t damage, vec3_t point) = 0;
 
     // Inflicts actual damage on the targeted entity.
     // 
     // Old Documentation stated:
-    // target      Entity that is being damaged
-    // inflictor   Entity that is causing the damage
-    // attacker    Entity that caused the inflictor to damage targ
+    // target      ServerEntity that is being damaged
+    // inflictor   ServerEntity that is causing the damage
+    // attacker    ServerEntity that caused the inflictor to damage targ
     // 
     // example: target = monster, inflictor = rocket, attacker = player
     //
@@ -139,10 +139,10 @@ public:
     // DamageFlags::NoKnockBack           Do not affect velocity, just view angles
     // DamageFlags::Bullet                Damage is from a bullet(used for ricochets)
     // DamageFlags::IgnoreProtection      Kills godmode, armor, everything
-    virtual void InflictDamage(SVGBaseEntity* targ, SVGBaseEntity* inflictor, SVGBaseEntity* attacker, const vec3_t& dmgDir, const vec3_t& point, const vec3_t& normal, int32_t damage, int32_t knockBack, int32_t damageFlags, int32_t mod) = 0;
+    virtual void InflictDamage(ServerGameEntity* targ, ServerGameEntity* inflictor, ServerGameEntity* attacker, const vec3_t& dmgDir, const vec3_t& point, const vec3_t& normal, int32_t damage, int32_t knockBack, int32_t damageFlags, int32_t mod) = 0;
     // Similar to InflictDamage, but damages all entities within the given radius.
     // Of course, only if they apply to the same rules as InflictDamage accepts them.
-    virtual void InflictRadiusDamage(SVGBaseEntity* inflictor, SVGBaseEntity* attacker, float damage, SVGBaseEntity* ignore, float radius, int32_t mod) = 0;
+    virtual void InflictRadiusDamage(ServerGameEntity* inflictor, ServerGameEntity* attacker, float damage, ServerGameEntity* ignore, float radius, int32_t mod) = 0;
     // Sets the current means of death for whichever client/entity is being processed.
     virtual void SetCurrentMeansOfDeath(int32_t meansOfDeath) = 0;
     // Retrieves the current means of death for whichever client/entity is being processed.
@@ -164,7 +164,7 @@ public:
     virtual vec3_t CalculateDamageVelocity(int32_t damage) = 0;
     // Copies the model of the dead client, into a separate entity that plays dead.
     // It is a first in first out kinda list.
-    virtual void SpawnClientCorpse(SVGBaseEntity* ent) = 0;
+    virtual void SpawnClientCorpse(ServerGameEntity* ent) = 0;
 
 
     // This function is for setting a "means of death", aka blaster or what not.

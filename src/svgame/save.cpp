@@ -499,7 +499,7 @@ static void write_field(FILE *f, const save_field_t *field, void *base)
         break;
 
     case F_EDICT:
-        //write_index(f, *(void **)p, sizeof(Entity), g_entities, MAX_EDICTS - 1);
+        //write_index(f, *(void **)p, sizeof(ServerEntity), g_entities, MAX_EDICTS - 1);
         break;
     case F_CLIENT:
         write_index(f, *(void **)p, sizeof(ServersClient), game.clients, game.maximumClients - 1);
@@ -684,7 +684,7 @@ static void read_field(FILE *f, const save_field_t *field, void *base)
         break;
 
     case F_EDICT:
-        //*(Entity **)p = (Entity*)read_index(f, sizeof(Entity), g_entities, game.maxEntities - 1); // CPP: Cast
+        //*(ServerEntity **)p = (ServerEntity*)read_index(f, sizeof(ServerEntity), g_entities, game.maxEntities - 1); // CPP: Cast
         break;
     case F_CLIENT:
         *(ServersClient **)p = (ServersClient*)read_index(f, sizeof(ServersClient), game.clients, game.maximumClients - 1); // CPP: Cast
@@ -818,7 +818,7 @@ WriteLevel
 void SVG_WriteLevel(const char *filename)
 {
     int     i;
-    Entity *ent;
+    ServerEntity *ent;
     FILE    *f;
 
     f = fopen(filename, "wb");
@@ -866,7 +866,7 @@ void SVG_ReadLevel(const char *filename)
     int     entnum;
     FILE    *f;
     int     i;
-    Entity *ent;
+    ServerEntity *ent;
 
     // Free any dynamic memory allocated by loading the level
     // base state

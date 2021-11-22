@@ -28,7 +28,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "weapons.h"
 
 // ClassEntities.
-#include "../entities/base/SVGBaseEntity.h"
+#include "../entities/base/ServerGameEntity.h"
 #include "../entities/base/PlayerClient.h"
 #include "../entities/info/InfoPlayerStart.h"
 
@@ -49,7 +49,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 // The game can override any of the settings in place
 // (forcing skins or names, etc) before copying it off.
 //================
-void SVG_ClientUserinfoChanged(Entity* ent, char* userinfo) {
+void SVG_ClientUserinfoChanged(ServerEntity* ent, char* userinfo) {
     if (!ent)
         return;
 
@@ -69,9 +69,9 @@ void SVG_ClientUserinfoChanged(Entity* ent, char* userinfo) {
 // we use carnal knowledge of the maps to fix the coop spot targetnames to match
 // that of the nearest named single player spot
 
-void SP_FixCoopSpots(Entity *self)
+void SP_FixCoopSpots(ServerEntity *self)
 {
-    Entity *spot;
+    ServerEntity *spot;
     vec3_t  d;
 
     spot = NULL;
@@ -98,7 +98,7 @@ void SP_FixCoopSpots(Entity *self)
 void SVG_TossClientWeapon(PlayerClient *playerClient)
 {
     gitem_t     *item;
-    Entity     *drop;
+    ServerEntity     *drop;
     float       spread = 1.5f;
 
     if (!deathmatch->value)
@@ -133,7 +133,7 @@ edicts are wiped.
 void SVG_SaveClientData(void)
 {
     int     i;
-    Entity *ent;
+    ServerEntity *ent;
 
     for (i = 0 ; i < game.maximumClients ; i++) {
         ent = &g_entities[1 + i];
@@ -149,7 +149,7 @@ void SVG_SaveClientData(void)
     }
 }
 
-void SVG_FetchClientData(Entity *ent)
+void SVG_FetchClientData(ServerEntity *ent)
 {
     if (!ent)
         return;
@@ -166,7 +166,7 @@ void SVG_FetchClientData(Entity *ent)
 
 //======================================================================
 
-void body_die(Entity *self, Entity *inflictor, Entity *attacker, int damage, const vec3_t& point)
+void body_die(ServerEntity *self, ServerEntity *inflictor, ServerEntity *attacker, int damage, const vec3_t& point)
 {
     //int n;
 
@@ -184,7 +184,7 @@ void body_die(Entity *self, Entity *inflictor, Entity *attacker, int damage, con
 * only called when persistent.isSpectator changes
 * note that resp.isSpectator should be the opposite of persistent.isSpectator here
 */
-void spectator_respawn(Entity *ent)
+void spectator_respawn(ServerEntity *ent)
 {
     int i, numspec;
 
@@ -279,7 +279,7 @@ A client has just connected to the server in
 deathmatch mode, so clear everything out before starting them.
 =====================
 */
-void SVG_ClientBeginDeathmatch(Entity *ent)
+void SVG_ClientBeginDeathmatch(ServerEntity *ent)
 {
     //SVG_InitEntity(ent);
 
@@ -315,7 +315,7 @@ to be placed into the game.  This will happen every level load.
 */
 extern void DebugShitForEntitiesLulz();
 
-void SVG_ClientBegin(Entity *ent)
+void SVG_ClientBegin(ServerEntity *ent)
 {
     // Fetch this entity's client.
     ent->client = game.clients + (ent - g_entities - 1);
@@ -338,7 +338,7 @@ Changing levels will NOT cause this to be called again, but
 loadgames will.
 ============
 */
-qboolean SVG_ClientConnect(Entity *ent, char *userinfo)
+qboolean SVG_ClientConnect(ServerEntity *ent, char *userinfo)
 {
     return game.gameMode->ClientConnect(ent, userinfo);
 }
@@ -351,7 +351,7 @@ Called when a player drops from the server.
 Will not be called between levels.
 ============
 */
-void SVG_ClientDisconnect(Entity *ent)
+void SVG_ClientDisconnect(ServerEntity *ent)
 {
     //int     playernum;
 
@@ -374,7 +374,7 @@ void SVG_ClientDisconnect(Entity *ent)
 //==============================================================
 
 
-Entity *pm_passent;
+ServerEntity *pm_passent;
 
 // pmove doesn't need to know about passent and contentmask
 trace_t q_gameabi PM_Trace(const vec3_t &start, const vec3_t &mins, const vec3_t &maxs, const vec3_t &end)
@@ -410,11 +410,11 @@ This will be called once for each client frame, which will
 usually be a couple times for each server frame.
 ==============
 */
-void SVG_ClientThink(Entity *serverEntity, ClientMoveCommand *moveCommand)
+void SVG_ClientThink(ServerEntity *serverEntity, ClientMoveCommand *moveCommand)
 {
     ServersClient* client = nullptr;
     PlayerClient *classEntity = nullptr;
-    Entity* other = nullptr;
+    ServerEntity* other = nullptr;
 
 
     PlayerMove pm = {};

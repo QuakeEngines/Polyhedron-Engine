@@ -13,7 +13,7 @@
 
 class SVGBaseTrigger;
 
-using PushMoveEndFunction = void(Entity*);
+using PushMoveEndFunction = void(ServerEntity*);
 
 
 constexpr uint32_t PlatLowTrigger = 1U;
@@ -55,7 +55,7 @@ struct PushMoveInfo {
     float nextSpeed;
     float remainingDistance;
     float deceleratedDistance;
-    //void (*OnEndFunction)(Entity *);
+    //void (*OnEndFunction)(ServerEntity *);
     PushMoveEndFunction* OnEndFunction;
 };
 
@@ -64,7 +64,7 @@ public:
     //
     // Constructor/Deconstructor.
     //
-    SVGBaseMover(Entity* svEntity);
+    SVGBaseMover(ServerEntity* svEntity);
     virtual ~SVGBaseMover();
 
     DefineAbstractClass( SVGBaseMover, SVGBaseTrigger );
@@ -202,7 +202,7 @@ protected:
 
     // Timestamp that the trigger has been called at.
     //
-    // Entity pointers.
+    // ServerEntity pointers.
     // 
 
 };

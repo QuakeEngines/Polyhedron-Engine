@@ -12,7 +12,7 @@
 //===============
 // PathCorner::ctor
 //===============
-PathCorner::PathCorner( Entity* entity )
+PathCorner::PathCorner( ServerEntity* entity )
 	: Base( entity ) {
 
 }
@@ -49,6 +49,6 @@ void PathCorner::SpawnKey( const std::string& key, const std::string& value ) {
 //===============
 // PathCorner::OnReachedCorner
 //===============
-void PathCorner::OnReachedCorner( SVGBaseEntity* traveler ) {
+void PathCorner::OnReachedCorner( ServerGameEntity* traveler ) {
     // Not implemented   
 }

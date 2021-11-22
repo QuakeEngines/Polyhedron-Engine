@@ -7,7 +7,7 @@ class SVGBaseMover;
 //===============
 class FuncDoor : public SVGBaseMover {
 public:
-    FuncDoor( Entity* entity );
+    FuncDoor( ServerEntity* entity );
     virtual ~FuncDoor() = default;
 
     DefineMapClass( "func_door", FuncDoor, SVGBaseMover );
@@ -29,12 +29,12 @@ public:
 	//void		SpawnKey( const std::string& key, const std::string& value ) override;
 
 protected:
-    void        DoorUse( SVGBaseEntity* other, SVGBaseEntity* activator );
-    void        DoorShotOpen( SVGBaseEntity* inflictor, SVGBaseEntity* attacker, int damage, const vec3_t& point );
-    void        DoorBlocked( SVGBaseEntity* other );
-    void        DoorTouch( SVGBaseEntity* self, SVGBaseEntity* other, cplane_t* plane, csurface_t* surf );
+    void        DoorUse( ServerGameEntity* other, ServerGameEntity* activator );
+    void        DoorShotOpen( ServerGameEntity* inflictor, ServerGameEntity* attacker, int damage, const vec3_t& point );
+    void        DoorBlocked( ServerGameEntity* other );
+    void        DoorTouch( ServerGameEntity* self, ServerGameEntity* other, cplane_t* plane, csurface_t* surf );
 
-    void        DoorGoUp( SVGBaseEntity* activator );
+    void        DoorGoUp( ServerGameEntity* activator );
     void        DoorGoDown();
    
     // These two are overridden by FuncDoorRotating
@@ -46,8 +46,8 @@ protected:
 
     // These are leftovers from the legacy brush movement functions
     // Soon, we'll have a... better way... of doing this
-    static void OnDoorHitTop( Entity* self );
-    static void OnDoorHitBottom( Entity* self );
+    static void OnDoorHitTop( ServerEntity* self );
+    static void OnDoorHitBottom( ServerEntity* self );
 
     // Admer: some of these could be moved to SVGBaseMover
     void        CalculateMoveSpeed();

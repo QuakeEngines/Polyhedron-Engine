@@ -78,7 +78,7 @@ Sends the contents of the mutlicast buffer to a single client.
 Archived in MVD stream.
 ===============
 */
-static void PF_Unicast(Entity *ent, qboolean reliable)
+static void PF_Unicast(ServerEntity *ent, qboolean reliable)
 {
     client_t    *client;
     int         cmd, flags, clientNumber;
@@ -204,7 +204,7 @@ Print to a single client if the level passes.
 Archived in MVD stream.
 ===============
 */
-static void PF_cprintf(Entity *ent, int level, const char *fmt, ...)
+static void PF_cprintf(ServerEntity *ent, int level, const char *fmt, ...)
 {
     char        msg[MAX_STRING_CHARS];
     va_list     argptr;
@@ -258,7 +258,7 @@ Centerprint to a single client.
 Archived in MVD stream.
 ===============
 */
-static void PF_centerprintf(Entity *ent, const char *fmt, ...)
+static void PF_centerprintf(ServerEntity *ent, const char *fmt, ...)
 {
     char        msg[MAX_STRING_CHARS];
     va_list     argptr;
@@ -318,7 +318,7 @@ PF_setmodel
 Also sets mins and maxs for inline bmodels
 =================
 */
-static void PF_setmodel(Entity *ent, const char *name)
+static void PF_setmodel(ServerEntity *ent, const char *name)
 {
     int         i;
     mmodel_t    *mod;
@@ -496,7 +496,7 @@ or the midpoint of the entity box for bmodels.
     if (soundindex < 0 || soundindex >= MAX_SOUNDS) \
         Com_Error(ERR_DROP, "%s: soundindex = %d", __func__, soundindex);
 
-static void PF_StartSound(Entity *edict, int channel,
+static void PF_StartSound(ServerEntity *edict, int channel,
                           int soundindex, float volume,
                           float attenuation, float timeofs)
 {
@@ -637,7 +637,7 @@ static void PF_StartSound(Entity *edict, int channel,
     }
 }
 
-static void PF_PositionedSound(vec3_t origin, Entity *entity, int channel,
+static void PF_PositionedSound(vec3_t origin, ServerEntity *entity, int channel,
                                int soundindex, float volume,
                                float attenuation, float timeofs)
 {
@@ -710,7 +710,7 @@ static cvar_t *PF_cvar(const char *name, const char *value, int flags)
 // Stuff Cmd implementation like other Quake engines have for the server module.
 //===============
 //
-static void PF_stuffcmd(Entity* pent, const char* pszCommand) {
+static void PF_stuffcmd(ServerEntity* pent, const char* pszCommand) {
     MSG_WriteByte(svc_stufftext);
     MSG_WriteString(pszCommand);
 

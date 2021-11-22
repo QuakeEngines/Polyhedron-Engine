@@ -15,7 +15,7 @@ public:
     //
     // Constructor/Deconstructor.
     //
-    TriggerHurt(Entity* svEntity);
+    TriggerHurt(ServerEntity* svEntity);
     virtual ~TriggerHurt();
 
     DefineMapClass( "trigger_hurt", TriggerHurt, SVGBaseTrigger );
@@ -36,8 +36,8 @@ public:
     //
 
     // Callback functions.
-    void TriggerHurtTouch(SVGBaseEntity* self, SVGBaseEntity* other, cplane_t* plane, csurface_t* surf);
-    void TriggerHurtUse(SVGBaseEntity* other, SVGBaseEntity* activator);
+    void TriggerHurtTouch(ServerGameEntity* self, ServerGameEntity* other, cplane_t* plane, csurface_t* surf);
+    void TriggerHurtUse(ServerGameEntity* other, ServerGameEntity* activator);
 
     //
     // Get/Set
@@ -51,7 +51,7 @@ protected:
     float lastHurtTime;
 
     //
-    // Entity pointers.
+    // ServerEntity pointers.
     // 
 
 public:

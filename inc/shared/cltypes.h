@@ -95,7 +95,7 @@ typedef struct cl_entity_s {
 } cl_entity_t;
 
 //
-// Temporarl Entity parameters.
+// Temporarl ServerEntity parameters.
 // Used for parsing EFFECTS in the client.
 //
 typedef struct {
@@ -263,7 +263,7 @@ struct ClientPredictedState {
     vec3_t velocity;
 
     // Ground entity pointer of the predicted frame.
-    struct Entity* groundEntityPtr;
+    struct ServerEntity* groundEntityPtr;
 
     // Prediction error that is interpolated over the server frame.
     vec3_t error;
@@ -307,16 +307,16 @@ struct ClientState {
     ClientPredictedState predictedState;
 
     //
-    // Entity States.
+    // ServerEntity States.
     // 
     // Solid Entities, these are REBUILT during EACH FRAME.
     cl_entity_t *solidEntities[MAX_PACKET_ENTITIES];
     int32_t numSolidEntities;
 
-    // Entity Baseline States. These are where to start working from.
+    // ServerEntity Baseline States. These are where to start working from.
     EntityState entityBaselines[MAX_EDICTS];
 
-    // The actual current Entity States.
+    // The actual current ServerEntity States.
     EntityState entityStates[MAX_PARSE_ENTITIES];
     int32_t numEntityStates;
 

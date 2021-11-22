@@ -11,7 +11,7 @@
 #include "../../physics/stepmove.h"
 #include "../../brushfuncs.h"
 
-#include "../base/SVGBaseEntity.h"
+#include "../base/ServerGameEntity.h"
 #include "../base/SVGBaseTrigger.h"
 
 #include "TriggerRelay.h"
@@ -19,7 +19,7 @@
 //===============
 // TriggerRelay::ctor
 //===============
-TriggerRelay::TriggerRelay( Entity* entity )
+TriggerRelay::TriggerRelay( ServerEntity* entity )
 	: Base( entity ) {
 }
 
@@ -34,6 +34,6 @@ void TriggerRelay::Spawn() {
 //===============
 // TriggerRelay::RelayUse
 //===============
-void TriggerRelay::RelayUse( SVGBaseEntity* other, SVGBaseEntity* activator ) {
+void TriggerRelay::RelayUse( ServerGameEntity* other, ServerGameEntity* activator ) {
 	UseTargets( activator );
 }

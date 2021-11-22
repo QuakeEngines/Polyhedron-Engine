@@ -2,7 +2,7 @@
 // LICENSE HERE.
 
 //
-// SVGBaseEntity.h
+// ServerGameEntity.h
 //
 // Base entity class, where the fun begins. All entities are inherited from this,
 // one way or the other :)
@@ -10,31 +10,31 @@
 */
 #pragma once
 
-// It makes sense to include TypeInfo in SVGBaseEntity.h, 
+// It makes sense to include TypeInfo in ServerGameEntity.h, 
 // because this class absolutely requires it
 #include "../../TypeInfo.h"
 
-class SVGBaseEntity {
+class ServerGameEntity {
 public:
     //------------------------------------------------------------
     //
     // Dispatch Callback Function Pointers.
     //
     //------------------------------------------------------------
-    using ThinkCallbackPointer      = void(SVGBaseEntity::*)(void);
-    using UseCallbackPointer        = void(SVGBaseEntity::*)(SVGBaseEntity* other, SVGBaseEntity* activator);
-    using TouchCallbackPointer      = void(SVGBaseEntity::*)(SVGBaseEntity* self, SVGBaseEntity* other, cplane_t* plane, csurface_t* surf);
-    using BlockedCallbackPointer    = void(SVGBaseEntity::*)(SVGBaseEntity* other);
-    using TakeDamageCallbackPointer = void(SVGBaseEntity::*)(SVGBaseEntity* other, float kick, int32_t damage);
-    using DieCallbackPointer        = void(SVGBaseEntity::*)(SVGBaseEntity* inflictor, SVGBaseEntity* attacker, int damage, const vec3_t& point);
+    using ThinkCallbackPointer      = void(ServerGameEntity::*)(void);
+    using UseCallbackPointer        = void(ServerGameEntity::*)(ServerGameEntity* other, ServerGameEntity* activator);
+    using TouchCallbackPointer      = void(ServerGameEntity::*)(ServerGameEntity* self, ServerGameEntity* other, cplane_t* plane, csurface_t* surf);
+    using BlockedCallbackPointer    = void(ServerGameEntity::*)(ServerGameEntity* other);
+    using TakeDamageCallbackPointer = void(ServerGameEntity::*)(ServerGameEntity* other, float kick, int32_t damage);
+    using DieCallbackPointer        = void(ServerGameEntity::*)(ServerGameEntity* inflictor, ServerGameEntity* attacker, int damage, const vec3_t& point);
 
     //------------------------------------------------------------
     //
     // Construct/Destructor.
     //
     //------------------------------------------------------------
-    SVGBaseEntity(Entity* svEntity);
-    virtual ~SVGBaseEntity();
+    ServerGameEntity(ServerEntity* svEntity);
+    virtual ~ServerGameEntity();
 
 
     //------------------------------------------------------------
@@ -42,17 +42,17 @@ public:
     // Runtime Type Information.
     //
     //------------------------------------------------------------
-    DefineTopAbstractClass( SVGBaseEntity );
+    DefineTopAbstractClass( ServerGameEntity );
 
     // Checks if this entity class is exactly the given class
-    // @param entityClass: an entity class which must inherint from SVGBaseEntity
+    // @param entityClass: an entity class which must inherint from ServerGameEntity
     template<typename entityClass>
     bool IsClass() const { // every entity has a ClassInfo, thanks to the DefineXYZ macro
         return GetTypeInfo()->IsClass( entityClass::ClassInfo );
     }
 
     // Checks if this entity class is a subclass of another, or is the same class
-    // @param entityClass: an entity class which must inherint from SVGBaseEntity
+    // @param entityClass: an entity class which must inherint from ServerGameEntity
     template<typename entityClass>
     bool IsSubclassOf() const {
         return GetTypeInfo()->IsSubclassOf( entityClass::ClassInfo );
@@ -77,21 +77,21 @@ public:
     //
     //------------------------------------------------------------
     // // Admer: these should all be prefixed with Dispatch
-    void Use(SVGBaseEntity* other, SVGBaseEntity* activator);
-    void Die(SVGBaseEntity* inflictor, SVGBaseEntity* attacker, int damage, const vec3_t& point);
-    void Blocked(SVGBaseEntity* other);
-    void Touch(SVGBaseEntity* self, SVGBaseEntity* other, cplane_t* plane, csurface_t* surf);
-    void TakeDamage(SVGBaseEntity* other, float kick, int32_t damage);
+    void Use(ServerGameEntity* other, ServerGameEntity* activator);
+    void Die(ServerGameEntity* inflictor, ServerGameEntity* attacker, int damage, const vec3_t& point);
+    void Blocked(ServerGameEntity* other);
+    void Touch(ServerGameEntity* self, ServerGameEntity* other, cplane_t* plane, csurface_t* surf);
+    void TakeDamage(ServerGameEntity* other, float kick, int32_t damage);
     
 
     //------------------------------------------------------------
     //
-    // Entity interaction functions.
+    // ServerEntity interaction functions.
     //
     //------------------------------------------------------------
     //  Calls Use on this entity's targets, and deletes its killtargets if any
     //  @param activatorOverride: if nullptr, the entity's own activator is used and if the entity's own activator is nullptr, then this entity itself is the activator
-    void UseTargets( SVGBaseEntity* activatorOverride = nullptr );
+    void UseTargets( ServerGameEntity* activatorOverride = nullptr );
 
 
     //------------------------------------------------------------
@@ -114,7 +114,7 @@ public:
     }
 
     // @returns The entity which activated this entity. (If any)
-    inline SVGBaseEntity* GetActivator() {
+    inline ServerGameEntity* GetActivator() {
         return activator;
     }
     
@@ -175,7 +175,7 @@ public:
     }
 
     // @returns The enemy entity pointer (if any.)
-    inline SVGBaseEntity* GetEnemy() {
+    inline ServerGameEntity* GetEnemy() {
         return enemyEntity;
     }
 
@@ -206,7 +206,7 @@ public:
     }
 
     // @returns The ground entity (if any).
-    inline SVGBaseEntity* GetGroundEntity() {
+    inline ServerGameEntity* GetGroundEntity() {
         return groundEntity;
     }
 
@@ -314,7 +314,7 @@ public:
     }
 
     // Return the 'oldEnemyPtr' entity pointer.
-    SVGBaseEntity* GetOldEnemy() {
+    ServerGameEntity* GetOldEnemy() {
         return oldEnemyEntity;
     }
 
@@ -329,7 +329,7 @@ public:
     }
 
     // Get the 'owner' value.
-    inline SVGBaseEntity* GetOwner() {
+    inline ServerGameEntity* GetOwner() {
         return this->ownerEntity;
     }
 
@@ -404,12 +404,12 @@ public:
     }
 
     // Return the 'teamChain' entity value.
-    inline SVGBaseEntity* GetTeamChainEntity() {
+    inline ServerGameEntity* GetTeamChainEntity() {
         return teamChainEntity;
     }
 
     // Return the 'teamMaster' entity value.
-    inline SVGBaseEntity *GetTeamMasterEntity() {
+    inline ServerGameEntity *GetTeamMasterEntity() {
         return teamMasterEntity;
     }
 
@@ -499,7 +499,7 @@ public:
     }
 
     // Set the 'enemyPtr' pointer.
-    inline void SetEnemy(SVGBaseEntity* enemy) {
+    inline void SetEnemy(ServerGameEntity* enemy) {
         this->enemyEntity = enemy;
     }
 
@@ -524,8 +524,8 @@ public:
     }
 
     // Set the 'groundEntitPtr' entity.
-    inline void SetGroundEntity(SVGBaseEntity* groundEntity) {
-        // Set SVGBaseEntity variant ground entity.
+    inline void SetGroundEntity(ServerGameEntity* groundEntity) {
+        // Set ServerGameEntity variant ground entity.
         this->groundEntity = groundEntity;
     }
 
@@ -631,7 +631,7 @@ public:
     }
 
     // Set the 'oldEnemyPtr' pointer.
-    inline void SetOldEnemy(SVGBaseEntity* oldEnemy) {
+    inline void SetOldEnemy(ServerGameEntity* oldEnemy) {
         this->oldEnemyEntity = oldEnemy;
     }
 
@@ -646,7 +646,7 @@ public:
     }
 
     // Set the 'owner' value.
-    inline void SetOwner(SVGBaseEntity* owner) {
+    inline void SetOwner(ServerGameEntity* owner) {
         this->ownerEntity = owner;
     }
 
@@ -710,12 +710,12 @@ public:
     }
 
     // Set the 'teamChain' entity value.
-    inline void SetTeamChainEntity(SVGBaseEntity* entity) {
+    inline void SetTeamChainEntity(ServerGameEntity* entity) {
         teamChainEntity = entity;
     }
 
     // Set the 'teamMaster' entity value.
-    inline void SetTeamMasterEntity(SVGBaseEntity* entity) {
+    inline void SetTeamMasterEntity(ServerGameEntity* entity) {
         teamMasterEntity = entity;
     }
 
@@ -771,7 +771,7 @@ public:
 
     //------------------------------------------------------------
     // 
-    // General Entity Functions.
+    // General ServerEntity Functions.
     // 
     //------------------------------------------------------------
     // Link entity to the world for collision testing.
@@ -785,12 +785,12 @@ public:
     void UnlinkEntity();
 
     // Returns the server entity pointer.
-    inline Entity* GetServerEntity() {
+    inline ServerEntity* GetServerEntity() {
         return serverEntity;
     }
 
     // Used only in SVG_FreeEntity
-    inline void SetServerEntity( Entity* svEntity )
+    inline void SetServerEntity( ServerEntity* svEntity )
     {
         serverEntity = svEntity;
     }
@@ -798,7 +798,7 @@ public:
 protected:
     //------------------------------------------------------------
     // 
-    // Entity Dictionary Value Parsing functions.
+    // ServerEntity Dictionary Value Parsing functions.
     // 
     // All return true on success and will have set the parsed
     // value on the referenced variale. Otherwise, it'll pick a 
@@ -811,7 +811,7 @@ protected:
     qboolean ParseVector3KeyValue(const std::string& key, const std::string& value, vec3_t& vectorValue);
 
     // The actual server entity this class is a member of.
-    Entity *serverEntity;
+    ServerEntity *serverEntity;
 
     //
     // Other base entity members. (These were old fields in edict_T back in the day.)
@@ -819,9 +819,9 @@ protected:
     // 
     //---------------------------------
     // -- Flags
-    // Entity flags, general flags, flags... :) 
+    // ServerEntity flags, general flags, flags... :) 
     int32_t flags;
-    // Entity spawn flags (Such as, is this a dropped item?)
+    // ServerEntity spawn flags (Such as, is this a dropped item?)
     int32_t spawnFlags;
 
     //---------------------------------
@@ -835,9 +835,9 @@ protected:
 
     //---------------------------------
     // -- Strings.
-    // Entity MODEL filename.
+    // ServerEntity MODEL filename.
     std::string model;
-    // Entity team Str.
+    // ServerEntity team Str.
     std::string teamStr;
 
     // Trigger kill target string.
@@ -873,12 +873,12 @@ protected:
     
     //-----------------------------------
     // -- Pointers.
-    // Goal Entity.
-    Entity* goalEntityPtr;
-    // Move Target Entity.
-    Entity* moveTargetPtr;
+    // Goal ServerEntity.
+    ServerEntity* goalEntityPtr;
+    // Move Target ServerEntity.
+    ServerEntity* moveTargetPtr;
     // The entity that activated this
-    SVGBaseEntity* activator;
+    ServerGameEntity* activator;
     
     // Yaw Speed. (Should be for monsters...)
     float yawSpeed;
@@ -894,18 +894,18 @@ protected:
     // Wait time before triggering at all, in case it was set to auto.
     float waitTime;
 
-    // Ground Entity link count. (To keep track if it is linked or not.)
+    // Ground ServerEntity link count. (To keep track if it is linked or not.)
     int32_t groundEntityLinkCount;
 
     //------------------------------------
-    // Entity Status.
+    // ServerEntity Status.
     // Current health.
     int32_t health;
     // Maximum health.
     int32_t maxHealth;
 
     //------------------------------------
-    // Entity GAME settings.
+    // ServerEntity GAME settings.
     // The height above the origin, this is where EYE SIGHT comes from. Ok?
     int32_t viewHeight;
     // Determines how to interpret, take damage like a man or like a ... ? Yeah, pick up soap.
@@ -925,22 +925,22 @@ protected:
     // 
     int32_t style;
 
-    // Entity pointers.
+    // ServerEntity pointers.
     // 
     // Current active enemy, NULL if not any.    
-    SVGBaseEntity *enemyEntity;
+    ServerGameEntity *enemyEntity;
     // Ground entity we're standing on.
-    SVGBaseEntity *groundEntity;
+    ServerGameEntity *groundEntity;
     // Old enemy, NULL if not any.
-    SVGBaseEntity *oldEnemyEntity;
+    ServerGameEntity *oldEnemyEntity;
 
     // Owner pointer. (Such as, did the player fire a blaster bolt? If so, the owner is...)
-    SVGBaseEntity* ownerEntity;
+    ServerGameEntity* ownerEntity;
 
     // Team Chain Pointer.
-    SVGBaseEntity* teamChainEntity;
+    ServerGameEntity* teamChainEntity;
     // Master Pointer.
-    SVGBaseEntity* teamMasterEntity;
+    ServerGameEntity* teamMasterEntity;
     
 public:
     //

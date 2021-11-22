@@ -340,7 +340,7 @@ If mvd_spawn is non-zero, load the built-in MVD game module.
 void SV_InitGame()
 {
     int     i, entnum;
-    Entity *ent;
+    ServerEntity *ent;
     client_t *client;
 
     if (svs.initialized) {

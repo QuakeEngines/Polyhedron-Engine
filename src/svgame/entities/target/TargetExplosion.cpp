@@ -9,14 +9,14 @@
 #include "../../entities.h"
 #include "../../utils.h"
 
-#include "../base/SVGBaseEntity.h"
+#include "../base/ServerGameEntity.h"
 
 #include "TargetExplosion.h"
 
 //===============
 // TargetExplosion::ctor
 //===============
-TargetExplosion::TargetExplosion( Entity* entity )
+TargetExplosion::TargetExplosion( ServerEntity* entity )
 	: Base( entity ) {
 
 }
@@ -32,7 +32,7 @@ void TargetExplosion::Spawn() {
 //===============
 // TargetExplosion::ExplosionUse
 //===============
-void TargetExplosion::ExplosionUse( SVGBaseEntity* other, SVGBaseEntity* activator ) {
+void TargetExplosion::ExplosionUse( ServerGameEntity* other, ServerGameEntity* activator ) {
 	this->activator = activator;
 
 	if ( !GetDelayTime() ) {

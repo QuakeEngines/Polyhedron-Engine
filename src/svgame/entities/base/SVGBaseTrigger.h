@@ -10,15 +10,15 @@
 #ifndef __SVGAME_ENTITIES_BASE_SVGBASETRIGGER_H__
 #define __SVGAME_ENTITIES_BASE_SVGBASETRIGGER_H__
 
-class SVGBaseTrigger : public SVGBaseEntity {
+class SVGBaseTrigger : public ServerGameEntity {
 public:
     //
     // Constructor/Deconstructor.
     //
-    SVGBaseTrigger(Entity* svEntity);
+    SVGBaseTrigger(ServerEntity* svEntity);
     virtual ~SVGBaseTrigger();
 
-    DefineAbstractClass( SVGBaseTrigger, SVGBaseEntity );
+    DefineAbstractClass( SVGBaseTrigger, ServerGameEntity );
 
     //
     // Interface functions. 
@@ -34,21 +34,21 @@ public:
     //
     // Trigger functions.
     //
-    void UseTargets(SVGBaseEntity* activator);
+    void UseTargets(ServerGameEntity* activator);
 
     //
     // Get/Set
     // 
     // Return the 'activatorEntity' entity pointer.
-    SVGBaseEntity* GetActivator() {
+    ServerGameEntity* GetActivator() {
         return activatorEntity;
     }
 
     //
-    // Entity Set Functions.
+    // ServerEntity Set Functions.
     //
     // Set the 'activatorEntity' pointer.
-    inline void SetActivator(SVGBaseEntity* activator) {
+    inline void SetActivator(ServerGameEntity* activator) {
         this->activatorEntity = activator;
     }
 
@@ -84,20 +84,20 @@ protected:
 
     // Timestamp that the trigger has been called at.
     //
-    // Entity pointers.
+    // ServerEntity pointers.
     // 
-    //// Entity that activated this entity, NULL if none.
-    SVGBaseEntity* activatorEntity;
+    //// ServerEntity that activated this entity, NULL if none.
+    ServerGameEntity* activatorEntity;
     //// Current active enemy, NULL if not any.    
-    //SVGBaseEntity* enemyEntity;
+    //ServerGameEntity* enemyEntity;
     //// Ground entity we're standing on.
-    //SVGBaseEntity* groundEntity;
+    //ServerGameEntity* groundEntity;
     //// Old enemy, NULL if not any.
-    //SVGBaseEntity* oldEnemyEntity;
+    //ServerGameEntity* oldEnemyEntity;
     //// Team Chain Pointer.
-    //SVGBaseEntity* teamChainEntity;
+    //ServerGameEntity* teamChainEntity;
     //// Master Pointer.
-    //SVGBaseEntity* teamMasterEntity;
+    //ServerGameEntity* teamMasterEntity;
 
 public:
 

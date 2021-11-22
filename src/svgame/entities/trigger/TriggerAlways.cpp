@@ -10,7 +10,7 @@
 #include "../../g_local.h"     // SVGame.
 #include "../../effects.h"     // Effects.
 #include "../../utils.h"       // Util funcs.
-#include "../base/SVGBaseEntity.h"
+#include "../base/ServerGameEntity.h"
 #include "../base/SVGBaseTrigger.h"
 #include "TriggerAlways.h"
 
@@ -19,7 +19,7 @@
 // 
 
 // Constructor/Deconstructor.
-TriggerAlways::TriggerAlways(Entity* svEntity) : SVGBaseTrigger(svEntity) {
+TriggerAlways::TriggerAlways(ServerEntity* svEntity) : SVGBaseTrigger(svEntity) {
 	//
 	// All callback functions best be nullptr.
 	//
@@ -115,7 +115,7 @@ void TriggerAlways::SpawnKey(const std::string& key, const std::string& value) {
 // 'Touch' callback, to hurt the entities touching it.
 //===============
 //
-void TriggerAlways::TriggerAlwaysTouch(SVGBaseEntity* self, SVGBaseEntity* other, cplane_t* plane, csurface_t* surf) {
+void TriggerAlways::TriggerAlwaysTouch(ServerGameEntity* self, ServerGameEntity* other, cplane_t* plane, csurface_t* surf) {
 	if (this == other)
 		return;
 
@@ -129,6 +129,6 @@ void TriggerAlways::TriggerAlwaysTouch(SVGBaseEntity* self, SVGBaseEntity* other
 // 'Use' callback, to trigger it on/off.
 //===============
 //
-void TriggerAlways::TriggerAlwaysUse(SVGBaseEntity* other, SVGBaseEntity* activator) {
+void TriggerAlways::TriggerAlwaysUse(ServerGameEntity* other, ServerGameEntity* activator) {
 
 }

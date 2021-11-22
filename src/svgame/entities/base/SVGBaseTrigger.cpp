@@ -12,14 +12,14 @@
 #include "../../utils.h"		// Util funcs.
 
 // Class Entities.
-#include "SVGBaseEntity.h"
+#include "ServerGameEntity.h"
 #include "SVGBaseTrigger.h"
 
 // Included for delayed use.
 #include "../trigger/TriggerDelayedUse.h"
 
 // Constructor/Deconstructor.
-SVGBaseTrigger::SVGBaseTrigger(Entity* svEntity) : SVGBaseEntity(svEntity) {
+SVGBaseTrigger::SVGBaseTrigger(ServerEntity* svEntity) : ServerGameEntity(svEntity) {
 	//
 	// All callback functions best be nullptr.
 	//
@@ -180,7 +180,7 @@ void SVGBaseTrigger::SpawnKey(const std::string& key, const std::string& value) 
 // calls their Use function.
 //===============
 //
-void SVGBaseTrigger::UseTargets(SVGBaseEntity* activator) {
+void SVGBaseTrigger::UseTargets(ServerGameEntity* activator) {
 	//
 	// Check for a delay
 	//
@@ -222,7 +222,7 @@ void SVGBaseTrigger::UseTargets(SVGBaseEntity* activator) {
 	// Kill killtargets
 	//
 	if (GetKillTarget().length()) {
-		SVGBaseEntity* triggerEntity = nullptr;
+		ServerGameEntity* triggerEntity = nullptr;
 
 		//while (triggerEntity = SVG_FindEntityByKeyValue("targetname", GetKillTarget(), triggerEntity))
 		// Loop over the total entity range, ensure that we're checking for the right filters.
@@ -261,14 +261,14 @@ void SVGBaseTrigger::UseTargets(SVGBaseEntity* activator) {
 
 			// Do not ALLOW an entity to use ITSELF. :)
 			if (triggerEntity == this) {
-				gi.DPrintf("WARNING: Entity #%i used itself.\n", GetServerEntity()->state.number);
+				gi.DPrintf("WARNING: ServerEntity #%i used itself.\n", GetServerEntity()->state.number);
 			} else {
 				triggerEntity->Use(this, activator);
 			}
 
 			// Make sure it is in use, if not, debug.
 			if (!triggerEntity->IsInUse()) {
-                gi.DPrintf("WARNING: Entity #%i was removed while using targets\n", GetServerEntity()->state.number);
+                gi.DPrintf("WARNING: ServerEntity #%i was removed while using targets\n", GetServerEntity()->state.number);
                 return;
 			}
 		}

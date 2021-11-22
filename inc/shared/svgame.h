@@ -69,16 +69,16 @@ struct gclient_s {
 #endif
 
 //-------------------
-// Entity, the server side entity structure. If you know what an entity is,
+// ServerEntity, the server side entity structure. If you know what an entity is,
 // then you know what this is.
 // 
-// The actual SVGBaseEntity class is a member. It is where the magic happens.
+// The actual ServerGameEntity class is a member. It is where the magic happens.
 // Entities can be linked to their "classname", this will in turn make sure that
 // the proper inheritance entity is allocated.
 //-------------------
 using EntityDictionary = std::map<std::string, std::string>;
 
-struct Entity {
+struct ServerEntity {
 public:
     // Actual entity state member. Contains all data that is actually networked.
     EntityState  state;
@@ -109,7 +109,7 @@ public:
     vec3_t absMin, absMax, size;
     uint32_t solid;
     int32_t clipMask;
-    Entity* owner;
+    ServerEntity* owner;
 
     // !!!!!!!!!!!!!!!!!
     // !! DO NOT MODIFY ANYTHING ABOVE THIS, THE SERVER
@@ -117,7 +117,7 @@ public:
     // !!!!!!!!!!!!!!!!!
     //================================
     // Pointer to the actual game class entity belonging to this server entity.
-    //SVGBaseEntity* classEntity;
+    //ServerGameEntity* classEntity;
     std::string className;
 
     // Hashmap containing the key:value entity properties.
@@ -162,11 +162,11 @@ struct ServerGameImports {
     } apiversion;
 
     //---------------------------------------------------------------------
-    // Entity Pool
+    // ServerEntity Pool
     //---------------------------------------------------------------------
     struct ServerEntityPool {
-        std::array<Entity, MAX_EDICTS> entities{};
-        int32_t entitySize{sizeof(Entity)};
+        std::array<ServerEntity, MAX_EDICTS> entities{};
+        int32_t entitySize{sizeof(ServerEntity)};
         int32_t numberOfEntities{0};     // current number, <= maxEntities
         int32_t maxEntities{MAX_EDICTS};
     } entityPool;
@@ -176,8 +176,8 @@ struct ServerGameImports {
     //---------------------------------------------------------------------
     void (* q_printf(2, 3) BPrintf)(int printlevel, const char *fmt, ...);
     void (* q_printf(1, 2) DPrintf)(const char *fmt, ...);
-    void (* q_printf(3, 4) CPrintf)(Entity *ent, int printlevel, const char *fmt, ...);
-    void (* q_printf(2, 3) CenterPrintf)(Entity *ent, const char *fmt, ...);
+    void (* q_printf(3, 4) CPrintf)(ServerEntity *ent, int printlevel, const char *fmt, ...);
+    void (* q_printf(2, 3) CenterPrintf)(ServerEntity *ent, const char *fmt, ...);
     void (* q_noreturn q_printf(1, 2) Error)(const char *fmt, ...);
 
     //---------------------------------------------------------------------
@@ -195,18 +195,18 @@ struct ServerGameImports {
     int (*SoundIndex)(const char *name);
     int (*ImageIndex)(const char *name);
 
-    void (*SetModel)(Entity *ent, const char *name);
+    void (*SetModel)(ServerEntity *ent, const char *name);
 
     //---------------------------------------------------------------------
     // Sound.
     //---------------------------------------------------------------------
-    void (*Sound)(Entity *ent, int channel, int soundindex, float volume, float attenuation, float timeofs);
-    void (*PositionedSound)(vec3_t origin, Entity *ent, int channel, int soundinedex, float volume, float attenuation, float timeofs);
+    void (*Sound)(ServerEntity *ent, int channel, int soundindex, float volume, float attenuation, float timeofs);
+    void (*PositionedSound)(vec3_t origin, ServerEntity *ent, int channel, int soundinedex, float volume, float attenuation, float timeofs);
 
     //---------------------------------------------------------------------
     // Collision Detection
     //---------------------------------------------------------------------
-    trace_t (* q_gameabi Trace)(const vec3_t &start, const vec3_t &mins, const vec3_t &maxs, const vec3_t &end, Entity *passent, int contentmask);
+    trace_t (* q_gameabi Trace)(const vec3_t &start, const vec3_t &mins, const vec3_t &maxs, const vec3_t &end, ServerEntity *passent, int contentmask);
     int (*PointContents)(const vec3_t &point);
     qboolean (*InPVS)(const vec3_t &p1, const vec3_t &p2);
     qboolean (*InPHS)(const vec3_t &p1, const vec3_t &p2);
@@ -218,15 +218,15 @@ struct ServerGameImports {
     // if it is not passed to LinkEntity.  If the size, position, or
     // solidity changes, it must be relinked.
     //---------------------------------------------------------------------
-    void (*LinkEntity)(Entity *ent);
-    void (*UnlinkEntity)(Entity *ent);     // call before removing an interactive edict
-    int (*BoxEntities)(const vec3_t &mins, const vec3_t &maxs, Entity **list, int maxcount, int areatype);
+    void (*LinkEntity)(ServerEntity *ent);
+    void (*UnlinkEntity)(ServerEntity *ent);     // call before removing an interactive edict
+    int (*BoxEntities)(const vec3_t &mins, const vec3_t &maxs, ServerEntity **list, int maxcount, int areatype);
     
     //---------------------------------------------------------------------
     // Network Messaging
     //---------------------------------------------------------------------
     void (*Multicast)(const vec3_t &origin, int32_t to);
-    void (*Unicast)(Entity *ent, qboolean reliable);
+    void (*Unicast)(ServerEntity *ent, qboolean reliable);
     void (*WriteChar)(int c);
     void (*WriteByte)(int c);
     void (*WriteShort)(int c);
@@ -257,7 +257,7 @@ struct ServerGameImports {
     const char *(*args)(void);      // concatenation of all argv >= 1 // C++20: char*
 
     // N&C: Stuff Cmd.
-    void (*StuffCmd) (Entity* pent, const char* pszCommand); // C++20: STRING: Added const to char*
+    void (*StuffCmd) (ServerEntity* pent, const char* pszCommand); // C++20: STRING: Added const to char*
     
     //---------------------------------------------------------------------
     // Add commands to the server console as if they were typed in
@@ -268,11 +268,11 @@ struct ServerGameImports {
     void (*DebugGraph)(float value, int color);
 
     //---------------------------------------------------------------------
-    // Entity Pool
+    // ServerEntity Pool
     //---------------------------------------------------------------------
     ServerEntityPool* pool;
     // Returns a pointer to the ID in the entity pool in case it is inUse
-    Entity* FetchPoolEntityID(uint32_t index);
+    ServerEntity* FetchPoolEntityID(uint32_t index);
 };
 
 //
@@ -325,12 +325,12 @@ struct ServerGameExports {
     void (*WriteLevel)(const char *filename);
     void (*ReadLevel)(const char *filename);
 
-    qboolean (*ClientConnect)(Entity *ent, char *userinfo);
-    void (*ClientBegin)(Entity *ent);
-    void (*ClientUserinfoChanged)(Entity *ent, char *userinfo);
-    void (*ClientDisconnect)(Entity *ent);
-    void (*ClientCommand)(Entity *ent);
-    void (*ClientThink)(Entity *ent, ClientMoveCommand *cmd);
+    qboolean (*ClientConnect)(ServerEntity *ent, char *userinfo);
+    void (*ClientBegin)(ServerEntity *ent);
+    void (*ClientUserinfoChanged)(ServerEntity *ent, char *userinfo);
+    void (*ClientDisconnect)(ServerEntity *ent);
+    void (*ClientCommand)(ServerEntity *ent);
+    void (*ClientThink)(ServerEntity *ent, ClientMoveCommand *cmd);
 
     void (*RunFrame)(void);
 
@@ -351,7 +351,7 @@ struct ServerGameExports {
     //EntityPool pool;
 
 
-    //struct Entity  *entities;
+    //struct ServerEntity  *entities;
     //int         entitySize;
     //int         numberOfEntities;     // current number, <= maxEntities
     //int         maxEntities;

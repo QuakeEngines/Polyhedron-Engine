@@ -8,7 +8,7 @@
 */
 #include "../../g_local.h"              // SVGame.
 
-#include "../base/SVGBaseEntity.h"
+#include "../base/ServerGameEntity.h"
 #include "WorldSpawn.h"
 
 static const char single_statusbar[] =
@@ -149,7 +149,7 @@ static const char dm_statusbar[] =
 ;
 
 // Constructor/Deconstructor.
-WorldSpawn::WorldSpawn(Entity* svEntity) : SVGBaseEntity(svEntity) {
+WorldSpawn::WorldSpawn(ServerEntity* svEntity) : ServerGameEntity(svEntity) {
 
 }
 WorldSpawn::~WorldSpawn() {
@@ -283,7 +283,7 @@ void WorldSpawn::Spawn() {
     // Reserve some spots for dead player bodies for coop / deathmatch
     level.bodyQue = 0;
     for (int i = 0; i < BODY_QUEUE_SIZE; i++) {
-        Entity* ent = SVG_Spawn();
+        ServerEntity* ent = SVG_Spawn();
         ent->className = "bodyque";
     }
 

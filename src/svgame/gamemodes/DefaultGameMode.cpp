@@ -11,8 +11,8 @@
 #include "../entities.h"    // Entities.
 #include "../utils.h"       // Util funcs.
 
-// Server Game Base Entity.
-#include "../entities/base/SVGBaseEntity.h"
+// Server Game Base ServerEntity.
+#include "../entities/base/ServerGameEntity.h"
 #include "../entities/base/BodyCorpse.h"
 #include "../entities/base/PlayerClient.h"
 #include "../entities/info/InfoPlayerStart.h"
@@ -47,7 +47,7 @@ DefaultGameMode::~DefaultGameMode() {
 // Assigns the teamname to the string passed, returns false in case the entity
 // is not part of a team at all.
 //===============
-qboolean DefaultGameMode::GetEntityTeamName(SVGBaseEntity* ent, std::string &teamName) {
+qboolean DefaultGameMode::GetEntityTeamName(ServerGameEntity* ent, std::string &teamName) {
     // Placeholder.
     teamName = "";
 
@@ -85,7 +85,7 @@ qboolean DefaultGameMode::GetEntityTeamName(SVGBaseEntity* ent, std::string &tea
 // Returns false either way, because yes, there is no... team in this case.
 // PS: ClientTeam <-- weird function, needs C++-fying and oh.. it stinks anyhow.
 //===============
-qboolean DefaultGameMode::OnSameTeam(SVGBaseEntity* ent1, SVGBaseEntity* ent2) {
+qboolean DefaultGameMode::OnSameTeam(ServerGameEntity* ent1, ServerGameEntity* ent2) {
     //// There is only a reason to check for this in case these specific
     //// game mode flags are set.
     //if (!((int)(gamemodeflags->value) & (GameModeFlags::ModelTeams | GameModeFlags::SkinTeams)))
@@ -109,7 +109,7 @@ qboolean DefaultGameMode::OnSameTeam(SVGBaseEntity* ent1, SVGBaseEntity* ent2) {
 // DefaultGameMode::CanDamage
 //
 //===============
-qboolean DefaultGameMode::CanDamage(SVGBaseEntity* target, SVGBaseEntity* inflictor) {
+qboolean DefaultGameMode::CanDamage(ServerGameEntity* target, ServerGameEntity* inflictor) {
     vec3_t  destination;
     SVGTrace trace;
 
@@ -177,7 +177,7 @@ qboolean DefaultGameMode::CanDamage(SVGBaseEntity* target, SVGBaseEntity* inflic
 //===============
 BaseEntityVector DefaultGameMode::FindBaseEnitiesWithinRadius(const vec3_t& origin, float radius, uint32_t excludeSolidFlags) {
     // List of base entities to return.
-    std::vector<SVGBaseEntity*> baseEntityList;
+    std::vector<ServerGameEntity*> baseEntityList;
 
     // Iterate over all entities, see who is nearby, and who is not.
     for (auto* radiusBaseEntity : GetBaseEntityRange<0, MAX_EDICTS>()
@@ -198,7 +198,7 @@ BaseEntityVector DefaultGameMode::FindBaseEnitiesWithinRadius(const vec3_t& orig
 // Called when an entity is killed, or at least, about to be.
 // Determine how to deal with it, usually resides in a callback to Die.
 //===============
-void DefaultGameMode::EntityKilled(SVGBaseEntity* target, SVGBaseEntity* inflictor, SVGBaseEntity* attacker, int32_t damage, vec3_t point) {
+void DefaultGameMode::EntityKilled(ServerGameEntity* target, ServerGameEntity* inflictor, ServerGameEntity* attacker, int32_t damage, vec3_t point) {
     // Ensure health isn't exceeding limits.
     if (target->GetHealth() < -999)
         target->SetHealth(-999);
@@ -248,7 +248,7 @@ void DefaultGameMode::EntityKilled(SVGBaseEntity* target, SVGBaseEntity* inflict
 // DefaultGameMode::InflictDamage
 // 
 //===============
-void DefaultGameMode::InflictDamage(SVGBaseEntity* target, SVGBaseEntity* inflictor, SVGBaseEntity* attacker, const vec3_t& dmgDir, const vec3_t& point, const vec3_t& normal, int32_t damage, int32_t knockBack, int32_t damageFlags, int32_t mod) {
+void DefaultGameMode::InflictDamage(ServerGameEntity* target, ServerGameEntity* inflictor, ServerGameEntity* attacker, const vec3_t& dmgDir, const vec3_t& point, const vec3_t& normal, int32_t damage, int32_t knockBack, int32_t damageFlags, int32_t mod) {
     int32_t damageTaken = 0;   // Damage taken.
     int32_t damageSaved = 0;   // Damaged saved, from being taken.
 
@@ -395,12 +395,12 @@ void DefaultGameMode::InflictDamage(SVGBaseEntity* target, SVGBaseEntity* inflic
 // DefaultGameMode::InflictDamage
 // 
 //===============
-void DefaultGameMode::InflictRadiusDamage(SVGBaseEntity* inflictor, SVGBaseEntity* attacker, float damage, SVGBaseEntity* ignore, float radius, int32_t mod) {
+void DefaultGameMode::InflictRadiusDamage(ServerGameEntity* inflictor, ServerGameEntity* attacker, float damage, ServerGameEntity* ignore, float radius, int32_t mod) {
     // Damage point counter for radius sum ups.
     float   points = 0.f;
 
     // Actual entity loop pointer.
-    SVGBaseEntity* ent = nullptr;
+    ServerGameEntity* ent = nullptr;
 
     // N&C: From Yamagi Q2, to prevent issues.
     if (!inflictor || !attacker) {
@@ -465,7 +465,7 @@ const int32_t& DefaultGameMode::GetCurrentMeansOfDeath() {
 // 
 // Spawns a dead body entity for the given client.
 //===============
-void DefaultGameMode::SpawnClientCorpse(SVGBaseEntity* ent) {
+void DefaultGameMode::SpawnClientCorpse(ServerGameEntity* ent) {
     // Ensure it is an entity.
     if (!ent)
         return;
@@ -478,7 +478,7 @@ void DefaultGameMode::SpawnClientCorpse(SVGBaseEntity* ent) {
     ent->UnlinkEntity();
 
     // Grab a body from the queue, and cycle to the next one.
-    Entity *bodyEntity = &g_entities[game.maximumClients + level.bodyQue + 1];
+    ServerEntity *bodyEntity = &g_entities[game.maximumClients + level.bodyQue + 1];
     level.bodyQue = (level.bodyQue + 1) % BODY_QUEUE_SIZE;
 
     // Send an effect on this body, in case it already has a model index.
@@ -493,7 +493,7 @@ void DefaultGameMode::SpawnClientCorpse(SVGBaseEntity* ent) {
     }
 
     // Create the class entity for this queued bodyEntity.
-    SVGBaseEntity *bodyClassEntity = SVG_CreateClassEntity<BodyCorpse>(bodyEntity, false);
+    ServerGameEntity *bodyClassEntity = SVG_CreateClassEntity<BodyCorpse>(bodyEntity, false);
 
     // Unlink the body entity, in case it was linked before.
     bodyClassEntity->UnlinkEntity();
@@ -596,7 +596,7 @@ void DefaultGameMode::OnLevelExit() {
     // Loop through the server entities, and run the base entity frame if any exists.
     for (int32_t i = 0; i < maximumClients->value; i++) {
         // Fetch the WorldSpawn entity number.
-        Entity *serverEntity = &g_entities[i];
+        ServerEntity *serverEntity = &g_entities[i];
 
         if (!serverEntity)
             continue;
@@ -607,7 +607,7 @@ void DefaultGameMode::OnLevelExit() {
         uint32_t stateNumber = serverEntity->state.number;
 
         // Fetch the corresponding base entity.
-        SVGBaseEntity* entity = g_baseEntities[stateNumber];
+        ServerGameEntity* entity = g_baseEntities[stateNumber];
 
         // Ensure an entity its health is reset to default.
         if (entity->GetHealth() > entity->GetClient()->persistent.maxHealth)
@@ -624,7 +624,7 @@ void DefaultGameMode::OnLevelExit() {
 // This basically allows for the game to disable fetching user input that makes
 // our movement tick. And/or shoot weaponry while in intermission time.
 //===============
-void DefaultGameMode::ClientBeginServerFrame(Entity* serverEntity) {
+void DefaultGameMode::ClientBeginServerFrame(ServerEntity* serverEntity) {
     // Ensure we aren't in an intermission time.
     if (level.intermission.time)
         return;
@@ -688,7 +688,7 @@ void DefaultGameMode::ClientBeginServerFrame(Entity* serverEntity) {
 // 
 // Used to set the latest view offsets
 //===============
-void DefaultGameMode::ClientEndServerFrame(Entity *serverEntity) {
+void DefaultGameMode::ClientEndServerFrame(ServerEntity *serverEntity) {
     float   bobTime;
 
     if (!serverEntity || !serverEntity->client || !serverEntity->classEntity) {
@@ -854,7 +854,7 @@ void DefaultGameMode::ClientEndServerFrame(Entity *serverEntity) {
 // 
 // Client is connecting, what do? :)
 //===============
-qboolean DefaultGameMode::ClientConnect(Entity* serverEntity, char *userinfo) {
+qboolean DefaultGameMode::ClientConnect(ServerEntity* serverEntity, char *userinfo) {
     if (!serverEntity) {
         gi.DPrintf("ClientConnect executed with invalid (nullptr) serverEntity");
         return false;
@@ -929,7 +929,7 @@ qboolean DefaultGameMode::ClientConnect(Entity* serverEntity, char *userinfo) {
 // 
 // Called when a client is ready to be placed in the game after connecting.
 //===============
-void DefaultGameMode::ClientBegin(Entity* serverEntity) {
+void DefaultGameMode::ClientBegin(ServerEntity* serverEntity) {
     if (!serverEntity) {
         gi.DPrintf("ClientBegin executed with invalid (nullptr) serverEntity");
         return;
@@ -1037,7 +1037,7 @@ void DefaultGameMode::ClientDisconnect(PlayerClient* player) {
 // DefaultGameMode::ClientUserinfoChanged
 // 
 //===============
-void DefaultGameMode::ClientUserinfoChanged(Entity* ent, char* userinfo) {
+void DefaultGameMode::ClientUserinfoChanged(ServerEntity* ent, char* userinfo) {
     char    *s;
     int     playernum;
 
@@ -1092,7 +1092,7 @@ void DefaultGameMode::ClientUserinfoChanged(Entity* ent, char* userinfo) {
 // DefaultGameMode::ClientUpdateObituary
 // 
 //===============
-void DefaultGameMode::ClientUpdateObituary(SVGBaseEntity* self, SVGBaseEntity* inflictor, SVGBaseEntity* attacker) {
+void DefaultGameMode::ClientUpdateObituary(ServerGameEntity* self, ServerGameEntity* inflictor, ServerGameEntity* attacker) {
     std::string message = ""; // String stating what happened to whichever entity. "suicides", "was squished" etc.
     std::string messageAddition = ""; // String stating what is additioned to it, "'s shrapnell" etc. Funny stuff.
 
@@ -1279,8 +1279,8 @@ void DefaultGameMode::InitializeClientRespawnData(ServersClient* client) {
 // Choose any info_player_start or its derivates, it'll do a subclassof check, so the only valid classnames are
 // those who have inherited from info_player_start. (info_player_deathmatch, etc).
 //===============
-void DefaultGameMode::SelectClientSpawnPoint(Entity* ent, vec3_t& origin, vec3_t& angles, const std::string& classname) {
-    SVGBaseEntity *spawnPoint = nullptr;
+void DefaultGameMode::SelectClientSpawnPoint(ServerEntity* ent, vec3_t& origin, vec3_t& angles, const std::string& classname) {
+    ServerGameEntity *spawnPoint = nullptr;
 
     //// Find a single player start spot
     if (!spawnPoint) {
@@ -1329,7 +1329,7 @@ void DefaultGameMode::SelectClientSpawnPoint(Entity* ent, vec3_t& origin, vec3_t
 // #2. In thecase of a MP mode death however, after a small intermission time, it'll
 // call this function again to respawn our player.
 //===============
-void DefaultGameMode::PutClientInServer(Entity *ent) {
+void DefaultGameMode::PutClientInServer(ServerEntity *ent) {
     // Find a spawn point for this client to be "placed"/"put" at.
     vec3_t  mins = PM_MINS;
     vec3_t  maxs = PM_MAXS;
@@ -1546,7 +1546,7 @@ void DefaultGameMode::RespawnClient(PlayerClient* ent) {
 // edicts are wiped.
 //===============
 void DefaultGameMode::SaveClientEntityData(void) {
-    Entity *ent;
+    ServerEntity *ent;
 
     for (int32_t i = 0 ; i < game.maximumClients ; i++) {
         ent = &g_entities[1 + i];
@@ -1567,7 +1567,7 @@ void DefaultGameMode::SaveClientEntityData(void) {
 // 
 // // Fetch client data that was stored between previous entity wipe session
 //===============
-void DefaultGameMode::FetchClientEntityData(Entity* ent) {
+void DefaultGameMode::FetchClientEntityData(ServerEntity* ent) {
     if (!ent)
         return;
 

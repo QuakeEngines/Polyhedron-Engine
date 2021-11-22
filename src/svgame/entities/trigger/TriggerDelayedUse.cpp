@@ -13,7 +13,7 @@
 #include "../../utils.h"       // Util funcs.
 
 // Class entities.
-#include "../base/SVGBaseEntity.h"
+#include "../base/ServerGameEntity.h"
 #include "../base/SVGBaseTrigger.h"
 
 // Delayed use.
@@ -24,7 +24,7 @@
 // 
 
 // Constructor/Deconstructor.
-TriggerDelayedUse::TriggerDelayedUse(Entity* svEntity) 
+TriggerDelayedUse::TriggerDelayedUse(ServerEntity* svEntity) 
 	: SVGBaseTrigger(svEntity) {
 	//
 	// All callback functions best be nullptr.

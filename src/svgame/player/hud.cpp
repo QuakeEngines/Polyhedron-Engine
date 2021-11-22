@@ -17,7 +17,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 */
 #include "../g_local.h" // Include SVGame header.
 #include "../entities.h"
-#include "../entities/base/SVGBaseEntity.h"
+#include "../entities/base/ServerGameEntity.h"
 #include "../entities/base/PlayerClient.h"
 
 #include "../gamemodes/IGameMode.h"
@@ -43,7 +43,7 @@ INTERMISSION
 // values.
 //================
 //
-void HUD_MoveClientToIntermission(Entity *ent)
+void HUD_MoveClientToIntermission(ServerEntity *ent)
 {
     //// Ensure it is a valid client entity.
     //if (!ent) {
@@ -91,10 +91,10 @@ void HUD_MoveClientToIntermission(Entity *ent)
 // Begins an intermission process for the given target entity.
 //================
 //
-void SVG_HUD_BeginIntermission(Entity *targ)
+void SVG_HUD_BeginIntermission(ServerEntity *targ)
 {
     int     i, n;
-    Entity *client = nullptr;
+    ServerEntity *client = nullptr;
 
     // Ensure targ is valid.
     if (!targ) {
@@ -146,7 +146,7 @@ void SVG_HUD_BeginIntermission(Entity *targ)
     level.intermission.exitIntermission = 0;
 
     // Fetch an intermission entity.
-    Entity *intermissionEntity = SVG_Find(NULL, FOFS(className), "info_player_intermission");
+    ServerEntity *intermissionEntity = SVG_Find(NULL, FOFS(className), "info_player_intermission");
     if (!intermissionEntity) {
         // the map creator forgot to put in an intermission point...
         intermissionEntity = SVG_Find(NULL, FOFS(className), "info_player_start");
@@ -189,7 +189,7 @@ SVG_HUD_GenerateDMScoreboardLayout
 
 ==================
 */
-void SVG_HUD_GenerateDMScoreboardLayout(SVGBaseEntity *ent, SVGBaseEntity *killer)
+void SVG_HUD_GenerateDMScoreboardLayout(ServerGameEntity *ent, ServerGameEntity *killer)
 {
     char    entry[1024];
     char    string[1400];
@@ -200,7 +200,7 @@ void SVG_HUD_GenerateDMScoreboardLayout(SVGBaseEntity *ent, SVGBaseEntity *kille
     int     score, total;
     int     x, y;
     ServersClient   *cl;
-    Entity     *cl_ent;
+    ServerEntity     *cl_ent;
     const char    *tag; // C++20: STRING: Added const to char*
 
     // sort the clients by score
@@ -279,7 +279,7 @@ HUD_SendDMScoreboardMessage
 Sends the deatchmatch scoreboard svc_layout message.
 ==================
 */
-void HUD_SendDMScoreboardMessage(SVGBaseEntity *ent)
+void HUD_SendDMScoreboardMessage(ServerGameEntity *ent)
 {
     // WID: Putting this check here for future issue preventing.
     // Truth is, this stuff has to go when we got RMLUI :)
@@ -298,9 +298,9 @@ SVG_Command_Score_f
 Display the scoreboard
 ==================
 */
-void SVG_Command_Score_f(SVGBaseEntity*ent)
+void SVG_Command_Score_f(ServerGameEntity*ent)
 {
-    // Entity. Make sure it is valid.
+    // ServerEntity. Make sure it is valid.
     if (!ent)
         return;
     
@@ -336,7 +336,7 @@ void SVG_Command_Score_f(SVGBaseEntity*ent)
 // and audio if required.
 //================
 //
-void SVG_HUD_SetClientStats(Entity* ent)
+void SVG_HUD_SetClientStats(ServerEntity* ent)
 {
     gitem_t* item;
 
@@ -438,7 +438,7 @@ void SVG_HUD_SetClientStats(Entity* ent)
 SVG_HUD_CheckChaseStats
 ===============
 */
-void SVG_HUD_CheckChaseStats(Entity *ent)
+void SVG_HUD_CheckChaseStats(ServerEntity *ent)
 {
     int i;
 
@@ -465,7 +465,7 @@ void SVG_HUD_CheckChaseStats(Entity *ent)
 SVG_HUD_SetSpectatorStats
 ===============
 */
-void SVG_HUD_SetSpectatorStats(Entity *ent)
+void SVG_HUD_SetSpectatorStats(ServerEntity *ent)
 {
     if (!ent) {
         return;

@@ -1,12 +1,12 @@
 
 #pragma once
 
-class FuncWall : public SVGBaseEntity {
+class FuncWall : public ServerGameEntity {
 public:
-	FuncWall( Entity* entity );
+	FuncWall( ServerEntity* entity );
 	virtual ~FuncWall() = default;
 
-	DefineMapClass( "func_wall", FuncWall, SVGBaseEntity );
+	DefineMapClass( "func_wall", FuncWall, ServerGameEntity );
 
 	// Spawn flags
 	static constexpr int32_t SF_TriggerSpawn = 1 << 0;
@@ -17,5 +17,5 @@ public:
 
 	void Spawn() override;
 
-	void WallUse( SVGBaseEntity* other, SVGBaseEntity* activator );
+	void WallUse( ServerGameEntity* other, ServerGameEntity* activator );
 };

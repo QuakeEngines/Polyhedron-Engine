@@ -8,7 +8,7 @@ class SVGBaseMover;
 //===============
 class FuncButton : public SVGBaseMover {
 public:
-	FuncButton( Entity* svEntity );
+	FuncButton( ServerEntity* svEntity );
 	virtual ~FuncButton() = default;
 
 	DefineMapClass( "func_button", FuncButton, SVGBaseMover );
@@ -19,16 +19,16 @@ public:
 
 	// These static methods here are required for mover logic, since the legacy code
 	// we ported simply operates on global functions & function pointers
-	static void OnButtonDone( Entity* self );
+	static void OnButtonDone( ServerEntity* self );
 	void		ButtonDone(); // The button is done moving, it is fully pressed
 	void		ButtonReturn(); // The button is returning from "pressed" to "sticking out"
-	static void OnButtonWait( Entity* self );
+	static void OnButtonWait( ServerEntity* self );
 	void		ButtonWait(); // The button is waiting for further interactions
 	void		ButtonFire(); // The button has just been pressed, do something
 	
-	void		ButtonUse( SVGBaseEntity* other, SVGBaseEntity* activator );
-	void		ButtonTouch( SVGBaseEntity* self, SVGBaseEntity* other, cplane_t* plane, csurface_t* surf );
-	void		ButtonDie( SVGBaseEntity* inflictor, SVGBaseEntity* attacker, int damage, const vec3_t& point );
+	void		ButtonUse( ServerGameEntity* other, ServerGameEntity* activator );
+	void		ButtonTouch( ServerGameEntity* self, ServerGameEntity* other, cplane_t* plane, csurface_t* surf );
+	void		ButtonDie( ServerGameEntity* inflictor, ServerGameEntity* attacker, int damage, const vec3_t& point );
 };
 
 

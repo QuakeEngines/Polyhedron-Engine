@@ -9,14 +9,14 @@
 #include "../../entities.h"
 #include "../../utils.h"
 
-#include "../base/SVGBaseEntity.h"
+#include "../base/ServerGameEntity.h"
 
 #include "TargetEarthquake.h"
 
 //===============
 // TargetEarthquake::ctor
 //===============
-TargetEarthquake::TargetEarthquake( Entity* entity )
+TargetEarthquake::TargetEarthquake( ServerEntity* entity )
 	: Base( entity ) {
 
 }
@@ -52,7 +52,7 @@ void TargetEarthquake::SpawnKey( const std::string& key, const std::string& valu
 //===============
 // TargetEarthquake::QuakeUse
 //===============
-void TargetEarthquake::QuakeUse( SVGBaseEntity* other, SVGBaseEntity* activator ) {
+void TargetEarthquake::QuakeUse( ServerGameEntity* other, ServerGameEntity* activator ) {
     this->activator = activator;
     
     lastQuakeTime = 0.0f;

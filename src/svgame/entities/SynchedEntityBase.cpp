@@ -4,12 +4,12 @@
 #include "../entities.h"    // Entities.
 #include "../utils.h"		// Util funcs.
 
-// Entity Bases.
+// ServerEntity Bases.
 #include "EntityBase.h"
 #include "SynchedEntityBase.h"
 
 // Constructor.
-SynchedEntityBase::SynchedEntityBase(Entity* entityHandle) : EntityBase(entityHandle) {
+SynchedEntityBase::SynchedEntityBase(ServerEntity* entityHandle) : EntityBase(entityHandle) {
 
 }
 

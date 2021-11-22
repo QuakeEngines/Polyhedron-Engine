@@ -11,7 +11,7 @@
 #include "../../physics/stepmove.h"
 #include "../../brushfuncs.h"
 
-#include "../base/SVGBaseEntity.h"
+#include "../base/ServerGameEntity.h"
 #include "../base/SVGBaseTrigger.h"
 #include "../base/SVGBaseMover.h"
 
@@ -20,7 +20,7 @@
 //===============
 // FuncExplosive::FuncExplosive
 //===============
-FuncExplosive::FuncExplosive( Entity* entity ) 
+FuncExplosive::FuncExplosive( ServerEntity* entity ) 
 	: Base( entity ) {
 }
 
@@ -64,7 +64,7 @@ void FuncExplosive::Spawn() {
 //===============
 // FuncExplosive::ExplosiveDeath
 //===============
-void FuncExplosive::ExplosiveDeath( SVGBaseEntity* inflictor, SVGBaseEntity* attacker, int damage, const vec3_t& point ) {
+void FuncExplosive::ExplosiveDeath( ServerGameEntity* inflictor, ServerGameEntity* attacker, int damage, const vec3_t& point ) {
     vec3_t  origin;
     vec3_t  chunkorigin;
     vec3_t  size;
@@ -129,14 +129,14 @@ void FuncExplosive::ExplosiveDeath( SVGBaseEntity* inflictor, SVGBaseEntity* att
 //===============
 // FuncExplosive::ExplosiveUse
 //===============
-void FuncExplosive::ExplosiveUse( SVGBaseEntity* other, SVGBaseEntity* activator ) {
+void FuncExplosive::ExplosiveUse( ServerGameEntity* other, ServerGameEntity* activator ) {
     ExplosiveDeath( other, activator, GetHealth(), vec3_zero() );
 }
 
 //===============
 // FuncExplosive::ExplosiveAppearUse
 //===============
-void FuncExplosive::ExplosiveAppearUse( SVGBaseEntity* other, SVGBaseEntity* activator ) {
+void FuncExplosive::ExplosiveAppearUse( ServerGameEntity* other, ServerGameEntity* activator ) {
     SetSolid( Solid::BSP );
     SetServerFlags( GetServerFlags() & ~EntityServerFlags::NoClient );
     SetUseCallback( nullptr );

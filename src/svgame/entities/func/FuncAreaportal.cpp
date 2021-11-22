@@ -11,14 +11,14 @@
 #include "../../physics/stepmove.h"
 #include "../../brushfuncs.h"
 
-#include "../base/SVGBaseEntity.h"
+#include "../base/ServerGameEntity.h"
 
 #include "FuncAreaportal.h"
 
 //===============
 // FuncAreaportal::ctor
 //===============
-FuncAreaportal::FuncAreaportal( Entity* entity )
+FuncAreaportal::FuncAreaportal( ServerEntity* entity )
 	: Base( entity ) {
 
 }
@@ -44,7 +44,7 @@ void FuncAreaportal::SpawnKey( const std::string& key, const std::string& value 
 //===============
 // FuncAreaportal::PortalUse
 //===============
-void FuncAreaportal::PortalUse( SVGBaseEntity* other, SVGBaseEntity* activator ) {
+void FuncAreaportal::PortalUse( ServerGameEntity* other, ServerGameEntity* activator ) {
 	ActivatePortal( !turnedOn );
 }
 

@@ -8,13 +8,13 @@
 */
 #pragma once
 
-class SVGBaseEntity;
+class ServerGameEntity;
 class InfoPlayerStart;
 
 class InfoPlayerDeathmatch : public InfoPlayerStart {
 public:
     // Constructor/Deconstructor.
-    InfoPlayerDeathmatch(Entity* svEntity);
+    InfoPlayerDeathmatch(ServerEntity* svEntity);
     virtual ~InfoPlayerDeathmatch();
 
     DefineMapClass( "info_player_deathmatch", InfoPlayerDeathmatch, InfoPlayerStart );

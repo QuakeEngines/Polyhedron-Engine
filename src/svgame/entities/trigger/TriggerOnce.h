@@ -15,7 +15,7 @@ public:
     //
     // Constructor/Deconstructor.
     //
-    TriggerOnce(Entity* svEntity);
+    TriggerOnce(ServerEntity* svEntity);
     virtual ~TriggerOnce();
 
     DefineMapClass( "trigger_once", TriggerOnce, TriggerMultiple );
@@ -37,9 +37,9 @@ public:
 
     // Callback functions.
     void TriggerOnceThinkWait(void);
-    void TriggerOnceTouch(SVGBaseEntity* self, SVGBaseEntity* other, cplane_t* plane, csurface_t* surf);
-    void TriggerOnceEnable(SVGBaseEntity* other, SVGBaseEntity* activator);
-    void TriggerOnceUse(SVGBaseEntity* other, SVGBaseEntity* activator);
+    void TriggerOnceTouch(ServerGameEntity* self, ServerGameEntity* other, cplane_t* plane, csurface_t* surf);
+    void TriggerOnceEnable(ServerGameEntity* other, ServerGameEntity* activator);
+    void TriggerOnceUse(ServerGameEntity* other, ServerGameEntity* activator);
 
     //
     // Get/Set
@@ -49,7 +49,7 @@ protected:
     //
     // Trigger function.
     //
-    void Trigger(SVGBaseEntity* activator);
+    void Trigger(ServerGameEntity* activator);
 
     //
     // Other base entity members. (These were old fields in edict_T back in the day.)
@@ -58,7 +58,7 @@ protected:
     //float lastHurtTime;
 
     //
-    // Entity pointers.
+    // ServerEntity pointers.
     // 
 
 public:

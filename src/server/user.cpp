@@ -68,7 +68,7 @@ sv_client and sv_player will be valid.
 ================
 SV_CreateBaselines
 
-Entity entityBaselines are used to compress the update messages
+ServerEntity entityBaselines are used to compress the update messages
 to the clients -- only the fields that differ from the
 baseline will be transmitted
 ================
@@ -76,7 +76,7 @@ baseline will be transmitted
 static void create_baselines(void)
 {
     int        i;
-    Entity    *ent;
+    ServerEntity    *ent;
     PackedEntity *base, **chunk;
 
     // clear entityBaselines from previous level

@@ -15,7 +15,7 @@ public:
     //
     // Constructor/Deconstructor.
     //
-    TriggerDelayedUse(Entity* svEntity);
+    TriggerDelayedUse(ServerEntity* svEntity);
     virtual ~TriggerDelayedUse();
 
     DefineClass( TriggerDelayedUse, SVGBaseTrigger );
@@ -48,7 +48,7 @@ protected:
     //float lastHurtTime;
 
     //
-    // Entity pointers.
+    // ServerEntity pointers.
     // 
 
 public:

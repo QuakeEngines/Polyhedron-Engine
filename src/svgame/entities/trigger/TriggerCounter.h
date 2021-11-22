@@ -3,7 +3,7 @@
 
 class TriggerCounter : public SVGBaseTrigger {
 public:
-	TriggerCounter( Entity* entity );
+	TriggerCounter( ServerEntity* entity );
 	virtual ~TriggerCounter() = default;
 
 	DefineMapClass( "trigger_counter", TriggerCounter, SVGBaseTrigger );
@@ -13,7 +13,7 @@ public:
 	void Spawn() override;
 	void SpawnKey( const std::string& key, const std::string& value );
 
-	void CounterUse( SVGBaseEntity* other, SVGBaseEntity* activator );
+	void CounterUse( ServerGameEntity* other, ServerGameEntity* activator );
 
 private:
 	uint32_t count{ 2U };

@@ -3,11 +3,11 @@
 
 class TriggerRelay : public SVGBaseTrigger {
 public:
-	TriggerRelay( Entity* entity );
+	TriggerRelay( ServerEntity* entity );
 	virtual ~TriggerRelay() = default;
 
 	DefineMapClass( "trigger_relay", TriggerRelay, SVGBaseTrigger );
 
 	void Spawn() override;
-	void RelayUse( SVGBaseEntity* other, SVGBaseEntity* activator );
+	void RelayUse( ServerGameEntity* other, ServerGameEntity* activator );
 };

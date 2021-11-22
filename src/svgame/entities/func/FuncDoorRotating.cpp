@@ -11,7 +11,7 @@
 #include "../../physics/stepmove.h"
 #include "../../brushfuncs.h"
 
-#include "../base/SVGBaseEntity.h"
+#include "../base/ServerGameEntity.h"
 #include "../base/SVGBaseTrigger.h"
 #include "../base/SVGBaseMover.h"
 
@@ -23,7 +23,7 @@
 //===============
 // FuncDoorRotating::ctor
 //===============
-FuncDoorRotating::FuncDoorRotating( Entity* entity )
+FuncDoorRotating::FuncDoorRotating( ServerEntity* entity )
 	: Base( entity ) {
 
 }

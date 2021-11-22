@@ -58,7 +58,7 @@ struct ServerState {
 //-----------------
 // EntityState->event values
 // 
-// Entity events are for effects that take place relative to an existing 
+// ServerEntity events are for effects that take place relative to an existing 
 // entities origin. Very network efficient.
 // 
 // All muzzle flashes really should be converted to events...
@@ -80,7 +80,7 @@ struct EntityEvent {
 // need to render in some way
 //-----------------
 struct EntityState {
-    int32_t number;         // Entity index
+    int32_t number;         // ServerEntity index
 
     vec3_t origin;
     vec3_t angles;

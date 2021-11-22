@@ -18,11 +18,11 @@
 #include "../../gamemodes/IGameMode.h"
 
 // Class Entities.
-#include "../base/SVGBaseEntity.h"
+#include "../base/ServerGameEntity.h"
 #include "PlayerClient.h"
 
 // Constructor/Deconstructor.
-PlayerClient::PlayerClient(Entity* svEntity) : SVGBaseEntity(svEntity) {
+PlayerClient::PlayerClient(ServerEntity* svEntity) : ServerGameEntity(svEntity) {
 
 }
 PlayerClient::~PlayerClient() {
@@ -137,9 +137,9 @@ void PlayerClient::SpawnKey(const std::string& key, const std::string& value) {
 // Callback that is fired any time the player dies. As such, it kindly takes care of doing this.
 //===============
 //
-void PlayerClient::PlayerClientDie(SVGBaseEntity* inflictor, SVGBaseEntity* attacker, int damage, const vec3_t& point) {
+void PlayerClient::PlayerClientDie(ServerGameEntity* inflictor, ServerGameEntity* attacker, int damage, const vec3_t& point) {
     // Fetch server entity.
-    Entity* serverEntity = GetServerEntity();
+    ServerEntity* serverEntity = GetServerEntity();
 
     // Fetch client.
     gclient_s* client = GetClient();
@@ -344,7 +344,7 @@ void PlayerClient::SetSound() {
 // Sets the clients view to look at the killer.
 //===============
 //
-void PlayerClient::LookAtKiller(SVGBaseEntity* inflictor, SVGBaseEntity* attacker)
+void PlayerClient::LookAtKiller(ServerGameEntity* inflictor, ServerGameEntity* attacker)
 {
     // Fetch client.
     gclient_s* client = GetClient();

@@ -8,13 +8,13 @@
 */
 #pragma once
 
-class SVGBaseEntity;
+class ServerGameEntity;
 class InfoPlayerStart;
 
 class InfoPlayerIntermission : public InfoPlayerStart {
 public:
     // Constructor/Deconstructor.
-    InfoPlayerIntermission(Entity* svEntity);
+    InfoPlayerIntermission(ServerEntity* svEntity);
     virtual ~InfoPlayerIntermission();
 
     DefineMapClass( "info_player_intermission", InfoPlayerIntermission, InfoPlayerStart );

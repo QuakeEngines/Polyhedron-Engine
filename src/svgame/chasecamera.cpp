@@ -18,13 +18,13 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "g_local.h"
 #include "chasecamera.h"
 
-#include "entities/base/SVGBaseEntity.h"
+#include "entities/base/ServerGameEntity.h"
 #include "entities/base/PlayerClient.h"
 
 void SVG_UpdateChaseCam(PlayerClient *ent)
 {
     vec3_t o, ownerv, goal;
-    Entity *targ;
+    ServerEntity *targ;
     vec3_t forward, right;
     trace_t trace;
     int i;
@@ -33,7 +33,7 @@ void SVG_UpdateChaseCam(PlayerClient *ent)
     // is our chase target gone?
     if (!ent->GetClient()->chaseTarget->inUse
         || ent->GetClient()->chaseTarget->client->respawn.isSpectator) {
-        Entity *old = ent->GetClient()->chaseTarget;
+        ServerEntity *old = ent->GetClient()->chaseTarget;
         SVG_ChaseNext(ent);
         if (ent->GetClient()->chaseTarget == old) {
             ent->GetClient()->chaseTarget = NULL;
@@ -112,7 +112,7 @@ void SVG_UpdateChaseCam(PlayerClient *ent)
 void SVG_ChaseNext(PlayerClient *ent)
 {
     int i;
-    Entity *e;
+    ServerEntity *e;
     ServersClient* client = ent->GetClient();
 
     if (!client->chaseTarget)
@@ -137,7 +137,7 @@ void SVG_ChaseNext(PlayerClient *ent)
 void SVG_ChasePrev(PlayerClient*ent)
 {
     int i;
-    Entity *e;
+    ServerEntity *e;
     ServersClient* client = ent->GetClient();
 
     if (!client->chaseTarget)
@@ -162,7 +162,7 @@ void SVG_ChasePrev(PlayerClient*ent)
 void SVG_GetChaseTarget(PlayerClient *ent)
 {
     int i;
-    Entity *other;
+    ServerEntity *other;
     ServersClient* client = ent->GetClient();
 
     for (i = 1; i <= maximumClients->value; i++) {

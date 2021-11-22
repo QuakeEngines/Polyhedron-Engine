@@ -368,7 +368,7 @@ void CLG_ParseCenterPrint(void)
 //            CLG_MuzzleFlash();
 //            return true;
 //        break;
-//        // Entity Muzzle Flash.
+//        // ServerEntity Muzzle Flash.
 //        case SVG_CMD_MUZZLEFLASH2:
 //            CLG_ParseMuzzleFlashPacket(0);
 //            CLG_MuzzleFlash2();

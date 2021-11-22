@@ -3,7 +3,7 @@
 
 class TriggerPush : public SVGBaseTrigger {
 public:
-	TriggerPush( Entity* entity );
+	TriggerPush( ServerEntity* entity );
 	virtual ~TriggerPush() = default;
 
 	DefineMapClass( "trigger_push", TriggerPush, SVGBaseTrigger );
@@ -13,7 +13,7 @@ public:
 	void Spawn() override;
 	void SpawnKey( const std::string& key, const std::string& value );
 
-	void PushTouch( SVGBaseEntity* self, SVGBaseEntity* other, cplane_t* plane, csurface_t* surf );
+	void PushTouch( ServerGameEntity* self, ServerGameEntity* other, cplane_t* plane, csurface_t* surf );
 
 private:
 	float pushForce{ 1000.0f };

@@ -21,13 +21,13 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "player/animations.h"
 
 // Class Entities.
-#include "entities/base/SVGBaseEntity.h"
+#include "entities/base/ServerGameEntity.h"
 #include "entities/base/PlayerClient.h"
 
 // Game Modes.
 #include "gamemodes/IGameMode.h"
 
-char *ClientTeam(SVGBaseEntity *ent)
+char *ClientTeam(ServerGameEntity *ent)
 {
     char        *p;
     static char value[512];
@@ -51,7 +51,7 @@ char *ClientTeam(SVGBaseEntity *ent)
     return ++p;
 }
 
-qboolean SVG_OnSameTeam(SVGBaseEntity *ent1, SVGBaseEntity *ent2)
+qboolean SVG_OnSameTeam(ServerGameEntity *ent1, ServerGameEntity *ent2)
 {
     char    ent1Team [512];
     char    ent2Team [512];
@@ -99,7 +99,7 @@ void SelectNextItem(PlayerClient *ent, int itflags)
     cl->persistent.selectedItem = -1;
 }
 
-void SelectPrevItem(Entity *ent, int itflags)
+void SelectPrevItem(ServerEntity *ent, int itflags)
 {
     ServersClient   *cl;
     int         i, index;
@@ -155,14 +155,14 @@ Cmd_Give_f
 Give items to a client
 ==================
 */
-void Cmd_Give_f(Entity *ent)
+void Cmd_Give_f(ServerEntity *ent)
 {
     const char        *name;
     gitem_t     *it;
     int         index;
     int         i;
     qboolean    give_all;
-    Entity     *it_ent;
+    ServerEntity     *it_ent;
 
     // Ensure these are valid.
     if (!ent) {
@@ -270,7 +270,7 @@ Sets client to godmode
 argv(0) god
 ==================
 */
-void Cmd_God_f(SVGBaseEntity *ent)
+void Cmd_God_f(ServerGameEntity *ent)
 {
     if (deathmatch->value && !sv_cheats->value) {
         gi.CPrintf(ent->GetServerEntity(), PRINT_HIGH, "You must run the server with '+set cheats 1' to enable this command.\n");
@@ -294,7 +294,7 @@ Sets client to notarget
 argv(0) notarget
 ==================
 */
-void Cmd_Notarget_f(SVGBaseEntity *ent)
+void Cmd_Notarget_f(ServerGameEntity *ent)
 {
     if (deathmatch->value && !sv_cheats->value) {
         gi.CPrintf(ent->GetServerEntity(), PRINT_HIGH, "You must run the server with '+set cheats 1' to enable this command.\n");
@@ -316,7 +316,7 @@ Cmd_Noclip_f
 argv(0) noclip
 ==================
 */
-void Cmd_Noclip_f(SVGBaseEntity *ent)
+void Cmd_Noclip_f(ServerGameEntity *ent)
 {
     if (deathmatch->value && !sv_cheats->value) {
         gi.CPrintf(ent->GetServerEntity(), PRINT_HIGH, "You must run the server with '+set cheats 1' to enable this command.\n");
@@ -404,7 +404,7 @@ void Cmd_Drop_f(PlayerClient*ent)
 Cmd_Inven_f
 =================
 */
-void Cmd_Inven_f(Entity *ent)
+void Cmd_Inven_f(ServerEntity *ent)
 {
     int         i;
     ServersClient   *cl;
@@ -593,7 +593,7 @@ void Cmd_Kill_f(PlayerClient *ent)
 Cmd_PutAway_f
 =================
 */
-void Cmd_PutAway_f(Entity *ent)
+void Cmd_PutAway_f(ServerEntity *ent)
 {
     ent->client->showScores = false;
     ent->client->showInventory = false;
@@ -622,7 +622,7 @@ int PlayerSort(void const *a, void const *b)
 Cmd_Players_f
 =================
 */
-void Cmd_Players_f(Entity *ent)
+void Cmd_Players_f(ServerEntity *ent)
 {
     int     i;
     int     count;
@@ -663,7 +663,7 @@ void Cmd_Players_f(Entity *ent)
 Cmd_Wave_f
 =================
 */
-void Cmd_Wave_f(Entity *ent)
+void Cmd_Wave_f(ServerEntity *ent)
 {
     int     i;
 
@@ -713,10 +713,10 @@ void Cmd_Wave_f(Entity *ent)
 Cmd_Say_f
 ==================
 */
-void Cmd_Say_f(Entity *ent, qboolean team, qboolean arg0)
+void Cmd_Say_f(ServerEntity *ent, qboolean team, qboolean arg0)
 {
     int     i, j;
-    Entity *other;
+    ServerEntity *other;
     char    *p; // C++20: Removed const.
     char    text[2048];
     ServersClient *cl;
@@ -792,12 +792,12 @@ void Cmd_Say_f(Entity *ent, qboolean team, qboolean arg0)
     }
 }
 
-void Cmd_PlayerList_f(Entity *ent)
+void Cmd_PlayerList_f(ServerEntity *ent)
 {
     int i;
     char st[80];
     char text[1400];
-    Entity *e2;
+    ServerEntity *e2;
 
     // connect time, ping, score, name
     *text = 0;
@@ -828,7 +828,7 @@ void Cmd_PlayerList_f(Entity *ent)
 ClientCommand
 =================
 */
-void SVG_ClientCommand(Entity *serverEntity)
+void SVG_ClientCommand(ServerEntity *serverEntity)
 {
     const char    *cmd;
 

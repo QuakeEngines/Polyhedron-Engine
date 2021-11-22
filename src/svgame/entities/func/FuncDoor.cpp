@@ -11,7 +11,7 @@
 #include "../../physics/stepmove.h"
 #include "../../brushfuncs.h"
 
-#include "../base/SVGBaseEntity.h"
+#include "../base/ServerGameEntity.h"
 #include "../base/SVGBaseTrigger.h"
 #include "../base/SVGBaseMover.h"
 
@@ -23,7 +23,7 @@
 //===============
 // FuncDoor::ctor
 //===============
-FuncDoor::FuncDoor( Entity* entity ) 
+FuncDoor::FuncDoor( ServerEntity* entity ) 
 	: Base( entity ) {
 
 }
@@ -53,7 +53,7 @@ void FuncDoor::Spawn() {
     SetSolid( Solid::BSP );
     SetModel( GetModel() );
 
-    SetThinkCallback( &SVGBaseEntity::SVGBaseEntityThinkNull );
+    SetThinkCallback( &ServerGameEntity::SVGBaseEntityThinkNull );
     SetBlockedCallback( &FuncDoor::DoorBlocked );
     SetUseCallback( &FuncDoor::DoorUse );
 
@@ -149,7 +149,7 @@ void FuncDoor::PostSpawn() {
 //===============
 // FuncDoor::DoorUse
 //===============
-void FuncDoor::DoorUse( SVGBaseEntity* other, SVGBaseEntity* activator ) {
+void FuncDoor::DoorUse( ServerGameEntity* other, ServerGameEntity* activator ) {
     if ( GetFlags() & EntityFlags::TeamSlave ) {
         return;
     }
@@ -163,7 +163,7 @@ void FuncDoor::DoorUse( SVGBaseEntity* other, SVGBaseEntity* activator ) {
     if ( GetSpawnFlags() & SF_Toggle ) {
         if ( moveInfo.state == MoverState::Up || moveInfo.state == MoverState::Top ) {
             // Trigger all paired doors
-            for ( SVGBaseEntity* ent = this; nullptr != ent; ent = ent->GetTeamChainEntity() ) {
+            for ( ServerGameEntity* ent = this; nullptr != ent; ent = ent->GetTeamChainEntity() ) {
                 if ( ent->IsSubclassOf<FuncDoor>() ) {
                     ent->SetMessage( "" );
                     ent->SetTouchCallback( nullptr );
@@ -176,7 +176,7 @@ void FuncDoor::DoorUse( SVGBaseEntity* other, SVGBaseEntity* activator ) {
     }
 
     // Trigger all paired doors
-    for ( SVGBaseEntity* ent = this; nullptr != ent; ent = ent->GetTeamChainEntity() ) {
+    for ( ServerGameEntity* ent = this; nullptr != ent; ent = ent->GetTeamChainEntity() ) {
         if ( ent->IsSubclassOf<FuncDoor>() ) {
             ent->SetMessage( "" );
             ent->SetTouchCallback( nullptr );
@@ -188,8 +188,8 @@ void FuncDoor::DoorUse( SVGBaseEntity* other, SVGBaseEntity* activator ) {
 //===============
 // FuncDoor::DoorShotOpen
 //===============
-void FuncDoor::DoorShotOpen( SVGBaseEntity* inflictor, SVGBaseEntity* attacker, int damage, const vec3_t& point ) {
-    SVGBaseEntity* ent;
+void FuncDoor::DoorShotOpen( ServerGameEntity* inflictor, ServerGameEntity* attacker, int damage, const vec3_t& point ) {
+    ServerGameEntity* ent;
     for ( ent = GetTeamMasterEntity(); nullptr != ent; ent = GetTeamChainEntity() ) {
         ent->SetHealth( GetMaxHealth() );
         ent->SetTakeDamage( TakeDamage::No );
@@ -201,8 +201,8 @@ void FuncDoor::DoorShotOpen( SVGBaseEntity* inflictor, SVGBaseEntity* attacker, 
 //===============
 // FuncDoor::DoorBlocked
 //===============
-void FuncDoor::DoorBlocked( SVGBaseEntity* other ) {
-    SVGBaseEntity* ent;
+void FuncDoor::DoorBlocked( ServerGameEntity* other ) {
+    ServerGameEntity* ent;
     
     if ( !(other->GetServerFlags() & EntityServerFlags::Monster) && !(other->GetClient()) ) {
         // Give it a chance to go away on its own terms (like gibs)
@@ -241,7 +241,7 @@ void FuncDoor::DoorBlocked( SVGBaseEntity* other ) {
 //===============
 // FuncDoor::DoorTouch
 //===============
-void FuncDoor::DoorTouch( SVGBaseEntity* self, SVGBaseEntity* other, cplane_t* plane, csurface_t* surf ) {
+void FuncDoor::DoorTouch( ServerGameEntity* self, ServerGameEntity* other, cplane_t* plane, csurface_t* surf ) {
     if ( nullptr == other->GetClient() ) {
         return; // Players only; should we have special flags for monsters et al?
     }
@@ -261,7 +261,7 @@ void FuncDoor::DoorTouch( SVGBaseEntity* self, SVGBaseEntity* other, cplane_t* p
 //===============
 // FuncDoor::DoorGoUp
 //===============
-void FuncDoor::DoorGoUp( SVGBaseEntity* activator ) {
+void FuncDoor::DoorGoUp( ServerGameEntity* activator ) {
     if ( moveInfo.state == MoverState::Up ) {
         return; // already going up
     }
@@ -362,7 +362,7 @@ void FuncDoor::HitBottom() {
 //===============
 // FuncDoor::OnDoorHitTop
 //===============
-void FuncDoor::OnDoorHitTop( Entity* self ) {
+void FuncDoor::OnDoorHitTop( ServerEntity* self ) {
     if ( self->classEntity->IsSubclassOf<FuncDoor>() ) {
         static_cast<FuncDoor*>( self->classEntity )->HitTop();
     }
@@ -371,7 +371,7 @@ void FuncDoor::OnDoorHitTop( Entity* self ) {
 //===============
 // FuncDoor::OnDoorHitBottom
 //===============
-void FuncDoor::OnDoorHitBottom( Entity* self ) {
+void FuncDoor::OnDoorHitBottom( ServerEntity* self ) {
     if ( self->classEntity->IsSubclassOf<FuncDoor>() ) {
         static_cast<FuncDoor*>(self->classEntity)->HitBottom();
     }
@@ -438,7 +438,7 @@ void FuncDoor::CalculateMoveSpeed() {
 //===============
 void FuncDoor::SpawnDoorTrigger() {
     FuncDoor* teamMember = nullptr;
-    SVGBaseEntity* trigger = nullptr;
+    ServerGameEntity* trigger = nullptr;
     vec3_t mins = GetMins();
     vec3_t maxs = GetMaxs();
 
@@ -474,7 +474,7 @@ void FuncDoor::UseAreaportals( bool open ) const {
         return;
     }
 
-    SVGBaseEntity* ent = nullptr;
+    ServerGameEntity* ent = nullptr;
     while ( ent = SVG_FindEntityByKeyValue( "targetname", targetStr, ent ) ) {
         if ( ent->IsClass<FuncAreaportal>() ) {
             static_cast<FuncAreaportal*>(ent)->ActivatePortal( open );

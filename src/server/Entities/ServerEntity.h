@@ -2,7 +2,7 @@
 #pragma once
 
 //---------------------------------------------------------
-// Server Entity Data.
+// Server ServerEntity Data.
 //---------------------------------------------------------
 class ServerEntity {
     // Current entity state. (Contains all that'd be networked.)

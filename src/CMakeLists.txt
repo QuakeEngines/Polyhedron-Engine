@@ -87,7 +87,7 @@ SET( SRC_SVGAME
 	svgame/entities/SynchedEntityBase.cpp
 
 	svgame/ai/MonsterAI.cpp
-	svgame/entities/base/SVGBaseEntity.cpp
+	svgame/entities/base/ServerGameEntity.cpp
 	svgame/entities/base/SVGBaseTrigger.cpp
 	svgame/entities/base/SVGBaseMover.cpp
 	svgame/entities/base/BodyCorpse.cpp
@@ -179,7 +179,7 @@ SET( SRC_SVGAME
 	svgame/TypeInfo.h
 	svgame/utils.h
 	svgame/ai/MonsterAI.h
-	svgame/entities/base/SVGBaseEntity.h
+	svgame/entities/base/ServerGameEntity.h
 	svgame/entities/base/SVGBaseTrigger.h
 	svgame/entities/base/SVGBaseMover.h
 	svgame/entities/base/BodyCorpse.h

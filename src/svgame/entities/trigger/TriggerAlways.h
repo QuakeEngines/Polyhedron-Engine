@@ -15,7 +15,7 @@ public:
     //
     // Constructor/Deconstructor.
     //
-    TriggerAlways(Entity* svEntity);
+    TriggerAlways(ServerEntity* svEntity);
     virtual ~TriggerAlways();
 
     DefineMapClass( "trigger_always", TriggerAlways, SVGBaseTrigger );
@@ -36,8 +36,8 @@ public:
     //
 
     // Callback functions.
-    void TriggerAlwaysTouch(SVGBaseEntity* self, SVGBaseEntity* other, cplane_t* plane, csurface_t* surf);
-    void TriggerAlwaysUse(SVGBaseEntity* other, SVGBaseEntity* activator);
+    void TriggerAlwaysTouch(ServerGameEntity* self, ServerGameEntity* other, cplane_t* plane, csurface_t* surf);
+    void TriggerAlwaysUse(ServerGameEntity* other, ServerGameEntity* activator);
 
     //
     // Get/Set
@@ -51,7 +51,7 @@ protected:
     //float lastHurtTime;
 
     //
-    // Entity pointers.
+    // ServerEntity pointers.
     // 
 
 public:

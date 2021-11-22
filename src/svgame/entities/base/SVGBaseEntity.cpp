@@ -2,7 +2,7 @@
 // LICENSE HERE.
 
 //
-// SVGBaseEntity.cpp
+// ServerGameEntity.cpp
 //
 //
 */
@@ -10,13 +10,13 @@
 #include "../../effects.h"		// Effects.
 #include "../../entities.h"		// Entities.
 #include "../../utils.h"		// Util funcs.
-#include "SVGBaseEntity.h"
+#include "ServerGameEntity.h"
 
 #include "SVGBaseTrigger.h"
 #include "../trigger/TriggerDelayedUse.h"
 
 // Constructor/Deconstructor.
-SVGBaseEntity::SVGBaseEntity(Entity* svEntity) : serverEntity(svEntity) {
+ServerGameEntity::ServerGameEntity(ServerEntity* svEntity) : serverEntity(svEntity) {
 	//
 	// All callback functions best be nullptr.
 	//
@@ -58,32 +58,32 @@ SVGBaseEntity::SVGBaseEntity(Entity* svEntity) : serverEntity(svEntity) {
 	maxHealth = 0;
 	deadFlag = DEAD_NO;
 }
-SVGBaseEntity::~SVGBaseEntity() {
+ServerGameEntity::~ServerGameEntity() {
 
 }
 
 // Interface functions. 
 //
 //===============
-// SVGBaseEntity::Precache
+// ServerGameEntity::Precache
 //
 // This function is used to load all entity data with.
 //===============
 //
-void SVGBaseEntity::Precache() {
-	//gi.DPrintf("SVGBaseEntity::Precache();");
+void ServerGameEntity::Precache() {
+	//gi.DPrintf("ServerGameEntity::Precache();");
 }
 
 //
 //===============
-// SVGBaseEntity::Spawn
+// ServerGameEntity::Spawn
 //
 // This function can be overrided, to allow for entity spawning.
 // Setup the basic entity properties here.
 //===============
 //
-void SVGBaseEntity::Spawn() {
-	//gi.DPrintf("SVGBaseEntity::Spawn();");
+void ServerGameEntity::Spawn() {
+	//gi.DPrintf("ServerGameEntity::Spawn();");
 
 	// Set default movetype to none.
 	//SetMoveType(MoveType::None);
@@ -91,38 +91,38 @@ void SVGBaseEntity::Spawn() {
 
 //
 //===============
-// SVGBaseEntity::Respawn
+// ServerGameEntity::Respawn
 //
 // This function can be overrided, to allow for entity respawning.
 // Setup the basic entity properties here.
 //===============
 //
-void SVGBaseEntity::Respawn() {
-	//gi.DPrintf("SVGBaseEntity::Respawn();");
+void ServerGameEntity::Respawn() {
+	//gi.DPrintf("ServerGameEntity::Respawn();");
 }
 
 //
 //===============
-// SVGBaseEntity::PostSpawn
+// ServerGameEntity::PostSpawn
 //
 // This function can be overrided, to allow for entity post spawning.
 // An example of that could be finding targetnames for certain target
 // trigger settings, etc.
 //===============
 //
-void SVGBaseEntity::PostSpawn() {
-	//gi.DPrintf("SVGBaseEntity::PostSpawn();");
+void ServerGameEntity::PostSpawn() {
+	//gi.DPrintf("ServerGameEntity::PostSpawn();");
 }
 
 //
 //===============
-// SVGBaseEntity::Think
+// ServerGameEntity::Think
 //
 // This function can be overrided, to allow for custom entity thinking.
 // By default it only executes the 'Think' callback in case we have any set.
 //===============
 //
-void SVGBaseEntity::Think() {
+void ServerGameEntity::Think() {
 	// Safety check.
 	if (thinkFunction == nullptr)
 		return;
@@ -133,12 +133,12 @@ void SVGBaseEntity::Think() {
 
 //
 //===============
-// SVGBaseEntity::ParseFloatKeyValue
+// ServerGameEntity::ParseFloatKeyValue
 //
 // PROTECTED function to help parsing float key:value string pairs with.
 //===============
 //
-qboolean SVGBaseEntity::ParseFloatKeyValue(const std::string& key, const std::string& value, float &floatNumber) {
+qboolean ServerGameEntity::ParseFloatKeyValue(const std::string& key, const std::string& value, float &floatNumber) {
 	floatNumber = std::stof(value);
 
 	return true;
@@ -146,12 +146,12 @@ qboolean SVGBaseEntity::ParseFloatKeyValue(const std::string& key, const std::st
 
 //
 //===============
-// SVGBaseEntity::ParseIntegerKeyValue
+// ServerGameEntity::ParseIntegerKeyValue
 //
 // PROTECTED function to help parsing int32_t key:value string pairs with.
 //===============
 //
-qboolean SVGBaseEntity::ParseIntegerKeyValue(const std::string& key, const std::string& value, int32_t &integerNumber) {
+qboolean ServerGameEntity::ParseIntegerKeyValue(const std::string& key, const std::string& value, int32_t &integerNumber) {
 	integerNumber = std::stoi(value);
 
 	return true;
@@ -159,12 +159,12 @@ qboolean SVGBaseEntity::ParseIntegerKeyValue(const std::string& key, const std::
 
 //
 //===============
-// SVGBaseEntity::ParseUnsignedIntegerKeyValue
+// ServerGameEntity::ParseUnsignedIntegerKeyValue
 //
 // PROTECTED function to help parsing uint32_t key:value string pairs with.
 //===============
 //
-qboolean SVGBaseEntity::ParseUnsignedIntegerKeyValue(const std::string& key, const std::string& value, uint32_t& unsignedIntegerNumber) {
+qboolean ServerGameEntity::ParseUnsignedIntegerKeyValue(const std::string& key, const std::string& value, uint32_t& unsignedIntegerNumber) {
 	unsignedIntegerNumber = std::stoul(value);
 
 	return true;
@@ -172,12 +172,12 @@ qboolean SVGBaseEntity::ParseUnsignedIntegerKeyValue(const std::string& key, con
 
 //
 //===============
-// SVGBaseEntity::ParseStringKeyValue
+// ServerGameEntity::ParseStringKeyValue
 //
 // PROTECTED function to help parsing string key:value string pairs with.
 //===============
 //
-qboolean SVGBaseEntity::ParseStringKeyValue(const std::string& key, const std::string& value, std::string& stringValue) {
+qboolean ServerGameEntity::ParseStringKeyValue(const std::string& key, const std::string& value, std::string& stringValue) {
 	stringValue = value;
 
 	return true;
@@ -185,12 +185,12 @@ qboolean SVGBaseEntity::ParseStringKeyValue(const std::string& key, const std::s
 
 //
 //===============
-// SVGBaseEntity::ParseVector3KeyValue
+// ServerGameEntity::ParseVector3KeyValue
 //
 // PROTECTED function to help parsing vector key:value string pairs with.
 //===============
 //
-qboolean SVGBaseEntity::ParseVector3KeyValue(const std::string& key, const std::string &value, vec3_t &vectorValue) {
+qboolean ServerGameEntity::ParseVector3KeyValue(const std::string& key, const std::string &value, vec3_t &vectorValue) {
 	// Stores vector fields fetched from string. (Might be corrupted, so we're parsing this nicely.)
 	std::vector<std::string> vectorFields;
 
@@ -213,12 +213,12 @@ qboolean SVGBaseEntity::ParseVector3KeyValue(const std::string& key, const std::
 
 //
 //===============
-// SVGBaseEntity::SpawnKey
+// ServerGameEntity::SpawnKey
 //
 // This function can be overrided, to allow for custom entity key:value parsing.
 //===============
 //
-void SVGBaseEntity::SpawnKey(const std::string& key, const std::string& value) {
+void ServerGameEntity::SpawnKey(const std::string& key, const std::string& value) {
 	//{"lip", STOFS(lip), F_INT},
 	//{ "distance", STOFS(distance), F_INT },
 	//{ "height", STOFS(height), F_INT },
@@ -348,18 +348,18 @@ void SVGBaseEntity::SpawnKey(const std::string& key, const std::string& value) {
 		// Set SpawnFlags.
 		SetSpawnFlags(parsedSpawnFlags);
 	} else {
-		gi.DPrintf("Entity ID: %i - classname: %s has unknown Key/Value['%s','%s']\n", GetServerEntity()->state.number, GetServerEntity()->className, key.c_str(), value.c_str());
+		gi.DPrintf("ServerEntity ID: %i - classname: %s has unknown Key/Value['%s','%s']\n", GetServerEntity()->state.number, GetServerEntity()->className, key.c_str(), value.c_str());
 	}
 }
 
 //
 //===============
-// SVGBaseEntity::Use
+// ServerGameEntity::Use
 //
 // Execute the 'Use' callback in case we ran into any.
 //===============
 //
-void SVGBaseEntity::Use(SVGBaseEntity* other, SVGBaseEntity* activator) {
+void ServerGameEntity::Use(ServerGameEntity* other, ServerGameEntity* activator) {
 	// Safety check.
 	if (useFunction == nullptr)
 		return;
@@ -370,12 +370,12 @@ void SVGBaseEntity::Use(SVGBaseEntity* other, SVGBaseEntity* activator) {
 
 //
 //===============
-// SVGBaseEntity::Blocked
+// ServerGameEntity::Blocked
 //
 // Execute the 'Blocked' callback in case we ran into any.
 //===============
 //
-void SVGBaseEntity::Blocked(SVGBaseEntity* other) {
+void ServerGameEntity::Blocked(ServerGameEntity* other) {
 	// Safety check.
 	if (blockedFunction == nullptr)
 		return;
@@ -386,12 +386,12 @@ void SVGBaseEntity::Blocked(SVGBaseEntity* other) {
 
 //
 //===============
-// SVGBaseEntity::TakeDamage
+// ServerGameEntity::TakeDamage
 //
 // Execute the 'TakeDamage' callback in case we ran into any.
 //===============
 //
-void SVGBaseEntity::TakeDamage(SVGBaseEntity* other, float kick, int32_t damage) {
+void ServerGameEntity::TakeDamage(ServerGameEntity* other, float kick, int32_t damage) {
 	// Safety check.
 	if (takeDamageFunction == nullptr)
 		return;
@@ -402,12 +402,12 @@ void SVGBaseEntity::TakeDamage(SVGBaseEntity* other, float kick, int32_t damage)
 
 //
 //===============
-// SVGBaseEntity::Die
+// ServerGameEntity::Die
 //
 // Execute the 'Die' callback in case we ran into any.
 //===============
 //
-void SVGBaseEntity::Die(SVGBaseEntity* inflictor, SVGBaseEntity* attacker, int damage, const vec3_t& point) {
+void ServerGameEntity::Die(ServerGameEntity* inflictor, ServerGameEntity* attacker, int damage, const vec3_t& point) {
 	// Safety check.
 	if (dieFunction == nullptr)
 		return;
@@ -418,12 +418,12 @@ void SVGBaseEntity::Die(SVGBaseEntity* inflictor, SVGBaseEntity* attacker, int d
 
 //
 //===============
-// SVGBaseEntity::Touch
+// ServerGameEntity::Touch
 //
 // Execute the 'Touch' callback in case we ran into any.
 //===============
 //
-void SVGBaseEntity::Touch(SVGBaseEntity* self, SVGBaseEntity* other, cplane_t* plane, csurface_t* surf) {
+void ServerGameEntity::Touch(ServerGameEntity* self, ServerGameEntity* other, cplane_t* plane, csurface_t* surf) {
 	// Safety check.
 	if (touchFunction == nullptr)
 		return;
@@ -433,11 +433,11 @@ void SVGBaseEntity::Touch(SVGBaseEntity* self, SVGBaseEntity* other, cplane_t* p
 }
 
 //===============
-// SVGBaseEntity::UseTargets
+// ServerGameEntity::UseTargets
 // 
 // Calls Use on this entity's targets, as well as killtargets
 //===============
-void SVGBaseEntity::UseTargets( SVGBaseEntity* activatorOverride )
+void ServerGameEntity::UseTargets( ServerGameEntity* activatorOverride )
 {
 	if ( nullptr == activatorOverride )
 	{
@@ -489,7 +489,7 @@ void SVGBaseEntity::UseTargets( SVGBaseEntity* activatorOverride )
 	// Remove all entities that qualify as our killtargets
 	if ( GetKillTarget().length() )
 	{
-		SVGBaseEntity* victim = nullptr;
+		ServerGameEntity* victim = nullptr;
 		while ( victim = SVG_FindEntityByKeyValue( "targetname", GetKillTarget(), victim ) )
 		{	// It is going to die, free it.
 			SVG_FreeEntity( victim->GetServerEntity() );
@@ -505,7 +505,7 @@ void SVGBaseEntity::UseTargets( SVGBaseEntity* activatorOverride )
 	// Actually fire the targets
 	if ( GetTarget().length() ) 
 	{
-		SVGBaseEntity* targetEntity = nullptr;
+		ServerGameEntity* targetEntity = nullptr;
 		while ( (targetEntity = SVG_FindEntityByKeyValue( "targetname", GetTarget(), targetEntity )) )
 		{
 			// Doors fire area portals in a special way, so skip those
@@ -517,7 +517,7 @@ void SVGBaseEntity::UseTargets( SVGBaseEntity* activatorOverride )
 
 			if ( targetEntity == this ) 
 			{
-				gi.DPrintf( "WARNING: Entity #%i used itself.\n", GetServerEntity()->state.number );
+				gi.DPrintf( "WARNING: ServerEntity #%i used itself.\n", GetServerEntity()->state.number );
 			}
 			else 
 			{
@@ -527,7 +527,7 @@ void SVGBaseEntity::UseTargets( SVGBaseEntity* activatorOverride )
 			// Make sure it is in use
 			if ( !targetEntity->IsInUse() ) 
 			{
-				gi.DPrintf( "WARNING: Entity #%i was removed while using targets\n", GetServerEntity()->state.number );
+				gi.DPrintf( "WARNING: ServerEntity #%i was removed while using targets\n", GetServerEntity()->state.number );
 				return;
 			}
 		}
@@ -536,28 +536,28 @@ void SVGBaseEntity::UseTargets( SVGBaseEntity* activatorOverride )
 
 //
 //===============
-// SVGBaseEntity::LinkEntity
+// ServerGameEntity::LinkEntity
 //
 // Link entity to world for collision testing using gi.LinkEntity.
 //===============
 //
-void SVGBaseEntity::LinkEntity() {
+void ServerGameEntity::LinkEntity() {
 	gi.LinkEntity(serverEntity);
 }
 
 //===============
-// SVGBaseEntity::UnlinkEntity
+// ServerGameEntity::UnlinkEntity
 //
 // 
 //===============
-void SVGBaseEntity::UnlinkEntity() {
+void ServerGameEntity::UnlinkEntity() {
 	gi.UnlinkEntity(serverEntity);
 }
 
 //===============
-// SVGBaseEntity::Remove
+// ServerGameEntity::Remove
 //===============
-void SVGBaseEntity::Remove()
+void ServerGameEntity::Remove()
 {
 	serverEntity->serverFlags |= EntityServerFlags::Remove;
 }
@@ -565,7 +565,7 @@ void SVGBaseEntity::Remove()
 //
 //
 //
-void SVGBaseEntity::SVGBaseEntityThinkRemove(void) {
+void ServerGameEntity::SVGBaseEntityThinkRemove(void) {
 	//SVG_FreeEntity(serverEntity);
 	Remove();
 }

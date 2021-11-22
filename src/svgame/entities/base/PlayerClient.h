@@ -9,15 +9,15 @@
 #ifndef __SVGAME_ENTITIES_MISC_PLAYERCLIENT_H__
 #define __SVGAME_ENTITIES_MISC_PLAYERCLIENT_H__
 
-class SVGBaseEntity;
+class ServerGameEntity;
 
-class PlayerClient : public SVGBaseEntity {
+class PlayerClient : public ServerGameEntity {
 public:
     // Constructor/Deconstructor.
-    PlayerClient(Entity* svEntity);
+    PlayerClient(ServerEntity* svEntity);
     virtual ~PlayerClient();
 
-    DefineMapClass("PlayerClient", PlayerClient, SVGBaseEntity);
+    DefineMapClass("PlayerClient", PlayerClient, ServerGameEntity);
 
     //
     // Interface functions. 
@@ -33,7 +33,7 @@ public:
     //
     // Callback functions.
     //
-    void PlayerClientDie(SVGBaseEntity* inflictor, SVGBaseEntity* attacker, int damage, const vec3_t& point);
+    void PlayerClientDie(ServerGameEntity* inflictor, ServerGameEntity* attacker, int damage, const vec3_t& point);
 
     //
     // Get/Set
@@ -210,7 +210,7 @@ private:
     //
     // Private utility functions.
     //
-    void LookAtKiller(SVGBaseEntity* inflictor, SVGBaseEntity* attacker);
+    void LookAtKiller(ServerGameEntity* inflictor, ServerGameEntity* attacker);
 
     //Adds the specific blend of colors on top of each other.
     static void AddScreenBlend(float r, float g, float b, float a, float *v_blend)

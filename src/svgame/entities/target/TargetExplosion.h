@@ -1,15 +1,15 @@
 
 #pragma once
 
-class TargetExplosion : public SVGBaseEntity {
+class TargetExplosion : public ServerGameEntity {
 public:
-	TargetExplosion( Entity* entity );
+	TargetExplosion( ServerEntity* entity );
 	virtual ~TargetExplosion() = default;
 	
-	DefineMapClass( "target_explosion", TargetExplosion, SVGBaseEntity );
+	DefineMapClass( "target_explosion", TargetExplosion, ServerGameEntity );
 
 	void Spawn() override;
 
-	void ExplosionUse( SVGBaseEntity* other, SVGBaseEntity* activator );
+	void ExplosionUse( ServerGameEntity* other, ServerGameEntity* activator );
 	void ExplosionThink();
 };

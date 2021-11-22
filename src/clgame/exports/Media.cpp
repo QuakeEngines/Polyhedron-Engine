@@ -24,7 +24,7 @@ static void CLG_LoadClientModels(void) {
     // Register view weapon models.
     CLG_RegisterVWepModels();
 
-    // Register Temp Entity models.
+    // Register Temp ServerEntity models.
     CLG_RegisterTempEntityModels();
 }
 

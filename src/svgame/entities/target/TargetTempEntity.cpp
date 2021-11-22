@@ -9,14 +9,14 @@
 #include "../../entities.h"
 #include "../../utils.h"
 
-#include "../base/SVGBaseEntity.h"
+#include "../base/ServerGameEntity.h"
 
 #include "TargetTempEntity.h"
 
 //===============
 // TargetTempEntity::ctor
 //===============
-TargetTempEntity::TargetTempEntity( Entity* entity )
+TargetTempEntity::TargetTempEntity( ServerEntity* entity )
 	: Base( entity ) {
 
 }
@@ -31,7 +31,7 @@ void TargetTempEntity::Spawn() {
 //===============
 // TargetTempEntity::TempEntityUse
 //===============
-void TargetTempEntity::TempEntityUse( SVGBaseEntity* other, SVGBaseEntity* activator ) {
+void TargetTempEntity::TempEntityUse( ServerGameEntity* other, ServerGameEntity* activator ) {
 	gi.WriteByte( SVG_CMD_TEMP_ENTITY );
 	gi.WriteByte( GetStyle() );
 	gi.WriteVector3( GetOrigin() );

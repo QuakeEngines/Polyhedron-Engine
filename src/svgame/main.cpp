@@ -21,7 +21,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 // Entities.
 #include "entities.h"
-#include "entities/base/SVGBaseEntity.h"
+#include "entities/base/ServerGameEntity.h"
 #include "entities/base/PlayerClient.h"
 
 // Gamemodes.
@@ -111,7 +111,7 @@ void SVG_AllocateGameClients();
 void SVG_AllocateGamePlayerClientEntities();
 void SVG_InitializeCVars();
 
-void SVG_RunEntity(SVGBaseEntity *ent);
+void SVG_RunEntity(ServerGameEntity *ent);
 void SVG_WriteGame(const char *filename, qboolean autosave);
 void SVG_ReadGame(const char *filename);
 void SVG_WriteLevel(const char *filename);
@@ -216,7 +216,7 @@ ServerGameExports* GetServerGameAPI(ServerGameImports* import)
 
     globals.ServerCommand = SVG_ServerCommand;
 
-    //globals.entitySize = sizeof(Entity);
+    //globals.entitySize = sizeof(ServerEntity);
 
     return &globals;
 }
@@ -383,7 +383,7 @@ void SVG_AllocateGamePlayerClientEntities() {
     // Allocate a classentity for each client in existence.
     for (int32_t i = 1; i < maximumClients + 1; i++) {
         // Fetch server entity.
-        Entity* serverEntity = &g_entities[i];
+        ServerEntity* serverEntity = &g_entities[i];
 
         // Initialize entity.
         SVG_InitEntity(serverEntity);
@@ -464,7 +464,7 @@ void SVG_ClientEndServerFrames(void)
         int32_t stateNumber = g_entities[1 + i].state.number;
 
         // Now, let's go wild. (Purposely, do not assume the pointer is a PlayerClient.)
-        Entity *entity = &g_entities[stateNumber]; // WID: 1 +, because 0 == WorldSpawn.
+        ServerEntity *entity = &g_entities[stateNumber]; // WID: 1 +, because 0 == WorldSpawn.
 
         // See if we're gooszsd to go, if not, continue for the next. 
         if (!entity || !entity->inUse || !entity->client)
@@ -486,7 +486,7 @@ The timelimit or fraglimit has been exceeded
 */
 void SVG_EndDMLevel(void)
 {
-    Entity     *ent;
+    ServerEntity     *ent;
     char *s, *t, *f;
     static const char *seps = " ,\n\r";
 
@@ -632,7 +632,7 @@ void SVG_RunFrame(void)
     int32_t stateNumber = g_entities[0].state.number;
 
     // Fetch the corresponding base entity.
-    SVGBaseEntity* entity = g_baseEntities[stateNumber];
+    ServerGameEntity* entity = g_baseEntities[stateNumber];
 
     // Loop through the server entities, and run the base entity frame if any exists.
     for (int32_t i = 0; i < globals.numberOfEntities; i++) {
@@ -640,7 +640,7 @@ void SVG_RunFrame(void)
         stateNumber = g_entities[i].state.number;
 
         // Fetch the corresponding base entity.
-        SVGBaseEntity* entity = g_baseEntities[stateNumber];
+        ServerGameEntity* entity = g_baseEntities[stateNumber];
 
         // Is it even valid?
         if (entity == nullptr)

@@ -96,11 +96,11 @@ typedef struct r_entity_s {
     qhandle_t           skin;       // NULL for inline skin
     int                 flags;      // Flags.
 
-    int                 id;         // Entity ID.
+    int                 id;         // ServerEntity ID.
 
-	int                 tent_type;  // Temporary Entity Type.
+	int                 tent_type;  // Temporary ServerEntity Type.
 
-	float               scale;      // Entity Scale.
+	float               scale;      // ServerEntity Scale.
 } r_entity_t;
 
 typedef struct dlight_s {

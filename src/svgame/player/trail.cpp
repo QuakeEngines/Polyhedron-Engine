@@ -37,7 +37,7 @@ the player has been recently.  It is used by monsters for pursuit.
 
 #define TRAIL_LENGTH    8
 
-Entity     *trail[TRAIL_LENGTH];
+ServerEntity     *trail[TRAIL_LENGTH];
 int         trail_head;
 qboolean    trail_active = false;
 
@@ -90,7 +90,7 @@ void SVG_PlayerTrail_New(vec3_t spot)
 }
 
 
-Entity *SVG_PlayerTrail_PickFirst(Entity *self)
+ServerEntity *SVG_PlayerTrail_PickFirst(ServerEntity *self)
 {
 //    int     marker;
 //    int     n;
@@ -117,7 +117,7 @@ Entity *SVG_PlayerTrail_PickFirst(Entity *self)
     return nullptr;
 }
 
-Entity *SVG_PlayerTrail_PickNext(Entity *self)
+ServerEntity *SVG_PlayerTrail_PickNext(ServerEntity *self)
 {
 //    int     marker;
 //    int     n;
@@ -136,7 +136,7 @@ Entity *SVG_PlayerTrail_PickNext(Entity *self)
     return nullptr;
 }
 
-Entity *SVG_PlayerTrail_LastSpot(void)
+ServerEntity *SVG_PlayerTrail_LastSpot(void)
 {
     return nullptr;
     //return trail[PREV(trail_head)];

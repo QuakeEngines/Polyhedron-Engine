@@ -72,21 +72,21 @@
 //
 // Support routines for movement (changes in origin using velocity)
 //
-//void Brush_Move_Done(Entity* ent);
-//void Brush_Move_Final(Entity* ent);
-//void Brush_Move_Begin(Entity* ent);
-//void Brush_Move_Calc(Entity* ent, const vec3_t &dest, void(*func)(Entity*));
+//void Brush_Move_Done(ServerEntity* ent);
+//void Brush_Move_Final(ServerEntity* ent);
+//void Brush_Move_Begin(ServerEntity* ent);
+//void Brush_Move_Calc(ServerEntity* ent, const vec3_t &dest, void(*func)(ServerEntity*));
 
 //
 // Support routines for angular movement (changes in angle using angularVelocity)
 //
-//void Brush_AngleMove_Done(Entity* ent);
-//void Brush_AngleMove_Final(Entity* ent);
-//void Brush_AngleMove_Begin(Entity* ent);
-//void Brush_AngleMove_Calc(Entity* ent, void(*func)(Entity*));
+//void Brush_AngleMove_Done(ServerEntity* ent);
+//void Brush_AngleMove_Final(ServerEntity* ent);
+//void Brush_AngleMove_Begin(ServerEntity* ent);
+//void Brush_AngleMove_Calc(ServerEntity* ent, void(*func)(ServerEntity*));
 
 //void plat_CalcAcceleratedMove(PushMoveInfo* moveinfo);
 //void plat_Accelerate(PushMoveInfo* moveinfo);
-//void Think_AccelMove(Entity* ent);
+//void Think_AccelMove(ServerEntity* ent);
 
 #endif // __SVGAME_PLAYER_WEAPONS_H__

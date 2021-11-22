@@ -21,18 +21,18 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 //=============================================================================
 //
-// Server Side Entity containment management.
+// Server Side ServerEntity containment management.
 //
 //=============================================================================
 
-// Server Entity Pool.
+// Server ServerEntity Pool.
 EntityPool entityPool;
 
 // Seeks the server entity pool for a free entity (aka inUse = false), and returns
 // a pointer to it.
-Entity* FindFreePoolEntity() {
+ServerEntity* FindFreePoolEntity() {
     // Callback to find an entity that is not in use.
-    auto findFunc  = [](Entity &e) -> size_t {
+    auto findFunc  = [](ServerEntity &e) -> size_t {
         return !e.inUse;
     };
     
@@ -46,19 +46,19 @@ Entity* FindFreePoolEntity() {
 }
 
 // Returns a pointer to the ID in the entity pool in case it is inUse
-Entity* FetchPoolEntityByID(uint32_t index) {
+ServerEntity* FetchPoolEntityByID(uint32_t index) {
     return (entityPool.entities[index].inUse ? &entityPool.entities[index] : nullptr);
 }
 
-//// Actual Server Entity array.
-//std::array<Entity, MAX_EDICTS> svEntities;
+//// Actual Server ServerEntity array.
+//std::array<ServerEntity, MAX_EDICTS> svEntities;
 
 
 
 //-----------------------
 //
 //-----------------------
-Entity* SV_QueryFreeEntity() {
+ServerEntity* SV_QueryFreeEntity() {
     return NULL;
 }
 
@@ -304,8 +304,8 @@ void SV_BuildClientFrame(client_t *client)
 {
     int         e;
     vec3_t      org;
-    Entity     *ent;
-    Entity     *clent;
+    ServerEntity     *ent;
+    ServerEntity     *clent;
     ClientFrame  *frame;
     PackedEntity *state;
     PlayerState  *ps;

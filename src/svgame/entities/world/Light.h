@@ -20,7 +20,7 @@ enum LightState : uint32_t {
 class Light : public SVGBaseTrigger {
 public:
     // Constructor/Deconstructor.
-    Light(Entity* svEntity);
+    Light(ServerEntity* svEntity);
     virtual ~Light();
 
     DefineMapClass( "light", Light, SVGBaseTrigger );
@@ -49,7 +49,7 @@ public:
     //
     // Callback functions.
     //
-    void LightUse(SVGBaseEntity* other, SVGBaseEntity* activator);
+    void LightUse(ServerGameEntity* other, ServerGameEntity* activator);
     void LightThink(void);
 
 private:
@@ -63,14 +63,14 @@ private:
 
 #pragma once
 
-class SVGBaseEntity;
+class ServerGameEntity;
 
-class PathCorner : public SVGBaseEntity {
+class PathCorner : public ServerGameEntity {
 public:
-    PathCorner(Entity* entity);
+    PathCorner(ServerEntity* entity);
     virtual ~PathCorner() = default;
 
-    DefineMapClass("path_corner", PathCorner, SVGBaseEntity);
+    DefineMapClass("path_corner", PathCorner, ServerGameEntity);
 
     const vec3_t	BboxSize = vec3_t(8.0f, 8.0f, 8.0f);
 
@@ -81,7 +81,7 @@ public:
     void			SpawnKey(const std::string& key, const std::string& value) override;
 
     // For AI
-    virtual void	OnReachedCorner(SVGBaseEntity* traveler);
+    virtual void	OnReachedCorner(ServerGameEntity* traveler);
 
     inline const char* GetPathTarget() override {
         return pathTarget.c_str();

@@ -228,7 +228,7 @@ void CLG_AddPacketEntities(void)
             }
         }
 
-        // Entity Effects for in case the entity is the actual client.
+        // ServerEntity Effects for in case the entity is the actual client.
         if (s1->number == cl->frame.clientNumber + 1) {
             if (!cl->thirdPersonView)
             {

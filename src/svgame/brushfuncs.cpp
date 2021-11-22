@@ -9,7 +9,7 @@
 
 // Include local game header.
 #include "g_local.h"
-#include "entities/base/SVGBaseEntity.h"
+#include "entities/base/ServerGameEntity.h"
 #include "brushfuncs.h"
 
 //=====================================================
@@ -60,13 +60,13 @@
 // Support routines for movement (changes in origin using velocity)
 //
 
-//void Brush_Move_Done(Entity* ent)
+//void Brush_Move_Done(ServerEntity* ent)
 //{
 //    ent->classEntity->SetVelocity( vec3_zero() );
 //    ent->moveInfo.OnEndFunction( ent );
 //}
 //
-//void Brush_Move_Final(Entity* ent)
+//void Brush_Move_Final(ServerEntity* ent)
 //{
 //    if ( ent->moveInfo.remainingDistance == 0 ) 
 //    {
@@ -82,7 +82,7 @@
 //    ent->classEntity->SetNextThinkTime( level.time + FRAMETIME );
 //}
 //
-//void Brush_Move_Begin(Entity* ent)
+//void Brush_Move_Begin(ServerEntity* ent)
 //{
 //    float frames;
 //
@@ -100,13 +100,13 @@
 //    ent->moveInfo.remainingDistance -= frames * ent->moveInfo.speed * FRAMETIME;
 //    ent->classEntity->SetNextThinkTime( level.time + (frames * FRAMETIME) );
 //    
-//    // FIXME: Mayhaps Brush_Move_Begin et al should be moved to SVGBaseEntity
+//    // FIXME: Mayhaps Brush_Move_Begin et al should be moved to ServerGameEntity
 //    //ent->Think = Brush_Move_Final;
 //}
 //
-//void Think_AccelMove(Entity* ent);
+//void Think_AccelMove(ServerEntity* ent);
 //
-//void Brush_Move_Calc(Entity* ent, const vec3_t &dest, void(*func)(Entity*))
+//void Brush_Move_Calc(ServerEntity* ent, const vec3_t &dest, void(*func)(ServerEntity*))
 //{
 //    ent->classEntity->SetVelocity( vec3_zero() );
 //    ent->moveInfo.dir = dest - ent->classEntity->GetOrigin();
@@ -141,13 +141,13 @@
 //// Support routines for angular movement (changes in angle using angularVelocity)
 ////
 //
-//void Brush_AngleMove_Done(Entity* ent)
+//void Brush_AngleMove_Done(ServerEntity* ent)
 //{
 //    ent->classEntity->SetAngularVelocity( vec3_zero() );
 //    ent->moveInfo.OnEndFunction( ent );
 //}
 //
-//void Brush_AngleMove_Final(Entity* ent)
+//void Brush_AngleMove_Final(ServerEntity* ent)
 //{
 //    vec3_t move;
 //
@@ -172,7 +172,7 @@
 //    ent->classEntity->SetNextThinkTime( level.time + FRAMETIME );
 //}
 //
-//void Brush_AngleMove_Begin(Entity* ent)
+//void Brush_AngleMove_Begin(ServerEntity* ent)
 //{
 //    //vec3_t  destdelta;
 //    //float   len;
@@ -206,7 +206,7 @@
 //    ////ent->Think = Brush_AngleMove_Final;
 //}
 //
-//void Brush_AngleMove_Calc(Entity* ent, void(*func)(Entity*))
+//void Brush_AngleMove_Calc(ServerEntity* ent, void(*func)(ServerEntity*))
 //{
 //    //VectorClear(ent->angularVelocity);
 //    //ent->moveInfo.OnEndFunction = func;
@@ -322,7 +322,7 @@
 //    return;
 //}
 
-void Think_AccelMove(Entity* ent)
+void Think_AccelMove(ServerEntity* ent)
 {
     //ent->moveInfo.remainingDistance -= ent->moveInfo.currentSpeed;
 

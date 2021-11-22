@@ -8,13 +8,13 @@
 */
 #pragma once
 
-class SVGBaseEntity;
+class ServerGameEntity;
 class InfoPlayerStart;
 
 class InfoPlayerCoop : public InfoPlayerStart {
 public:
     // Constructor/Deconstructor.
-    InfoPlayerCoop(Entity* svEntity);
+    InfoPlayerCoop(ServerEntity* svEntity);
     virtual ~InfoPlayerCoop();
 
     DefineMapClass( "info_player_coop", InfoPlayerCoop, InfoPlayerStart );

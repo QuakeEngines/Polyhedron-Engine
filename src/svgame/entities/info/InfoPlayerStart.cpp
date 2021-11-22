@@ -7,12 +7,12 @@
 //
 */
 #include "../../g_local.h"              // SVGame.
-#include "../base/SVGBaseEntity.h"      // BaseEntity.
+#include "../base/ServerGameEntity.h"      // BaseEntity.
 #include "InfoPlayerStart.h"            // Class.
 
 // Constructor/Deconstructor.
-InfoPlayerStart::InfoPlayerStart(Entity* svEntity) 
-    : SVGBaseEntity(svEntity) {
+InfoPlayerStart::InfoPlayerStart(ServerEntity* svEntity) 
+    : ServerGameEntity(svEntity) {
 
 }
 InfoPlayerStart::~InfoPlayerStart() {

@@ -18,5 +18,5 @@ public:
 
 protected:
     // Internal memory 
-    Entity handleMemory;
+    ServerEntity handleMemory;
 };

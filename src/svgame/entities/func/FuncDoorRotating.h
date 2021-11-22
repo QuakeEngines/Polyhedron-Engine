@@ -1,12 +1,12 @@
 #pragma once
 
-class SVGBaseEntity;
+class ServerGameEntity;
 class SVGBaseMover;
 class FuncDoor;
 
 class FuncDoorRotating : public FuncDoor {
 public:
-	FuncDoorRotating( Entity* entity );
+	FuncDoorRotating( ServerEntity* entity );
 	virtual ~FuncDoorRotating() = default;
 
 	DefineMapClass( "func_door_rotating", FuncDoorRotating, FuncDoor );
