@@ -52,138 +52,138 @@ typedef struct {
 
 static const save_field_t entityfields[] = {
 #define _OFS FOFS
-    V(state.origin),
-    V(state.angles),
-    V(state.oldOrigin),
-    I(state.modelIndex),
-    I(state.modelIndex2),
-    I(state.modelIndex3),
-    I(state.modelIndex4),
-    I(state.frame),
-    I(state.skinNumber),
-    I(state.effects),
-    I(state.renderEffects),
-    I(state.solid),
-    I(state.sound),
-    I(state.eventID),
-
-    // [...]
-
-    I(serverFlags),
-    V(mins),
-    V(maxs),
-    V(absMin),
-    V(absMax),
-    V(size),
-    I(solid),
-    I(clipMask),
-    E(owner),
-
-    //I(classEntity->GetMoveType()),
-//    I(flags),
-
-//    L(model),
-    F(freeTime),
-
-    L(message),
-    L(className),
-//    I(spawnFlags),
-
-    F(timeStamp),
-
-    L(target),
-    L(targetName),
-    L(killTarget),
-    L(team),
-    L(pathTarget),
-    E(targetEntityPtr),
-
-    F(speed),
-    F(acceleration),
-    F(deceleration),
-    V(moveDirection),
-    V(position1),
-    V(position2),
-
-//    V(velocity),
-//    V(angularVelocity),
-//    I(mass),
-//    F(airFinishedTime),
-//    F(gravity),
-
-    E(goalEntityPtr),
-    E(moveTargetPtr),
-//    F(yawSpeed),
- //   F(idealYawAngle),
-
- //   F(nextThinkTime),
-    //P(PreThink, P_prethink),
-    //P(Think, P_think),
-    //P(Blocked, P_blocked),
-    //P(Touch, P_touch),
-    //P(Use, P_use),
-    //P(Pain, P_pain),
-    //P(Die, P_die),
-
-//    F(debounceTouchTime),
-//    F(debouncePainTime),
-//    F(debounceDamageTime),
-//    F(debounceSoundTime),
-//    F(lastMoveTime),
-
-//    I(health),
-//    I(maxHealth),
-//    I(gibHealth),
-//    I(deadFlag),
-//    I(showHostile),
-
- //   F(powerArmorTime),
-
-    L(map),
-
-    //I(viewHeight),
-    //I(takeDamage),
-    //I(damage),
-    //I(radiusDamage),
-    //F(damageRadius),
-    //I(sounds),
-    I(count),
-
-    E(chain),
-    //E(enemy),
-    //E(oldEnemyPtr),
-    //E(activator),
-    //E(groundEntityPtr),
-    //I(groundEntityLinkCount),
-    //E(teamChainPtr),
-    //E(teamMasterPtr),
-
-    E(myNoisePtr),
-    E(myNoise2Ptr),
-
-    I(noiseIndex),
-    I(noiseIndex2),
-    F(volume),
-    F(attenuation),
-
-//    F(wait),
-//    F(delay),
-    F(random),
-
-    F(teleportTime),
-
-//    I(waterType),
-//    I(waterLevel),
-
-    V(moveOrigin),
-    V(moveAngles),
-
-    I(lightLevel),
-
-    I(style),
-    L(customLightStyle),
-
-    T(item),
+//    V(state.origin),
+//    V(state.angles),
+//    V(state.oldOrigin),
+//    I(state.modelIndex),
+//    I(state.modelIndex2),
+//    I(state.modelIndex3),
+//    I(state.modelIndex4),
+//    I(state.frame),
+//    I(state.skinNumber),
+//    I(state.effects),
+//    I(state.renderEffects),
+//    I(state.solid),
+//    I(state.sound),
+//    I(state.eventID),
+//
+//    // [...]
+//
+//    I(serverFlags),
+//    V(mins),
+//    V(maxs),
+//    V(absMin),
+//    V(absMax),
+//    V(size),
+//    I(solid),
+//    I(clipMask),
+//    E(owner),
+//
+//    //I(classEntity->GetMoveType()),
+////    I(flags),
+//
+////    L(model),
+//    F(freeTime),
+//
+//    L(message),
+//    L(className),
+////    I(spawnFlags),
+//
+//    F(timeStamp),
+//
+//    L(target),
+//    L(targetName),
+//    L(killTarget),
+//    L(team),
+//    L(pathTarget),
+//    E(targetEntityPtr),
+//
+//    F(speed),
+//    F(acceleration),
+//    F(deceleration),
+//    V(moveDirection),
+//    V(position1),
+//    V(position2),
+//
+////    V(velocity),
+////    V(angularVelocity),
+////    I(mass),
+////    F(airFinishedTime),
+////    F(gravity),
+//
+//    E(goalEntityPtr),
+//    E(moveTargetPtr),
+////    F(yawSpeed),
+// //   F(idealYawAngle),
+//
+// //   F(nextThinkTime),
+//    //P(PreThink, P_prethink),
+//    //P(Think, P_think),
+//    //P(Blocked, P_blocked),
+//    //P(Touch, P_touch),
+//    //P(Use, P_use),
+//    //P(Pain, P_pain),
+//    //P(Die, P_die),
+//
+////    F(debounceTouchTime),
+////    F(debouncePainTime),
+////    F(debounceDamageTime),
+////    F(debounceSoundTime),
+////    F(lastMoveTime),
+//
+////    I(health),
+////    I(maxHealth),
+////    I(gibHealth),
+////    I(deadFlag),
+////    I(showHostile),
+//
+// //   F(powerArmorTime),
+//
+//    L(map),
+//
+//    //I(viewHeight),
+//    //I(takeDamage),
+//    //I(damage),
+//    //I(radiusDamage),
+//    //F(damageRadius),
+//    //I(sounds),
+//    I(count),
+//
+//    E(chain),
+//    //E(enemy),
+//    //E(oldEnemyPtr),
+//    //E(activator),
+//    //E(groundEntityPtr),
+//    //I(groundEntityLinkCount),
+//    //E(teamChainPtr),
+//    //E(teamMasterPtr),
+//
+//    E(myNoisePtr),
+//    E(myNoise2Ptr),
+//
+//    I(noiseIndex),
+//    I(noiseIndex2),
+//    F(volume),
+//    F(attenuation),
+//
+////    F(wait),
+////    F(delay),
+//    F(random),
+//
+//    F(teleportTime),
+//
+////    I(waterType),
+////    I(waterLevel),
+//
+//    V(moveOrigin),
+//    V(moveAngles),
+//
+//    I(lightLevel),
+//
+//    I(style),
+//    L(customLightStyle),
+//
+//    T(item),
 
 //    V(moveInfo.startOrigin),
     //V(moveInfo.startAngles),
@@ -499,7 +499,7 @@ static void write_field(FILE *f, const save_field_t *field, void *base)
         break;
 
     case F_EDICT:
-        write_index(f, *(void **)p, sizeof(Entity), g_entities, MAX_EDICTS - 1);
+        //write_index(f, *(void **)p, sizeof(Entity), g_entities, MAX_EDICTS - 1);
         break;
     case F_CLIENT:
         write_index(f, *(void **)p, sizeof(ServersClient), game.clients, game.maximumClients - 1);
@@ -684,7 +684,7 @@ static void read_field(FILE *f, const save_field_t *field, void *base)
         break;
 
     case F_EDICT:
-        *(Entity **)p = (Entity*)read_index(f, sizeof(Entity), g_entities, game.maxEntities - 1); // CPP: Cast
+        //*(Entity **)p = (Entity*)read_index(f, sizeof(Entity), g_entities, game.maxEntities - 1); // CPP: Cast
         break;
     case F_CLIENT:
         *(ServersClient **)p = (ServersClient*)read_index(f, sizeof(ServersClient), game.clients, game.maximumClients - 1); // CPP: Cast
@@ -771,37 +771,37 @@ void SVG_ReadGame(const char *filename)
     if (!f)
         gi.Error("Couldn't open %s", filename);
 
-    i = read_int(f);
-    if (i != SAVE_MAGIC1) {
-        fclose(f);
-        gi.Error("Not a save game");
-    }
+    //i = read_int(f);
+    //if (i != SAVE_MAGIC1) {
+    //    fclose(f);
+    //    gi.Error("Not a save game");
+    //}
 
-    i = read_int(f);
-    if (i != SAVE_VERSION) {
-        fclose(f);
-        gi.Error("Savegame from an older version");
-    }
+    //i = read_int(f);
+    //if (i != SAVE_VERSION) {
+    //    fclose(f);
+    //    gi.Error("Savegame from an older version");
+    //}
 
-    read_fields(f, gamefields, &game);
+    //read_fields(f, gamefields, &game);
 
-    // should agree with server's version
-    if (game.maximumClients != (int)maximumClients->value) {
-        fclose(f);
-        gi.Error("Savegame has bad maximumClients");
-    }
-    if (game.maxEntities <= game.maximumClients || game.maxEntities > MAX_EDICTS) {
-        fclose(f);
-        gi.Error("Savegame has bad maxEntities");
-    }
+    //// should agree with server's version
+    //if (game.maximumClients != (int)maximumClients->value) {
+    //    fclose(f);
+    //    gi.Error("Savegame has bad maximumClients");
+    //}
+    //if (game.maxEntities <= game.maximumClients || game.maxEntities > MAX_EDICTS) {
+    //    fclose(f);
+    //    gi.Error("Savegame has bad maxEntities");
+    //}
 
-    globals.entities = g_entities;
-    globals.maxEntities = game.maxEntities;
+    //globals.entities = g_entities;
+    //globals.maxEntities = game.maxEntities;
 
-    game.clients = (ServersClient*)gi.TagMalloc(game.maximumClients * sizeof(game.clients[0]), TAG_GAME); // CPP: Cast
-    for (i = 0; i < game.maximumClients; i++) {
-        read_fields(f, clientfields, &game.clients[i]);
-    }
+    //game.clients = (ServersClient*)gi.TagMalloc(game.maximumClients * sizeof(game.clients[0]), TAG_GAME); // CPP: Cast
+    //for (i = 0; i < game.maximumClients; i++) {
+    //    read_fields(f, clientfields, &game.clients[i]);
+    //}
 
     fclose(f);
 }
@@ -825,21 +825,21 @@ void SVG_WriteLevel(const char *filename)
     if (!f)
         gi.Error("Couldn't open %s", filename);
 
-    write_int(f, SAVE_MAGIC2);
-    write_int(f, SAVE_VERSION);
+    //write_int(f, SAVE_MAGIC2);
+    //write_int(f, SAVE_VERSION);
 
-    // write out LevelLocals
-    write_fields(f, levelfields, &level);
+    //// write out LevelLocals
+    //write_fields(f, levelfields, &level);
 
-    // write out all the entities
-    for (i = 0; i < globals.numberOfEntities; i++) {
-        ent = &g_entities[i];
-        if (!ent->inUse)
-            continue;
-        write_int(f, i);
-        write_fields(f, entityfields, ent);
-    }
-    write_int(f, -1);
+    //// write out all the entities
+    //for (i = 0; i < globals.numberOfEntities; i++) {
+    //    ent = &g_entities[i];
+    //    if (!ent->inUse)
+    //        continue;
+    //    write_int(f, i);
+    //    write_fields(f, entityfields, ent);
+    //}
+    //write_int(f, -1);
 
     fclose(f);
 }
@@ -876,14 +876,14 @@ void SVG_ReadLevel(const char *filename)
     if (!f)
         gi.Error("Couldn't open %s", filename);
 
-    // Ensure all entities have a clean slate in memory.
-    for (int32_t i = 0; i < game.maxEntities; i++) {
-        g_entities[i] = {};
-    }
-    //memset(g_entities, 0, game.maxEntities * sizeof(g_entities[0]));
+    //// Ensure all entities have a clean slate in memory.
+    //for (int32_t i = 0; i < game.maxEntities; i++) {
+    //    g_entities[i] = {};
+    //}
+    ////memset(g_entities, 0, game.maxEntities * sizeof(g_entities[0]));
 
-    // Set the number of edicts to be maximumClients + 1. (They are soon to be in-use after all)
-    globals.numberOfEntities = maximumClients->value + 1;
+    //// Set the number of edicts to be maximumClients + 1. (They are soon to be in-use after all)
+    //globals.numberOfEntities = maximumClients->value + 1;
 
     i = read_int(f);
     if (i != SAVE_MAGIC2) {
@@ -897,59 +897,59 @@ void SVG_ReadLevel(const char *filename)
         gi.Error("Savegame from an older version");
     }
 
-    // load the level locals
-    read_fields(f, levelfields, &level);
+    //// load the level locals
+    //read_fields(f, levelfields, &level);
 
-    // load all the entities
-    while (1) {
-        entnum = read_int(f);
-        if (entnum == -1)
-            break;
-        if (entnum < 0 || entnum >= game.maxEntities) {
-            gi.Error("%s: bad entity number", __func__);
-        }
-        if (entnum >= globals.numberOfEntities)
-            globals.numberOfEntities = entnum + 1;
+    //// load all the entities
+    //while (1) {
+    //    entnum = read_int(f);
+    //    if (entnum == -1)
+    //        break;
+    //    if (entnum < 0 || entnum >= game.maxEntities) {
+    //        gi.Error("%s: bad entity number", __func__);
+    //    }
+    //    if (entnum >= globals.numberOfEntities)
+    //        globals.numberOfEntities = entnum + 1;
 
-        ent = &g_entities[entnum];
-        read_fields(f, entityfields, ent);
-        ent->inUse = true;
-        ent->state.number = entnum;
+    //    ent = &g_entities[entnum];
+    //    read_fields(f, entityfields, ent);
+    //    ent->inUse = true;
+    //    ent->state.number = entnum;
 
-        // let the server rebuild world links for this ent
-        memset(&ent->area, 0, sizeof(ent->area));
-        gi.LinkEntity(ent);
-    }
+    //    // let the server rebuild world links for this ent
+    //    memset(&ent->area, 0, sizeof(ent->area));
+    //    gi.LinkEntity(ent);
+    //}
 
     fclose(f);
 
-    // mark all clients as unconnected
-    for (i = 0 ; i < maximumClients->value ; i++) {
-        ent = &g_entities[i + 1];
-        ent->client = game.clients + i;
-        ent->client->persistent.isConnected = false;
-    }
+    //// mark all clients as unconnected
+    //for (i = 0 ; i < maximumClients->value ; i++) {
+    //    ent = &g_entities[i + 1];
+    //    ent->client = game.clients + i;
+    //    ent->client->persistent.isConnected = false;
+    //}
 
-    // do any load time things at this point
-    for (i = 0 ; i < globals.numberOfEntities ; i++) {
-        ent = &g_entities[i];
+    //// do any load time things at this point
+    //for (i = 0 ; i < globals.numberOfEntities ; i++) {
+    //    ent = &g_entities[i];
 
-        if (!ent->inUse)
-            continue;
+    //    if (!ent->inUse)
+    //        continue;
 
-        // fire any cross-level triggers
-        //if (ent->className)
-        //    if (strcmp(ent->className, "target_crosslevel_target") == 0)
-        //        ent->nextThinkTime = level.time + ent->delay;
+    //    // fire any cross-level triggers
+    //    //if (ent->className)
+    //    //    if (strcmp(ent->className, "target_crosslevel_target") == 0)
+    //    //        ent->nextThinkTime = level.time + ent->delay;
 
-        //if (ent->Think == func_clock_think || ent->Use == func_clock_use) {
-        //    const char *msg = ent->message;
-        //    ent->message = (const char)gi.TagMalloc(CLOCK_MESSAGE_SIZE, TAG_LEVEL); // CPP: Cast
-        //    if (msg) {
-        //        Q_strlcpy((char*)ent->message, msg, CLOCK_MESSAGE_SIZE); // C++20: STRING: Dangerous (const char*) to (char*)..?
-        //        gi.TagFree((void*)msg);
-        //    }
-        //}
-    }
+    //    //if (ent->Think == func_clock_think || ent->Use == func_clock_use) {
+    //    //    const char *msg = ent->message;
+    //    //    ent->message = (const char)gi.TagMalloc(CLOCK_MESSAGE_SIZE, TAG_LEVEL); // CPP: Cast
+    //    //    if (msg) {
+    //    //        Q_strlcpy((char*)ent->message, msg, CLOCK_MESSAGE_SIZE); // C++20: STRING: Dangerous (const char*) to (char*)..?
+    //    //        gi.TagFree((void*)msg);
+    //    //    }
+    //    //}
+    //}
 }
 

@@ -1,21 +1,32 @@
-/*
+/*Og ypi 
 // LICENSE HERE.
 
 //
 // entities.h
 //
-// All entity related functionality resides here. Need to allocate a class?
-// Find an entity? Anything else? You've hit the right spot.
+// All entity related functionality resides here. Need to spawn a specific entity?
+// Determine the distance between the two, etc? 
 //
-// A "ClassEntity", or a CE, is always a member of a "ServerEntity", aka an SE.
+// This is THE place.
 //
-// The actual game logic implementation thus goes in ClassEntities. An SE is
-// merely a POD binding layer between SVGame and the server. (Important for
-// networking.)
+// A GameEntity(GE) is always related to a ServerENtity (SE).
+// The SE is literally stored on the server and acts as a POD(Plain Old Data)
+// structure which is efficient for networking.
+//
+// The GE is where the actual game logic is implemented in, and it is what makes the
+// gameplay tick. Need a new type of entity, a special door perhaps? GE.
+//
+// There should seldom if ever at all be a reason to touch an SE. After all, it is the
+// server's own job to work with those, not the game!
+//
+// The "CE" is where the actual game logic implementation goes into. It is bound
+// to an SE, which has to not be InUse. For if it is, it's slot has already been
+// eaten up by an other "CE". 
+//
+//
 //
 */
-#ifndef __SVGAME_ENTITIES_H__
-#define __SVGAME_ENTITIES_H__
+#pragma once
 
 // Include this guy here, gotta do so to make it work.
 #include "entities/base/SVGBaseEntity.h"
@@ -24,12 +35,12 @@
 // Filter function namespace that actually contains the entity filter implementations.
 // 
 namespace EntityFilterFunctions {
-    // Returns true in case the (server-)Entity is in use.
-    inline bool EntityInUse(const Entity& ent) { return ent.inUse; }
-    // Returns true in case the (server-)Entity has a client attached to it.
-    inline bool EntityHasClient(const Entity& ent) { return static_cast<bool>(ent.client); }
-    // Returns true in case the (server-)Entity has a Class Entity attached to it.
-    inline bool EntityHasClassEntity(const Entity& ent) { return static_cast<bool>(ent.classEntity); }
+    // @returns true in case the (server-)Entity is in use.
+    inline bool EntityInUse (const Entity& ent) { return ent.inUse; }
+    // @returns true in case the (server-)Entity has a client attached to it.
+    inline bool HasClient(Entity& ent) { return static_cast<bool>(ent.client); }
+    // @returns true in case the (server-)Entity has a Class Entity attached to it.
+    inline bool EntityHasClassEntity(Entity& ent) { return static_cast<bool>(ent.className.empty()); }
 
     // Returns true in case the (server-)Entity has a client attached to it.
     inline bool BaseEntityHasClient(SVGBaseEntity* ent) { return ent->GetClient(); }
@@ -199,7 +210,7 @@ inline auto GetBaseEntityRange() -> std::span<SVGBaseEntity*, count> {
 }
 
 inline EntitySpan GetEntityRange(std::size_t start, std::size_t count) {
-    return EntitySpan(gi.serverEntityPool.entities).subspan(start, count);
+    return EntitySpan(gi.entityPool.entities).subspan(start, count);
 }
 inline BaseEntitySpan GetBaseEntityRange(std::size_t start, std::size_t count) {
     return BaseEntitySpan(g_baseEntities).subspan(start, count);
@@ -236,7 +247,7 @@ template<typename entityClass>
 inline entityClass* SVG_CreateClassEntity(Entity* edict = nullptr, bool allocateNewEdict = true) {
     entityClass* entity = nullptr;
     // If a null entity was passed, create a new one
-    if (nullptr == edict) {
+    if (edict == nullptr) {
         if (allocateNewEdict) {
             edict = SVG_Spawn();
         } else {
@@ -245,10 +256,10 @@ inline entityClass* SVG_CreateClassEntity(Entity* edict = nullptr, bool allocate
         }
     }
     // Abstract classes will have AllocateInstance as nullptr, hence we gotta check for that
-    if (entityClass::ClassInfo.AllocateInstance) {
+    if (enti        edict->classEntity = entity;
+tyClass::ClassInfo.AllocateInstance) {
         entity = static_cast<entityClass*>(entityClass::ClassInfo.AllocateInstance(edict)); // Entities that aren't in the type info system will error out here
         edict->className = entity->GetTypeInfo()->className;
-        edict->classEntity = entity;
         if (nullptr == g_baseEntities[edict->state.number]) {
             g_baseEntities[edict->state.number] = entity;
         } else {
@@ -265,5 +276,3 @@ inline entityClass* SVG_CreateClassEntity(Entity* edict = nullptr, bool allocate
 SVGBaseEntity* SVG_GetWorldClassEntity();
 SVGBaseEntity* SVG_SpawnClassEntity(Entity* ent, const std::string& className);
 void SVG_FreeClassEntity(Entity* ent);
-
-#endif // __SVGAME_ENTITIES_H__

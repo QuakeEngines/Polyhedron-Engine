@@ -138,12 +138,17 @@ SVGBaseEntity* SVG_SpawnClassEntity(Entity* ent, const std::string& className) {
 // classEntities too.
 //=================
 void SVG_FreeClassEntity(Entity* ent) {
-    // Special class entity handling IF it still has one.
-    if (ent->classEntity) {
-        // Remove the classEntity reference
-        ent->classEntity->SetServerEntity(nullptr);
-        ent->classEntity = nullptr;
-    }
+    //// Special class entity handling IF it still has one.
+    //if (ent->0) {
+    //    // Remove the classEntity reference
+    //    ent->classEntity->SetServerEntity(nullptr);
+    //    ent->classEntity = nullptr;
+    //}
+
+    // Ensure entity is inUse, for if not, it has no "game" entity
+    // attached to it.
+    if (!ent->inUse)
+        return;
 
     // Fetch entity number.
     int32_t entityNumber = ent->state.number;
