@@ -38,7 +38,7 @@ namespace EntityFilterFunctions {
     // @returns true in case the (server-)ServerEntity is in use.
     inline bool EntityInUse (const ServerEntity& ent) { return ent.inUse; }
     // @returns true in case the (server-)ServerEntity has a client attached to it.
-    inline bool HasClient(ServerEntity& ent) { return static_cast<bool>(ent.client); }
+    inline bool EntityHasClient(ServerEntity& ent) { return static_cast<bool>(ent.client); }
     // @returns true in case the (server-)ServerEntity has a Class ServerEntity attached to it.
     inline bool EntityHasClassEntity(ServerEntity& ent) { return static_cast<bool>(ent.className.empty()); }
 
@@ -256,8 +256,7 @@ inline entityClass* SVG_CreateClassEntity(ServerEntity* edict = nullptr, bool al
         }
     }
     // Abstract classes will have AllocateInstance as nullptr, hence we gotta check for that
-    if (enti        edict->classEntity = entity;
-tyClass::ClassInfo.AllocateInstance) {
+    if (entityClass::ClassInfo.AllocateInstance) {
         entity = static_cast<entityClass*>(entityClass::ClassInfo.AllocateInstance(edict)); // Entities that aren't in the type info system will error out here
         edict->className = entity->GetTypeInfo()->className;
         if (nullptr == g_baseEntities[edict->state.number]) {
