@@ -31,13 +31,13 @@
 // TODO: Explain shit, lol.
 //-----------------
 // BaseEntity array, matches similarly index wise.
-ServerGameEntity* g_baseEntities[MAX_EDICTS];
+ServerGameEntity* serverGameEntities[MAX_EDICTS];
 
 //
 // This is the old method, or at least, where we started off with.
 //
 //auto FetchModernMethod(std::size_t start, std::size_t end) {
-//    return BaseEntityRange(&g_baseEntities[start], &g_baseEntities[end]) |
+//    return BaseEntityRange(&serverGameEntities[start], &serverGameEntities[end]) |
 //        std::views::filter([](ServerGameEntity* ent) {
 //            return ent != nullptr && ent->GetServerEntity() && ent->IsInUse();
 //        }
@@ -68,7 +68,7 @@ void DebugShitForEntitiesLulz() {
         gi.DPrintf("%s\n", entity.className);
     }
     gi.DPrintf("BaseEntities - ===========================================\n");
-    for (auto* baseEntity : g_baseEntities | BaseEntityFilters::IsValidPointer | BaseEntityFilters::HasServerEntity | BaseEntityFilters::InUse) {
+    for (auto* baseEntity : serverGameEntities | BaseEntityFilters::IsValidPointer | BaseEntityFilters::HasServerEntity | BaseEntityFilters::InUse) {
         gi.DPrintf("%s\n", baseEntity->GetClassName());
     }
 
@@ -99,7 +99,7 @@ void DebugShitForEntitiesLulz() {
 ServerGameEntity* SVG_SpawnClassEntity(ServerEntity* ent, const std::string& className) {
     // Start with a nice nullptr.
     ServerGameEntity* spawnEntity = nullptr;
-    if ( nullptr == ent ) {
+    if ( !ent ) {
         return nullptr;
     }
 
@@ -119,7 +119,7 @@ ServerGameEntity* SVG_SpawnClassEntity(ServerEntity* ent, const std::string& cla
     // Don't freak out if the entity cannot be allocated, but do warn us about it, it's good to know
     // ServerEntity classes with 'DefineDummyMapClass' won't be reported here
     if ( nullptr != info->AllocateInstance && info->IsMapSpawnable() ) {
-        return (g_baseEntities[entityNumber] = info->AllocateInstance( ent ));
+        return (serverGameEntities[entityNumber] = info->AllocateInstance( ent ));
     } else {
         if ( info->IsAbstract() ) {
             gi.DPrintf( "WARNING: tried to allocate an abstract class '%s'\n", info->className );
@@ -154,9 +154,9 @@ void SVG_FreeClassEntity(ServerEntity* ent) {
     int32_t entityNumber = ent->state.number;
 
     // In case it exists in our base entitys, get rid of it, assign nullptr.
-    if (g_baseEntities[entityNumber]) {
-        delete g_baseEntities[entityNumber];
-        g_baseEntities[entityNumber] = nullptr;
+    if (serverGameEntities[entityNumber]) {
+        delete serverGameEntities[entityNumber];
+        serverGameEntities[entityNumber] = nullptr;
     }
 }
 
@@ -434,5 +434,5 @@ ServerEntity* SVG_GetWorldServerEntity() {
 // Returns a pointer to the 'Worldspawn' ClassEntity.
 //===============
 ServerGameEntity* SVG_GetWorldClassEntity() {
-    return g_baseEntities[0];
+    return serverGameEntities[0];
 };

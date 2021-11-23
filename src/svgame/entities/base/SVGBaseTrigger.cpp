@@ -226,7 +226,7 @@ void SVGBaseTrigger::UseTargets(ServerGameEntity* activator) {
 
 		//while (triggerEntity = SVG_FindEntityByKeyValue("targetname", GetKillTarget(), triggerEntity))
 		// Loop over the total entity range, ensure that we're checking for the right filters.
-		for (auto* triggerEntity : GetBaseEntityRange<0, MAX_EDICTS>()
+		for (auto* triggerEntity : GetGameEntityRange<0, MAX_EDICTS>()
 			| bef::IsValidPointer
 			| bef::HasServerEntity
 			| bef::InUse

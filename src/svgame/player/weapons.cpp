@@ -51,30 +51,30 @@ void SVG_PlayerNoise(ServerGameEntity *who, vec3_t where, int type)
         return;
 
 
-    if (!who->GetServerEntity()->myNoisePtr) {
+    if (!who->myNoisePtr) {
         noise = SVG_Spawn();
         noise->className = "player_noise";
         VectorSet(noise->mins, -8, -8, -8);
         VectorSet(noise->maxs, 8, 8, 8);
         noise->owner = who->GetServerEntity();
         noise->serverFlags = EntityServerFlags::NoClient;
-        who->GetServerEntity()->myNoisePtr = noise;
+        who->myNoisePtr = noise;
 
         noise = SVG_Spawn();
         noise->className = "player_noise";
         VectorSet(noise->mins, -8, -8, -8);
         VectorSet(noise->maxs, 8, 8, 8);
-        noise->owner = who->GetServerEntity();
+        noise->owner = who;
         noise->serverFlags = EntityServerFlags::NoClient;
-        who->GetServerEntity()->myNoise2Ptr = noise;
+        who->myNoise2Ptr = noise;
     }
 
     if (type == PNOISE_SELF || type == PNOISE_WEAPON) {
-        noise = who->GetServerEntity()->myNoisePtr;
+        noise = who->myNoisePtr;
         level.soundEntity = noise;
         level.soundEntityFrameNumber = level.frameNumber;
     } else { // type == PNOISE_IMPACT
-        noise = who->GetServerEntity()->myNoise2Ptr;
+        noise = who->myNoise2Ptr;
         level.sound2Entity = noise;
         level.sound2EntityFrameNumber = level.frameNumber;
     }

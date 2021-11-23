@@ -46,7 +46,7 @@ void SVG_UpdateChaseCam(PlayerClient *ent)
 
     VectorCopy(targ->state.origin, ownerv);
 
-    ownerv[2] += targ->classEntity->GetViewHeight();
+    ownerv[2] += targ->GetViewHeight();
 
     VectorCopy(targ->client->aimAngles, angles);
     if (angles[vec3_t::Pitch] > 56)

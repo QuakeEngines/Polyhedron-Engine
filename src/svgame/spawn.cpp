@@ -21,147 +21,147 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "entities.h"         // Entities.
 #include "player/client.h"    // Include Player Client header.
 
-typedef struct {
-    const char    *name; // C++20: STRING: Added const
-    void (*spawn)(ServerEntity *ent);
-} spawn_func_t;
-
-typedef struct {
-    const char    *name; // C++20: STRING: Added const
-    size_t  ofs;
-    fieldtype_t type;
-} spawn_field_t;
-
-static const spawn_func_t spawn_funcs[] = {
-    //{"item_health", SP_item_health},
-    //{"item_health_small", SP_item_health_small},
-    //{"item_health_large", SP_item_health_large},
-    //{"item_health_mega", SP_item_health_mega},
-
-    {"info_player_start", NULL},
-    //{"info_player_deathmatch", SP_info_player_deathmatch},
-    //{"info_player_coop", SP_info_player_coop},
-    //{"info_player_intermission", SP_info_player_intermission},
-
-    //{"func_plat", SP_func_plat},
-    {"func_button", nullptr},
-    //{"func_door", SP_func_door},
-
-    //{"func_door_rotating", SP_func_door_rotating},
-    //{"func_rotating", SP_func_rotating},
-    //{"func_train", SP_func_train},
-    //{"func_water", SP_func_water},
-    //{"func_conveyor", SP_func_conveyor},
-    //{"func_areaportal", SP_func_areaportal},
-    //{"func_wall", SP_func_wall},
-    //{"func_object", SP_func_object},
-    //{"func_timer", SP_func_timer},
-    //{"func_explosive", SP_func_explosive},
-    //{"func_killbox", SP_func_killbox},
-
-    {"trigger_always", NULL},
-    //{"trigger_relay", SP_trigger_relay},
-    //{"trigger_push", SP_trigger_push},
-    {"DelayedUse", NULL},
-    {"trigger_hurt", NULL},
-    {"trigger_multiple", NULL},
-    {"trigger_once", NULL},
-    //{"trigger_key", SP_trigger_key},
-    //{"trigger_counter", SP_trigger_counter},
-    //{"trigger_elevator", SP_trigger_elevator},
-    //{"trigger_gravity", SP_trigger_gravity},
-    //{"trigger_monsterjump", SP_trigger_monsterjump},
-
-    //{"target_temp_entity", SP_target_temp_entity},
-    //{"target_speaker", SP_target_speaker},
-    //{"target_explosion", SP_target_explosion},
-    //{"target_changelevel", SP_target_changelevel},
-    //{"target_splash", SP_target_splash},
-    //{"target_spawner", SP_target_spawner},
-    //{"target_blaster", SP_target_blaster},
-    //{"target_crosslevel_trigger", SP_target_crosslevel_trigger},
-    //{"target_crosslevel_target", SP_target_crosslevel_target},
-
-    //{"target_lightramp", SP_target_lightramp},
-    //{"target_earthquake", SP_target_earthquake},
-
-    {"worldspawn", NULL},
-
-    {"light", NULL},
-    //{"info_null", SP_info_null},
-    //{"func_group", SP_info_null},
-    //{"info_notnull", SP_info_notnull},
-
-    //{"misc_gib_arm", SP_misc_gib_arm},
-    //{"misc_gib_leg", SP_misc_gib_leg},
-    //{"misc_gib_head", SP_misc_gib_head},
-
-    //{"misc_teleporter", SP_misc_teleporter},
-    //{"misc_teleporter_dest", SP_misc_teleporter_dest},
-    {"misc_explobox", NULL},
-
-    {"BlasterBolt", NULL},
-
-    {NULL, NULL}
-};
-
-static const spawn_field_t spawn_fields[] = {
-    {"classname", FOFS(className), F_LSTRING},
-//    {"model", FOFS(model), F_LSTRING},
-//    {"spawnflags", FOFS(spawnFlags), F_INT},
-    {"speed", FOFS(speed), F_FLOAT},
-    {"acceleration", FOFS(acceleration), F_FLOAT},
-    {"deceleration", FOFS(deceleration), F_FLOAT},
-    {"target", FOFS(target), F_LSTRING},
-    {"targetName", FOFS(targetName), F_LSTRING},
-    {"pathtarget", FOFS(pathTarget), F_LSTRING},
-    {"killtarget", FOFS(killTarget), F_LSTRING},
-    {"message", FOFS(message), F_LSTRING},
-    {"team", FOFS(team), F_LSTRING},
-//    {"wait", FOFS(wait), F_FLOAT},
-//    {"delay", FOFS(delay), F_FLOAT},
-    {"random", FOFS(random), F_FLOAT},
-    {"moveorigin", FOFS(moveOrigin), F_VECTOR},
-    {"moveangles", FOFS(moveAngles), F_VECTOR},
-    {"style", FOFS(style), F_INT},
-    {"customLightStyle", FOFS(customLightStyle), F_LSTRING},
-    {"count", FOFS(count), F_INT},
-//    {"health", FOFS(health), F_INT},
-//    {"sounds", FOFS(sounds), F_INT},
-    {"light", 0, F_IGNORE},
-//    {"damage", FOFS(damage), F_INT},
-//    {"mass", FOFS(mass), F_INT},
-    {"volume", FOFS(volume), F_FLOAT},
-    {"attenuation", FOFS(attenuation), F_FLOAT},
-    {"map", FOFS(map), F_LSTRING},
-    //{"origin", FOFS(state.origin), F_VECTOR},
-    //{"angles", FOFS(state.angles), F_VECTOR},
-    //{"angle", FOFS(state.angles), F_ANGLEHACK},
-
-    {NULL}
-};
-
-// temp spawn vars -- only valid when the spawn function is called
-static const spawn_field_t temp_fields[] = {
-    {"lip", STOFS(lip), F_INT},
-    {"distance", STOFS(distance), F_INT},
-    {"height", STOFS(height), F_INT},
-    {"noise", STOFS(noise), F_LSTRING},
-    {"pausetime", STOFS(pausetime), F_FLOAT},
-    {"item", STOFS(item), F_LSTRING},
-
-    {"gravity", STOFS(gravity), F_LSTRING},
-    {"sky", STOFS(sky), F_LSTRING},
-    {"skyrotate", STOFS(skyrotate), F_FLOAT},
-    {"skyaxis", STOFS(skyaxis), F_VECTOR},
-    {"minyaw", STOFS(minyaw), F_FLOAT},
-    {"maxyaw", STOFS(maxyaw), F_FLOAT},
-    {"minpitch", STOFS(minpitch), F_FLOAT},
-    {"maxpitch", STOFS(maxpitch), F_FLOAT},
-    {"nextmap", STOFS(nextMap), F_LSTRING},
-
-    {NULL}
-};
+//typedef struct {
+//    const char    *name; // C++20: STRING: Added const
+//    void (*spawn)(ServerEntity *ent);
+//} spawn_func_t;
+//
+//typedef struct {
+//    const char    *name; // C++20: STRING: Added const
+//    size_t  ofs;
+//    fieldtype_t type;
+//} spawn_field_t;
+//
+//static const spawn_func_t spawn_funcs[] = {
+//    //{"item_health", SP_item_health},
+//    //{"item_health_small", SP_item_health_small},
+//    //{"item_health_large", SP_item_health_large},
+//    //{"item_health_mega", SP_item_health_mega},
+//
+//    {"info_player_start", NULL},
+//    //{"info_player_deathmatch", SP_info_player_deathmatch},
+//    //{"info_player_coop", SP_info_player_coop},
+//    //{"info_player_intermission", SP_info_player_intermission},
+//
+//    //{"func_plat", SP_func_plat},
+//    {"func_button", nullptr},
+//    //{"func_door", SP_func_door},
+//
+//    //{"func_door_rotating", SP_func_door_rotating},
+//    //{"func_rotating", SP_func_rotating},
+//    //{"func_train", SP_func_train},
+//    //{"func_water", SP_func_water},
+//    //{"func_conveyor", SP_func_conveyor},
+//    //{"func_areaportal", SP_func_areaportal},
+//    //{"func_wall", SP_func_wall},
+//    //{"func_object", SP_func_object},
+//    //{"func_timer", SP_func_timer},
+//    //{"func_explosive", SP_func_explosive},
+//    //{"func_killbox", SP_func_killbox},
+//
+//    {"trigger_always", NULL},
+//    //{"trigger_relay", SP_trigger_relay},
+//    //{"trigger_push", SP_trigger_push},
+//    {"DelayedUse", NULL},
+//    {"trigger_hurt", NULL},
+//    {"trigger_multiple", NULL},
+//    {"trigger_once", NULL},
+//    //{"trigger_key", SP_trigger_key},
+//    //{"trigger_counter", SP_trigger_counter},
+//    //{"trigger_elevator", SP_trigger_elevator},
+//    //{"trigger_gravity", SP_trigger_gravity},
+//    //{"trigger_monsterjump", SP_trigger_monsterjump},
+//
+//    //{"target_temp_entity", SP_target_temp_entity},
+//    //{"target_speaker", SP_target_speaker},
+//    //{"target_explosion", SP_target_explosion},
+//    //{"target_changelevel", SP_target_changelevel},
+//    //{"target_splash", SP_target_splash},
+//    //{"target_spawner", SP_target_spawner},
+//    //{"target_blaster", SP_target_blaster},
+//    //{"target_crosslevel_trigger", SP_target_crosslevel_trigger},
+//    //{"target_crosslevel_target", SP_target_crosslevel_target},
+//
+//    //{"target_lightramp", SP_target_lightramp},
+//    //{"target_earthquake", SP_target_earthquake},
+//
+//    {"worldspawn", NULL},
+//
+//    {"light", NULL},
+//    //{"info_null", SP_info_null},
+//    //{"func_group", SP_info_null},
+//    //{"info_notnull", SP_info_notnull},
+//
+//    //{"misc_gib_arm", SP_misc_gib_arm},
+//    //{"misc_gib_leg", SP_misc_gib_leg},
+//    //{"misc_gib_head", SP_misc_gib_head},
+//
+//    //{"misc_teleporter", SP_misc_teleporter},
+//    //{"misc_teleporter_dest", SP_misc_teleporter_dest},
+//    {"misc_explobox", NULL},
+//
+//    {"BlasterBolt", NULL},
+//
+//    {NULL, NULL}
+//};
+//
+//static const spawn_field_t spawn_fields[] = {
+//    {"classname", FOFS(className), F_LSTRING},
+////    {"model", FOFS(model), F_LSTRING},
+////    {"spawnflags", FOFS(spawnFlags), F_INT},
+//    {"speed", FOFS(speed), F_FLOAT},
+//    {"acceleration", FOFS(acceleration), F_FLOAT},
+//    {"deceleration", FOFS(deceleration), F_FLOAT},
+//    {"target", FOFS(target), F_LSTRING},
+//    {"targetName", FOFS(targetName), F_LSTRING},
+//    {"pathtarget", FOFS(pathTarget), F_LSTRING},
+//    {"killtarget", FOFS(killTarget), F_LSTRING},
+//    {"message", FOFS(message), F_LSTRING},
+//    {"team", FOFS(team), F_LSTRING},
+////    {"wait", FOFS(wait), F_FLOAT},
+////    {"delay", FOFS(delay), F_FLOAT},
+//    {"random", FOFS(random), F_FLOAT},
+//    {"moveorigin", FOFS(moveOrigin), F_VECTOR},
+//    {"moveangles", FOFS(moveAngles), F_VECTOR},
+//    {"style", FOFS(style), F_INT},
+//    {"customLightStyle", FOFS(customLightStyle), F_LSTRING},
+//    {"count", FOFS(count), F_INT},
+////    {"health", FOFS(health), F_INT},
+////    {"sounds", FOFS(sounds), F_INT},
+//    {"light", 0, F_IGNORE},
+////    {"damage", FOFS(damage), F_INT},
+////    {"mass", FOFS(mass), F_INT},
+//    {"volume", FOFS(volume), F_FLOAT},
+//    {"attenuation", FOFS(attenuation), F_FLOAT},
+//    {"map", FOFS(map), F_LSTRING},
+//    //{"origin", FOFS(state.origin), F_VECTOR},
+//    //{"angles", FOFS(state.angles), F_VECTOR},
+//    //{"angle", FOFS(state.angles), F_ANGLEHACK},
+//
+//    {NULL}
+//};
+//
+//// temp spawn vars -- only valid when the spawn function is called
+//static const spawn_field_t temp_fields[] = {
+//    {"lip", STOFS(lip), F_INT},
+//    {"distance", STOFS(distance), F_INT},
+//    {"height", STOFS(height), F_INT},
+//    {"noise", STOFS(noise), F_LSTRING},
+//    {"pausetime", STOFS(pausetime), F_FLOAT},
+//    {"item", STOFS(item), F_LSTRING},
+//
+//    {"gravity", STOFS(gravity), F_LSTRING},
+//    {"sky", STOFS(sky), F_LSTRING},
+//    {"skyrotate", STOFS(skyrotate), F_FLOAT},
+//    {"skyaxis", STOFS(skyaxis), F_VECTOR},
+//    {"minyaw", STOFS(minyaw), F_FLOAT},
+//    {"maxyaw", STOFS(maxyaw), F_FLOAT},
+//    {"minpitch", STOFS(minpitch), F_FLOAT},
+//    {"maxpitch", STOFS(maxpitch), F_FLOAT},
+//    {"nextmap", STOFS(nextMap), F_LSTRING},
+//
+//    {NULL}
+//};
 
 //
 // SVG_SpawnClassEntity
@@ -205,13 +205,13 @@ ED_CallSpawn
 Allocates the proper server game entity class. Then spawns the entity.
 ===============
 */
-void ED_CallSpawn(ServerEntity *ent)
+void ED_CallSpawn(ServerEntity *svEnt)
 {
-    auto dictionary = ent->entityDictionary;
-    ent->className = ED_NewString( ent->entityDictionary["classname"].c_str() );
-    ent->classEntity = SVG_SpawnClassEntity( ent, ent->className );
+    auto entityDictionary = svEnt->entityDictionary;
+    svEnt->className = ED_NewString( entityDictionary["classname"].c_str() );
+    ServerGameEntity *= SVG_SpawnClassEntity( svEnt, svEnt->className );
     // If we did not find the classname, then give up
-    if ( nullptr == ent->classEntity ) {
+    if ( !ent ) {
         SVG_FreeEntity( ent );
         return;
     }
@@ -350,7 +350,7 @@ void SVG_FindTeams(void)
     c2 = 0;
     for (i = 1, e = g_entities + i; i < globals.numberOfEntities; i++, e++) {
         // Fetch class entity.
-        ServerGameEntity *classEntity = g_baseEntities[e->state.number];
+        ServerGameEntity *classEntity = serverGameEntities[e->state.number];
 
         if (classEntity == NULL)
             continue;
@@ -367,7 +367,7 @@ void SVG_FindTeams(void)
         c2++;
         for (j = i + 1, e2 = e + 1 ; j < globals.numberOfEntities ; j++, e2++) {
             // Fetch class entity.
-            ServerGameEntity* classEntity2 = g_baseEntities[e->state.number];
+            ServerGameEntity* classEntity2 = serverGameEntities[e->state.number];
 
             if (classEntity2 == NULL)
                 continue;
@@ -431,9 +431,9 @@ void SVG_SpawnEntities(const char *mapName, const char *entities, const char *sp
     // Clear out entities.
     for (int32_t i = 0; i < game.maxEntities; i++) {
         // Delete class entities, if any.
-        if (g_baseEntities[i]) {
-            delete g_baseEntities[i];
-            g_baseEntities[i] = NULL;
+        if (serverGameEntities[i]) {
+            delete serverGameEntities[i];
+            serverGameEntities[i] = NULL;
         }
 
         g_entities[i] = {};
@@ -444,7 +444,7 @@ void SVG_SpawnEntities(const char *mapName, const char *entities, const char *sp
 
     // Set client fields on player ents
     for (i = 0 ; i < game.maximumClients ; i++)
-        g_entities[i + 1].client = game.clients + i;
+        gameEntities[i + 1].client = game.clients + i;
 
     ent = NULL;
     inhibit = 0;
@@ -498,8 +498,8 @@ void SVG_SpawnEntities(const char *mapName, const char *entities, const char *sp
 
     // Post spawn entities.
     for (int32_t i = 0; i < MAX_EDICTS; i++) {
-        if (g_baseEntities[i])
-            g_baseEntities[i]->PostSpawn();
+        if (serverGameEntities[i])
+            serverGameEntities[i]->PostSpawn();
     }
 
     // Spawn PlayerClient entities first.

@@ -60,7 +60,7 @@ ServerGameEntity *SVG_TestEntityPosition(ServerGameEntity *ent)
     trace = SVG_Trace(ent->GetOrigin(), ent->GetMins(), ent->GetMaxs(), ent->GetOrigin(), ent, mask);
 
     if (trace.startSolid)
-        return g_baseEntities[0];
+        return serverGameEntities[0];
 
     return NULL;
 }
@@ -482,7 +482,7 @@ qboolean SVG_Push(ServerGameEntity *pusher, vec3_t move, vec3_t amove)
 // see if any solid entities are inside the final position
     for (e = 1; e < globals.numberOfEntities; e++) {
         // Fetch the base entity and ensure it is valid.
-        check = g_baseEntities[e];
+        check = serverGameEntities[e];
 
         if (!check)
             continue;

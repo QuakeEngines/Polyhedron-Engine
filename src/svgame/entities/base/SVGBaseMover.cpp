@@ -94,7 +94,7 @@ void SVGBaseMover::SpawnKey(const std::string& key, const std::string& value) {
 // SVGBaseMover::SetMoveDirection
 //
 //===============
-void SVGBaseMover::SetMoveDirection(const vec3_t& angles) {
+void SVGBaseMover::SetMoveDirection(const vec3_t& angles, qboolean resetAngles = false) {
 	const vec3_t VEC_UP = { 0, -1, 0 };
 	const vec3_t MOVEDIR_UP = { 0, 0, 1 };
 	const vec3_t VEC_DOWN = { 0, -2, 0 };
@@ -122,7 +122,9 @@ void SVGBaseMover::SetMoveDirection(const vec3_t& angles) {
 	// and align it directly with the movement direction.
 	// I suggest we add a bool parameter to this method, 'resetAngles',
 	// which will zero the entity's angles if true
-	SetAngles(vec3_zero());
+	//SetAngles(vec3_zero());
+	SetAngles(moveDirection);
+	// WID: Like I did just now?
 }
 
 //===============

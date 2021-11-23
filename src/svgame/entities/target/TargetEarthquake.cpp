@@ -69,7 +69,7 @@ void TargetEarthquake::QuakeThink() {
         lastQuakeTime = level.time + 0.5f;
     }
 
-    for ( auto * entity : g_baseEntities
+    for ( auto * entity : serverGameEntities
          | bef::Standard | bef::HasClient | bef::HasGroundEntity ) 
     {
         entity->SetGroundEntity( nullptr );

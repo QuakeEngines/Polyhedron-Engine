@@ -78,7 +78,8 @@ void UTIL_TouchTriggers(ServerGameEntity *ent)
 {
     int         i, num;
     ServerEntity* serverEntity = ent->GetServerEntity();
-    ServerGameEntity* touch[MAX_EDICTS], * hit;
+    std::vector<ServerGameEntity*> touch(MAX_EDICTS);
+    ServerGameEntity *hit;
 
     // Dead entities don't activate triggers!
     if ((ent->GetClient() || (ent->GetServerFlags() & EntityServerFlags::Monster)) && (ent->GetHealth() <= 0))
@@ -134,28 +135,24 @@ to force all entities it covers to immediately touch it
 */
 void G_TouchSolids(ServerGameEntity *ent)
 {
-    int         i, num;
-    ServerEntity* serverEntity = ent->GetServerEntity();
-    ServerEntity* touch[MAX_EDICTS], * hit;
+    // Array of pointers to touched game entities.
+    ServerGameEntity *touchedEntities[MAX_EDICTS];
+    ServerGameEntity *hit = nullptr;
 
-    // dead things don't activate triggers!
+    // Ensure that the entity which is being checked ain't dead.
     if ((ent->GetClient() || (ent->GetServerFlags() & EntityServerFlags::Monster)) && (ent->GetHealth() <= 0))
         return;
 
-    num = gi.BoxEntities(ent->GetAbsoluteMin(), ent->GetAbsoluteMax(), touch
-        , MAX_EDICTS, AREA_SOLID);
+    touchedEntities = SVG_BoxEntities(ent->GetAbsoluteMin(), ent->GetAbsoluteMax(), MAX_EDICTS, AREA_SOLID);
 
-    // be careful, it is possible to have an entity in this
+    // Let's be careful, it is possible to have an entity in this
     // list removed before we get to it (killtriggered)
-    for (i = 0; i < num; i++) {
-        hit = touch[i];
-        if (!hit->inUse)
+    for (std::size_t i = 0; i < touchedEntities.size(); i++) {
+        hit = touchedEntities[i];
+        if (!hit->IsInUse())
             continue;
 
-        if (!hit->classEntity)
-            continue;
-
-        ent->Touch(ent, hit->classEntity, NULL, NULL);
+        ent->Touch(ent, hit, NULL, NULL);
         //if (!hit->touch)
         //    continue;
         //hit->touch(hit, ent, NULL, NULL);

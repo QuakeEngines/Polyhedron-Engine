@@ -64,8 +64,8 @@ std::vector<ServerGameEntity*> SVG_BoxEntities(const vec3_t& mins, const vec3_t&
 
     // Go through the boxed entities list, and store there classEntities (ServerGameEntity aka baseEntities).
     for (int32_t i = 0; i < numEntities; i++) {
-        if (g_baseEntities[boxedServerEntities[i]->state.number] != nullptr)
-            boxedBaseEntities.push_back(g_baseEntities[boxedServerEntities[i]->state.number]);
+        if (serverGameEntities[boxedServerEntities[i]->state.number] != nullptr)
+            boxedBaseEntities.push_back(serverGameEntities[boxedServerEntities[i]->state.number]);
     }
 
     // Return our boxed base entities vector.
@@ -108,8 +108,8 @@ SVGTrace SVG_Trace(const vec3_t& start, const vec3_t& mins, const vec3_t& maxs, 
     if (trace.ent) {
         uint32_t index = trace.ent->state.number;
 
-        if (g_baseEntities[index] != NULL) {
-            svgTrace.ent = g_baseEntities[index];
+        if (serverGameEntities[index] != NULL) {
+            svgTrace.ent = serverGameEntities[index];
         } else {
             svgTrace.ent = g_entities[0].classEntity;
         }

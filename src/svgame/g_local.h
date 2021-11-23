@@ -487,7 +487,7 @@ struct MeansOfDeath {
 };
 
 // Once again, ugly.
-extern ServerGameEntity* g_baseEntities[MAX_EDICTS];
+extern ServerGameEntity* serverGameEntities[MAX_EDICTS];
 
 
 //

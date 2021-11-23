@@ -299,6 +299,11 @@ public:
         return nextThinkTime;
     }
 
+    // @return a pointer to the "myNoise".
+    inline const ServerGameEntity* GetMyNoiseEntity() {
+        return myNoiseEntity;
+    }
+
     // Return the 'noiseIndex' value.
     inline const int32_t GetNoiseIndex() {
         return noiseIndex;
@@ -458,7 +463,7 @@ public:
     }
 
     // Return the 'angles' value.
-    inline void SetAngles(const vec3_t& angles) {
+    inline void SetAngles(const vec3_t& angles, bool resetAngles = false) {
         serverEntity->state.angles = angles;
     }
 
@@ -879,6 +884,8 @@ protected:
     ServerEntity* moveTargetPtr;
     // The entity that activated this
     ServerGameEntity* activator;
+    // The entity that activated the noise.
+    ServerGameEntity* myNoiseEntity;
     
     // Yaw Speed. (Should be for monsters...)
     float yawSpeed;

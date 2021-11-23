@@ -162,17 +162,7 @@ struct ServerGameImports {
     } apiversion;
 
     //---------------------------------------------------------------------
-    // ServerEntity Pool
-    //---------------------------------------------------------------------
-    struct ServerEntityPool {
-        std::array<ServerEntity, MAX_EDICTS> entities{};
-        int32_t entitySize{sizeof(ServerEntity)};
-        int32_t numberOfEntities{0};     // current number, <= maxEntities
-        int32_t maxEntities{MAX_EDICTS};
-    } entityPool;
-
-    //---------------------------------------------------------------------
-    // Special messages
+    // Print Messages.
     //---------------------------------------------------------------------
     void (* q_printf(2, 3) BPrintf)(int printlevel, const char *fmt, ...);
     void (* q_printf(1, 2) DPrintf)(const char *fmt, ...);
@@ -189,7 +179,8 @@ struct ServerGameImports {
     void (*configstring)(int num, const char *string);
 
     //---------------------------------------------------------------------
-    // the *index functions create configstrings and some internal server state
+    // the *index functions create configstrings and some internal 
+    // server state.
     //---------------------------------------------------------------------
     int (*ModelIndex)(const char *name);
     int (*SoundIndex)(const char *name);
@@ -204,7 +195,7 @@ struct ServerGameImports {
     void (*PositionedSound)(vec3_t origin, ServerEntity *ent, int channel, int soundinedex, float volume, float attenuation, float timeofs);
 
     //---------------------------------------------------------------------
-    // Collision Detection
+    // Collision Detection.
     //---------------------------------------------------------------------
     trace_t (* q_gameabi Trace)(const vec3_t &start, const vec3_t &mins, const vec3_t &maxs, const vec3_t &end, ServerEntity *passent, int contentmask);
     int (*PointContents)(const vec3_t &point);
@@ -223,7 +214,7 @@ struct ServerGameImports {
     int (*BoxEntities)(const vec3_t &mins, const vec3_t &maxs, ServerEntity **list, int maxcount, int areatype);
     
     //---------------------------------------------------------------------
-    // Network Messaging
+    // Network Messaging.
     //---------------------------------------------------------------------
     void (*Multicast)(const vec3_t &origin, int32_t to);
     void (*Unicast)(ServerEntity *ent, qboolean reliable);
@@ -266,13 +257,6 @@ struct ServerGameImports {
     void (*AddCommandString)(const char *text);
 
     void (*DebugGraph)(float value, int color);
-
-    //---------------------------------------------------------------------
-    // ServerEntity Pool
-    //---------------------------------------------------------------------
-    ServerEntityPool* pool;
-    // Returns a pointer to the ID in the entity pool in case it is inUse
-    ServerEntity* FetchPoolEntityID(uint32_t index);
 };
 
 //

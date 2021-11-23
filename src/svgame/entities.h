@@ -30,190 +30,45 @@
 
 // Include this guy here, gotta do so to make it work.
 #include "entities/base/ServerGameEntity.h"
-
+#include <ranges>
 //
-// Filter function namespace that actually contains the entity filter implementations.
+// C++ using magic.
 // 
-namespace EntityFilterFunctions {
-    // @returns true in case the (server-)ServerEntity is in use.
-    inline bool EntityInUse (const ServerEntity& ent) { return ent.inUse; }
-    // @returns true in case the (server-)ServerEntity has a client attached to it.
-    inline bool EntityHasClient(ServerEntity& ent) { return static_cast<bool>(ent.client); }
-    // @returns true in case the (server-)ServerEntity has a Class ServerEntity attached to it.
-    inline bool EntityHasClassEntity(ServerEntity& ent) { return static_cast<bool>(ent.className.empty()); }
+using ServerGameEntitySpan = std::span<ServerGameEntity*>;
 
-    // Returns true in case the (server-)ServerEntity has a client attached to it.
-    inline bool BaseEntityHasClient(ServerGameEntity* ent) { return ent->GetClient(); }
-    // Returns true in case the BaseEntity has a ground entity set to it.
-    inline bool BaseEntityHasGroundEntity(ServerGameEntity* ent) { return ent->GetGroundEntity(); }
-    // Returns true in case the BaseEntity is properly linked to a server entity.
-    inline bool BaseEntityHasServerEntity(ServerGameEntity* ent) { return ent->GetServerEntity(); }
-    // Returns true if the BaseEntity contains the sought for targetname.
-    inline bool BaseEntityHasTargetName(ServerGameEntity* ent) { return ent->GetTargetName() != "" && !ent->GetTargetName().empty(); }
-    // Returns true in case the BaseEntity has a client attached to it.
-    inline bool BaseEntityInUse(ServerGameEntity* ent) { return ent->IsInUse(); }
-    // Returns true if the BaseEntity is NOT a nullptr.
-    inline bool BaseEntityIsValidPointer(ServerGameEntity* ent) { return ent != nullptr; }
-
-    // Returns true in case the BaseEntity has the queried for classname.
-    //inline bool BaseEntityHasClass(ServerGameEntity* ent, std::string classname) { return ent->GetClassName() == classname; }
-};
-
-
+// Returns a span containing all ServerEntities in the range of:
+// [start] to [start + count].
 //
-// Actual filters to use with GetBaseEntityRange, ..., ... TODO: What other functions?
-//
-namespace EntityFilters {
-    using namespace std::views;
-
-    inline auto InUse = std::views::filter( &EntityFilterFunctions::EntityInUse );
-    inline auto HasClient = std::views::filter( &EntityFilterFunctions::EntityHasClient );
-    inline auto HasClassEntity = std::views::filter( &EntityFilterFunctions::EntityHasClassEntity );
-    // WID: TODO: This one actually has to move into EntityFilterFunctions, and then
-    // be referred to from here. However, I am unsure how to do that as of yet.
-    inline auto HasClassName(const std::string& classname) {
-        return std::ranges::views::filter(
-            [classname /*need a copy!*/](ServerEntity &ent) {
-                return classname == ent.className;
-            }
-        );
-    }
-    // WID: TODO: This one actually has to move into EntityFilterFunctions, and then
-    // be referred to from here. However, I am unsure how to do that as of yet.
-    inline auto HasKeyValue(const std::string& fieldKey, const std::string &fieldValue) {
-        return std::ranges::views::filter(
-            [fieldKey, fieldValue /*need a copy!*/](ServerEntity& ent) {
-                auto& dictionary = ent.entityDictionary;
-
-                if (dictionary.find(fieldKey) != dictionary.end()) {
-                    if (dictionary[fieldKey] == fieldValue) {
-                        return true;
-                    }
-                }
-
-                return false;
-            }
-        );
-    }
-
-    inline auto Standard = (InUse);
-};
-namespace ef = EntityFilters; // Shortcut, lesser typing.
+// This span can be quired on by several filters to ensure you only
+// acquire a list of entities with specific demands.
+template <std::size_t start, std::size_t count>
+inline auto GetServerEntityRange() -> std::span<ServerGameEntity, count> {
+    return std::span(serverGameEntities).subspan<start, count>();
+}
+inline ServerGameEntitySpan GetServerEntityRange(std::size_t start, std::size_t count) {
+    return ServerGameEntitySpan(serverGameEntities).subspan(start, count);
+}
 
 
-//
-// Actual filters to use with GetEntityRange, ..., ... TODO: What other functions?
-//
-namespace BaseEntityFilters {
-    using namespace std::views;
-
-    // BaseEntity Filters to employ by pipelining. Very nice and easy method of doing loops.
-    inline auto IsValidPointer = std::views::filter( &EntityFilterFunctions::BaseEntityIsValidPointer );
-    inline auto HasServerEntity = std::views::filter( &EntityFilterFunctions::BaseEntityHasServerEntity);
-    inline auto HasGroundEntity = std::views::filter( &EntityFilterFunctions::BaseEntityHasGroundEntity);
-    inline auto InUse = std::views::filter( &EntityFilterFunctions::BaseEntityInUse );
-    inline auto HasClient = std::views::filter ( &EntityFilterFunctions::BaseEntityHasClient );
-
-    // WID: TODO: This one actually has to move into EntityFilterFunctions, and then
-    // be referred to from here. However, I am unsure how to do that as of yet.
-    inline auto HasClassName(const std::string& classname) {
-        return std::ranges::views::filter(
-            [classname /*need a copy!*/](ServerGameEntity* ent) {
-                return ent->GetClassName() == classname;
-            }
-        );
-    }
-
-    // WID: TODO: This one actually has to move into EntityFilterFunctions, and then
-    // be referred to from here. However, I am unsure how to do that as of yet.
-    inline auto HasKeyValue(const std::string& fieldKey, const std::string& fieldValue) {
-        return std::ranges::views::filter(
-            [fieldKey, fieldValue /*need a copy!*/](ServerGameEntity *ent) {
-                auto& dictionary = ent->GetEntityDictionary();
-
-                if (dictionary.find(fieldKey) != dictionary.end()) {
-                    if (dictionary[fieldKey] == fieldValue) {
-                        return true;
-                    }
-                }
-
-                return false;
-            }
-        );
-    }
-
-    // WID: TODO: This one actually has to move into EntityFilterFunctions, and then
-    // be referred to from here. However, I am unsure how to do that as of yet.
-    template <typename ClassType>
-    auto IsClassOf() {
-        return std::ranges::views::filter(
-            [](ServerGameEntity* ent) {
-                return ent->IsClass<ClassType>();
-            }
-        );
-    }
-
-    template <typename ClassType>
-    auto IsSubclassOf() {
-        return std::ranges::views::filter(
-            [](ServerGameEntity* ent) {
-                return ent->IsSubclassOf<ClassType>();
-            }
-        );
-    }
-
-    // WID: TODO: This one actually has to move into EntityFilterFunctions, and then
-    // be referred to from here. However, I am unsure how to do that as of yet.
-    inline auto WithinRadius(vec3_t origin, float radius, uint32_t excludeSolidFlags) {
-        return std::ranges::views::filter(
-            [origin, radius, excludeSolidFlags/*need a copy!*/](ServerGameEntity* ent) {
-                // Find distances between entity origins.
-                vec3_t entityOrigin = origin - (ent->GetOrigin() + vec3_scale(ent->GetMins() + ent->GetMaxs(), 0.5f));
-
-                // Do they exceed our radius? Then we haven't find any.
-                if (vec3_length(entityOrigin) > radius)
-                    return false;
-
-                // Cheers, we found our class entity.
-                return true;
-            }
-        );
-    }
-
-    //
-    // Summed up pipelines to simplify life with.
-    //
-    // A wrapper for the most likely 3 widely used, and if forgotten, error prone filters.
-    inline auto Standard = (IsValidPointer | HasServerEntity | InUse);
-};
-namespace bef = BaseEntityFilters; // Shortcut, lesser typing.
 
 
 //
 // C++ using magic.
 //
-using EntitySpan = std::span<ServerEntity>;
-using BaseEntitySpan = std::span<ServerGameEntity*>;
+using GameEntitySpan = std::span<ServerGameEntity*>;
+using GameEntityVector = std::vector<ServerGameEntity*>;
 
-using BaseEntityVector = std::vector<ServerGameEntity*>;
-
-// Returns a span containing all the entities in the range of [start] to [start + count].
+// Returns a span containing all ServerGameEntities in the range of:
+// [start] to [start + count].
+//
+// This span can be quired on by several filters to ensure you only
+// acquire a list of entities with specific demands.
 template <std::size_t start, std::size_t count>
-inline auto GetEntityRange() -> std::span<ServerEntity, count> {
-    return std::span(gi.entityPool.entities).subspan<start, count>();
+inline auto GetGameEntityRange() -> std::span<ServerGameEntity*, count> {
+    return std::span(serverGameEntities).subspan<start, count>();
 }
-
-// Returns a span containing all base entities in the range of [start] to [start + count].
-template <std::size_t start, std::size_t count>
-inline auto GetBaseEntityRange() -> std::span<ServerGameEntity*, count> {
-    return std::span(g_baseEntities).subspan<start, count>();
-}
-
-inline EntitySpan GetEntityRange(std::size_t start, std::size_t count) {
-    return EntitySpan(gi.entityPool.entities).subspan(start, count);
-}
-inline BaseEntitySpan GetBaseEntityRange(std::size_t start, std::size_t count) {
-    return BaseEntitySpan(g_baseEntities).subspan(start, count);
+inline auto GetGameEntityRange(std::size_t start, std::size_t count) {
+    return std::span(serverGameEntities).subspan(start, count);
 }
 
 
@@ -259,8 +114,8 @@ inline entityClass* SVG_CreateClassEntity(ServerEntity* edict = nullptr, bool al
     if (entityClass::ClassInfo.AllocateInstance) {
         entity = static_cast<entityClass*>(entityClass::ClassInfo.AllocateInstance(edict)); // Entities that aren't in the type info system will error out here
         edict->className = entity->GetTypeInfo()->className;
-        if (nullptr == g_baseEntities[edict->state.number]) {
-            g_baseEntities[edict->state.number] = entity;
+        if (nullptr == serverGameEntities[edict->state.number]) {
+            serverGameEntities[edict->state.number] = entity;
         } else {
             gi.DPrintf("ERROR: edict %i is already taken\n", edict->state.number);
         }

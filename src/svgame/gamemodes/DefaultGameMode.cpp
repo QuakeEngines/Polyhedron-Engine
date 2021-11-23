@@ -607,7 +607,7 @@ void DefaultGameMode::OnLevelExit() {
         uint32_t stateNumber = serverEntity->state.number;
 
         // Fetch the corresponding base entity.
-        ServerGameEntity* entity = g_baseEntities[stateNumber];
+        ServerGameEntity* entity = serverGameEntities[stateNumber];
 
         // Ensure an entity its health is reset to default.
         if (entity->GetHealth() > entity->GetClient()->persistent.maxHealth)
@@ -1285,7 +1285,7 @@ void DefaultGameMode::SelectClientSpawnPoint(ServerEntity* ent, vec3_t& origin, 
     //// Find a single player start spot
     if (!spawnPoint) {
         // Find a spawnpoint that has a target:
-        for (auto* result : g_baseEntities | bef::Standard | bef::IsSubclassOf<InfoPlayerStart>()) {
+        for (auto* result : serverGameEntities | bef::Standard | bef::IsSubclassOf<InfoPlayerStart>()) {
             // Continue in case there is no comparison to it with the possible target
             // of the InfoPlayerStart
             if (!game.spawnpoint[0])
@@ -1301,7 +1301,7 @@ void DefaultGameMode::SelectClientSpawnPoint(ServerEntity* ent, vec3_t& origin, 
     // Since we still haven't found one with a target, do it again, but this time without
     // a target requirement.
     if (!spawnPoint) {
-        for (auto* result : g_baseEntities | bef::Standard | bef::IsSubclassOf<InfoPlayerStart>()) {
+        for (auto* result : serverGameEntities | bef::Standard | bef::IsSubclassOf<InfoPlayerStart>()) {
             if (result) {
                 spawnPoint = result;
                 break;
