@@ -299,9 +299,13 @@ public:
         return nextThinkTime;
     }
 
-    // @return a pointer to the "myNoise".
+    // @return a pointer to the entity that triggered myNoise
     inline const ServerGameEntity* GetMyNoiseEntity() {
         return myNoiseEntity;
+    }
+    // @return a pointer to the entity that triggered myNoise2
+    inline const ServerGameEntity* GetMyNoise2Entity() {
+        return myNoise2Entity;
     }
 
     // Return the 'noiseIndex' value.
@@ -376,7 +380,7 @@ public:
     }
 
     // Return a reference to the serverEntity its state.
-    inline const EntityState& GetState() {
+    inline EntityState& GetState() {
         return serverEntity->state;
     }
     // Return the 'style' value.
@@ -886,7 +890,10 @@ protected:
     ServerGameEntity* activator;
     // The entity that activated the noise.
     ServerGameEntity* myNoiseEntity;
-    
+    // The entity that activated the second noise.
+    ServerGameEntity* myNoise2Entity;
+
+
     // Yaw Speed. (Should be for monsters...)
     float yawSpeed;
     // Ideal Yaw Angle. (Should be for monsters...)

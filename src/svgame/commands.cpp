@@ -108,7 +108,7 @@ void SelectPrevItem(ServerEntity *ent, int itflags)
     cl = ent->client;
 
     if (cl->chaseTarget) {
-        SVG_ChasePrev((PlayerClient*)ent->classEntity);
+        SVG_ChasePrev(<dynamic_cast>(PlayerClient*)ent->classEntity);
         return;
     }
 

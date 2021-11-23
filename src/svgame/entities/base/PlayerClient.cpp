@@ -347,14 +347,14 @@ void PlayerClient::SetSound() {
 void PlayerClient::LookAtKiller(ServerGameEntity* inflictor, ServerGameEntity* attacker)
 {
     // Fetch client.
-    gclient_s* client = GetClient();
+    GameClient* client = GetClient();
 
     // Is the attack, not us, or the world?
-    if (attacker && attacker != SVG_GetWorldClassEntity() && attacker != this) {
+    if (attacker && attacker != SVG_GetWorldSpawnEntity() && attacker != this) {
         float yaw = vec3_to_yaw(attacker->GetOrigin() - GetOrigin());
         SetKillerYaw(yaw);
     // Is the inflictor, and not an attack, NOT us or the WORLD?
-    } else if (inflictor && inflictor != SVG_GetWorldClassEntity() && inflictor != this) {
+    } else if (inflictor && inflictor != SVG_GetWorldSpawnEntity() && inflictor != this) {
         float yaw = vec3_to_yaw(inflictor->GetOrigin() - GetOrigin());
         SetKillerYaw(yaw);
     // If none of the above, set the yaw as is.
@@ -463,7 +463,7 @@ void PlayerClient::CheckFallingDamage()
 
         //if (!deathmatch->value || 
         if (!((int)gamemodeflags->value & GameModeFlags::NoFalling)) {
-            SVG_InflictDamage(this, SVG_GetWorldClassEntity(), SVG_GetWorldClassEntity(), dir, GetOrigin(), vec3_zero(), damage, 0, 0, MeansOfDeath::Falling);
+            SVG_InflictDamage(this, SVG_GetWorldSpawnEntity(), SVG_GetWorldSpawnEntity(), dir, GetOrigin(), vec3_zero(), damage, 0, 0, MeansOfDeath::Falling);
         }
     } else {
         SetEventID(EntityEvent::FallShort);
@@ -573,7 +573,7 @@ void PlayerClient::CheckWorldEffects()
 
                 SetDebouncePainTime(level.time);
 
-                SVG_InflictDamage(this, SVG_GetWorldClassEntity(), SVG_GetWorldClassEntity(), vec3_zero(),   GetOrigin(), vec3_zero(), GetDamage(), 0, DamageFlags::NoArmorProtection, MeansOfDeath::Water);
+                SVG_InflictDamage(this, SVG_GetWorldSpawnEntity(), SVG_GetWorldSpawnEntity(), vec3_zero(),   GetOrigin(), vec3_zero(), GetDamage(), 0, DamageFlags::NoArmorProtection, MeansOfDeath::Water);
             }
         }
     } else {
@@ -595,11 +595,11 @@ void PlayerClient::CheckWorldEffects()
                 SetDebouncePainTime(level.time + 1);
             }
 
-            SVG_InflictDamage(this, SVG_GetWorldClassEntity(), SVG_GetWorldClassEntity(), vec3_zero(), GetOrigin(), vec3_zero(), 3 * waterLevel, 0, 0, MeansOfDeath::Lava);
+            SVG_InflictDamage(this, SVG_GetWorldSpawnEntity(), SVG_GetWorldSpawnEntity(), vec3_zero(), GetOrigin(), vec3_zero(), 3 * waterLevel, 0, 0, MeansOfDeath::Lava);
         }
 
         if (GetWaterType() & CONTENTS_SLIME) {
-            SVG_InflictDamage(this, SVG_GetWorldClassEntity(), SVG_GetWorldClassEntity(), vec3_zero(), GetOrigin(), vec3_zero(), 1 * waterLevel, 0, 0, MeansOfDeath::Slime);
+            SVG_InflictDamage(this, SVG_GetWorldSpawnEntity(), SVG_GetWorldSpawnEntity(), vec3_zero(), GetOrigin(), vec3_zero(), 1 * waterLevel, 0, 0, MeansOfDeath::Slime);
         }
     }
 }

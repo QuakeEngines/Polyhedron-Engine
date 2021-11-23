@@ -51,14 +51,15 @@ void SVG_PlayerNoise(ServerGameEntity *who, vec3_t where, int type)
         return;
 
 
-    if (!who->myNoisePtr) {
+    if (!who->GetMyNoiseEntity()) {
+        SVG_CreateEnt
         noise = SVG_Spawn();
         noise->className = "player_noise";
-        VectorSet(noise->mins, -8, -8, -8);
-        VectorSet(noise->maxs, 8, 8, 8);
+        noise->mins = vec3_t { - 8, -8, -8 );
+        noise->maxs = vec3_t {   8,  8,  8 );
         noise->owner = who->GetServerEntity();
         noise->serverFlags = EntityServerFlags::NoClient;
-        who->myNoisePtr = noise;
+        who->SetMyNoiseEntity(noise);
 
         noise = SVG_Spawn();
         noise->className = "player_noise";

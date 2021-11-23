@@ -23,14 +23,126 @@
 // to an SE, which has to not be InUse. For if it is, it's slot has already been
 // eaten up by an other "CE". 
 //
-//
-//
 */
 #pragma once
 
 // Include this guy here, gotta do so to make it work.
 #include "entities/base/ServerGameEntity.h"
 #include <ranges>
+#include <span>
+
+//
+// Filter function namespace that actually contains the entity filter implementations.
+// 
+namespace EntityFilterFunctions {
+    // @returns true in case the (server-)ServerEntity is in use.
+    //inline bool EntityInUse (const ServerEntity& ent) { return ent.inUse; }
+    // @returns true in case the (server-)ServerEntity has a client attached to it.
+    inline bool ServerEntityHasClient(ServerEntity& ent) { return static_cast<bool>(ent.client); }
+    // @returns true in case the (server-)ServerEntity has a Class ServerEntity attached to it.
+    inline bool ServerEntityHasClassEntity(ServerEntity& ent) { return static_cast<bool>(ent.className.empty()); }
+
+    // Returns true in case the (server-)ServerEntity has a client attached to it.
+    inline bool ServerGameEntityHasClient(ServerGameEntity* ent) { return ent->GetClient(); }
+    // Returns true in case the BaseEntity has a ground entity set to it.
+    inline bool ServerGameEntityHasGroundEntity(ServerGameEntity* ent) { return ent->GetGroundEntity(); }
+    // Returns true in case the BaseEntity is properly linked to a server entity.
+    //line bool ServerGameEntityHasServerEntity(ServerGameEntity* ent) { return ent->GetServerEntity(); }
+    // Returns true if the BaseEntity contains the sought for targetname.
+    inline bool ServerGameEntityHasTargetName(ServerGameEntity* ent) { return ent->GetTargetName() != "" && !ent->GetTargetName().empty(); }
+    // Returns true in case the BaseEntity has a client attached to it.
+    //inline bool ServerGameEntityInUse(ServerGameEntity* ent) { return ent->IsInUse(); }
+    // Returns true if the BaseEntity is NOT a nullptr.
+    //inline bool ServerGameEntityIsValidPointer(ServerGameEntity* ent) { return ent != nullptr; }
+
+    // Returns true in case the BaseEntity has the queried for classname.
+    //inline bool BaseEntityHasClass(ServerGameEntity* ent, std::string classname) { return ent->GetClassName() == classname; }
+};
+
+//
+// Actual filters to use with GetEntityRange, ..., ... TODO: What other functions?
+//
+namespace ServerGameEntityFilters {
+    using namespace std::views;
+
+    // BaseEntity Filters to employ by pipelining. Very nice and easy method of doing loops.
+    inline auto HasGroundEntity = std::views::filter( &EntityFilterFunctions::ServerGameEntityHasGroundEntity);
+    inline auto HasClient = std::views::filter ( &EntityFilterFunctions::ServerGameEntityHasClient );
+
+    // WID: TODO: This one actually has to move into EntityFilterFunctions, and then
+    // be referred to from here. However, I am unsure how to do that as of yet.
+    inline auto HasClassName(const std::string& classname) {
+        return std::ranges::views::filter(
+            [classname /*need a copy!*/](ServerGameEntity* ent) {
+                return ent->GetClassName() == classname;
+            }
+        );
+    }
+
+    // WID: TODO: This one actually has to move into EntityFilterFunctions, and then
+    // be referred to from here. However, I am unsure how to do that as of yet.
+    inline auto HasKeyValue(const std::string& fieldKey, const std::string& fieldValue) {
+        return std::ranges::views::filter(
+            [fieldKey, fieldValue /*need a copy!*/](ServerGameEntity *ent) {
+                auto& dictionary = ent->GetEntityDictionary();
+
+                if (dictionary.find(fieldKey) != dictionary.end()) {
+                    if (dictionary[fieldKey] == fieldValue) {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+        );
+    }
+
+    // WID: TODO: This one actually has to move into EntityFilterFunctions, and then
+    // be referred to from here. However, I am unsure how to do that as of yet.
+    template <typename ClassType>
+    auto IsClassOf() {
+        return std::ranges::views::filter(
+            [](ServerGameEntity* ent) {
+                return ent->IsClass<ClassType>();
+            }
+        );
+    }
+
+    template <typename ClassType>
+    auto IsSubclassOf() {
+        return std::ranges::views::filter(
+            [](ServerGameEntity* ent) {
+                return ent->IsSubclassOf<ClassType>();
+            }
+        );
+    }
+
+    // WID: TODO: This one actually has to move into EntityFilterFunctions, and then
+    // be referred to from here. However, I am unsure how to do that as of yet.
+    inline auto WithinRadius(vec3_t origin, float radius, uint32_t excludeSolidFlags) {
+        return std::ranges::views::filter(
+            [origin, radius, excludeSolidFlags/*need a copy!*/](ServerGameEntity* ent) {
+                // Find distances between entity origins.
+                vec3_t entityOrigin = origin - (ent->GetOrigin() + vec3_scale(ent->GetMins() + ent->GetMaxs(), 0.5f));
+
+                // Do they exceed our radius? Then we haven't find any.
+                if (vec3_length(entityOrigin) > radius)
+                    return false;
+
+                // Cheers, we found our class entity.
+                return true;
+            }
+        );
+    }
+
+    //
+    // Summed up pipelines to simplify life with.
+    //
+    // A wrapper for the most likely 3 widely used, and if forgotten, error prone filters.
+    //inline auto Standard = (IsValidPointer | HasServerEntity | InUse);
+};
+namespace svgef = ServerGameEntityFilters; // Shortcut, lesser typing.
+
 //
 // C++ using magic.
 // 
@@ -127,6 +239,6 @@ inline entityClass* SVG_CreateClassEntity(ServerEntity* edict = nullptr, bool al
 //
 // ClassEntity handling.
 //
-ServerGameEntity* SVG_GetWorldClassEntity();
+ServerGameEntity* SVG_GetWorldSpawnEntity();
 ServerGameEntity* SVG_SpawnClassEntity(ServerEntity* ent, const std::string& className);
 void SVG_FreeClassEntity(ServerEntity* ent);

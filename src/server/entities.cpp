@@ -26,40 +26,23 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 //=============================================================================
 
 // Server ServerEntity Pool.
-EntityPool entityPool;
+struct ServerEntityPool {
+    std::array<ServerEntity, MAX_EDICTS> entities;
+    int32_t entityStructureSize{sizeof(ServerEntity)};
+    int32_t currentNumberOfEntities{0};     // current number, <= maxEntities
+    int32_t maximumEntities{MAX_EDICTS};
+} svEntityPool;
 
 // Seeks the server entity pool for a free entity (aka inUse = false), and returns
 // a pointer to it.
-ServerEntity* FindFreePoolEntity() {
-    // Callback to find an entity that is not in use.
-    auto findFunc  = [](ServerEntity &e) -> size_t {
-        return !e.inUse;
-    };
-    
-    // See if there is still an entity left with no inUse == true, if so, return it.
-    auto result = std::find_if(entityPool.entities.begin(), entityPool.entities.end(), findFunc);
-    if (result != entityPool.entities.end()) {
-        return &(*result);
+ServerEntity* GetServerEntity(ServerEntityID id) {
+    if (id < 0) {
+        Com_LPrintf(PRINT_WARNING, "Invalid ServerEntityID: '%i' passed to %s" __func__ ".", id);
+    } else {
+        Com_LPrintf(PRINT_WARNING, "Out of bounds ServerEntityID: '%i' passed to %s" __func__ " while the upper limit is: '%i'.", id, MAX_EDICTS);
     }
 
-    return nullptr;
-}
-
-// Returns a pointer to the ID in the entity pool in case it is inUse
-ServerEntity* FetchPoolEntityByID(uint32_t index) {
-    return (entityPool.entities[index].inUse ? &entityPool.entities[index] : nullptr);
-}
-
-//// Actual Server ServerEntity array.
-//std::array<ServerEntity, MAX_EDICTS> svEntities;
-
-
-
-//-----------------------
-//
-//-----------------------
-ServerEntity* SV_QueryFreeEntity() {
-    return NULL;
+    return svEntityPool.entities[id];
 }
 
 /*

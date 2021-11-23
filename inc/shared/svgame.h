@@ -78,6 +78,12 @@ struct gclient_s {
 //-------------------
 using EntityDictionary = std::map<std::string, std::string>;
 
+//------------------------------------------------------------------------
+// As silly as it seems, we do this for readability and actually a mere pair of functions too.
+//------------------------------------------------------------------------
+using ServerEntityID = uint32_t;
+
+
 struct ServerEntity {
 public:
     // Actual entity state member. Contains all data that is actually networked.
@@ -203,6 +209,11 @@ struct ServerGameImports {
     qboolean (*InPHS)(const vec3_t &p1, const vec3_t &p2);
     void (*SetAreaPortalState)(int portalnum, qboolean open);
     qboolean (*AreasConnected)(int area1, int area2);
+
+    //---------------------------------------------------------------------
+    // ServerEntity management.
+    //---------------------------------------------------------------------
+    ServerEntity *GetServerEntity(ServerEntityID id);
 
     //---------------------------------------------------------------------
     // An entity will never be sent to a client or used for collision

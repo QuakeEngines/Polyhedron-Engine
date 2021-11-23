@@ -209,19 +209,19 @@ void ED_CallSpawn(ServerEntity *svEnt)
 {
     auto entityDictionary = svEnt->entityDictionary;
     svEnt->className = ED_NewString( entityDictionary["classname"].c_str() );
-    ServerGameEntity *= SVG_SpawnClassEntity( svEnt, svEnt->className );
+    ServerGameEntity *ent = SVG_SpawnClassEntity( svEnt, svEnt->className );
     // If we did not find the classname, then give up
-    if ( !ent ) {
-        SVG_FreeEntity( ent );
+    if ( !svEnt ) {
+        SVG_FreeEntity( svEnt );
         return;
     }
     // Initialise the entity with its respected keyvalue properties
     for ( const auto& keyValueEntry : ent->entityDictionary ) {
-        ent->classEntity->SpawnKey( keyValueEntry.first, keyValueEntry.second );
+        ent->SpawnKey( keyValueEntry.first, keyValueEntry.second );
     }
     // Precache and spawn, to set the entity up
-    ent->classEntity->Precache();
-    ent->classEntity->Spawn();
+    svEnt->Precache();
+    svEnt->Spawn();
 }
 
 /*
@@ -348,6 +348,7 @@ void SVG_FindTeams(void)
 
     c = 0;
     c2 = 0;
+
     for (i = 1, e = g_entities + i; i < globals.numberOfEntities; i++, e++) {
         // Fetch class entity.
         ServerGameEntity *classEntity = serverGameEntities[e->state.number];

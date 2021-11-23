@@ -180,7 +180,7 @@ BaseEntityVector DefaultGameMode::FindBaseEnitiesWithinRadius(const vec3_t& orig
     std::vector<ServerGameEntity*> baseEntityList;
 
     // Iterate over all entities, see who is nearby, and who is not.
-    for (auto* radiusBaseEntity : GetBaseEntityRange<0, MAX_EDICTS>()
+    for (auto* radiusBaseEntity : GetGameEntityRange<0, MAX_EDICTS>()
          | bef::Standard
          | bef::WithinRadius(origin, radius, excludeSolidFlags)) {
 

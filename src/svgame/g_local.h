@@ -917,7 +917,7 @@ struct gclient_s {
     float respawnTime;
 
     // The (client)player we are chasing
-    ServerEntity *chaseTarget;
+    ServerGameEntity *chaseTarget;
 
     // Do we need to update chase info?
     qboolean updateChase;

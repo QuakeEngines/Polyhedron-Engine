@@ -145,23 +145,23 @@ void SVG_SetRespawn(ServerEntity *ent, float delay)
 
 //======================================================================
 
-qboolean Pickup_Powerup(ServerEntity *ent, ServerEntity *other)
+qboolean Pickup_Powerup(ServerGameEntity *ent, ServerGameEntity  *other)
 {
-    int     quantity;
+    //int     quantity;
 
-    quantity = other->client->persistent.inventory[ITEM_INDEX(ent->item)];
-    if ((skill->value == 1 && quantity >= 2) || (skill->value >= 2 && quantity >= 1))
-        return false;
+    //quantity = other->client->persistent.inventory[ITEM_INDEX(ent->item)];
+    //if ((skill->value == 1 && quantity >= 2) || (skill->value >= 2 && quantity >= 1))
+    //    return false;
 
-    if ((coop->value) && (ent->item->flags & ItemFlags::StayInCoop) && (quantity > 0))
-        return false;
+    //if ((coop->value) && (ent->item->flags & ItemFlags::StayInCoop) && (quantity > 0))
+    //    return false;
 
-    other->client->persistent.inventory[ITEM_INDEX(ent->item)]++;
+    //other->client->persistent.inventory[ITEM_INDEX(ent->item)]++;
 
-    if (deathmatch->value) {
-        //if (!(ent->spawnFlags & ItemSpawnFlags::DroppedItem))
-        //    SVG_SetRespawn(ent, ent->item->quantity);
-    }
+    //if (deathmatch->value) {
+    //    //if (!(ent->spawnFlags & ItemSpawnFlags::DroppedItem))
+    //    //    SVG_SetRespawn(ent, ent->item->quantity);
+    //}
 
     return true;
 }

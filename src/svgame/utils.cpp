@@ -77,7 +77,7 @@ UTIL_TouchTriggers
 void UTIL_TouchTriggers(ServerGameEntity *ent)
 {
     int         i, num;
-    ServerEntity* serverEntity = ent->GetServerEntity();
+
     std::vector<ServerGameEntity*> touch(MAX_EDICTS);
     ServerGameEntity *hit;
 

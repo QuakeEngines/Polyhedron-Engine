@@ -1,24 +1,24 @@
+// License here.
 #pragma once
 
-namespace EntityFilterFunctions {
+namespace ServerEntityFilterFunctions {
     // @returns true in case the (server-)ServerEntity is in use.
-    inline bool EntityInUse (const ServerEntity& ent) { return ent.inUse; }
+    inline bool ServerEntityInUse (const ServerEntity& ent) { return ent.inUse; }
     // @returns true in case the (server-)ServerEntity has a client attached to it.
-    inline bool EntityHasClient(ServerEntity& ent) { return static_cast<bool>(ent.client); }
+    inline bool ServerEntityHasClient(ServerEntity& ent) { return static_cast<bool>(ent.client); }
     // @returns true in case the (server-)ServerEntity has a Class ServerEntity attached to it.
-    inline bool EntityHasClassEntity(ServerEntity& ent) { return static_cast<bool>(ent.className.empty()); }
+    inline bool ServerEntityHasClassEntity(ServerEntity& ent) { return static_cast<bool>(ent.className.empty()); }
 };
 
-
 //
-// Actual filters to use with GetBaseEntityRange, ..., ... TODO: What other functions?
+// Actual filters to use with GetGameEntityRange, ..., ... TODO: What other functions?
 //
-namespace EntityFilters {
+namespace ServerEntityFilters {
     using namespace std::views;
 
-    inline auto InUse = std::views::filter( &EntityFilterFunctions::EntityInUse );
-    inline auto HasClient = std::views::filter( &EntityFilterFunctions::EntityHasClient );
-    inline auto HasClassEntity = std::views::filter( &EntityFilterFunctions::EntityHasClassEntity );
+    inline auto InUse = std::views::filter( &ServerEntityFilterFunctions::EntityInUse );
+    inline auto HasClient = std::views::filter( &ServerEntityFilterFunctions::EntityHasClient );
+    inline auto HasClassEntity = std::views::filter( &ServerEntityFilterFunctions::EntityHasClassEntity );
     // WID: TODO: This one actually has to move into EntityFilterFunctions, and then
     // be referred to from here. However, I am unsure how to do that as of yet.
     inline auto HasClassName(const std::string& classname) {
@@ -48,7 +48,7 @@ namespace EntityFilters {
 
     inline auto Standard = (InUse);
 };
-namespace ef = EntityFilters; // Shortcut, lesser typing.
+namespace sgef = EntityFilters; // Shortcut, lesser typing.
 
 //
 // C++ using magic.

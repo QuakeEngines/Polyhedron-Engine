@@ -108,13 +108,13 @@ SVGTrace SVG_Trace(const vec3_t& start, const vec3_t& mins, const vec3_t& maxs, 
     if (trace.ent) {
         uint32_t index = trace.ent->state.number;
 
-        if (serverGameEntities[index] != NULL) {
+        if (serverGameEntities[index] != nullptr) {
             svgTrace.ent = serverGameEntities[index];
         } else {
-            svgTrace.ent = g_entities[0].classEntity;
+            svgTrace.ent = serverGameEntities[0];
         }
     } else {
-        svgTrace.ent = g_entities[0].classEntity;
+        svgTrace.ent = serverGameEntities[0];
     }
 
     return svgTrace;

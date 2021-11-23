@@ -15,8 +15,8 @@
 class EntityBase
 {
 public:
+    EntityBase() = default;
     EntityBase(ServerEntity* handle);
-    ~EntityBase();
 
 protected:
     // Handle to the server entity. (Assumed to be internal)

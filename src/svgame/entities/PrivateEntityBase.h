@@ -10,13 +10,17 @@
 // an entity slot.
 //----------------------------------------------------------
 class PrivateEntityBase abstract : public EntityBase
-{
+{ 
 public:
+    // Constructor.
     PrivateEntityBase();
+
     // Deconstructor
     virtual ~PrivateEntityBase();
 
 protected:
+
+
     // Internal memory 
     ServerEntity handleMemory;
 };

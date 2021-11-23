@@ -349,7 +349,7 @@ void SVG_Client_CalculateBlend(PlayerClient *ent)
 //        dir = { 0.f, 0.f, 1.f };
 //
 //        if (!deathmatch->value || !((int)gamemodeflags->value & GameModeFlags::NoFalling))
-//            SVG_InflictDamage(ent, SVG_GetWorldClassEntity(), SVG_GetWorldClassEntity(), dir, ent->GetOrigin(), vec3_zero(), damage, 0, 0, MeansOfDeath::Falling);
+//            SVG_InflictDamage(ent, SVG_GetWorldSpawnEntity(), SVG_GetWorldSpawnEntity(), dir, ent->GetOrigin(), vec3_zero(), damage, 0, 0, MeansOfDeath::Falling);
 //    } else {
 //        ent->SetEventID(EntityEvent::FallShort);
 //        return;

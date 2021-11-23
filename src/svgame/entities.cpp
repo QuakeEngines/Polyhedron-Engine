@@ -83,7 +83,7 @@ void DebugShitForEntitiesLulz() {
 
     gi.DPrintf("BaseEntity - info_player_start filter - ===========================================\n");
     // Hehe, only  fetch info_player_start
-    for (auto* baseEntity : GetBaseEntityRange<0, MAX_EDICTS>()
+    for (auto* baseEntity : GetGameEntityRange<0, MAX_EDICTS>()
         | bef::IsValidPointer
         | bef::HasServerEntity
         | bef::InUse
@@ -330,12 +330,12 @@ ServerGameEntity* SVG_FindEntityByKeyValue(const std::string& fieldKey, const st
 // 
 // SVG_FindEntitiesWithinRadius (origin, radius)
 //===============
-BaseEntityVector SVG_FindEntitiesWithinRadius(vec3_t origin, float radius, uint32_t excludeSolidFlags)
+ServerGameEntityVector SVG_FindEntitiesWithinRadius(vec3_t origin, float radius, uint32_t excludeSolidFlags)
 {
     BaseEntityVector entityList;
 
     // Iterate over all entities, see who is nearby, and who is not.
-    for (auto* radiusEntity : GetBaseEntityRange<0, MAX_EDICTS>()
+    for (auto* radiusEntity : GetGameEntityRange<0, MAX_EDICTS>()
         | bef::IsValidPointer
         | bef::HasServerEntity
         | bef::InUse
@@ -429,10 +429,10 @@ ServerEntity* SVG_GetWorldServerEntity() {
 };
 
 //===============
-// SVG_GetWorldClassEntity
+// SVG_GetWorldSpawnEntity
 // 
 // Returns a pointer to the 'Worldspawn' ClassEntity.
 //===============
-ServerGameEntity* SVG_GetWorldClassEntity() {
+ServerGameEntity* SVG_GetWorlEntity() {
     return serverGameEntities[0];
 };
