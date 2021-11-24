@@ -11,7 +11,7 @@
 
 #include "../base/ServerGameEntity.h"
 #include "../base/SVGBaseTrigger.h"
-#include "../base/PlayerClient.h"
+#include "../base/PlayerEntity.h"
 
 #include "TriggerPush.h"
 
@@ -63,8 +63,8 @@ void TriggerPush::PushTouch( ServerGameEntity* self, ServerGameEntity* other, cp
         other->SetVelocity( newVelocity );
 
         // Play sounds on clients
-        if ( other->IsClass<PlayerClient>() ) {
-            PlayerClient* player = static_cast<PlayerClient*>(other);
+        if ( other->IsClass<PlayerEntity>() ) {
+            PlayerEntity* player = static_cast<PlayerEntity*>(other);
 
             // Don't take fall damage immediately from this
             player->GetClient()->oldVelocity = other->GetVelocity();

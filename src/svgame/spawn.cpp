@@ -503,7 +503,7 @@ void SVG_SpawnEntities(const char *mapName, const char *entities, const char *sp
             serverGameEntities[i]->PostSpawn();
     }
 
-    // Spawn PlayerClient entities first.
+    // Spawn PlayerEntity entities first.
     // WID: LAME HACK...
     SVG_AllocateGamePlayerClientEntities();
 

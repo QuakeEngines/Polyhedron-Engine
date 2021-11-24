@@ -19,9 +19,9 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "chasecamera.h"
 
 #include "entities/base/ServerGameEntity.h"
-#include "entities/base/PlayerClient.h"
+#include "entities/base/PlayerEntity.h"
 
-void SVG_UpdateChaseCam(PlayerClient *ent)
+void SVG_UpdateChaseCam(PlayerEntity *ent)
 {
     ServerGameEntity* target;
 
@@ -111,73 +111,73 @@ void SVG_UpdateChaseCam(PlayerClient *ent)
     ent->LinkEntity();
 }
 
-void SVG_ChaseNext(PlayerClient *ent)
+void SVG_ChaseNext(PlayerEntity *ent)
 {
-    ServersClient* client = ent->GetClient();
+    //ServersClient* client = ent->GetClient();
 
-    // Return if we got none at all to start with.
-    if (!client->chaseTarget)
-        return;
+    //// Return if we got none at all to start with.
+    //if (!client->chaseTarget)
+    //    return;
 
-    ServerGameEntity *nextChaseEntity = nullptr;
-    
-    int32_t startClientNumber = client->chaseTarget->GetNumber();
-    int32_t i = client->chaseTarget - serverGameEntities[client->chaseTarget->GetNumber()];
-    do {
-        i++;
-        if (i > maximumClients->value)
-            i = 1;
-        nextChaseEntity = serverGameEntities[startClientNumber + i];
-        if (!nextChaseEntity->IsInUse())
-            continue;
-        if (!nextChaseEntity->GetClient()->respawn.isSpectator)
-            break;
-    } while (nextChaseEntity != client->chaseTarget);
+    //ServerGameEntity *nextChaseEntity = nullptr;
+    //
+    //int32_t startClientNumber = client->chaseTarget->GetNumber();
+    //int32_t i = client->chaseTarget - serverGameEntities[client->chaseTarget->GetNumber()];
+    //do {
+    //    i++;
+    //    if (i > maximumClients->value)
+    //        i = 1;
+    //    nextChaseEntity = serverGameEntities[startClientNumber + i];
+    //    if (!nextChaseEntity->IsInUse())
+    //        continue;
+    //    if (!nextChaseEntity->GetClient()->respawn.isSpectator)
+    //        break;
+    //} while (nextChaseEntity != client->chaseTarget);
 
-    client->chaseTarget = nextChaseEntity;
-    client->updateChase = true;
+    //client->chaseTarget = nextChaseEntity;
+    //client->updateChase = true;
 }
 
-void SVG_ChasePrev(PlayerClient*ent)
+void SVG_ChasePrev(PlayerEntity*ent)
 {
-    int i;
-    ServerEntity *e;
-    ServersClient* client = ent->GetClient();
+    //int i;
+    //ServerGameEntity *e;
+    //ServersClient* client = ent->GetClient();
 
-    if (!client->chaseTarget)
-        return;
+    //if (!client->chaseTarget)
+    //    return;
 
-    i = client->chaseTarget - g_entities;
-    do {
-        i--;
-        if (i < 1)
-            i = maximumClients->value;
-        e = g_entities + i;
-        if (!e->inUse)
-            continue;
-        if (!e->client->respawn.isSpectator)
-            break;
-    } while (e != client->chaseTarget);
+    //i = client->chaseTarget - serverGameEntities[0];
+    //do {
+    //    i--;
+    //    if (i < 1)
+    //        i = maximumClients->value;
+    //    e = serverGameEntities[] + i;
+    //    if (!e->inUse)
+    //        continue;
+    //    if (!e->client->respawn.isSpectator)
+    //        break;
+    //} while (e != client->chaseTarget);
 
-    client->chaseTarget = e;
-    client->updateChase = true;
+    //client->chaseTarget = e;
+    //client->updateChase = true;
 }
 
-void SVG_GetChaseTarget(PlayerClient *ent)
+void SVG_GetChaseTarget(PlayerEntity *ent)
 {
-    int i;
-    ServerEntity *other;
-    ServersClient* client = ent->GetClient();
+    //int i;
+    //ServerEntity *other;
+    //ServersClient* client = ent->GetClient();
 
-    for (i = 1; i <= maximumClients->value; i++) {
-        other = g_entities + i;
-        if (other->inUse && !other->client->respawn.isSpectator) {
-            client->chaseTarget = other;
-            client->updateChase = true;
-            SVG_UpdateChaseCam(ent);
-            return;
-        }
-    }
-    gi.CenterPrintf(ent->GetServerEntity(), "No other players to chase.");
+    //for (i = 1; i <= maximumClients->value; i++) {
+    //    other = g_entities + i;
+    //    if (other->inUse && !other->client->respawn.isSpectator) {
+    //        client->chaseTarget = other;
+    //        client->updateChase = true;
+    //        SVG_UpdateChaseCam(ent);
+    //        return;
+    //    }
+    //}
+    //gi.CenterPrintf(ent->GetServerEntity(), "No other players to chase.");
 }
 

@@ -21,7 +21,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "animations.h"
 
 #include "../entities/base/ServerGameEntity.h"
-#include "../entities/base/PlayerClient.h"
+#include "../entities/base/PlayerEntity.h"
 
 #include "sharedgame/sharedgame.h" // Include SG Base.
 
@@ -52,8 +52,7 @@ void SVG_PlayerNoise(ServerGameEntity *who, vec3_t where, int type)
 
 
     if (!who->GetMyNoiseEntity()) {
-        SVG_CreateEnt
-        noise = SVG_Spawn();
+        ServerGameEntity noise = SVG_C
         noise->className = "player_noise";
         noise->mins = vec3_t { - 8, -8, -8 );
         noise->maxs = vec3_t {   8,  8,  8 );
@@ -88,7 +87,7 @@ void SVG_PlayerNoise(ServerGameEntity *who, vec3_t where, int type)
 }
 
 
-qboolean Pickup_Weapon(ServerGameEntity *ent, PlayerClient *other)
+qboolean Pickup_Weapon(ServerGameEntity *ent, PlayerEntity *other)
 {
     //int         index;
     //gitem_t     *ammo;
@@ -141,7 +140,7 @@ The old weapon has been dropped all the way, so make the new one
 current
 ===============
 */
-void SVG_ChangeWeapon(PlayerClient*ent)
+void SVG_ChangeWeapon(PlayerEntity*ent)
 {
     int i;
 
@@ -195,7 +194,7 @@ void SVG_ChangeWeapon(PlayerClient*ent)
 NoAmmoWeaponChange
 =================
 */
-void NoAmmoWeaponChange(PlayerClient *ent)
+void NoAmmoWeaponChange(PlayerEntity *ent)
 {
     ServersClient* client = ent->GetClient();
 
@@ -214,7 +213,7 @@ SVG_ThinkWeapon
 Called by ClientBeginServerFrame and ClientThink
 =================
 */
-void SVG_ThinkWeapon(PlayerClient *ent)
+void SVG_ThinkWeapon(PlayerEntity *ent)
 {
     if (!ent)
         return;
@@ -244,7 +243,7 @@ Use_Weapon
 Make the weapon ready if there is ammo
 ================
 */
-void Use_Weapon(PlayerClient *ent, gitem_t* item)
+void Use_Weapon(PlayerEntity *ent, gitem_t* item)
 {
     int         ammoIndex;
     gitem_t     *ammo_item;
@@ -280,7 +279,7 @@ void Use_Weapon(PlayerClient *ent, gitem_t* item)
 Drop_Weapon
 ================
 */
-void Drop_Weapon(PlayerClient *ent, gitem_t *item)
+void Drop_Weapon(PlayerEntity *ent, gitem_t *item)
 {
     int     index;
 
@@ -311,7 +310,7 @@ A generic function to handle the basics of weapon thinking
 #define FRAME_IDLE_FIRST        (FRAME_FIRE_LAST + 1)
 #define FRAME_DEACTIVATE_FIRST  (FRAME_IDLE_LAST + 1)
 
-void Weapon_Generic(PlayerClient *ent, int FRAME_ACTIVATE_LAST, int FRAME_FIRE_LAST, int FRAME_IDLE_LAST, int FRAME_DEACTIVATE_LAST, int *pause_frames, int *fire_frames, void (*fire)(PlayerClient *ent))
+void Weapon_Generic(PlayerEntity *ent, int FRAME_ACTIVATE_LAST, int FRAME_FIRE_LAST, int FRAME_IDLE_LAST, int FRAME_DEACTIVATE_LAST, int *pause_frames, int *fire_frames, void (*fire)(PlayerEntity *ent))
 {
     int     n;
 

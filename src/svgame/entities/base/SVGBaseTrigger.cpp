@@ -227,18 +227,11 @@ void SVGBaseTrigger::UseTargets(ServerGameEntity* activator) {
 		//while (triggerEntity = SVG_FindEntityByKeyValue("targetname", GetKillTarget(), triggerEntity))
 		// Loop over the total entity range, ensure that we're checking for the right filters.
 		for (auto* triggerEntity : GetGameEntityRange<0, MAX_EDICTS>()
-			| bef::IsValidPointer
-			| bef::HasServerEntity
-			| bef::InUse
-			| bef::HasKeyValue("targetname", GetKillTarget())) {
+			| SvgEF::HasKeyValue("targetname", GetKillTarget())) {
 
-			// It is going to die, free it.
-			SVG_FreeEntity(triggerEntity->GetServerEntity());
-
-			if (!IsInUse()) {
-				gi.DPrintf("entity was removed while using killtargets\n");
-				return;
-			}
+			// It is going to die, set it up for removal.
+			//SVG_FreeEntity(triggerEntity->GetServerEntity());
+			triggerEntity->Remove();
 		}
 	}
 	
@@ -248,10 +241,7 @@ void SVGBaseTrigger::UseTargets(ServerGameEntity* activator) {
 	if (GetTarget().length()) {
 		// Loop over the total entity range, ensure that we're checking for the right filters.
 		for (auto* triggerEntity : GetGameEntityRange<0, MAX_EDICTS>()
-			| bef::IsValidPointer
-			| bef::HasServerEntity
-			| bef::InUse
-			| bef::HasKeyValue("targetname", GetTarget())) {
+			| SvgEF::HasKeyValue("targetname", GetTarget())) {
 			
 			// Doors fire area portals in a special way. So we skip those.
 			if (triggerEntity->GetClassName() == "func_areaportal"
@@ -261,7 +251,7 @@ void SVGBaseTrigger::UseTargets(ServerGameEntity* activator) {
 
 			// Do not ALLOW an entity to use ITSELF. :)
 			if (triggerEntity == this) {
-				gi.DPrintf("WARNING: ServerEntity #%i used itself.\n", GetServerEntity()->state.number);
+				gi.WPrintf("WARNING: '%s' tried to use itself #%i used itself.\n", GetTypeInfo()->className, GetServerEntity()->state.number);
 			} else {
 				triggerEntity->Use(this, activator);
 			}

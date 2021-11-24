@@ -19,8 +19,6 @@ public:
     virtual ~PrivateEntityBase();
 
 protected:
-
-
     // Internal memory 
     ServerEntity handleMemory;
 };

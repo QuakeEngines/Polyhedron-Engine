@@ -39,7 +39,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 // Forward Declaration.
 //-------------------
 class ServerGameEntity;
-class PlayerClient;
+class PlayerEntity;
 class IGameMode;
 
 //==================================================================
@@ -275,10 +275,10 @@ typedef struct gitem_s {
     const char *className;
 
     // Function callbacks.
-    qboolean (*Pickup)(ServerGameEntity *ent, PlayerClient *other);
-    void (*Use)(PlayerClient *ent, struct gitem_s *item);
-    void (*Drop)(PlayerClient *ent, struct gitem_s *item);
-    void (*WeaponThink)(PlayerClient *ent);
+    qboolean (*Pickup)(ServerGameEntity *ent, PlayerEntity *other);
+    void (*Use)(PlayerEntity *ent, struct gitem_s *item);
+    void (*Drop)(PlayerEntity *ent, struct gitem_s *item);
+    void (*WeaponThink)(PlayerEntity *ent);
 
     // Sound used when being picked up.
     const char *pickupSound;
@@ -605,7 +605,7 @@ gitem_t *SVG_FindItemByClassname(const char *className);
 #define ITEM_INDEX(x) ((x)-itemlist)
 ServerEntity *SVG_DropItem(ServerEntity *ent, gitem_t *item);
 void SVG_SetRespawn(ServerEntity *ent, float delay);
-void SVG_ChangeWeapon(PlayerClient* ent);
+void SVG_ChangeWeapon(PlayerEntity* ent);
 void SVG_SpawnItem(ServerEntity *ent, gitem_t *item);
 //void SVG_ThinkWeapon(ServerEntity *ent);
 int32_t SVG_ArmorIndex(ServerGameEntity *ent);

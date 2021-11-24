@@ -29,7 +29,7 @@ BlasterBolt::~BlasterBolt() {
 
 //
 //===============
-// PlayerClient::Precache
+// PlayerEntity::Precache
 //
 //===============
 //
@@ -39,7 +39,7 @@ void BlasterBolt::Precache() {
 
 //
 //===============
-// PlayerClient::Spawn
+// PlayerEntity::Spawn
 //
 //===============
 //

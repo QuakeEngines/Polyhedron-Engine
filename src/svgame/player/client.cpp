@@ -29,7 +29,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 // ClassEntities.
 #include "../entities/base/ServerGameEntity.h"
-#include "../entities/base/PlayerClient.h"
+#include "../entities/base/PlayerEntity.h"
 #include "../entities/info/InfoPlayerStart.h"
 
 // Game modes.
@@ -95,7 +95,7 @@ void SP_FixCoopSpots(ServerEntity *self)
 
 //=======================================================================
 
-void SVG_TossClientWeapon(PlayerClient *playerClient)
+void SVG_TossClientWeapon(PlayerEntity *playerClient)
 {
     gitem_t     *item;
     ServerEntity     *drop;
@@ -363,7 +363,7 @@ void SVG_ClientDisconnect(ServerEntity *ent)
         return;
 
     // Since it does, we pass it on to the game mode.
-    game.gameMode->ClientDisconnect((PlayerClient*)ent->classEntity);
+    game.gameMode->ClientDisconnect((PlayerEntity*)ent->classEntity);
 
     // FIXME: don't break skins on corpses, etc
     //playernum = ent-g_entities-1;
@@ -413,7 +413,7 @@ usually be a couple times for each server frame.
 void SVG_ClientThink(ServerEntity *serverEntity, ClientMoveCommand *moveCommand)
 {
     ServersClient* client = nullptr;
-    PlayerClient *classEntity = nullptr;
+    PlayerEntity *classEntity = nullptr;
     ServerEntity* other = nullptr;
 
 
@@ -436,7 +436,7 @@ void SVG_ClientThink(ServerEntity *serverEntity, ClientMoveCommand *moveCommand)
     client = serverEntity->client;
 
     // Fetch the class entity.
-    classEntity = (PlayerClient*)serverEntity->classEntity;
+    classEntity = (PlayerEntity*)serverEntity->classEntity;
 
     if (level.intermission.time) {
         client->playerState.pmove.type = EnginePlayerMoveType::Freeze;

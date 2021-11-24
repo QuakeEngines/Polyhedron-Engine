@@ -29,7 +29,7 @@ DebrisEntity::~DebrisEntity() {
 
 //
 //===============
-// PlayerClient::Precache
+// PlayerEntity::Precache
 //
 //===============
 //
@@ -39,7 +39,7 @@ void DebrisEntity::Precache() {
 
 //
 //===============
-// PlayerClient::Spawn
+// PlayerEntity::Spawn
 //
 //===============
 //

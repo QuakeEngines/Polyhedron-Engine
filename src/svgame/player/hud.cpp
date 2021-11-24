@@ -18,7 +18,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "../g_local.h" // Include SVGame header.
 #include "../entities.h"
 #include "../entities/base/ServerGameEntity.h"
-#include "../entities/base/PlayerClient.h"
+#include "../entities/base/PlayerEntity.h"
 
 #include "../gamemodes/IGameMode.h"
 
@@ -114,7 +114,7 @@ void SVG_HUD_BeginIntermission(ServerEntity *targ)
             continue;
         }
         if (client->classEntity->GetHealth() <= 0) {
-            game.gameMode->RespawnClient((PlayerClient*)client->classEntity);
+            game.gameMode->RespawnClient((PlayerEntity*)client->classEntity);
         }
     }
 

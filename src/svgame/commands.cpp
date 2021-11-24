@@ -22,7 +22,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 // Class Entities.
 #include "entities/base/ServerGameEntity.h"
-#include "entities/base/PlayerClient.h"
+#include "entities/base/PlayerEntity.h"
 
 // Game Modes.
 #include "gamemodes/IGameMode.h"
@@ -68,7 +68,7 @@ qboolean SVG_OnSameTeam(ServerGameEntity *ent1, ServerGameEntity *ent2)
 }
 
 
-void SelectNextItem(PlayerClient *ent, int itflags)
+void SelectNextItem(PlayerEntity *ent, int itflags)
 {
     ServersClient   *cl;
     int         i, index;
@@ -108,7 +108,7 @@ void SelectPrevItem(ServerEntity *ent, int itflags)
     cl = ent->client;
 
     if (cl->chaseTarget) {
-        SVG_ChasePrev(<dynamic_cast>(PlayerClient*)ent->classEntity);
+        SVG_ChasePrev(dynamic_cast<PlayerEntity*>(ent));
         return;
     }
 
@@ -130,7 +130,7 @@ void SelectPrevItem(ServerEntity *ent, int itflags)
     cl->persistent.selectedItem = -1;
 }
 
-void HUD_ValidateSelectedItem(PlayerClient *ent)
+void HUD_ValidateSelectedItem(PlayerEntity *ent)
 {
     // Ensure these are valid.
     if (!ent || !ent->GetClient()) {
@@ -340,7 +340,7 @@ Cmd_Use_f
 Use an inventory item
 ==================
 */
-void Cmd_Use_f(PlayerClient *ent)
+void Cmd_Use_f(PlayerEntity *ent)
 {
     int         index;
     gitem_t     *it;
@@ -373,7 +373,7 @@ Cmd_Drop_f
 Drop an inventory item
 ==================
 */
-void Cmd_Drop_f(PlayerClient*ent)
+void Cmd_Drop_f(PlayerEntity*ent)
 {
     int         index;
     gitem_t     *it;
@@ -432,7 +432,7 @@ void Cmd_Inven_f(ServerEntity *ent)
 Cmd_InvUse_f
 =================
 */
-void Cmd_InvUse_f(PlayerClient *ent)
+void Cmd_InvUse_f(PlayerEntity *ent)
 {
     gitem_t     *it;
 
@@ -456,7 +456,7 @@ void Cmd_InvUse_f(PlayerClient *ent)
 Cmd_WeapPrev_f
 =================
 */
-void Cmd_WeapPrev_f(PlayerClient *ent)
+void Cmd_WeapPrev_f(PlayerEntity *ent)
 {
     ServersClient   *cl;
     int         i, index;
@@ -491,7 +491,7 @@ void Cmd_WeapPrev_f(PlayerClient *ent)
 Cmd_WeapNext_f
 =================
 */
-void Cmd_WeapNext_f(PlayerClient *ent)
+void Cmd_WeapNext_f(PlayerEntity *ent)
 {
     ServersClient   *cl;
     int         i, index;
@@ -526,7 +526,7 @@ void Cmd_WeapNext_f(PlayerClient *ent)
 Cmd_WeapLast_f
 =================
 */
-void Cmd_WeapLast_f(PlayerClient *ent)
+void Cmd_WeapLast_f(PlayerEntity *ent)
 {
     ServersClient   *cl;
     int         index;
@@ -553,7 +553,7 @@ void Cmd_WeapLast_f(PlayerClient *ent)
 Cmd_InvDrop_f
 =================
 */
-void Cmd_InvDrop_f(PlayerClient *ent)
+void Cmd_InvDrop_f(PlayerEntity *ent)
 {
     gitem_t     *it;
 
@@ -577,7 +577,7 @@ void Cmd_InvDrop_f(PlayerClient *ent)
 Cmd_Kill_f
 =================
 */
-void Cmd_Kill_f(PlayerClient *ent)
+void Cmd_Kill_f(PlayerEntity *ent)
 {
     if ((level.time - ent->GetClient()->respawnTime) < 5)
         return;
@@ -833,11 +833,11 @@ void SVG_ClientCommand(ServerEntity *serverEntity)
     const char    *cmd;
 
     // Ensure it is an entity with active client.
-    if (!serverEntity->client)
+    if (!serverEntity->clie)
         return; // Not fully in game yet
 
-    // We can safely cast to PlayerClient now.
-    PlayerClient* ent = (PlayerClient*)serverEntity->classEntity;
+    // We can safely cast to PlayerEntity now.
+    PlayerEntity* ent = (PlayerEntity*)serverEntity;
 
     // Fetch cmd.
     cmd = gi.argv(0);

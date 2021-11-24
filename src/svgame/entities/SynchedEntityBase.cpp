@@ -9,11 +9,15 @@
 #include "SynchedEntityBase.h"
 
 // Constructor.
-SynchedEntityBase::SynchedEntityBase(ServerEntity* entityHandle) : EntityBase(entityHandle) {
+//SynchedEntityBase::SynchedEntityBase() {
+//    // 
+//}
+
+SynchedEntityBase::SynchedEntityBase(ServerEntity* serverEntityHandle) : EntityBase(serverEntityHandle) {
 
 }
 
 SynchedEntityBase::~SynchedEntityBase()
 {
-    handle->inUse = false;
+    entityHandle->inUse = false;
 }

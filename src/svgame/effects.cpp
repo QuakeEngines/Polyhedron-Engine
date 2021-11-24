@@ -17,7 +17,7 @@
 
 // Class Entities.
 #include "entities/base/ServerGameEntity.h"
-#include "entities/base/PlayerClient.h"
+#include "entities/base/PlayerEntity.h"
 #include "entities/base/DebrisEntity.h"
 #include "entities/base/GibEntity.h"
 
@@ -111,7 +111,7 @@ void SVG_ThrowGib(ServerGameEntity*self, const char *gibname, int damage, int ty
 // 
 // Tosses a client head entity around.
 //=================
-void SVG_ThrowClientHead(PlayerClient* self, int damage) {
+void SVG_ThrowClientHead(PlayerEntity* self, int damage) {
     // Set model based on randomness.
     if (rand() & 1) {
         self->SetModel("models/objects/gibs/head2/tris.md2");

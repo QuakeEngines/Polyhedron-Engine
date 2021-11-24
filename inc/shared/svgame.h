@@ -83,7 +83,6 @@ using EntityDictionary = std::map<std::string, std::string>;
 //------------------------------------------------------------------------
 using ServerEntityID = uint32_t;
 
-
 struct ServerEntity {
 public:
     // Actual entity state member. Contains all data that is actually networked.
@@ -126,6 +125,7 @@ public:
     //ServerGameEntity* classEntity;
     std::string className;
 
+protected:
     // Hashmap containing the key:value entity properties.
     EntityDictionary entityDictionary;
 
@@ -213,7 +213,8 @@ struct ServerGameImports {
     //---------------------------------------------------------------------
     // ServerEntity management.
     //---------------------------------------------------------------------
-    ServerEntity *GetServerEntity(ServerEntityID id);
+    ServerEntity (* GetServerEntityByID)(ServerEntityID id);
+    ServerEntity (* GetFreeServerEntity)();
 
     //---------------------------------------------------------------------
     // An entity will never be sent to a client or used for collision

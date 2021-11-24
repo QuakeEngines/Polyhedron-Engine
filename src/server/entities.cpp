@@ -35,14 +35,31 @@ struct ServerEntityPool {
 
 // Seeks the server entity pool for a free entity (aka inUse = false), and returns
 // a pointer to it.
-ServerEntity* GetServerEntity(ServerEntityID id) {
+ServerEntity* GetServerEntity(ServerEntityID id, qboolean inUseAllowed = true) {
+    // Ensure our ID is in range.
     if (id < 0) {
         Com_LPrintf(PRINT_WARNING, "Invalid ServerEntityID: '%i' passed to %s" __func__ ".", id);
-    } else {
+        return nullptr;
+    } else if ((svEntityPool.currentNumberOfEntities + 1) >= MAX_EDICTS) {
         Com_LPrintf(PRINT_WARNING, "Out of bounds ServerEntityID: '%i' passed to %s" __func__ " while the upper limit is: '%i'.", id, MAX_EDICTS);
+        return nullptr;
     }
 
-    return svEntityPool.entities[id];
+    return &svEntityPool.entities[id];
+}
+
+ServerEntity* GetFreeServerEntity() {
+    // Ensure we aren't creating too many.
+    if (svEntityPool.currentNumberOfEntities >= MAX_EDICTS) {
+        Com_LPrintf(PRINT_ERROR, "Tried to " __func__ " resulting in ID: '%i' while the upper limit is of max entities is: '%i'.", svEntityPool.currentNumberOfEntities + 1, MAX_EDICTS);
+        return nullptr;
+    }
+
+    // Increment the currentNumberOfEntities.
+    uint32_t id = svEntityPool.currentNumberOfEntities++;
+    
+    // Blast away.
+    return &svEntityPool.entities[id];
 }
 
 /*

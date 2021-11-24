@@ -20,6 +20,5 @@ void UTIL_UseTargets(ServerGameEntity* ent, ServerGameEntity* activator);
 void UTIL_SetMoveDir(vec3_t &angles, vec3_t &moveDirection);
 
 void UTIL_TouchTriggers(ServerGameEntity* ent);
-void UTIL_TouchSolids(ServerGameEntity* ent);
 
 #endif // __SVGAME_UTILS_H__

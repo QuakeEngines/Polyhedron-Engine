@@ -11,7 +11,7 @@
 //----------------------------------------------------------
 class SynchedEntityBase abstract : public EntityBase {
 public:
-    SynchedEntityBase();
+    //SynchedEntityBase();
     SynchedEntityBase(ServerEntity* entityHandle);
 
 protected:

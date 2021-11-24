@@ -2,7 +2,7 @@
 // LICENSE HERE.
 
 //
-// PlayerClient.h
+// PlayerEntity.h
 //
 //
 */
@@ -11,13 +11,13 @@
 
 class ServerGameEntity;
 
-class PlayerClient : public ServerGameEntity {
+class PlayerEntity : public ServerGameEntity {
 public:
     // Constructor/Deconstructor.
-    PlayerClient(ServerEntity* svEntity);
-    virtual ~PlayerClient();
+    PlayerEntity(ServerEntity* svEntity);
+    virtual ~PlayerEntity();
 
-    DefineMapClass("PlayerClient", PlayerClient, ServerGameEntity);
+    DefineMapClass("PlayerEntity", PlayerEntity, ServerGameEntity);
 
     //
     // Interface functions. 

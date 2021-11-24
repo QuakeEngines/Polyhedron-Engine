@@ -14,7 +14,7 @@
 // Server Game Base ServerEntity.
 #include "../entities/base/ServerGameEntity.h"
 #include "../entities/base/BodyCorpse.h"
-#include "../entities/base/PlayerClient.h"
+#include "../entities/base/PlayerEntity.h"
 #include "../entities/info/InfoPlayerStart.h"
 
 // Weapons.h
@@ -631,7 +631,7 @@ void DefaultGameMode::ClientBeginServerFrame(ServerEntity* serverEntity) {
 
     // Fetch the client.
     ServersClient* client = serverEntity->client;
-    PlayerClient* player = (PlayerClient*)serverEntity->classEntity;
+    PlayerEntity* player = (PlayerEntity*)serverEntity->classEntity;
     // This has to go ofc.... lol. What it simply does though, is determine whether there is 
     // a need to respawn as spectator.
     //if (deathmatch->value &&
@@ -663,7 +663,7 @@ void DefaultGameMode::ClientBeginServerFrame(ServerEntity* serverEntity) {
 
             if ((client->latchedButtons & buttonMask) ||
                 (deathmatch->value && ((int)gamemodeflags->value & GameModeFlags::ForceRespawn))) {
-                game.gameMode->RespawnClient((PlayerClient*)player->GetServerEntity());
+                game.gameMode->RespawnClient((PlayerEntity*)player->GetServerEntity());
                 client->latchedButtons = 0;
             }
         }
@@ -699,10 +699,10 @@ void DefaultGameMode::ClientEndServerFrame(ServerEntity *serverEntity) {
     ServersClient *client = serverEntity->client;
 
     // Used for in this function, the classEntity of the given serverEntity.
-    PlayerClient* classEntity = (PlayerClient*)serverEntity->classEntity;
+    PlayerEntity* classEntity = (PlayerEntity*)serverEntity->classEntity;
 
     // Fetch the bobMove in use for classEntity.
-    PlayerClient::BobMoveCycle& bobMoveCycle = classEntity->GetBobMoveCycle();
+    PlayerEntity::BobMoveCycle& bobMoveCycle = classEntity->GetBobMoveCycle();
 
     //
     // If the origin or velocity have changed since ClientThink(),
@@ -960,8 +960,8 @@ void DefaultGameMode::ClientBegin(ServerEntity* serverEntity) {
         // Delete previous classentity, if existent (older client perhaps).
         SVG_FreeClassEntity(serverEntity);
 
-        // Recreate class PlayerClient entity.
-        serverEntity->classEntity = SVG_CreateClassEntity<PlayerClient>(serverEntity, false);
+        // Recreate class PlayerEntity entity.
+        serverEntity->classEntity = SVG_CreateClassEntity<PlayerEntity>(serverEntity, false);
 
         // Initialize client respawn data.
         InitializeClientRespawnData(serverEntity->client);
@@ -997,7 +997,7 @@ void DefaultGameMode::ClientBegin(ServerEntity* serverEntity) {
 // This basically allows for the game to disable fetching user input that makes
 // our movement tick. And/or shoot weaponry while in intermission time.
 //===============
-void DefaultGameMode::ClientDisconnect(PlayerClient* player) {
+void DefaultGameMode::ClientDisconnect(PlayerEntity* player) {
     // Fetch the client.
     ServersClient* client = player->GetClient();
 
@@ -1392,7 +1392,7 @@ void DefaultGameMode::PutClientInServer(ServerEntity *ent) {
     FetchClientEntityData(ent);
 
     // clear entity values
-    PlayerClient* playerClient = (PlayerClient*)ent->classEntity;
+    PlayerEntity* playerClient = (PlayerEntity*)ent->classEntity;
     playerClient->SetGroundEntity(nullptr);
     playerClient->SetClient(&game.clients[index]);
     playerClient->SetTakeDamage(TakeDamage::Aim);
@@ -1405,8 +1405,8 @@ void DefaultGameMode::PutClientInServer(ServerEntity *ent) {
     playerClient->SetAirFinishedTime(level.time + 12);
     playerClient->SetClipMask(CONTENTS_MASK_PLAYERSOLID);
     playerClient->SetModel("players/male/tris.md2");
-    //playerClient->SetTakeDamageCallback(&PlayerClient::PlayerClientTakeDamage);
-    playerClient->SetDieCallback(&PlayerClient::PlayerClientDie);
+    //playerClient->SetTakeDamageCallback(&PlayerEntity::PlayerClientTakeDamage);
+    playerClient->SetDieCallback(&PlayerEntity::PlayerClientDie);
     /*ent->pain = player_pain;*/
     playerClient->SetWaterLevel(0);
     playerClient->SetWaterType(0);
@@ -1506,7 +1506,7 @@ void DefaultGameMode::PutClientInServer(ServerEntity *ent) {
 // 
 // Respawns a client (if that is what the game mode wants).
 //===============
-void DefaultGameMode::RespawnClient(PlayerClient* ent) {
+void DefaultGameMode::RespawnClient(PlayerEntity* ent) {
     // Kept around here to port later to other gamemodes.
     //if (deathmatch->value || coop->value) {
     //    // Spectator's don't leave bodies
@@ -1514,7 +1514,7 @@ void DefaultGameMode::RespawnClient(PlayerClient* ent) {
     //        game.gameMode->SpawnClientCorpse(self->classEntity);
 
     //    self->serverFlags &= ~EntityServerFlags::NoClient;
-    //    game.gameMode->PutClientInServer((PlayerClient*)self->classEntity);
+    //    game.gameMode->PutClientInServer((PlayerEntity*)self->classEntity);
 
     //    // add a teleportation effect
     //    self->state.eventID = EntityEvent::PlayerTeleport;

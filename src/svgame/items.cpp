@@ -21,16 +21,16 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "player/hud.h"      // Include HUD funcs.
 
 #include "entities/base/ServerGameEntity.h"
-#include "entities/base/PlayerClient.h"
+#include "entities/base/PlayerEntity.h"
 
 #include "weapons/blaster.h"
 #include "weapons/machinegun.h"
 #include "weapons/shotgun.h"
 #include "weapons/supershotgun.h"
 
-qboolean    Pickup_Weapon(ServerGameEntity *ent, PlayerClient *other);
-void        Use_Weapon(PlayerClient *ent, gitem_t *inv);
-void        Drop_Weapon(PlayerClient *ent, gitem_t *inv);
+qboolean    Pickup_Weapon(ServerGameEntity *ent, PlayerEntity *other);
+void        Use_Weapon(PlayerEntity *ent, gitem_t *inv);
+void        Drop_Weapon(PlayerEntity *ent, gitem_t *inv);
 
 gitem_armor_t bodyarmor_info    = {100, 200, .80f, .60f, ArmorType::Body};
 
@@ -166,11 +166,11 @@ qboolean Pickup_Powerup(ServerGameEntity *ent, ServerGameEntity  *other)
     return true;
 }
 
-void Drop_General(ServerEntity *ent, gitem_t *item)
+void Drop_General(PlayerEntity *ent, gitem_t *item)
 {
     SVG_DropItem(ent, item);
-    ent->client->persistent.inventory[ITEM_INDEX(item)]--;
-    HUD_ValidateSelectedItem((PlayerClient*)ent->classEntity);
+    ent->GetClient()->persistent.inventory[ITEM_INDEX(item)]--;
+    HUD_ValidateSelectedItem(ent);
 }
 
 //======================================================================
@@ -214,7 +214,7 @@ qboolean SVG_AddAmmo(ServerEntity *ent, gitem_t *item, int count)
     return true;
 }
 
-qboolean Pickup_Ammo(ServerGameEntity *ent, PlayerClient*other)
+qboolean Pickup_Ammo(ServerGameEntity *ent, PlayerEntity*other)
 {
     //int         oldcount;
     //int         count;
@@ -243,7 +243,7 @@ qboolean Pickup_Ammo(ServerGameEntity *ent, PlayerClient*other)
     return true;
 }
 
-void Drop_Ammo(PlayerClient *ent, gitem_t *item)
+void Drop_Ammo(PlayerEntity *ent, gitem_t *item)
 {
     //ServerEntity *dropped;
     //int     index;
@@ -332,7 +332,7 @@ int SVG_ArmorIndex(ServerGameEntity *ent)
     return 0;
 }
 
-qboolean Pickup_Armor(ServerGameEntity *ent, PlayerClient *other)
+qboolean Pickup_Armor(ServerGameEntity *ent, PlayerEntity *other)
 {
     //int             old_armor_index;
     //gitem_armor_t   *oldinfo;
@@ -474,7 +474,7 @@ void drop_make_touchable(ServerEntity *ent)
     }
 }
 
-ServerEntity *SVG_DropItem(ServerEntity *ent, gitem_t *item)
+ServerEntity *SVG_DropItem(PlayerEntity *ent, gitem_t *item)
 {
     return NULL;
 //    ServerEntity *dropped;

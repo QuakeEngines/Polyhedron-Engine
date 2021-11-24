@@ -136,7 +136,7 @@ to force all entities it covers to immediately touch it
 void G_TouchSolids(ServerGameEntity *ent)
 {
     // Array of pointers to touched game entities.
-    ServerGameEntity *touchedEntities[MAX_EDICTS];
+    std::vector<ServerGameEntity*> touchedEntities;
     ServerGameEntity *hit = nullptr;
 
     // Ensure that the entity which is being checked ain't dead.

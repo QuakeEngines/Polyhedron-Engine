@@ -141,7 +141,7 @@ namespace ServerGameEntityFilters {
     // A wrapper for the most likely 3 widely used, and if forgotten, error prone filters.
     //inline auto Standard = (IsValidPointer | HasServerEntity | InUse);
 };
-namespace svgef = ServerGameEntityFilters; // Shortcut, lesser typing.
+namespace SvgEF = ServerGameEntityFilters; // Shortcut, lesser typing.
 
 //
 // C++ using magic.
@@ -226,7 +226,7 @@ inline entityClass* SVG_CreateClassEntity(ServerEntity* edict = nullptr, bool al
     if (entityClass::ClassInfo.AllocateInstance) {
         entity = static_cast<entityClass*>(entityClass::ClassInfo.AllocateInstance(edict)); // Entities that aren't in the type info system will error out here
         edict->className = entity->GetTypeInfo()->className;
-        if (nullptr == serverGameEntities[edict->state.number]) {
+        if (serverGameEntities[edict->state.number] == nullptr) {
             serverGameEntities[edict->state.number] = entity;
         } else {
             gi.DPrintf("ERROR: edict %i is already taken\n", edict->state.number);

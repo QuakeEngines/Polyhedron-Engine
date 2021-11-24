@@ -12,7 +12,7 @@
 
 // Include class entities.
 #include "../entities/base/ServerGameEntity.h"
-#include "../entities/base/PlayerClient.h"
+#include "../entities/base/PlayerEntity.h"
 
 // Include player headers.
 #include "../player/animations.h"
@@ -29,7 +29,7 @@
 //======================================================================
 //
 
-void Blaster_Fire(PlayerClient* ent, const vec3_t &g_offset, int damage, qboolean hyper, int effect)
+void Blaster_Fire(PlayerEntity* ent, const vec3_t &g_offset, int damage, qboolean hyper, int effect)
 {
     vec3_t  forward, right;
     vec3_t  start;
@@ -60,7 +60,7 @@ void Blaster_Fire(PlayerClient* ent, const vec3_t &g_offset, int damage, qboolea
 }
 
 
-void Weapon_Blaster_Fire(PlayerClient *ent)
+void Weapon_Blaster_Fire(PlayerEntity *ent)
 {
     int     damage;
 
@@ -72,7 +72,7 @@ void Weapon_Blaster_Fire(PlayerClient *ent)
     ent->GetClient()->playerState.gunFrame++;
 }
 
-void Weapon_Blaster(PlayerClient* ent)
+void Weapon_Blaster(PlayerEntity* ent)
 {
     static int  pause_frames[] = { 19, 32, 0 };
     static int  fire_frames[] = { 5, 0 };

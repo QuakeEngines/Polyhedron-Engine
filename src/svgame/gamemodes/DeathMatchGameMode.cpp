@@ -13,7 +13,7 @@
 
 // Server Game Base ServerEntity.
 #include "../entities/base/ServerGameEntity.h"
-#include "../entities/base/PlayerClient.h"
+#include "../entities/base/PlayerEntity.h"
 
 // Weapons.h
 #include "../player/client.h"
@@ -76,8 +76,8 @@ void DeathMatchGameMode::ClientBegin(ServerEntity* serverEntity) {
     // Delete previous classentity, if existent (older client perhaps).
     SVG_FreeClassEntity(serverEntity);
 
-    // Recreate class PlayerClient entity.
-    serverEntity->classEntity = SVG_CreateClassEntity<PlayerClient>(serverEntity, false);
+    // Recreate class PlayerEntity entity.
+    serverEntity->classEntity = SVG_CreateClassEntity<PlayerEntity>(serverEntity, false);
 
     // Initialize client respawn data.
     InitializeClientRespawnData(serverEntity->client);
@@ -146,7 +146,7 @@ void DeathMatchGameMode::PutClientInServer(ServerEntity *ent) {
     FetchClientEntityData(ent);
 
     // clear entity values
-    PlayerClient* playerClient = (PlayerClient*)ent->classEntity;
+    PlayerEntity* playerClient = (PlayerEntity*)ent->classEntity;
     playerClient->SetGroundEntity(nullptr);
     playerClient->SetClient(&game.clients[index]);
     playerClient->SetTakeDamage(TakeDamage::Aim);
@@ -159,8 +159,8 @@ void DeathMatchGameMode::PutClientInServer(ServerEntity *ent) {
     playerClient->SetAirFinishedTime(level.time + 12);
     playerClient->SetClipMask(CONTENTS_MASK_PLAYERSOLID);
     playerClient->SetModel("players/male/tris.md2");
-    //playerClient->SetTakeDamageCallback(&PlayerClient::PlayerClientTakeDamage);
-    playerClient->SetDieCallback(&PlayerClient::PlayerClientDie);
+    //playerClient->SetTakeDamageCallback(&PlayerEntity::PlayerClientTakeDamage);
+    playerClient->SetDieCallback(&PlayerEntity::PlayerClientDie);
     /*ent->pain = player_pain;*/
     playerClient->SetWaterLevel(0);
     playerClient->SetWaterType(0);
@@ -271,7 +271,7 @@ void DeathMatchGameMode::ClientBeginServerFrame(ServerEntity* serverEntity) {
 
     // Fetch the client.
     ServersClient* client = serverEntity->client;
-    PlayerClient* player = (PlayerClient*)serverEntity->classEntity;
+    PlayerEntity* player = (PlayerEntity*)serverEntity->classEntity;
     // This has to go ofc.... lol. What it simply does though, is determine whether there is 
     // a need to respawn as spectator.
     if (client->persistent.isSpectator != client->respawn.isSpectator &&
@@ -481,7 +481,7 @@ void DeathMatchGameMode::ClientUpdateObituary(ServerGameEntity* self, ServerGame
 // 
 // Respawns a client after intermission and hitting a button.
 //===============
-void DeathMatchGameMode::RespawnClient(PlayerClient* ent) {
+void DeathMatchGameMode::RespawnClient(PlayerEntity* ent) {
     // Spectator's don't leave bodies
     if (ent->GetMoveType() != MoveType::NoClip)
         SpawnClientCorpse(ent);
@@ -506,7 +506,7 @@ void DeathMatchGameMode::RespawnClient(PlayerClient* ent) {
 // 
 // Respawns a spectator after intermission and hitting a button.
 //===============
-void DeathMatchGameMode::RespawnSpectator(PlayerClient* ent) {
+void DeathMatchGameMode::RespawnSpectator(PlayerEntity* ent) {
     // Spectator's don't leave bodies
     if (ent->GetMoveType() != MoveType::NoClip)
         SpawnClientCorpse(ent);

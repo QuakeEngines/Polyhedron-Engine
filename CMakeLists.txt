@@ -38,7 +38,7 @@ execute_process(
 OPTION(CONFIG_BUILD_CL_GAME "Build Client Game module" ON)
 OPTION(CONFIG_BUILD_SV_GAME "Build Server Game module" ON)
 OPTION(CONFIG_ENABLE_RMLUI "Enable libRmlUI implementation" OFF)
-OPTION(CONFIG_GL_RENDERER "Enable GL renderer" ON)
+OPTION(CONFIG_GL_RENDERER "Enable GL renderer" OFF)
 OPTION(CONFIG_VKPT_RENDERER "Enable VKPT renderer" ON)
 OPTION(CONFIG_VKPT_ENABLE_DEVICE_GROUPS "Enable device groups (multi-gpu) support" ON) 
 OPTION(CONFIG_VKPT_ENABLE_IMAGE_DUMPS "Enable image dumping functionality" ON) 
@@ -75,14 +75,17 @@ IF(WIN32)
     set(CMAKE_C_FLAGS_RELWITHDEBINFO "${CMAKE_C_FLAGS_RELWITHDEBINFO} /MD")
 ENDIF()
 
+# Ensure to include our extern folder subdirectory for CMake.
 add_subdirectory(extern)
 
+# Add our link directories. (Starting from here, bad idea if ya ask me. But it was there long ago)
 link_directories(.)
+
+# Add our source subdirectory.
+add_subdirectory(src)
 
 # WATISDEZE: Do we still need this?
 # set(CMAKE_INSTALL_PREFIX ${PROJECT_BINARY_DIR}/install)
-
-add_subdirectory(src)
 
 # IF(CONFIG_LINUX_PACKAGING_SUPPORT)
 #     # https://cmake.org/cmake/help/v3.8/module/CPackDeb.html

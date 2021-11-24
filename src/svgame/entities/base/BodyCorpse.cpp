@@ -29,7 +29,7 @@ BodyCorpse::~BodyCorpse() {
 
 //
 //===============
-// PlayerClient::Precache
+// PlayerEntity::Precache
 //
 //===============
 //
@@ -39,7 +39,7 @@ void BodyCorpse::Precache() {
 
 //
 //===============
-// PlayerClient::Spawn
+// PlayerEntity::Spawn
 //
 //===============
 //

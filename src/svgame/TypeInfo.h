@@ -26,11 +26,12 @@ private:
 	size_t localID; 
 };
 
-using EntityAllocatorFn = ServerGameEntity* ( ServerEntity* );
 
 //===============
 // TypeInfo, a system for getting runtime information about classes
 //===============
+using EntityAllocatorFn = ServerGameEntity* ( ServerEntity* );
+
 class TypeInfo {
 public:
 	enum

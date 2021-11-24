@@ -29,7 +29,7 @@ GibEntity::~GibEntity() {
 
 //
 //===============
-// PlayerClient::Precache
+// PlayerEntity::Precache
 //
 //===============
 //
@@ -39,7 +39,7 @@ void GibEntity::Precache() {
 
 //
 //===============
-// PlayerClient::Spawn
+// PlayerEntity::Spawn
 //
 //===============
 //

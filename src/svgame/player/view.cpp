@@ -19,7 +19,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "../g_local.h"
 #include "../entities.h"
 #include "../entities/base/ServerGameEntity.h"
-#include "../entities/base/PlayerClient.h"
+#include "../entities/base/PlayerEntity.h"
 #include "hud.h"
 #include "animations.h"
 
@@ -39,13 +39,13 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 //// 
 ////===============
 ////
-//void SVG_Client_CalculateViewOffset(PlayerClient *ent)
+//void SVG_Client_CalculateViewOffset(PlayerEntity *ent)
 //{
 //    float       bob;
 //    float       ratio;
 //    float       delta;
 //
-//    // Check whether ent is valid, and a PlayerClient hooked up 
+//    // Check whether ent is valid, and a PlayerEntity hooked up 
 //    // to a valid client.
 //    ServersClient* client = nullptr;
 //
@@ -146,17 +146,17 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 //// 
 ////===============
 ////
-//void SVG_Client_CalculateGunOffset(PlayerClient *ent)
+//void SVG_Client_CalculateGunOffset(PlayerEntity *ent)
 //{
 //    int     i;
 //    float   delta;
 //
-//    // Check whether ent is valid, and a PlayerClient hooked up 
+//    // Check whether ent is valid, and a PlayerEntity hooked up 
 //    // to a valid client.
 //    ServersClient* client = nullptr;
 //
 //    if (!ent || !(client = ent->GetClient()) ||
-//        !ent->IsSubclassOf<PlayerClient>()) {
+//        !ent->IsSubclassOf<PlayerEntity>()) {
 //        return;
 //    }
 //
@@ -225,14 +225,14 @@ static void SV_AddBlend(float r, float g, float b, float a, float *v_blend)
 // 
 //===============
 //
-void SVG_Client_CalculateBlend(PlayerClient *ent)
+void SVG_Client_CalculateBlend(PlayerEntity *ent)
 {
-    // Check whether ent is valid, and a PlayerClient hooked up 
+    // Check whether ent is valid, and a PlayerEntity hooked up 
     // to a valid client.
     ServersClient* client = nullptr;
 
     if (!ent || !(client = ent->GetClient()) ||
-        !ent->IsSubclassOf<PlayerClient>()) {
+        !ent->IsSubclassOf<PlayerEntity>()) {
         return;
     }
 
@@ -281,18 +281,18 @@ void SVG_Client_CalculateBlend(PlayerClient *ent)
 // 
 //===============
 //
-//void SVG_Client_CheckFallingDamage(PlayerClient *ent)
+//void SVG_Client_CheckFallingDamage(PlayerEntity *ent)
 //{
 //    float   delta;
 //    int     damage;
 //    vec3_t  dir;
 //
-//    // Check whether ent is valid, and a PlayerClient hooked up 
+//    // Check whether ent is valid, and a PlayerEntity hooked up 
 //    // to a valid client.
 //    ServersClient* client = nullptr;
 //
 //    if (!ent || !(client = ent->GetClient()) ||
-//        !ent->IsSubclassOf<PlayerClient>()) {
+//        !ent->IsSubclassOf<PlayerEntity>()) {
 //        return;
 //    }
 //
@@ -362,7 +362,7 @@ void SVG_Client_CalculateBlend(PlayerClient *ent)
 // 
 //===============
 //
-void SVG_Client_SetEvent(PlayerClient* ent) {
+void SVG_Client_SetEvent(PlayerEntity* ent) {
     //if (!ent || !ent->GetClient()) {
     //    return;
     //}
@@ -383,9 +383,9 @@ void SVG_Client_SetEvent(PlayerClient* ent) {
 // 
 //===============
 //
-void SVG_Client_SetEffects(PlayerClient *ent)
+void SVG_Client_SetEffects(PlayerEntity *ent)
 {
-    //if (!ent || !ent->IsSubclassOf<PlayerClient>()) {
+    //if (!ent || !ent->IsSubclassOf<PlayerEntity>()) {
     //    return;
     //}
 
@@ -407,16 +407,16 @@ void SVG_Client_SetEffects(PlayerClient *ent)
 // 
 //===============
 //
-void SVG_Client_SetSound(PlayerClient *ent)
+void SVG_Client_SetSound(PlayerEntity *ent)
 {
     //const char    *weap; // C++20: STRING: Added const to char*
 
-    //// Check whether ent is valid, and a PlayerClient hooked up 
+    //// Check whether ent is valid, and a PlayerEntity hooked up 
     //// to a valid client.
     //ServersClient* client = nullptr;
 
     //if (!ent || !(client = ent->GetClient()) ||
-    //    !ent->IsSubclassOf<PlayerClient>()) {
+    //    !ent->IsSubclassOf<PlayerEntity>()) {
     //    return;
     //}
 
@@ -443,17 +443,17 @@ void SVG_Client_SetSound(PlayerClient *ent)
 // 
 //===============
 //
-//void SVG_Client_SetAnimationFrame(PlayerClient *ent)
+//void SVG_Client_SetAnimationFrame(PlayerEntity *ent)
 //{
 //    qboolean isDucking = false;
 //    qboolean isRunning = false;
 //
-//    // Check whether ent is valid, and a PlayerClient hooked up 
+//    // Check whether ent is valid, and a PlayerEntity hooked up 
 //    // to a valid client.
 //    ServersClient* client = nullptr;
 //
 //    if (!ent || !(client = ent->GetClient()) ||
-//        !ent->IsSubclassOf<PlayerClient>()) {
+//        !ent->IsSubclassOf<PlayerEntity>()) {
 //        return;
 //    }
 //
@@ -552,16 +552,16 @@ void SVG_Client_SetSound(PlayerClient *ent)
 // sound, effects, animations, you name it.
 //===============
 //
-//void SVG_ClientEndServerFrame(PlayerClient *ent)
+//void SVG_ClientEndServerFrame(PlayerEntity *ent)
 //{
 //    float   bobTime;
 //
-//    // Check whether ent is valid, and a PlayerClient hooked up 
+//    // Check whether ent is valid, and a PlayerEntity hooked up 
 //    // to a valid client.
 //    ServersClient* client = nullptr;
 //
 //    if (!ent || !(client = ent->GetClient()) ||
-//        !ent->IsSubclassOf<PlayerClient>()) {
+//        !ent->IsSubclassOf<PlayerEntity>()) {
 //        return;
 //    }
 //

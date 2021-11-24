@@ -12,7 +12,7 @@
 #define __SVGAME_GAMEMODES_IGAMEMODE_H__
 
 class ServerGameEntity;
-class PlayerClient;
+class PlayerEntity;
 
 using BaseEntityVector = std::vector<ServerGameEntity*>;
 
@@ -53,7 +53,7 @@ public:
     virtual void ClientEndServerFrame(ServerEntity *serverEntity) = 0;
     // Called when a client disconnects. This does not get called between
     // load games.
-    virtual void ClientDisconnect(PlayerClient* ent) = 0;
+    virtual void ClientDisconnect(PlayerEntity* ent) = 0;
     //called whenever the player updates a userinfo variable.
 
     // The game can override any of the settings in place
@@ -84,7 +84,7 @@ public:
     // call this function again to respawn our player.
     virtual void PutClientInServer(ServerEntity* ent) = 0;
     // Respawns a client (if that is what the game mode wants).
-    virtual void RespawnClient(PlayerClient* ent) = 0;
+    virtual void RespawnClient(PlayerEntity* ent) = 0;
 
      // Some information that should be persistant, like health,
     // is still stored in the edict structure, so it needs to

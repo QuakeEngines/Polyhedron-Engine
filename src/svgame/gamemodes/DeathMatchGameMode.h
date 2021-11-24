@@ -28,8 +28,8 @@ public:
     virtual void ClientBegin(ServerEntity* serverEntity) override;
     virtual void ClientBeginServerFrame(ServerEntity* serverEntity) override;
     
-    virtual void RespawnClient(PlayerClient* ent) override;
-    virtual void RespawnSpectator(PlayerClient* ent);
+    virtual void RespawnClient(PlayerEntity* ent) override;
+    virtual void RespawnSpectator(PlayerEntity* ent);
 
     virtual void ClientUpdateObituary(ServerGameEntity* self, ServerGameEntity* inflictor, ServerGameEntity* attacker) override;
 

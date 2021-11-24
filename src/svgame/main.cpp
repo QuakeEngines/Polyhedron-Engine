@@ -22,7 +22,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 // Entities.
 #include "entities.h"
 #include "entities/base/ServerGameEntity.h"
-#include "entities/base/PlayerClient.h"
+#include "entities/base/PlayerEntity.h"
 
 // Gamemodes.
 #include "gamemodes/IGameMode.h"
@@ -149,7 +149,7 @@ void SVG_InitGame(void)
     SVG_InitItems();
     SVG_InitializeServerEntities();
     SVG_AllocateGameClients();
-    // WID: You'd expect PlayerClient allocation for the entities here.
+    // WID: You'd expect PlayerEntity allocation for the entities here.
     // that won't work with the structure of things.
     // Therefor, it now resides in SVG_SpawnEntities.
     SVG_InitializeGameMode();
@@ -335,26 +335,6 @@ void SVG_InitializeCVars() {
 
 //
 //=====================
-// SVG_InitializeServerEntities
-//
-// Sets up the server entity aligned array.
-//=====================
-//
-void SVG_InitializeServerEntities() {
-    // Initialize all entities for this "game", aka map that is being played.
-    game.maxEntities = MAX_EDICTS;
-    game.maxEntities = Clampi(game.maxEntities, (int)maximumClients->value + 1, MAX_EDICTS);
-//    globals.entities = g_entities;
-//    globals.maxEntities = game.maxEntities;
-
-    // Ensure, all base entities are nullptrs. Just to be save.
-    for (int32_t i = 0; i < MAX_EDICTS; i++) {
-        serverGameEntities[i] = nullptr;
-    }
-}
-
-//
-//=====================
 // SVG_AllocateGameClients
 //
 // Allocates the "ServersClient", aligned to the ServerClient data type array properly for
@@ -362,10 +342,11 @@ void SVG_InitializeServerEntities() {
 //=====================
 //
 void SVG_AllocateGameClients() {
-    // Initialize all clients for this game
-    game.maximumClients = maximumClients->value;
-    game.clients = (ServersClient*)gi.TagMalloc(game.maximumClients * sizeof(game.clients[0]), TAG_GAME); // CPP: Cast
-    globals.numberOfEntities = game.maximumClients + 1;
+// Move to server.
+    //// Initialize all clients for this game
+    //game.maximumClients = maximumClients->value;
+    //game.clients = (ServersClient*)gi.TagMalloc(game.maximumClients * sizeof(game.clients[0]), TAG_GAME); // CPP: Cast
+    //game.numberOfEntities = game.maximumClients + 1;
 }
 
 //
@@ -383,13 +364,13 @@ void SVG_AllocateGamePlayerClientEntities() {
     // Allocate a classentity for each client in existence.
     for (int32_t i = 1; i < maximumClients + 1; i++) {
         // Fetch server entity.
-        ServerEntity* serverEntity = &g_entities[i];
+        ServerEntity* serverEntity = &serverGameEntities[i];
 
         // Initialize entity.
         SVG_InitEntity(serverEntity);
 
         // Allocate their class entities appropriately.
-        serverEntity->classEntity = SVG_CreateClassEntity<PlayerClient>(serverEntity, false); //SVG_SpawnClassEntity(serverEntity, serverEntity->className);
+        serverEntity->classEntity = SVG_CreateClassEntity<PlayerEntity>(serverEntity, false); //SVG_SpawnClassEntity(serverEntity, serverEntity->className);
         
         // Be sure to reset their inuse, after all, they aren't in use.
         serverEntity->classEntity->SetInUse(false);
@@ -397,8 +378,8 @@ void SVG_AllocateGamePlayerClientEntities() {
         // Fetch client index.
         const int32_t clientIndex = i - 1; // Same as the older: serverEntity - g_entities - 1;
 
-        // Assign the designated client to this PlayerClient entity.
-        ((PlayerClient*)serverEntity->classEntity)->SetClient(&game.clients[clientIndex]);
+        // Assign the designated client to this PlayerEntity entity.
+        ((PlayerEntity*)serverEntity->classEntity)->SetClient(&game.clients[clientIndex]);
     }
 }
 
@@ -463,7 +444,7 @@ void SVG_ClientEndServerFrames(void)
         // First, fetch entity state number.
         int32_t stateNumber = g_entities[1 + i].state.number;
 
-        // Now, let's go wild. (Purposely, do not assume the pointer is a PlayerClient.)
+        // Now, let's go wild. (Purposely, do not assume the pointer is a PlayerEntity.)
         ServerEntity *entity = &g_entities[stateNumber]; // WID: 1 +, because 0 == WorldSpawn.
 
         // See if we're gooszsd to go, if not, continue for the next. 

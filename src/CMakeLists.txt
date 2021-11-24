@@ -93,7 +93,7 @@ SET( SRC_SVGAME
 	svgame/entities/base/BodyCorpse.cpp
 	svgame/entities/base/DebrisEntity.cpp
 	svgame/entities/base/GibEntity.cpp
-	svgame/entities/base/PlayerClient.cpp
+	svgame/entities/base/PlayerEntity.cpp
 	#svgame/entities/info/InfoNotNull.cpp
 	svgame/entities/info/InfoNull.cpp
 	svgame/entities/info/InfoPlayerCoop.cpp
@@ -185,7 +185,7 @@ SET( SRC_SVGAME
 	svgame/entities/base/BodyCorpse.h
 	svgame/entities/base/DebrisEntity.h
 	svgame/entities/base/GibEntity.h
-	svgame/entities/base/PlayerClient.h
+	svgame/entities/base/PlayerEntity.h
 	svgame/entities/func/FuncAreaportal.h
 	svgame/entities/func/FuncButton.h
 	svgame/entities/func/FuncDoor.h
