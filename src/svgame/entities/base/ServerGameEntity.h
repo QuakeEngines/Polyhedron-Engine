@@ -16,6 +16,7 @@
 
 class ServerGameEntity {
 public:
+    friend struct ServerEntity;
     //------------------------------------------------------------
     //
     // Dispatch Callback Function Pointers.
@@ -297,15 +298,6 @@ public:
     // Return the 'nextThinkTime' value.
     inline const float GetNextThinkTime() {
         return nextThinkTime;
-    }
-
-    // @return a pointer to the entity that triggered myNoise
-    inline const ServerGameEntity* GetMyNoiseEntity() {
-        return myNoiseEntity;
-    }
-    // @return a pointer to the entity that triggered myNoise2
-    inline const ServerGameEntity* GetMyNoise2Entity() {
-        return myNoise2Entity;
     }
 
     // Return the 'noiseIndex' value.
@@ -630,6 +622,15 @@ public:
         this->nextThinkTime = nextThinkTime;
     }
 
+    // @set a pointer to the entity that triggered firstNoiseEntity
+    inline const ServerGameEntity* SetFirstNoiseEntity() {
+        return firstNoiseEntity;
+    }
+    // @set a pointer to the entity that triggered secondNoiseEntity
+    inline const ServerGameEntity* SetSecondNoiseEntity() {
+        return secondNoiseEntity;
+    }
+
     // Set the 'noiseIndex' value.
     inline void SetNoiseIndex(const int32_t& noiseIndex) {
         this->noiseIndex = noiseIndex;
@@ -889,9 +890,9 @@ protected:
     // The entity that activated this
     ServerGameEntity* activator;
     // The entity that activated the noise.
-    ServerGameEntity* myNoiseEntity;
+    ServerGameEntity* firstNoiseEntity;
     // The entity that activated the second noise.
-    ServerGameEntity* myNoise2Entity;
+    ServerGameEntity* secondNoiseEntity;
 
 
     // Yaw Speed. (Should be for monsters...)

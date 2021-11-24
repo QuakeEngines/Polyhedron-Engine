@@ -47,7 +47,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 //
 //    // Check whether ent is valid, and a PlayerEntity hooked up 
 //    // to a valid client.
-//    ServersClient* client = nullptr;
+//    ServerClient* client = nullptr;
 //
 //    if (!ent || !(client = ent->GetClient())) {
 //        return;
@@ -153,7 +153,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 //
 //    // Check whether ent is valid, and a PlayerEntity hooked up 
 //    // to a valid client.
-//    ServersClient* client = nullptr;
+//    ServerClient* client = nullptr;
 //
 //    if (!ent || !(client = ent->GetClient()) ||
 //        !ent->IsSubclassOf<PlayerEntity>()) {
@@ -229,7 +229,7 @@ void SVG_Client_CalculateBlend(PlayerEntity *ent)
 {
     // Check whether ent is valid, and a PlayerEntity hooked up 
     // to a valid client.
-    ServersClient* client = nullptr;
+    ServerClient* client = nullptr;
 
     if (!ent || !(client = ent->GetClient()) ||
         !ent->IsSubclassOf<PlayerEntity>()) {
@@ -289,7 +289,7 @@ void SVG_Client_CalculateBlend(PlayerEntity *ent)
 //
 //    // Check whether ent is valid, and a PlayerEntity hooked up 
 //    // to a valid client.
-//    ServersClient* client = nullptr;
+//    ServerClient* client = nullptr;
 //
 //    if (!ent || !(client = ent->GetClient()) ||
 //        !ent->IsSubclassOf<PlayerEntity>()) {
@@ -413,7 +413,7 @@ void SVG_Client_SetSound(PlayerEntity *ent)
 
     //// Check whether ent is valid, and a PlayerEntity hooked up 
     //// to a valid client.
-    //ServersClient* client = nullptr;
+    //ServerClient* client = nullptr;
 
     //if (!ent || !(client = ent->GetClient()) ||
     //    !ent->IsSubclassOf<PlayerEntity>()) {
@@ -450,7 +450,7 @@ void SVG_Client_SetSound(PlayerEntity *ent)
 //
 //    // Check whether ent is valid, and a PlayerEntity hooked up 
 //    // to a valid client.
-//    ServersClient* client = nullptr;
+//    ServerClient* client = nullptr;
 //
 //    if (!ent || !(client = ent->GetClient()) ||
 //        !ent->IsSubclassOf<PlayerEntity>()) {
@@ -558,7 +558,7 @@ void SVG_Client_SetSound(PlayerEntity *ent)
 //
 //    // Check whether ent is valid, and a PlayerEntity hooked up 
 //    // to a valid client.
-//    ServersClient* client = nullptr;
+//    ServerClient* client = nullptr;
 //
 //    if (!ent || !(client = ent->GetClient()) ||
 //        !ent->IsSubclassOf<PlayerEntity>()) {

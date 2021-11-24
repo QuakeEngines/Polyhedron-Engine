@@ -96,11 +96,11 @@ void DebugShitForEntitiesLulz() {
 // SVG_SpawnClassEntity
 //
 //=================
-ServerGameEntity* SVG_SpawnServerGameEntity(ServerEntity *ent, const std::string& className) {
+ServerGameEntity* SVG_SpawnServerGameEntity(ServerEntity* ent, const std::string& className) {
     // Start with a nice nullptr.
     ServerGameEntity* serverGameEntity = nullptr;
-    if ( !ent ) {
-        Com_LPrintf(PRINT_WARNING, "Failed to initialize ServerGameEntity: '%s' under ServerEntity: #'%i'", className.c_str, ent->state.number);
+    if (!ent) {
+        Com_LPrintf(PRINT_WARNING, "Failed to initialize ServerGameEntity: '%s' under ServerEntity: #'%i'", className.c_str(), ent->state.number);
         return nullptr;
     }
 
@@ -109,65 +109,66 @@ ServerGameEntity* SVG_SpawnServerGameEntity(ServerEntity *ent, const std::string
 
     // New type info-based spawning system, to replace endless string comparisons
     // First find it by the map name
-    TypeInfo* info = TypeInfo::GetInfoByMapName( className.c_str() );
-    if ( info == nullptr ) { // Then try finding it by the C++ class name
+    TypeInfo* info = TypeInfo::GetInfoByMapName(className.c_str());
+    if (info == nullptr) { // Then try finding it by the C++ class name
         info = TypeInfo::GetInfoByName(className.c_str());
-        if ( info == nullptr ) { 
-            gi.DPrintf( "WARNING: unknown entity '%s'\n", className.c_str() );
+        if (info == nullptr) {
+            gi.DPrintf("WARNING: unknown entity '%s'\n", className.c_str());
             return nullptr; // Bail out, we didn't find one
         }
     }
 
     // Don't freak out if the entity cannot be allocated, but do warn us about it, it's good to know
     // ServerEntity classes with 'DefineDummyMapClass' won't be reported here
-    if ( info->AllocateInstance  != nullptr && info->IsMapSpawnable() ) {
-        return (serverGameEntities[entityNumber] = info->AllocateInstance( ent ));
+    if (info->AllocateInstance != nullptr && info->IsMapSpawnable()) {
+        return (serverGameEntities[entityNumber] = info->AllocateInstance(ent));
     } else {
-        if ( info->IsAbstract() ) {
-            gi.DPrintf( "WARNING: tried to allocate an abstract class '%s'\n", info->className );
-        } else if ( !info->IsMapSpawnable() ) {
-            gi.DPrintf( "WARNING: tried to allocate a code-only class '%s'\n", info->className );
+        if (info->IsAbstract()) {
+            gi.DPrintf("WARNING: tried to allocate an abstract class '%s'\n", info->className);
+        } else if (!info->IsMapSpawnable()) {
+            gi.DPrintf("WARNING: tried to allocate a code-only class '%s'\n", info->className);
         }
         return nullptr;
     }
+}
 
 //===============
 // SVG_SpawnClassEntity
 //
 //=================
-ServerGameEntity* SVG_SpawnClassEntity(ServerEntity* ent, const std::string& className) {
-    // Start with a nice nullptr.
-    ServerGameEntity* spawnEntity = nullptr;
-    if ( !ent ) {
-        return nullptr;
-    }
-
-    // Fetch entity number.
-    int32_t entityNumber = ent->state.number;
-
-    // New type info-based spawning system, to replace endless string comparisons
-    // First find it by the map name
-    TypeInfo* info = TypeInfo::GetInfoByMapName( className.c_str() );
-    if ( nullptr == info ) { // Then try finding it by the C++ class name
-        if ( nullptr == (info = TypeInfo::GetInfoByName( className.c_str() )) ) { 
-            gi.DPrintf( "WARNING: unknown entity '%s'\n", className.c_str() );
-            return nullptr; // Bail out, we didn't find one
-        }
-    }
-
-    // Don't freak out if the entity cannot be allocated, but do warn us about it, it's good to know
-    // ServerEntity classes with 'DefineDummyMapClass' won't be reported here
-    if ( nullptr != info->AllocateInstance && info->IsMapSpawnable() ) {
-        return (serverGameEntities[entityNumber] = info->AllocateInstance( ent ));
-    } else {
-        if ( info->IsAbstract() ) {
-            gi.DPrintf( "WARNING: tried to allocate an abstract class '%s'\n", info->className );
-        } else if ( !info->IsMapSpawnable() ) {
-            gi.DPrintf( "WARNING: tried to allocate a code-only class '%s'\n", info->className );
-        }
-        return nullptr;
-    }
-}
+//ServerGameEntity* SVG_SpawnClassEntity(ServerEntity* ent, const std::string& className) {
+//    // Start with a nice nullptr.
+//    ServerGameEntity* spawnEntity = nullptr;
+//    if ( !ent ) {
+//        return nullptr;
+//    }
+//
+//    // Fetch entity number.
+//    int32_t entityNumber = ent->state.number;
+//
+//    // New type info-based spawning system, to replace endless string comparisons
+//    // First find it by the map name
+//    TypeInfo* info = TypeInfo::GetInfoByMapName( className.c_str() );
+//    if ( nullptr == info ) { // Then try finding it by the C++ class name
+//        if ( nullptr == (info = TypeInfo::GetInfoByName( className.c_str() )) ) { 
+//            gi.DPrintf( "WARNING: unknown entity '%s'\n", className.c_str() );
+//            return nullptr; // Bail out, we didn't find one
+//        }
+//    }
+//
+//    // Don't freak out if the entity cannot be allocated, but do warn us about it, it's good to know
+//    // ServerEntity classes with 'DefineDummyMapClass' won't be reported here
+//    if ( nullptr != info->AllocateInstance && info->IsMapSpawnable() ) {
+//        return (serverGameEntities[entityNumber] = info->AllocateInstance( ent ));
+//    } else {
+//        if ( info->IsAbstract() ) {
+//            gi.DPrintf( "WARNING: tried to allocate an abstract class '%s'\n", info->className );
+//        } else if ( !info->IsMapSpawnable() ) {
+//            gi.DPrintf( "WARNING: tried to allocate a code-only class '%s'\n", info->className );
+//        }
+//        return nullptr;
+//    }
+//}
 
 //===============
 // SVG_FreeClassEntity
@@ -176,28 +177,28 @@ ServerGameEntity* SVG_SpawnClassEntity(ServerEntity* ent, const std::string& cla
 // look for SVG_FreeEntity instead. It automatically takes care of 
 // classEntities too.
 //=================
-void SVG_FreeClassEntity(ServerEntity* ent) {
-    //// Special class entity handling IF it still has one.
-    //if (ent->0) {
-    //    // Remove the classEntity reference
-    //    ent->classEntity->SetServerEntity(nullptr);
-    //    ent->classEntity = nullptr;
-    //}
-
-    // Ensure entity is inUse, for if not, it has no "game" entity
-    // attached to it.
-    if (!ent->inUse)
-        return;
-
-    // Fetch entity number.
-    int32_t entityNumber = ent->state.number;
-
-    // In case it exists in our base entitys, get rid of it, assign nullptr.
-    if (serverGameEntities[entityNumber]) {
-        delete serverGameEntities[entityNumber];
-        serverGameEntities[entityNumber] = nullptr;
-    }
-}
+//void SVG_FreeClassEntity(ServerEntity* ent) {
+//    //// Special class entity handling IF it still has one.
+//    //if (ent->0) {
+//    //    // Remove the classEntity reference
+//    //    ent->classEntity->SetServerEntity(nullptr);
+//    //    ent->classEntity = nullptr;
+//    //}
+//
+//    // Ensure entity is inUse, for if not, it has no "game" entity
+//    // attached to it.
+//    if (!ent->inUse)
+//        return;
+//
+//    // Fetch entity number.
+//    int32_t entityNumber = ent->state.number;
+//
+//    // In case it exists in our base entitys, get rid of it, assign nullptr.
+//    if (serverGameEntities[entityNumber]) {
+//        delete serverGameEntities[entityNumber];
+//        serverGameEntities[entityNumber] = nullptr;
+//    }
+//}
 
 
 //===============
@@ -206,42 +207,42 @@ void SVG_FreeClassEntity(ServerEntity* ent) {
 // Will remove the class entity, if it exists. Continues to then mark the
 // entity as "freed". (inUse = false)
 //=================
-void SVG_FreeEntity(ServerEntity* ent)
-{
-    if (!ent)
-        return;
-
-    // Fetch entity number.
-    int32_t entityNumber = ent->state.number;
-
-    // First of all, unlink the entity from this world.
-    gi.UnlinkEntity(ent);        // unlink from world
-
-    // Prevent freeing "special edicts". Clients, and the dead "client body queue".
-    //if ((ent - g_entities) <= (maximumClients->value + BODY_QUEUE_SIZE)) {
-    //    //      gi.DPrintf("tried to free special edict\n");
-    //    return;
-    //}
-
-    // Delete the actual entity pointer.
-    SVG_FreeClassEntity(ent);
-
-    // Clear the struct.
-    *ent = {};
-    
-    // Reset classname to "freed" (It is, freed...)
-    ent->className = "freed";
-
-    // Store the freeTime, so we can prevent allocating a new entity with this ID too soon.
-    // If we don't, we can expect client side LERP horror.
-    ent->freeTime = level.time;
-
-    // Last but not least, since it isn't in use anymore, let it be known.
-    ent->inUse = false;
-
-    // Reset serverFlags.
-    ent->serverFlags = 0;
-}
+//void SVG_FreeEntity(ServerEntity* ent)
+//{
+//    if (!ent)
+//        return;
+//
+//    // Fetch entity number.
+//    int32_t entityNumber = ent->state.number;
+//
+//    // First of all, unlink the entity from this world.
+//    gi.UnlinkEntity(ent);        // unlink from world
+//
+//    // Prevent freeing "special edicts". Clients, and the dead "client body queue".
+//    //if ((ent - g_entities) <= (maximumClients->value + BODY_QUEUE_SIZE)) {
+//    //    //      gi.DPrintf("tried to free special edict\n");
+//    //    return;
+//    //}
+//
+//    // Delete the actual entity pointer.
+//    SVG_FreeClassEntity(ent);
+//
+//    // Clear the struct.
+//    *ent = {};
+//    
+//    // Reset classname to "freed" (It is, freed...)
+//    ent->className = "freed";
+//
+//    // Store the freeTime, so we can prevent allocating a new entity with this ID too soon.
+//    // If we don't, we can expect client side LERP horror.
+//    ent->freeTime = level.time;
+//
+//    // Last but not least, since it isn't in use anymore, let it be known.
+//    ent->inUse = false;
+//
+//    // Reset serverFlags.
+//    ent->serverFlags = 0;
+//}
 
 //===============
 // SVG_PickTarget
@@ -268,6 +269,15 @@ ServerEntity* SVG_PickTarget(char* targetName)
     }
 
     // Try and find the given entity that matches this targetName.
+    for (auto& ent : serverGameEntities | SvgEF::HasKeyValue("targetName", targetName)) {
+        // If we did find one, add it to our list of targets to choose from.
+        choice[num_choices++] = ent;
+
+        // Break out in case of maximum choice limit.
+        if (num_choices == MAXCHOICES)
+            break;
+    }
+
     while (1) {
         ent = SVG_Find(ent, FOFS(targetName), targetName);
         // If we can't find it, break out of this loop.
@@ -419,11 +429,11 @@ void SVG_InitEntity(ServerEntity* e)
 //===============
 ServerEntity* SVG_Spawn(void)
 {
-    ServerEntity *serverEntity = nullptr;
+    ServerGameEntity *serverGameEntity = nullptr;
     int32_t i = 0;
     // Acquire a pointer to the entity we'll check for.
-    serverEntity = &g_entities[game.maximumClients + 1];
-    for (i = game.maximumClients + 1; i < globals.serverEntityPool.numberOfEntities; i++, serverEntity++) {
+    serverGameEntity = &serverGameEntities[game.maximumClients + 1];
+    for (i = game.maximumClients + 1; i < serverEntityPool.numberOfEntities; i++, serverGameEntity++) {
         // The first couple seconds of server time can involve a lot of
         // freeing and allocating, so relax the replacement policy
         if (!serverEntity->inUse && (serverEntity->freeTime < 2 || level.time - serverEntity->freeTime > 0.5)) {

@@ -50,19 +50,19 @@ public:
     //
     // Client related callbacks.
     // 
-    virtual qboolean ClientConnect(ServerEntity* serverEntity, char *userinfo) override;
-    virtual void ClientBegin(ServerEntity* serverEntity) override;
-    virtual void ClientBeginServerFrame(ServerEntity *serverEntity) override;
-    virtual void ClientEndServerFrame(ServerEntity *serverEntity) override;
+    virtual qboolean ClientConnect(PlayerEntity* serverEntity, char *userinfo) override;
+    virtual void ClientBegin(PlayerEntity* serverEntity) override;
+    virtual void ClientBeginServerFrame(PlayerEntity* serverEntity) override;
+    virtual void ClientEndServerFrame(PlayerEntity *serverEntity) override;
     virtual void ClientDisconnect(PlayerEntity* ent) override;
-    virtual void ClientUserinfoChanged(ServerEntity* ent, char *userinfo) override;
-    virtual void ClientUpdateObituary(ServerGameEntity* self, ServerGameEntity* inflictor, ServerGameEntity* attacker) override;
+    virtual void ClientUserinfoChanged(PlayerEntity* ent, char *userinfo) override;
+    virtual void ClientUpdateObituary(PlayerEntity* self, ServerGameEntity* inflictor, ServerGameEntity* attacker) override;
 
     //
     // Client related functions/utilities.
     // 
-    virtual void InitializeClientPersistentData(ServersClient* client) override;
-    virtual void InitializeClientRespawnData(ServersClient *client) override;
+    virtual void InitializeClientPersistentData(ServerClient* client) override;
+    virtual void InitializeClientRespawnData(ServerClient *client) override;
 
     virtual void SelectClientSpawnPoint(ServerEntity* ent, vec3_t& origin, vec3_t& angles, const std::string &classname) override;
     virtual void PutClientInServer(ServerEntity *ent) override;

@@ -100,13 +100,13 @@ gitem_t *SVG_FindItemByPickupName(const char *pickup_name) // C++20: STRING: Add
 
 //======================================================================
 
-void DoRespawn(ServerEntity *ent)
+void DoRespawn(ServerGameEntity *ent)
 {
     //if (!ent)
     //    return;
 
     //if (ent->team) {
-    //    ServerEntity *master;
+    //    ServerGameEntity *master;
     //    int count;
     //    int choice;
 
@@ -129,7 +129,7 @@ void DoRespawn(ServerEntity *ent)
     //ent->state.event = EntityEvent::ItemRespawn;
 }
 
-void SVG_SetRespawn(ServerEntity *ent, float delay)
+void SVG_SetRespawn(ServerGameEntity *ent, float delay)
 {
     if (!ent)
         return;
@@ -175,41 +175,42 @@ void Drop_General(PlayerEntity *ent, gitem_t *item)
 
 //======================================================================
 
-qboolean SVG_AddAmmo(ServerEntity *ent, gitem_t *item, int count)
+qboolean SVG_AddAmmo(PlayerEntity *playerEntity, gitem_t *item, int32_t count)
 {
-    int         index;
-    int         max;
+    int32_t index;
+    int32_t max;
 
-    if (!ent)
+    if (!playerEntity)
         return false;
 
-    if (!ent->client)
+    ServerClient* client = playerEntity->GetClient();
+    if (!playerEntity->GetClient())
         return false;
 
     if (item->tag == AmmoType::Bullets)
-        max = ent->client->persistent.maxBullets;
+        max = client->persistent.maxBullets;
     else if (item->tag == AmmoType::Shells)
-        max = ent->client->persistent.maxShells;
+        max = client->persistent.maxShells;
     else if (item->tag == AmmoType::Rockets)
-        max = ent->client->persistent.maxRockets;
+        max = client->persistent.maxRockets;
     else if (item->tag == AmmoType::Grenade)
-        max = ent->client->persistent.maxGrenades;
+        max = client->persistent.maxGrenades;
     else if (item->tag == AmmoType::Cells)
-        max = ent->client->persistent.maxCells;
+        max = client->persistent.maxCells;
     else if (item->tag == AmmoType::Slugs)
-        max = ent->client->persistent.maxSlugs;
+        max = client->persistent.maxSlugs;
     else
         return false;
 
     index = ITEM_INDEX(item);
 
-    if (ent->client->persistent.inventory[index] == max)
+    if (client->persistent.inventory[index] == max)
         return false;
 
-    ent->client->persistent.inventory[index] += count;
+    client->persistent.inventory[index] += count;
 
-    if (ent->client->persistent.inventory[index] > max)
-        ent->client->persistent.inventory[index] = max;
+    if (client->persistent.inventory[index] > max)
+        client->persistent.inventory[index] = max;
 
     return true;
 }
@@ -245,7 +246,7 @@ qboolean Pickup_Ammo(ServerGameEntity *ent, PlayerEntity*other)
 
 void Drop_Ammo(PlayerEntity *ent, gitem_t *item)
 {
-    //ServerEntity *dropped;
+    //ServerGameEntity *dropped;
     //int     index;
 
     //index = ITEM_INDEX(item);
@@ -271,7 +272,7 @@ void Drop_Ammo(PlayerEntity *ent, gitem_t *item)
 
 //======================================================================
 
-void MegaHealth_think(ServerEntity *self)
+void MegaHealth_think(ServerGameEntity *self)
 {
     //if (self->owner->health > self->owner->maxHealth) {
     //    self->nextThinkTime = level.time + 1;
@@ -285,7 +286,7 @@ void MegaHealth_think(ServerEntity *self)
     //    SVG_FreeEntity(self);
 }
 
-qboolean Pickup_Health(ServerEntity *ent, ServerEntity *other)
+qboolean Pickup_Health(ServerGameEntity *ent, ServerGameEntity *other)
 {
 //    if (!(ent->style & HEALTH_IGNORE_MAX))
 //        if (other->health >= other->maxHealth)
@@ -457,15 +458,15 @@ void SVG_TouchItem(ServerGameEntity *ent, ServerGameEntity *other, cplane_t *pla
 
 //======================================================================
 
-void drop_temp_touch(ServerEntity *ent, ServerEntity *other, cplane_t *plane, csurface_t *surf)
+void drop_temp_touch(ServerGameEntity *ent, ServerGameEntity *other, cplane_t *plane, csurface_t *surf)
 {
     if (other == ent->owner)
         return;
 
-    SVG_TouchItem(ent->classEntity, other->classEntity, plane, surf);
+    //SVG_TouchItem(ent, other, plane, surf);
 }
 
-void drop_make_touchable(ServerEntity *ent)
+void drop_make_touchable(ServerGameEntity *ent)
 {
 //    ent->Touch = SVG_TouchItem;
     if (deathmatch->value) {
@@ -474,10 +475,10 @@ void drop_make_touchable(ServerEntity *ent)
     }
 }
 
-ServerEntity *SVG_DropItem(PlayerEntity *ent, gitem_t *item)
+ServerGameEntity *SVG_DropItem(PlayerEntity *ent, gitem_t *item)
 {
     return NULL;
-//    ServerEntity *dropped;
+//    ServerGameEntity *dropped;
 //    vec3_t  forward, right;
 //    vec3_t  offset;
 //
@@ -521,9 +522,9 @@ ServerEntity *SVG_DropItem(PlayerEntity *ent, gitem_t *item)
 //    return dropped;
 }
 
-void Use_Item(ServerEntity *ent, ServerEntity *other, ServerEntity *activator)
+void Use_Item(ServerGameEntity *serverEntity, ServerGameEntity *other, ServerGameEntity *activator)
 {
-    ent->serverFlags &= ~EntityServerFlags::NoClient;
+    ent->SetServerFlags(ent->GetServerFlags() & ~EntityServerFlags::NoClient);
 //    ent->Use = NULL;
 
 //    if (ent->spawnFlags & ItemSpawnFlags::NoTouch) {
@@ -534,7 +535,7 @@ void Use_Item(ServerEntity *ent, ServerEntity *other, ServerEntity *activator)
 ////        ent->Touch = SVG_TouchItem;
 //    }
 
-    gi.LinkEntity(ent);
+    serverEntity->LinkEntity();
 }
 
 //======================================================================
@@ -544,7 +545,7 @@ void Use_Item(ServerEntity *ent, ServerEntity *other, ServerEntity *activator)
 droptofloor
 ================
 */
-void droptofloor(ServerEntity *ent)
+void droptofloor(ServerGameEntity *ent)
 {
 //    trace_t     tr;
 //    vec3_t      dest;
@@ -677,7 +678,7 @@ Items can't be immediately dropped to floor, because they might
 be on an entity that hasn't spawned yet.
 ============
 */
-void SVG_SpawnItem(ServerEntity *ent, gitem_t *item)
+void SVG_SpawnItem(ServerGameEntity *ent, gitem_t *item)
 {
     SVG_PrecacheItem(item);
 
@@ -944,7 +945,7 @@ gitem_t itemlist[] = {
 
 /*QUAKED item_health (.3 .3 1) (-16 -16 -16) (16 16 16)
 */
-void SP_item_health(ServerEntity *self)
+void SP_item_health(ServerGameEntity *self)
 {
     if (deathmatch->value && ((int)gamemodeflags->value & GameModeFlags::NoHealth)) {
         SVG_FreeEntity(self);
@@ -959,7 +960,7 @@ void SP_item_health(ServerEntity *self)
 
 /*QUAKED item_health_small (.3 .3 1) (-16 -16 -16) (16 16 16)
 */
-void SP_item_health_small(ServerEntity *self)
+void SP_item_health_small(ServerGameEntity *self)
 {
     if (deathmatch->value && ((int)gamemodeflags->value & GameModeFlags::NoHealth)) {
         SVG_FreeEntity(self);
@@ -975,7 +976,7 @@ void SP_item_health_small(ServerEntity *self)
 
 /*QUAKED item_health_large (.3 .3 1) (-16 -16 -16) (16 16 16)
 */
-void SP_item_health_large(ServerEntity *self)
+void SP_item_health_large(ServerGameEntity *self)
 {
     if (deathmatch->value && ((int)gamemodeflags->value & GameModeFlags::NoHealth)) {
         SVG_FreeEntity(self);
@@ -990,7 +991,7 @@ void SP_item_health_large(ServerEntity *self)
 
 /*QUAKED item_health_mega (.3 .3 1) (-16 -16 -16) (16 16 16)
 */
-void SP_item_health_mega(ServerEntity *self)
+void SP_item_health_mega(ServerGameEntity *self)
 {
     if (deathmatch->value && ((int)gamemodeflags->value & GameModeFlags::NoHealth)) {
         SVG_FreeEntity(self);

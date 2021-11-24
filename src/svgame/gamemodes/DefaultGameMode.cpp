@@ -277,7 +277,7 @@ void DefaultGameMode::InflictDamage(ServerGameEntity* target, ServerGameEntity* 
     SetCurrentMeansOfDeath(mod);
 
     // Fetch client.
-    ServersClient* client = target->GetClient();
+    ServerClient* client = target->GetClient();
 
     // Lame thing, regarding the sparks to use. Ancient code, keeping it for now.
     int32_t te_sparks = TempEntityEvent::Sparks;
@@ -630,7 +630,7 @@ void DefaultGameMode::ClientBeginServerFrame(ServerEntity* serverEntity) {
         return;
 
     // Fetch the client.
-    ServersClient* client = serverEntity->client;
+    ServerClient* client = serverEntity->client;
     PlayerEntity* player = (PlayerEntity*)serverEntity->classEntity;
     // This has to go ofc.... lol. What it simply does though, is determine whether there is 
     // a need to respawn as spectator.
@@ -696,7 +696,7 @@ void DefaultGameMode::ClientEndServerFrame(ServerEntity *serverEntity) {
     }
 
     // Setup the current player and entity being processed.
-    ServersClient *client = serverEntity->client;
+    ServerClient *client = serverEntity->client;
 
     // Used for in this function, the classEntity of the given serverEntity.
     PlayerEntity* classEntity = (PlayerEntity*)serverEntity->classEntity;
@@ -999,7 +999,7 @@ void DefaultGameMode::ClientBegin(ServerEntity* serverEntity) {
 //===============
 void DefaultGameMode::ClientDisconnect(PlayerEntity* player) {
     // Fetch the client.
-    ServersClient* client = player->GetClient();
+    ServerClient* client = player->GetClient();
 
     // Print who disconnected.
     gi.BPrintf(PRINT_HIGH, "%s disconnected\n", client->persistent.netname);
@@ -1037,7 +1037,7 @@ void DefaultGameMode::ClientDisconnect(PlayerEntity* player) {
 // DefaultGameMode::ClientUserinfoChanged
 // 
 //===============
-void DefaultGameMode::ClientUserinfoChanged(ServerEntity* ent, char* userinfo) {
+void DefaultGameMode::ClientUserinfoChanged(PlayerEntity* ent, char* userinfo) {
     char    *s;
     int     playernum;
 
@@ -1236,7 +1236,7 @@ void DefaultGameMode::ClientUpdateObituary(ServerGameEntity* self, ServerGameEnt
 }
 
 
-void DefaultGameMode::InitializeClientPersistentData(ServersClient* client) {
+void DefaultGameMode::InitializeClientPersistentData(ServerClient* client) {
     gitem_t     *item = NULL;
 
     if (!client)
@@ -1264,7 +1264,7 @@ void DefaultGameMode::InitializeClientPersistentData(ServersClient* client) {
     client->persistent.isConnected = true;
 }
 
-void DefaultGameMode::InitializeClientRespawnData(ServersClient* client) {
+void DefaultGameMode::InitializeClientRespawnData(ServerClient* client) {
     if (!client)
         return;
 
@@ -1347,7 +1347,7 @@ void DefaultGameMode::PutClientInServer(ServerEntity *ent) {
 
     // Fetch the entity index, and the client right off the bat.
     int32_t index = ent - g_entities - 1;
-    ServersClient* client = ent->client;
+    ServerClient* client = ent->client;
 
     // Deathmatch wipes most client data every spawn
     //-----------------------------------------------------------------------

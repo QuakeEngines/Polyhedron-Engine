@@ -205,23 +205,26 @@ ED_CallSpawn
 Allocates the proper server game entity class. Then spawns the entity.
 ===============
 */
-void ED_CallSpawn(ServerEntity *svEnt)
+void ED_CallSpawn(ServerEntity *serverEntity)
 {
-    auto entityDictionary = svEnt->entityDictionary;
-    svEnt->className = ED_NewString( entityDictionary["classname"].c_str() );
-    ServerGameEntity *ent = SVG_SpawnClassEntity( svEnt, svEnt->className );
+    // Fetch its classname.
+    auto entityDictionary = serverEntity->entityDictionary;
+    serverEntity->className = ED_NewString( entityDictionary["classname"].c_str() );
+    
+    // Fetch/allocate game entity based on that.
+    ServerGameEntity *serverGameEntity = SVG_SpawnClassEntity( serverEntity, serverEntity->className );
     // If we did not find the classname, then give up
-    if ( !svEnt ) {
-        SVG_FreeEntity( svEnt );
+    if ( !serverGameEntity ) {
+        SVG_FreeEntity( serverEntity );
         return;
     }
     // Initialise the entity with its respected keyvalue properties
-    for ( const auto& keyValueEntry : ent->entityDictionary ) {
-        ent->SpawnKey( keyValueEntry.first, keyValueEntry.second );
+    for ( const auto& keyValueEntry : serverEntity->entityDictionary ) {
+        serverGameEntity ->SpawnKey( keyValueEntry.first, keyValueEntry.second );
     }
     // Precache and spawn, to set the entity up
-    svEnt->Precache();
-    svEnt->Spawn();
+    serverGameEntity ->Precache();
+    serverGameEntity ->Spawn();
 }
 
 /*

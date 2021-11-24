@@ -113,7 +113,7 @@ void SVG_UpdateChaseCam(PlayerEntity *ent)
 
 void SVG_ChaseNext(PlayerEntity *ent)
 {
-    //ServersClient* client = ent->GetClient();
+    //ServerClient* client = ent->GetClient();
 
     //// Return if we got none at all to start with.
     //if (!client->chaseTarget)
@@ -142,7 +142,7 @@ void SVG_ChasePrev(PlayerEntity*ent)
 {
     //int i;
     //ServerGameEntity *e;
-    //ServersClient* client = ent->GetClient();
+    //ServerClient* client = ent->GetClient();
 
     //if (!client->chaseTarget)
     //    return;
@@ -167,7 +167,7 @@ void SVG_GetChaseTarget(PlayerEntity *ent)
 {
     //int i;
     //ServerEntity *other;
-    //ServersClient* client = ent->GetClient();
+    //ServerClient* client = ent->GetClient();
 
     //for (i = 1; i <= maximumClients->value; i++) {
     //    other = g_entities + i;

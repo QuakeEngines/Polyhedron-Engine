@@ -24,7 +24,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "shared/list.h"
 
 // define GAME_INCLUDE so that game.h does not define the
-// short, server-visible ServersClient and ServerEntity structures,
+// short, server-visible ServerClient and ServerEntity structures,
 // because we define the full size ones in this file
 #define GAME_INCLUDE
 #include "shared/svgame.h"
@@ -330,7 +330,7 @@ struct GameLocals {
     IGameMode* gameMode;
 
     // List of clients, based on sv_maxclients, or rather in the game dll: maxclients cvar.
-    ServersClient *clients;
+    ServerClient *clients;
 
     // Can't store spawnpoint32_t in level, because
     // it would get overwritten by the savegame restore
@@ -498,7 +498,7 @@ extern ServerGameEntity* serverGameEntities[MAX_EDICTS];
 #define STOFS(x) q_offsetof(TemporarySpawnFields, x)
 #define LLOFS(x) q_offsetof(LevelLocals, x)
 #define GLOFS(x) q_offsetof(GameLocals, x)
-#define CLOFS(x) q_offsetof(ServersClient, x)
+#define CLOFS(x) q_offsetof(ServerClient, x)
 
 // Very ugly macros, need to rid ourselves and inline func them at the least.
 // Also, there should be alternatives in our utils for math lib as is.
@@ -603,14 +603,14 @@ void SVG_SetItemNames(void);
 gitem_t *SVG_FindItemByPickupName(const char *pickup_name);
 gitem_t *SVG_FindItemByClassname(const char *className);
 #define ITEM_INDEX(x) ((x)-itemlist)
-ServerEntity *SVG_DropItem(ServerEntity *ent, gitem_t *item);
+ServerEntity *SVG_DropItem(PlayerEntity *ent, gitem_t *item);
 void SVG_SetRespawn(ServerEntity *ent, float delay);
 void SVG_ChangeWeapon(PlayerEntity* ent);
 void SVG_SpawnItem(ServerEntity *ent, gitem_t *item);
 //void SVG_ThinkWeapon(ServerEntity *ent);
 int32_t SVG_ArmorIndex(ServerGameEntity *ent);
 gitem_t *SVG_GetItemByIndex(int32_t index);
-qboolean SVG_AddAmmo(ServerEntity *ent, gitem_t *item, int32_t count);
+qboolean SVG_AddAmmo(PlayerEntity *ent, gitem_t *item, int32_t count);
 void SVG_TouchItem(ServerGameEntity* ent, ServerGameEntity* other, cplane_t *plane, csurface_t *surf);
 
 //
@@ -653,8 +653,8 @@ ServerEntity *SVG_PlayerTrail_LastSpot(void);
 //
 // g_player.c
 //
-void SVG_Client_Pain(ServerEntity *self, ServerEntity *other, float kick, int32_t damage);
-void SVG_Client_Die(ServerEntity *self, ServerEntity *inflictor, ServerEntity *attacker, int32_t damage, const vec3_t& point);
+void SVG_Client_Pain(PlayerEntity *self, ServerEntity *other, float kick, int32_t damage);
+void SVG_Client_Die(PlayerEntity *self, ServerEntity *inflictor, ServerEntity *attacker, int32_t damage, const vec3_t& point);
 
 //
 // g_svcmds.c
@@ -665,7 +665,7 @@ qboolean SVG_FilterPacket(char *from);
 //
 // g_pweapon.c
 //
-void SVG_PlayerNoise(ServerGameEntity *who, vec3_t where, int32_t type);
+void SVG_PlayerNoise(PlayerEntity *who, vec3_t where, int32_t type);
 
 //
 // g_phys.c
@@ -677,7 +677,7 @@ void SVG_RunEntity(ServerGameEntity *ent);
 //
 //-----------------------------------------------------------------------------------------------------------
 void SVG_SaveClientData(void);
-void SVG_FetchClientData(ServerEntity *ent);
+void SVG_FetchClientData(PlayerEntity *playerEntity);
 
 ServerEntity* SVG_Spawn(void);
 

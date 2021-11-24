@@ -17,7 +17,7 @@ class ServerGameEntity;
 class PlayerEntity;
 
 // Player project source.
-vec3_t SVG_PlayerProjectSource(ServersClient* client, const vec3_t &point, const vec3_t& distance, const vec3_t& forward, const vec3_t& right);
+vec3_t SVG_PlayerProjectSource(ServerClient* client, const vec3_t &point, const vec3_t& distance, const vec3_t& forward, const vec3_t& right);
 
 void SVG_PlayerNoise(ServerGameEntity* who, vec3_t where, int type);
 

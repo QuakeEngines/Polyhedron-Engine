@@ -41,27 +41,27 @@ public:
     // Called when a client connects. This does not get called between
     // load games, of course. A client is still connected to the current
     // game session in that case.
-    virtual qboolean ClientConnect(ServerEntity* serverEntity, char *userinfo) = 0;
+    virtual qboolean ClientConnect(PlayerEntity* playerEntity , char* userinfo) = 0;
     // Called when a client has finished connecting, and is ready
     // to be placed into the game.This will happen every map load.
-    virtual void ClientBegin(ServerEntity* serverEntity) = 0;
+    virtual void ClientBegin(PlayerEntity* playerEntity) = 0;
     // This will be called once for all clients at the start of each server 
     // frame. Before running any other entities in the world.
-    virtual void ClientBeginServerFrame(ServerEntity* serverEntity) = 0;
+    virtual void ClientBeginServerFrame(PlayerEntity* playerEntity) = 0;
     // Called for each player at the end of the server frame and right 
     // after spawning.
-    virtual void ClientEndServerFrame(ServerEntity *serverEntity) = 0;
+    virtual void ClientEndServerFrame(PlayerEntity *playerEntity) = 0;
     // Called when a client disconnects. This does not get called between
     // load games.
-    virtual void ClientDisconnect(PlayerEntity* ent) = 0;
+    virtual void ClientDisconnect(PlayerEntity* playerEntity) = 0;
     //called whenever the player updates a userinfo variable.
 
     // The game can override any of the settings in place
     // (forcing skins or names, etc) before copying it off.
-    virtual void ClientUserinfoChanged(ServerEntity* ent, char *userinfo) = 0;
+    virtual void ClientUserinfoChanged(PlayerEntity* playerEntity, char *userinfo) = 0;
     // Called in order to process "obituary" updates, aka with what weapon did this client
     // or did other clients, kill any other client/entity.
-    virtual void ClientUpdateObituary(ServerGameEntity* self, ServerGameEntity* inflictor, ServerGameEntity* attacker) = 0;
+    virtual void ClientUpdateObituary(PlayerEntity* self, ServerGameEntity* inflictor, ServerGameEntity* attacker) = 0;
     
 
     //
@@ -69,10 +69,10 @@ public:
     //
     // This is only called when the game first initializes in single player,
     // but is called after each death and level change in deathmatch
-    virtual void InitializeClientPersistentData(ServersClient* client) = 0;
+    virtual void InitializeClientPersistentData(ServerClient* client) = 0;
     // This is only called when the game first initializes in single player,
     // but is called after each death and level change in deathmatch
-    virtual void InitializeClientRespawnData(ServersClient *client) = 0;
+    virtual void InitializeClientRespawnData(ServerClient *client) = 0;
 
     // Choose any info_player_start or its derivates, it'll do a subclassof check, so the only valid classnames are
     // those who have inherited from info_player_start. (info_player_deathmatch, etc).

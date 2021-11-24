@@ -123,7 +123,8 @@ void SVGBaseMover::SetMoveDirection(const vec3_t& angles, qboolean resetAngles =
 	// I suggest we add a bool parameter to this method, 'resetAngles',
 	// which will zero the entity's angles if true
 	//SetAngles(vec3_zero());
-	SetAngles(moveDirection);
+	if (resetAngles == true)
+		SetAngles(vec3_zero());
 	// WID: Like I did just now?
 }
 

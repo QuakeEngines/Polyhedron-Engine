@@ -56,7 +56,7 @@ void SVG_PlayerNoise(ServerGameEntity *who, vec3_t where, int type)
         noise->className = "player_noise";
         noise->mins = vec3_t { - 8, -8, -8 );
         noise->maxs = vec3_t {   8,  8,  8 );
-        noise->owner = who->GetServerEntity();
+        noise->owner = who;
         noise->serverFlags = EntityServerFlags::NoClient;
         who->SetMyNoiseEntity(noise);
 
@@ -70,11 +70,11 @@ void SVG_PlayerNoise(ServerGameEntity *who, vec3_t where, int type)
     }
 
     if (type == PNOISE_SELF || type == PNOISE_WEAPON) {
-        noise = who->myNoisePtr;
+        noise = who->GetMyNoiseEntity();
         level.soundEntity = noise;
         level.soundEntityFrameNumber = level.frameNumber;
     } else { // type == PNOISE_IMPACT
-        noise = who->myNoise2Ptr;
+        noise = who->GetMyNoise2Entity();
         level.sound2Entity = noise;
         level.sound2EntityFrameNumber = level.frameNumber;
     }
@@ -147,7 +147,7 @@ void SVG_ChangeWeapon(PlayerEntity*ent)
     if (!ent)
         return;
 
-    ServersClient* client = ent->GetClient();
+    ServerClient* client = ent->GetClient();
 
     client->persistent.lastWeapon = client->persistent.activeWeapon;
     client->persistent.activeWeapon = client->newWeapon;
@@ -196,7 +196,7 @@ NoAmmoWeaponChange
 */
 void NoAmmoWeaponChange(PlayerEntity *ent)
 {
-    ServersClient* client = ent->GetClient();
+    ServerClient* client = ent->GetClient();
 
     if (client->persistent.inventory[ITEM_INDEX(SVG_FindItemByPickupName("bullets"))]
         &&  client->persistent.inventory[ITEM_INDEX(SVG_FindItemByPickupName("machinegun"))]) {
@@ -218,7 +218,7 @@ void SVG_ThinkWeapon(PlayerEntity *ent)
     if (!ent)
         return;
 
-    ServersClient* client = ent->GetClient();
+    ServerClient* client = ent->GetClient();
 
     if (!client)
         return;
@@ -247,7 +247,7 @@ void Use_Weapon(PlayerEntity *ent, gitem_t* item)
 {
     int         ammoIndex;
     gitem_t     *ammo_item;
-    ServersClient* client = ent->GetClient();
+    ServerClient* client = ent->GetClient();
 
     // see if we're already using it
     if (item == client->persistent.activeWeapon)
@@ -286,7 +286,7 @@ void Drop_Weapon(PlayerEntity *ent, gitem_t *item)
     if ((int)(gamemodeflags->value) & GameModeFlags::WeaponsStay)
         return;
 
-    ServersClient* client = ent->GetClient();
+    ServerClient* client = ent->GetClient();
     index = ITEM_INDEX(item);
     // see if we're already using it
     if (((item == client->persistent.activeWeapon) || (item == client->newWeapon)) && (client->persistent.inventory[index] == 1)) {
@@ -318,7 +318,7 @@ void Weapon_Generic(PlayerEntity *ent, int FRAME_ACTIVATE_LAST, int FRAME_FIRE_L
         return;
     }
 
-    ServersClient* client = ent->GetClient();
+    ServerClient* client = ent->GetClient();
 
     if (client->weaponState == WeaponState::Dropping) {
         if (client->playerState.gunFrame == FRAME_DEACTIVATE_LAST) {

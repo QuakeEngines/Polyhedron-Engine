@@ -70,7 +70,7 @@ qboolean SVG_OnSameTeam(ServerGameEntity *ent1, ServerGameEntity *ent2)
 
 void SelectNextItem(PlayerEntity *ent, int itflags)
 {
-    ServersClient   *cl;
+    ServerClient   *cl;
     int         i, index;
     gitem_t     *it;
 
@@ -101,16 +101,16 @@ void SelectNextItem(PlayerEntity *ent, int itflags)
 
 void SelectPrevItem(ServerEntity *ent, int itflags)
 {
-    ServersClient   *cl;
+    ServerClient   *cl;
     int         i, index;
     gitem_t     *it;
 
     cl = ent->client;
 
-    if (cl->chaseTarget) {
-        SVG_ChasePrev(dynamic_cast<PlayerEntity*>(ent));
-        return;
-    }
+    //if (cl->chaseTarget) {
+    //    SVG_ChasePrev(ent);
+    //    return;
+    //}
 
     // scan  for the next valid one
     for (i = 1 ; i <= MAX_ITEMS ; i++) {
@@ -137,7 +137,7 @@ void HUD_ValidateSelectedItem(PlayerEntity *ent)
         return;
     }
 
-    ServersClient* cl = ent->GetClient();
+    ServerClient* cl = ent->GetClient();
 
     if (cl->persistent.inventory[cl->persistent.selectedItem])
         return;     // valid
@@ -155,7 +155,7 @@ Cmd_Give_f
 Give items to a client
 ==================
 */
-void Cmd_Give_f(ServerEntity *ent)
+void Cmd_Give_f(PlayerEntity *playerEntity)
 {
     const char        *name;
     gitem_t     *it;
@@ -165,12 +165,12 @@ void Cmd_Give_f(ServerEntity *ent)
     ServerEntity     *it_ent;
 
     // Ensure these are valid.
-    if (!ent) {
+    if (!playerEntity) {
         return;
     }
 
     if (deathmatch->value && !sv_cheats->value) {
-        gi.CPrintf(ent, PRINT_HIGH, "You must run the server with '+set cheats 1' to enable this command.\n");
+        gi.CPrintf(playerEntity, PRINT_HIGH, "You must run the server with '+set cheats 1' to enable this command.\n");
         return;
     }
 
@@ -183,9 +183,9 @@ void Cmd_Give_f(ServerEntity *ent)
 
     if (give_all || Q_stricmp(gi.argv(1), "health") == 0) {
         if (gi.argc() == 3)
-            ent->classEntity->SetHealth(atoi(gi.argv(2)));
+            playerEntity->SetHealth(atoi(gi.argv(2)));
         else
-            ent->classEntity->SetHealth(ent->classEntity->GetMaxHealth());
+            playerEntity->SetHealth(playerEntity->GetMaxHealth());
         if (!give_all)
             return;
     }
@@ -197,7 +197,7 @@ void Cmd_Give_f(ServerEntity *ent)
                 continue;
             if (!(it->flags & ItemFlags::IsWeapon))
                 continue;
-            ent->client->persistent.inventory[i] += 1;
+            playerEntity->GetClient()->persistent.inventory[i] += 1;
         }
         if (!give_all)
             return;
@@ -210,7 +210,7 @@ void Cmd_Give_f(ServerEntity *ent)
                 continue;
             if (!(it->flags & ItemFlags::IsAmmo))
                 continue;
-            SVG_AddAmmo(ent, it, 1000);
+            SVG_AddAmmo(playerEntity, it, 1000);
         }
         if (!give_all)
             return;
@@ -223,7 +223,7 @@ void Cmd_Give_f(ServerEntity *ent)
                 continue;
             if (it->flags & (ItemFlags::IsWeapon | ItemFlags::IsAmmo))
                 continue;
-            ent->client->persistent.inventory[i] = 1;
+            playerEntity->GetClient()->persistent.inventory[i] = 1;
         }
         return;
     }
@@ -233,13 +233,13 @@ void Cmd_Give_f(ServerEntity *ent)
         name = gi.argv(1); // C++20: Added cast.
         it = SVG_FindItemByPickupName(name);
         if (!it) {
-            gi.CPrintf(ent, PRINT_HIGH, "unknown item\n");
+            gi.CPrintf(playerEntity, PRINT_HIGH, "unknown item\n");
             return;
         }
     }
 
     if (!it->Pickup) {
-        gi.CPrintf(ent, PRINT_HIGH, "non-pickup item\n");
+        gi.CPrintf(playerEntity, PRINT_HIGH, "non-pickup item\n");
         return;
     }
 
@@ -247,9 +247,9 @@ void Cmd_Give_f(ServerEntity *ent)
 
     if (it->flags & ItemFlags::IsAmmo) {
         if (gi.argc() == 3)
-            ent->client->persistent.inventory[index] = atoi(gi.argv(2));
+            playerEntity->GetClient()->persistent.inventory[index] = atoi(gi.argv(2));
         else
-            ent->client->persistent.inventory[index] += it->quantity;
+            playerEntity->GetClient()->persistent.inventory[index] += it->quantity;
     } else {
         it_ent = SVG_Spawn();
         it_ent->className = it->className;
@@ -407,7 +407,7 @@ Cmd_Inven_f
 void Cmd_Inven_f(ServerEntity *ent)
 {
     int         i;
-    ServersClient   *cl;
+    ServerClient   *cl;
 
     cl = ent->client;
 
@@ -458,7 +458,7 @@ Cmd_WeapPrev_f
 */
 void Cmd_WeapPrev_f(PlayerEntity *ent)
 {
-    ServersClient   *cl;
+    ServerClient   *cl;
     int         i, index;
     gitem_t     *it;
     int         selected_weapon;
@@ -493,7 +493,7 @@ Cmd_WeapNext_f
 */
 void Cmd_WeapNext_f(PlayerEntity *ent)
 {
-    ServersClient   *cl;
+    ServerClient   *cl;
     int         i, index;
     gitem_t     *it;
     int         selected_weapon;
@@ -528,7 +528,7 @@ Cmd_WeapLast_f
 */
 void Cmd_WeapLast_f(PlayerEntity *ent)
 {
-    ServersClient   *cl;
+    ServerClient   *cl;
     int         index;
     gitem_t     *it;
 
@@ -622,7 +622,7 @@ int PlayerSort(void const *a, void const *b)
 Cmd_Players_f
 =================
 */
-void Cmd_Players_f(ServerEntity *ent)
+void Cmd_Players_f(PlayerEntity *playerEntity)
 {
     int     i;
     int     count;
@@ -655,7 +655,7 @@ void Cmd_Players_f(ServerEntity *ent)
         strcat(large, small);
     }
 
-    gi.CPrintf(ent, PRINT_HIGH, "%s\n%i players\n", large, count);
+    gi.CPrintf(playerEntity, PRINT_HIGH, "%s\n%i players\n", large, count);
 }
 
 /*
@@ -663,47 +663,46 @@ void Cmd_Players_f(ServerEntity *ent)
 Cmd_Wave_f
 =================
 */
-void Cmd_Wave_f(ServerEntity *ent)
+void Cmd_Wave_f(PlayerEntity *playerEntity)
 {
-    int     i;
-
-    i = atoi(gi.argv(1));
+    // Fetch the action.
+    int32_t i = atoi(gi.argv(1));
 
     // can't wave when ducked
-    if (ent->client->playerState.pmove.flags & PMF_DUCKED)
+    if (playerEntity->GetClient()->playerState.pmove.flags & PMF_DUCKED)
         return;
 
-    if (ent->client->animation.priorityAnimation > PlayerAnimation::Wave)
+    if (playerEntity->GetClient()->animation.priorityAnimation > PlayerAnimation::Wave)
         return;
 
-    ent->client->animation.priorityAnimation = PlayerAnimation::Wave;
+    playerEntity->GetClient()->animation.priorityAnimation = PlayerAnimation::Wave;
 
     switch (i) {
     case 0:
         gi.CPrintf(ent, PRINT_HIGH, "flipoff\n");
-        ent->state.frame = FRAME_flip01 - 1;
-        ent->client->animation.endFrame = FRAME_flip12;
+        playerEntity->GetState().frame = FRAME_flip01 - 1;
+        playerEntity->GetClient()->animation.endFrame = FRAME_flip12;
         break;
     case 1:
         gi.CPrintf(ent, PRINT_HIGH, "salute\n");
-        ent->state.frame = FRAME_salute01 - 1;
-        ent->client->animation.endFrame = FRAME_salute11;
+        playerEntity->GetState().frame = FRAME_salute01 - 1;
+        playerEntity->GetClient()->animation.endFrame = FRAME_salute11;
         break;
     case 2:
         gi.CPrintf(ent, PRINT_HIGH, "taunt\n");
-        ent->state.frame = FRAME_taunt01 - 1;
-        ent->client->animation.endFrame = FRAME_taunt17;
+        playerEntity->GetState().frame = FRAME_taunt01 - 1;
+        playerEntity->GetClient()->animation.endFrame = FRAME_taunt17;
         break;
     case 3:
         gi.CPrintf(ent, PRINT_HIGH, "wave\n");
-        ent->state.frame = FRAME_wave01 - 1;
-        ent->client->animation.endFrame = FRAME_wave11;
+        playerEntity->GetState().frame = FRAME_wave01 - 1;
+        playerEntity->GetClient()->animation.endFrame = FRAME_wave11;
         break;
     case 4:
     default:
         gi.CPrintf(ent, PRINT_HIGH, "point\n");
-        ent->state.frame = FRAME_point01 - 1;
-        ent->client->animation.endFrame = FRAME_point12;
+        playerEntity->GetState().frame = FRAME_point01 - 1;
+        playerEntity->GetClient()->animation.endFrame = FRAME_point12;
         break;
     }
 }
@@ -719,7 +718,7 @@ void Cmd_Say_f(ServerEntity *ent, qboolean team, qboolean arg0)
     ServerEntity *other;
     char    *p; // C++20: Removed const.
     char    text[2048];
-    ServersClient *cl;
+    ServerClient *cl;
 
     if (gi.argc() < 2 && !arg0)
         return;
@@ -828,30 +827,27 @@ void Cmd_PlayerList_f(ServerEntity *ent)
 ClientCommand
 =================
 */
-void SVG_ClientCommand(ServerEntity *serverEntity)
+void SVG_ClientCommand(PlayerEntity *playerEntity)
 {
-    const char    *cmd;
-
     // Ensure it is an entity with active client.
-    if (!serverEntity->clie)
+    ServerClient* client = playerEntity->GetClient();
+    
+    if (!playerEntity->GetClient())
         return; // Not fully in game yet
 
-    // We can safely cast to PlayerEntity now.
-    PlayerEntity* ent = (PlayerEntity*)serverEntity;
-
     // Fetch cmd.
-    cmd = gi.argv(0);
+    const char *cmd = gi.argv(0);
 
     if (Q_stricmp(cmd, "players") == 0) {
-        Cmd_Players_f(serverEntity);
+        Cmd_Players_f(playerEntity);
         return;
     }
     if (Q_stricmp(cmd, "say") == 0) {
-        Cmd_Say_f(serverEntity, false, false);
+        Cmd_Say_f(playerEntity, false, false);
         return;
     }
     if (Q_stricmp(cmd, "say_team") == 0) {
-        Cmd_Say_f(serverEntity, true, false);
+        Cmd_Say_f(playerEntity, true, false);
         return;
     }
     if (Q_stricmp(cmd, "score") == 0) {
@@ -880,15 +876,15 @@ void SVG_ClientCommand(ServerEntity *serverEntity)
     else if (Q_stricmp(cmd, "invnext") == 0)
         SelectNextItem(ent, -1);
     else if (Q_stricmp(cmd, "invprev") == 0)
-        SelectPrevItem(serverEntity, -1);
+        SelectPrevItem(playerEntity, -1);
     else if (Q_stricmp(cmd, "invnextw") == 0)
         SelectNextItem(ent, ItemFlags::IsWeapon);
     else if (Q_stricmp(cmd, "invprevw") == 0)
-        SelectPrevItem(serverEntity, ItemFlags::IsWeapon);
+        SelectPrevItem(playerEntity, ItemFlags::IsWeapon);
     else if (Q_stricmp(cmd, "invnextp") == 0)
         SelectNextItem(ent, ItemFlags::IsPowerUp);
     else if (Q_stricmp(cmd, "invprevp") == 0)
-        SelectPrevItem(serverEntity, ItemFlags::IsPowerUp);
+        SelectPrevItem(playerEntity, ItemFlags::IsPowerUp);
     else if (Q_stricmp(cmd, "invuse") == 0)
         Cmd_InvUse_f(ent);
     else if (Q_stricmp(cmd, "invdrop") == 0)
@@ -902,11 +898,11 @@ void SVG_ClientCommand(ServerEntity *serverEntity)
     else if (Q_stricmp(cmd, "kill") == 0)
         Cmd_Kill_f(ent);
     else if (Q_stricmp(cmd, "putaway") == 0)
-        Cmd_PutAway_f(serverEntity);
+        Cmd_PutAway_f(playerEntity);
     else if (Q_stricmp(cmd, "wave") == 0)
-        Cmd_Wave_f(serverEntity);
+        Cmd_Wave_f(playerEntity);
     else if (Q_stricmp(cmd, "playerlist") == 0)
-        Cmd_PlayerList_f(serverEntity);
+        Cmd_PlayerList_f(playerEntity);
     else    // anything that doesn't match a command will be a chat
-        Cmd_Say_f(serverEntity, false, true);
+        Cmd_Say_f(playerEntity, false, true);
 }

@@ -40,8 +40,8 @@ void FuncButton::Spawn() {
 
 	// Mappers set angles to determine the movement direction of the button,
 	// so we gotta set the movement direction, then zero the entity's angles
-	SetMoveDirection( GetAngles() );
-	SetAngles( vec3_zero() );
+	SetMoveDirection( GetAngles(), trie );
+	//SetAngles( vec3_zero() );
 
 	SetModel( GetModel() );
 	SetMoveType( MoveType::Stop );

@@ -264,7 +264,7 @@ void PlayerEntity::PlayerClientDie(ServerGameEntity* inflictor, ServerGameEntity
 // 
 //===============
 void PlayerEntity::SetEvent() {
-    ServersClient* client = GetClient();
+    ServerClient* client = GetClient();
 
     if (!client) {
         return;
@@ -314,7 +314,7 @@ void PlayerEntity::SetSound() {
     const char    *weap; // C++20: STRING: Added const to char*
 
     // Check whether the PlayerEntity is hooked up to a valid client.
-    ServersClient* client = GetClient();
+    ServerClient* client = GetClient();
 
     if (!client) {
         return;
@@ -347,7 +347,7 @@ void PlayerEntity::SetSound() {
 void PlayerEntity::LookAtKiller(ServerGameEntity* inflictor, ServerGameEntity* attacker)
 {
     // Fetch client.
-    GameClient* client = GetClient();
+    ServerClient* client = GetClient();
 
     // Is the attack, not us, or the world?
     if (attacker && attacker != SVG_GetWorldSpawnEntity() && attacker != this) {
@@ -403,7 +403,7 @@ void PlayerEntity::CheckFallingDamage()
 
     // Check whether ent is valid, and a PlayerEntity hooked up 
     // to a valid client.
-    ServersClient* client = GetClient();
+    ServerClient* client = GetClient();
 
     if (!client) {
         return;
@@ -483,7 +483,7 @@ void PlayerEntity::CheckWorldEffects()
 
     // Check whether ent is valid, and a PlayerEntity hooked up 
     // to a valid client.
-    ServersClient* client = GetClient();
+    ServerClient* client = GetClient();
 
     if (!client)
         return;
@@ -620,7 +620,7 @@ void PlayerEntity::ApplyDamageFeedback() {
 
     // Check whether ent is valid, and a PlayerEntity hooked up 
     // to a valid client.
-    ServersClient* client = GetClient();
+    ServerClient* client = GetClient();
     if (!client)
         return;
 
@@ -760,7 +760,7 @@ void PlayerEntity::CalculateViewOffset()
 
     // Check whether ent is valid, and a PlayerEntity hooked up 
     // to a valid client.
-    ServersClient* client = GetClient();
+    ServerClient* client = GetClient();
 
     if (!client) {
         return;
@@ -857,7 +857,7 @@ void PlayerEntity::CalculateGunOffset() {
 
     // Check whether ent is valid, and a PlayerEntity hooked up 
     // to a valid client.
-    ServersClient* client = GetClient();
+    ServerClient* client = GetClient();
 
     if (!client) {
         return;
@@ -908,7 +908,7 @@ void PlayerEntity::CalculateGunOffset() {
 //===============
 //
 void PlayerEntity::CalculateScreenBlend() {
-        ServersClient* client = GetClient();
+        ServerClient* client = GetClient();
 
     if (!client) {
         return;
@@ -959,7 +959,7 @@ void PlayerEntity::SetAnimationFrame() {
 
     // Check whether ent is valid, and a PlayerEntity hooked up 
     // to a valid client.
-    ServersClient* client = GetClient();
+    ServerClient* client = GetClient();
 
     if (!client) {
         return;

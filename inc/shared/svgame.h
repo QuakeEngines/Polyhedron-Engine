@@ -23,15 +23,15 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "sharedgame/pmove.h"
 #include "sharedgame/protocol.h"
 
-//
-// game.h -- game dll information visible to server
-//
 
-#define SVGAME_API_VERSION_MAJOR VERSION_MAJOR
-#define SVGAME_API_VERSION_MINOR VERSION_MINOR
-#define SVGAME_API_VERSION_POINT VERSION_POINT
+//-------------------
+static constexpr uint32_t SVGAME_API_VERSION_MAJOR = VERSION_MAJOR;
+static constexpr uint32_t SVGAME_API_VERSION_MINOR = VERSION_MINOR;
+static constexpr uint32_t SVGAME_API_VERSION_POINT = VERSION_POINT;
+//-------------------
 
-// edict->serverFlags
+
+// ServerEntity->serverFlags
 struct EntityServerFlags {
     static constexpr uint32_t NoClient = 0x00000001;    // Don't send entity to clients, even if it has effects
     static constexpr uint32_t DeadMonster = 0x00000002; // Treat as CONTENTS_DEADMONSTER for collision
@@ -39,7 +39,7 @@ struct EntityServerFlags {
     static constexpr uint32_t Remove = 0x00000008;      // Delete the entity next tick
 };
 
-// edict->solid values
+// ServerEntity->solid values
 struct Solid {
     static constexpr uint32_t Not       = 0;    // No interaction with other objects
     static constexpr uint32_t Trigger   = 1;    // Only touch when inside, after moving
@@ -48,15 +48,11 @@ struct Solid {
 };
 
 //===============================================================
+static constexpr uint32_t MAX_ENT_CLUSTERS = 16;
 
-#define MAX_ENT_CLUSTERS    16
-
-
-typedef struct gclient_s ServersClient;
-
-
+// Silly typedef gotta rid it somehow.
+typedef struct gclient_s ServerClient;
 #ifndef GAME_INCLUDE
-
 struct gclient_s {
     PlayerState playerState;     // communicated by server to clients
     int         ping;
@@ -65,26 +61,31 @@ struct gclient_s {
     // this point in the structure
     int         clientNumber;
 };
-
 #endif
+
+//===================
+// Predefinition for the API functions.
+//===================
+class PlayerEntity;
 
 //-------------------
 // ServerEntity, the server side entity structure. If you know what an entity is,
 // then you know what this is.
 // 
-// The actual ServerGameEntity class is a member. It is where the magic happens.
-// Entities can be linked to their "classname", this will in turn make sure that
-// the proper inheritance entity is allocated.
+// The actual ServerGameEntity class stors a handle to a ServerEntity. It is where 
+// the magic happens. Entities can be linked to their "classname", this will in turn 
+// make sure that the proper inheritance entity is allocated.
 //-------------------
+// Using for readability, I love it.
 using EntityDictionary = std::map<std::string, std::string>;
 
-//------------------------------------------------------------------------
 // As silly as it seems, we do this for readability and actually a mere pair of functions too.
-//------------------------------------------------------------------------
 using ServerEntityID = uint32_t;
 
 struct ServerEntity {
 public:
+    friend class ServerGameEntity;
+
     // Actual entity state member. Contains all data that is actually networked.
     EntityState  state;
 
@@ -126,6 +127,8 @@ public:
     std::string className;
 
 protected:
+    // Friend function that has access to the dictionary for special reasons xXx
+    friend void ED_CallSpawn(ServerEntity *svEnt);
     // Hashmap containing the key:value entity properties.
     EntityDictionary entityDictionary;
 
@@ -321,12 +324,12 @@ struct ServerGameExports {
     void (*WriteLevel)(const char *filename);
     void (*ReadLevel)(const char *filename);
 
-    qboolean (*ClientConnect)(ServerEntity *ent, char *userinfo);
-    void (*ClientBegin)(ServerEntity *ent);
-    void (*ClientUserinfoChanged)(ServerEntity *ent, char *userinfo);
-    void (*ClientDisconnect)(ServerEntity *ent);
-    void (*ClientCommand)(ServerEntity *ent);
-    void (*ClientThink)(ServerEntity *ent, ClientMoveCommand *cmd);
+    qboolean (*ClientConnect)(PlayerEntity *ent, char *userinfo);
+    void (*ClientBegin)(PlayerEntity *ent);
+    void (*ClientUserinfoChanged)(PlayerEntity *ent, char *userinfo);
+    void (*ClientDisconnect)(PlayerEntity *ent);
+    void (*ClientCommand)(PlayerEntity *ent);
+    void (*ClientThink)(PlayerEntity *ent, ClientMoveCommand *cmd);
 
     void (*RunFrame)(void);
 
