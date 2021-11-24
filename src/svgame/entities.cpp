@@ -433,7 +433,7 @@ ServerEntity* SVG_Spawn(void)
     int32_t i = 0;
     // Acquire a pointer to the entity we'll check for.
     serverGameEntity = &serverGameEntities[game.maximumClients + 1];
-    for (i = game.maximumClients + 1; i < serverEntityPool.numberOfEntities; i++, serverGameEntity++) {
+    for (i = game.maximumClients + 1; i <.numberOfEntities; i++, serverGameEntity++) {
         // The first couple seconds of server time can involve a lot of
         // freeing and allocating, so relax the replacement policy
         if (!serverEntity->inUse && (serverEntity->freeTime < 2 || level.time - serverEntity->freeTime > 0.5)) {

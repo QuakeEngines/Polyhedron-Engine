@@ -712,13 +712,21 @@ void Cmd_Wave_f(PlayerEntity *playerEntity)
 Cmd_Say_f
 ==================
 */
-void Cmd_Say_f(ServerEntity *ent, qboolean team, qboolean arg0)
-{
+void Cmd_Say_f(PlayerEntity* playerEntity, qboolean team, qboolean arg0) {
     int     i, j;
-    ServerEntity *other;
-    char    *p; // C++20: Removed const.
-    char    text[2048];
-    ServerClient *cl;
+
+    char* p; // C++20: Removed const.
+    //char    text[2048];
+    std::string message(150, 0);
+
+    if (!playerEntity)
+        return;
+
+    // Fetch client.
+    ServerClient* client = playerEntity->GetClient();
+
+    if (!client)
+        return;
 
     if (gi.argc() < 2 && !arg0)
         return;
@@ -727,14 +735,14 @@ void Cmd_Say_f(ServerEntity *ent, qboolean team, qboolean arg0)
         team = false;
 
     if (team)
-        Q_snprintf(text, sizeof(text), "(%s): ", ent->client->persistent.netname);
+        message = "(" + std::string(client->persistent.netname) + "): ";
     else
-        Q_snprintf(text, sizeof(text), "%s: ", ent->client->persistent.netname);
+        message = "" + std::string(client->persistent.netname) + ": ";
 
     if (arg0) {
-        strcat(text, gi.argv(0));
-        strcat(text, " ");
-        strcat(text, gi.args());
+        message += gi.argv(0);
+        message += " ";
+        message += gi.args();
     } else {
         p = (char*)gi.args();  // C++20: Added casts.
 
@@ -742,21 +750,22 @@ void Cmd_Say_f(ServerEntity *ent, qboolean team, qboolean arg0)
             p++;
             p[strlen(p) - 1] = 0;
         }
-        strcat(text, p);
+        message += p;
     }
 
     // don't let text be too long for malicious reasons
-    if (strlen(text) > 150)
-        text[150] = 0;
-
-    strcat(text, "\n");
+    if (message.length() > 150) {
+        message.resize(150);
+        message[150] = 0;
+    }
+    message += "\n";
 
     if (flood_msgs->value) {
-        cl = ent->client;
+        client = playerEntity->GetClient();
 
-        if (level.time < cl->flood.lockTill) {
+        if (level.time < client->flood.lockTill) {
             gi.CPrintf(ent, PRINT_HIGH, "You can't talk for %d more seconds\n",
-                       (int)(cl->flood.lockTill - level.time));
+                       (int)(client->flood.lockTill - level.time));
             return;
         }
         i = cl->flood.whenHead - flood_msgs->value + 1;
@@ -775,19 +784,19 @@ void Cmd_Say_f(ServerEntity *ent, qboolean team, qboolean arg0)
     }
 
     if (dedicated->value)
-        gi.CPrintf(NULL, PRINT_CHAT, "%s", text);
+        gi.CPrintf(NULL, PRINT_CHAT, "%s", message.c_str());
 
     for (j = 1; j <= game.maximumClients; j++) {
-        other = &g_entities[j];
-        if (!other->inUse)
+        PlayerEntity *other = serverGameEntities[j];
+        if (!other->IsInUse())
             continue;
-        if (!other->client)
+        if (!other->GetClient())
             continue;
         if (team) {
-            if (!SVG_OnSameTeam(ent->classEntity, other->classEntity))
+            if (!SVG_OnSameTeam(playerEntity, other))
                 continue;
         }
-        gi.CPrintf(other, PRINT_CHAT, "%s", text);
+        gi.CPrintf(other->GetServerEntity(), PRINT_CHAT, "%s", message.c_str());
     }
 }
 

@@ -51,7 +51,7 @@ void SVG_PlayerNoise(ServerGameEntity *who, vec3_t where, int type)
         return;
 
 
-    if (!who->GetMyNoiseEntity()) {
+    if (!who->firstNoiseEntity) {
         ServerGameEntity noise = SVG_C
         noise->className = "player_noise";
         noise->mins = vec3_t { - 8, -8, -8 );
@@ -294,7 +294,7 @@ void Drop_Weapon(PlayerEntity *ent, gitem_t *item)
         return;
     }
 
-    SVG_DropItem(ent->GetServerEntity(), item);
+    SVG_DropItem(ent, item);
     client->persistent.inventory[index]--;
 }
 

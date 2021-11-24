@@ -23,7 +23,6 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "sharedgame/pmove.h"
 #include "sharedgame/protocol.h"
 
-
 //-------------------
 static constexpr uint32_t SVGAME_API_VERSION_MAJOR = VERSION_MAJOR;
 static constexpr uint32_t SVGAME_API_VERSION_MINOR = VERSION_MINOR;
@@ -50,6 +49,8 @@ struct Solid {
 //===============================================================
 static constexpr uint32_t MAX_ENT_CLUSTERS = 16;
 
+#include "shared/Entities/ServerEntity.h"
+
 // Silly typedef gotta rid it somehow.
 typedef struct gclient_s ServerClient;
 #ifndef GAME_INCLUDE
@@ -61,11 +62,18 @@ struct gclient_s {
     // this point in the structure
     int         clientNumber;
 };
+
+#include "shared/Entities/ServerEntity.h"
+#else
+#include "shared/Entities/ServerEntity.h"
+
 #endif
 
 //===================
 // Predefinition for the API functions.
 //===================
+
+class ServerGameEntity;
 class PlayerEntity;
 
 //-------------------
@@ -82,60 +90,8 @@ using EntityDictionary = std::map<std::string, std::string>;
 // As silly as it seems, we do this for readability and actually a mere pair of functions too.
 using ServerEntityID = uint32_t;
 
-struct ServerEntity {
-public:
-    friend class ServerGameEntity;
 
-    // Actual entity state member. Contains all data that is actually networked.
-    EntityState  state;
-
-    // NULL if not a player the server expects the first part of gclient_s to
-    // be a PlayerState but the rest of it is opaque
-    struct gclient_s* client;
-
-    // An entity is in no use, in case it complies to the INUSE macro.
-    qboolean inUse;
-    int32_t linkCount;
-
-    // FIXME: move these fields to a server private sv_entity_t
-    list_t area; // Linked to a division node or leaf
-
-                 // If numClusters is -1, use headNodew instead.
-    int32_t numClusters;       // if -1, use headNode instead
-    int32_t clusterNumbers[MAX_ENT_CLUSTERS];
-
-    // Only use this instead of numClusters if numClusters == -1
-    int32_t headNode;
-    int32_t areaNumber;
-    int32_t areaNumber2;
-
-    //================================
-    int32_t serverFlags;
-    vec3_t mins, maxs;
-    vec3_t absMin, absMax, size;
-    uint32_t solid;
-    int32_t clipMask;
-    ServerEntity* owner;
-
-    // !!!!!!!!!!!!!!!!!
-    // !! DO NOT MODIFY ANYTHING ABOVE THIS, THE SERVER
-    // !! EXPECTS THE FIELDS IN THAT ORDER!
-    // !!!!!!!!!!!!!!!!!
-    //================================
-    // Pointer to the actual game class entity belonging to this server entity.
-    //ServerGameEntity* classEntity;
-    std::string className;
-
-protected:
-    // Friend function that has access to the dictionary for special reasons xXx
-    friend void ED_CallSpawn(ServerEntity *svEnt);
-    // Hashmap containing the key:value entity properties.
-    EntityDictionary entityDictionary;
-
-    //const char *model;       // C++20: STRING: Added const to char*
-    float freeTime;     // sv.time when the object was freed
-};
-//#endif      // GAME_INCLUDE
+///#endif      // GAME_INCLUDE
 
 
 

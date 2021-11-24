@@ -87,6 +87,7 @@ SET( SRC_SVGAME
 	svgame/entities/SynchedEntityBase.cpp
 
 	svgame/ai/MonsterAI.cpp
+#	svgame/entities/base/ServerEntity.cpp
 	svgame/entities/base/ServerGameEntity.cpp
 	svgame/entities/base/SVGBaseTrigger.cpp
 	svgame/entities/base/SVGBaseMover.cpp
@@ -179,6 +180,7 @@ SET( SRC_SVGAME
 	svgame/TypeInfo.h
 	svgame/utils.h
 	svgame/ai/MonsterAI.h
+	#svgame/entities/base/ServerEntity.h
 	svgame/entities/base/ServerGameEntity.h
 	svgame/entities/base/SVGBaseTrigger.h
 	svgame/entities/base/SVGBaseMover.h
@@ -418,6 +420,10 @@ SET(HEADERS_SHARED
 	# Container lib.
 	../inc/shared/containers/IterableCArray.h
 
+	# Entities.
+	#../inc/shared/Entities/ServerEntity.h
+
+
 	# Interfaces
 	../inc/shared/interfaces/IClientGameExports.h
 	../inc/shared/interfaces/IClientGameImports.h
@@ -455,10 +461,15 @@ SET(HEADERS_SHARED
 	../inc/shared/ui.h 
 )
 SET(SRC_SHARED
+	# Entities.
+	#shared/Entities/ServerEntity.cpp
+
+	# Maths.
 	shared/math/plane.cpp
 	shared/math/vector3.cpp
-
 	shared/math.cpp
+	
+	# Random
 	shared/shared.cpp
 )
 

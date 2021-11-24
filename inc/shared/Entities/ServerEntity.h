@@ -1,12 +1,14 @@
 // License here.
 #pragma once
 
+using EntityDictionary = std::map<std::string, std::string>;
+
 //---------------------------------------------------------
 // Server ServerEntity Data.
 //---------------------------------------------------------
-class ServerEntity {
+struct ServerEntity {
     // Current entity state. (Contains all that'd be networked.)
-    ServerEntityState  state;
+    EntityState  state;
 
     // Assigned client to control this entity(If any.)
     struct gclient_s    *client;
@@ -42,4 +44,10 @@ class ServerEntity {
 
     // Entities can have owners, yes.
     ServerEntity    *owner;
+
+    // Classname.
+    std::string className;
+
+    // Entity dictionary.
+    EntityDictionary entityDictionary;
 };

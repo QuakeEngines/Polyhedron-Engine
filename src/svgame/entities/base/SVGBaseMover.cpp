@@ -94,7 +94,7 @@ void SVGBaseMover::SpawnKey(const std::string& key, const std::string& value) {
 // SVGBaseMover::SetMoveDirection
 //
 //===============
-void SVGBaseMover::SetMoveDirection(const vec3_t& angles, qboolean resetAngles = false) {
+void SVGBaseMover::SetMoveDirection(const vec3_t& angles, qboolean resetAngles) {
 	const vec3_t VEC_UP = { 0, -1, 0 };
 	const vec3_t MOVEDIR_UP = { 0, 0, 1 };
 	const vec3_t VEC_DOWN = { 0, -2, 0 };

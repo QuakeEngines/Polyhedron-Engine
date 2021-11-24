@@ -222,7 +222,7 @@ static void fire_lead(ServerGameEntity *self, const vec3_t& start, const vec3_t&
                     gi.Multicast(tr.endPosition, MultiCast::PVS);
 
                     if (self->GetClient())
-                        SVG_PlayerNoise(self, tr.endPosition, PNOISE_IMPACT);
+                        SVG_PlayerNoise(static_cast<PlayerEntity*>(self), tr.endPosition, PNOISE_IMPACT);
                 }
             }
         }

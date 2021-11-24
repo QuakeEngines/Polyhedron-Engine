@@ -83,7 +83,7 @@ typedef struct csurface_s {
 // BSP planes they intersect.This is the basis for all collision detection
 // within Quake.
 //-----------------
-typedef struct {
+struct trace_t {
     // If true, the trace startedand ended within the same solid.
     qboolean    allSolid;
     // If true, the trace started within a solid, but exited it.
@@ -110,6 +110,6 @@ typedef struct {
 
     // N&C: Custom added.
     vec3_t		offsets[8];	// [signbits][x] = either size[0][x] or size[1][x]
-} trace_t;
+};
 
 #endif // __SHARED__COLLISION_H__

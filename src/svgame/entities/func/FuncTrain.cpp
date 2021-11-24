@@ -245,9 +245,11 @@ void FuncTrain::WaitAtCorner() {
 //===============
 // FuncTrain::OnWaitAtCorner
 //===============
-void FuncTrain::OnWaitAtCorner( ServerEntity* ent ) {
-	if ( ent->classEntity->IsSubclassOf<FuncTrain>() ) {
-		static_cast<FuncTrain*>( ent->classEntity )->WaitAtCorner();
+void FuncTrain::OnWaitAtCorner( ServerGameEntity* serverGameEntity ) {
+	if (!serverGameEntity)
+		Com_LPrintf(PRINT_WARNING, "Null entity caught at %s in class %s", __FUNCDNAME__, ServerGameEntity::ClassInfo.className);
+	if ( serverGameEntity->IsSubclassOf<FuncTrain>() ) {
+		static_cast<FuncTrain*>( serverGameEntity )->WaitAtCorner();
 	}
 }
 

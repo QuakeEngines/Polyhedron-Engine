@@ -83,7 +83,7 @@ public:
     //
     // Pusher functions.
     //
-    virtual void SetMoveDirection(const vec3_t& angles, qboolean resetAngles);
+    virtual void SetMoveDirection(const vec3_t& angles, qboolean resetAngles = false);
 
     //
     // Get/Set

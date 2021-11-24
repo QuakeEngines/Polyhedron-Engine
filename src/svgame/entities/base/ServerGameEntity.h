@@ -16,7 +16,6 @@
 
 class ServerGameEntity {
 public:
-    friend struct ServerEntity;
     //------------------------------------------------------------
     //
     // Dispatch Callback Function Pointers.
@@ -107,11 +106,11 @@ public:
 
     // @returns The entity's mins in world coordinates.
     inline const vec3_t& GetAbsoluteMin() {
-        return serverEntity->absMin;
+        return serverEntity->absoluteMin;
     }
     // @returns The entity's maxs in world coordinates.
     inline const vec3_t& GetAbsoluteMax() {
-        return serverEntity->absMax;
+        return serverEntity->absoluteMax;
     }
 
     // @returns The entity which activated this entity. (If any)
@@ -450,12 +449,12 @@ public:
     //------------------------------------------------------------
     // Return the bounding box absolute 'min' value.
     inline void SetAbsoluteMin(const vec3_t &absMin) {
-        serverEntity->absMin = absMin;
+        serverEntity->absoluteMin = absMin;
     }
 
     // Return the bounding box absolute 'max' value.
     inline void SetAbsoluteMax(const vec3_t &absMax) {
-        serverEntity->absMax = absMax;
+        serverEntity->absoluteMax = absMax;
     }
 
     // Return the 'angles' value.

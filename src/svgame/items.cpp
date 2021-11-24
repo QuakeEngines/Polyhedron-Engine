@@ -129,17 +129,17 @@ void DoRespawn(ServerGameEntity *ent)
     //ent->state.event = EntityEvent::ItemRespawn;
 }
 
-void SVG_SetRespawn(ServerGameEntity *ent, float delay)
+void SVG_SetRespawn(ServerGameEntity *serverEntity, float delay)
 {
-    if (!ent)
+    if (!serverEntity)
         return;
 
 //    ent->flags |= EntityFlags::Respawn;
-    ent->serverFlags |= EntityServerFlags::NoClient;
-    ent->solid = Solid::Not;
+    serverEntity->SetServerFlags(serverEntity->GetServerFlags() | EntityServerFlags::NoClient);
+    serverEntity->SetSolid(Solid::Not);
 //    ent->nextThinkTime = level.time + delay;
 //    ent->Think = DoRespawn;
-    gi.LinkEntity(ent);
+    serverEntity->LinkEntity();
 }
 
 
@@ -466,13 +466,14 @@ void drop_temp_touch(ServerGameEntity *ent, ServerGameEntity *other, cplane_t *p
     //SVG_TouchItem(ent, other, plane, surf);
 }
 
-void drop_make_touchable(ServerGameEntity *ent)
+void drop_make_touchable(ServerGameEntity *serverGameEntity)
 {
+//    serverGameEntity->SetTouchCallback(S)
 //    ent->Touch = SVG_TouchItem;
-    if (deathmatch->value) {
+//    if (deathmatch->value) {
 //        ent->nextThinkTime = level.time + 29;
 //        ent->Think = SVG_FreeEntity;
-    }
+//    }
 }
 
 ServerGameEntity *SVG_DropItem(PlayerEntity *ent, gitem_t *item)
