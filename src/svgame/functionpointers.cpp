@@ -5,6 +5,7 @@
 //
 #include "g_local.h"
 #include "effects.h"
+#include "entities.h"
 #include "utils.h"
 
 // 

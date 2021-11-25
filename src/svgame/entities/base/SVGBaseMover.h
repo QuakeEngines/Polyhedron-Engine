@@ -8,12 +8,11 @@
 // OR, stepmoves.
 //
 */
-#ifndef __SVGAME_ENTITIES_BASE_SVGBASEPUSHER_H__
-#define __SVGAME_ENTITIES_BASE_SVGBASEPUSHER_H__
+#pragma once
 
 class SVGBaseTrigger;
 
-using PushMoveEndFunction = void(ServerEntity*);
+using PushMoveEndFunction = void(ServerGameEntity*);
 
 
 constexpr uint32_t PlatLowTrigger = 1U;
@@ -206,5 +205,3 @@ protected:
     // 
 
 };
-
-#endif // __SVGAME_ENTITIES_BASE_CBASEENTITY_H__

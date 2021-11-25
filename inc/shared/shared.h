@@ -62,8 +62,8 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include <unordered_map>
 #include <set>
 #include <unordered_set>
-#include <span>
 #include <ranges>
+#include <span>
 
 //-----------------
 // System Endian include, if needed. 

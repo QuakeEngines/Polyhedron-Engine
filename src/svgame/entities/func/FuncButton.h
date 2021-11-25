@@ -19,10 +19,10 @@ public:
 
 	// These static methods here are required for mover logic, since the legacy code
 	// we ported simply operates on global functions & function pointers
-	static void OnButtonDone( ServerEntity* self );
+	static void OnButtonDone( ServerGameEntity* self );
 	void		ButtonDone(); // The button is done moving, it is fully pressed
 	void		ButtonReturn(); // The button is returning from "pressed" to "sticking out"
-	static void OnButtonWait( ServerEntity* self );
+	static void OnButtonWait( ServerGameEntity* self );
 	void		ButtonWait(); // The button is waiting for further interactions
 	void		ButtonFire(); // The button has just been pressed, do something
 	

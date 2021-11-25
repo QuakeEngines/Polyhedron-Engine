@@ -345,28 +345,31 @@ All but the last will have the teamchain field set to the next one
 void SVG_FindTeams(void)
 {
     ServerEntity* e, * e2;
-    ServerGameEntity *chain;
+    ServerGameEntity* chain = nullptr;;
     int     i, j;
     int     c, c2;
 
     c = 0;
     c2 = 0;
 
-    for (i = 1, e = g_entities + i; i < globals.numberOfEntities; i++, e++) {
-        // Fetch class entity.
-        ServerGameEntity *classEntity = serverGameEntities[e->state.number];
-
-        if (classEntity == NULL)
+    //or (i = 1, e = g_entities + i; i < globals.numberOfEntities; i++, e++) {
+    for (auto &playerEntityA : serverGameEntities | SvgEF::IsSubclassOf<PlayerEntity>() | SvgEF::HasClient) {
+        if (playerEntityA == NULL)
             continue;
 
-        if (!classEntity->IsInUse())
+        if (!playerEntityA->IsInUse())
             continue;
-        if (!classEntity->GetTeam())
+        if (playerEntityA->GetTeam().empty())
             continue;
-        if (classEntity->GetFlags() & EntityFlags::TeamSlave)
+        if (playerEntityA->GetFlags() & EntityFlags::TeamSlave)
             continue;
-        chain = classEntity;
-        classEntity->SetTeamMasterEntity(classEntity);
+        
+        // Start the chain.
+        chain = playerEntityA;
+
+        // Set its master.
+        playerEntityA->SetTeamMasterEntity(playerEntityA);
+
         c++;
         c2++;
         for (j = i + 1, e2 = e + 1 ; j < globals.numberOfEntities ; j++, e2++) {

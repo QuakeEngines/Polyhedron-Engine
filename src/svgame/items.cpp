@@ -20,6 +20,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "utils.h"           // Include Utilities funcs.
 #include "player/hud.h"      // Include HUD funcs.
 
+#include "entities/SynchedEntityBase.h"
 #include "entities/base/ServerGameEntity.h"
 #include "entities/base/PlayerEntity.h"
 
@@ -460,7 +461,7 @@ void SVG_TouchItem(ServerGameEntity *ent, ServerGameEntity *other, cplane_t *pla
 
 void drop_temp_touch(ServerGameEntity *ent, ServerGameEntity *other, cplane_t *plane, csurface_t *surf)
 {
-    if (other == ent->owner)
+    if (other == ent->GetOwner())
         return;
 
     //SVG_TouchItem(ent, other, plane, surf);
@@ -525,7 +526,7 @@ ServerGameEntity *SVG_DropItem(PlayerEntity *ent, gitem_t *item)
 
 void Use_Item(ServerGameEntity *serverEntity, ServerGameEntity *other, ServerGameEntity *activator)
 {
-    ent->SetServerFlags(ent->GetServerFlags() & ~EntityServerFlags::NoClient);
+    serverEntity->SetServerFlags(serverEntity->GetServerFlags() & ~EntityServerFlags::NoClient);
 //    ent->Use = NULL;
 
 //    if (ent->spawnFlags & ItemSpawnFlags::NoTouch) {
@@ -546,7 +547,7 @@ void Use_Item(ServerGameEntity *serverEntity, ServerGameEntity *other, ServerGam
 droptofloor
 ================
 */
-void droptofloor(ServerGameEntity *ent)
+void droptofloor(ServerGameEntity *serverEntity)
 {
 //    trace_t     tr;
 //    vec3_t      dest;
@@ -679,7 +680,7 @@ Items can't be immediately dropped to floor, because they might
 be on an entity that hasn't spawned yet.
 ============
 */
-void SVG_SpawnItem(ServerGameEntity *ent, gitem_t *item)
+void SVG_SpawnItem(ServerGameEntity *serverGameEntity, gitem_t *item)
 {
     SVG_PrecacheItem(item);
 
@@ -718,7 +719,7 @@ void SVG_SpawnItem(ServerGameEntity *ent, gitem_t *item)
     //    }
     //}
 
-    if (coop->value && (strcmp(ent->className, "key_power_cube") == 0)) {
+    if (coop->value && (strcmp(serverGameEntity->GetClassName(), "key_power_cube") == 0)) {
 //        ent->spawnFlags |= (1 << (8 + level.powerCubes));
         level.powerCubes++;
     }

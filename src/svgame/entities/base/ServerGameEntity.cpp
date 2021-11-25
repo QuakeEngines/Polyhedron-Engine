@@ -10,13 +10,14 @@
 #include "../../effects.h"		// Effects.
 #include "../../entities.h"		// Entities.
 #include "../../utils.h"		// Util funcs.
+#include "../SynchedEntityBase.h"
 #include "ServerGameEntity.h"
 
 #include "SVGBaseTrigger.h"
 #include "../trigger/TriggerDelayedUse.h"
 
 // Constructor/Deconstructor.
-ServerGameEntity::ServerGameEntity(ServerEntity* svEntity) : serverEntity(svEntity) {
+ServerGameEntity::ServerGameEntity(ServerEntity* serverEntity) : SynchedEntityBase(serverEntity) {
 	//
 	// All callback functions best be nullptr.
 	//

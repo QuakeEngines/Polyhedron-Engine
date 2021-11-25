@@ -603,7 +603,7 @@ void SVG_SetItemNames(void);
 gitem_t *SVG_FindItemByPickupName(const char *pickup_name);
 gitem_t *SVG_FindItemByClassname(const char *className);
 #define ITEM_INDEX(x) ((x)-itemlist)
-ServerEntity *SVG_DropItem(PlayerEntity *ent, gitem_t *item);
+ServerGameEntity *SVG_DropItem(PlayerEntity *ent, gitem_t *item);
 void SVG_SetRespawn(ServerEntity *ent, float delay);
 void SVG_ChangeWeapon(PlayerEntity* ent);
 void SVG_SpawnItem(ServerEntity *ent, gitem_t *item);

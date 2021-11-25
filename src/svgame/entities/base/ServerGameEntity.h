@@ -14,7 +14,9 @@
 // because this class absolutely requires it
 #include "../../TypeInfo.h"
 
-class ServerGameEntity {
+class SynchedEntityBase;
+
+class ServerGameEntity : public ServerEntity {
 public:
     //------------------------------------------------------------
     //

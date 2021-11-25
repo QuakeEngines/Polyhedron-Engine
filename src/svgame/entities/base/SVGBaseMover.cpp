@@ -238,7 +238,7 @@ void SVGBaseMover::BrushMoveCalc( const vec3_t& destination, PushMoveEndFunction
 //===============
 void SVGBaseMover::BrushAngleMoveDone() {
 	SetAngularVelocity( vec3_zero() );
-	moveInfo.OnEndFunction( GetServerEntity() );
+	moveInfo.OnEndFunction( entityHandle );
 }
 
 //===============

@@ -31,7 +31,7 @@ public:
 	// Waits at the arrived path_corner
 	void			WaitAtCorner();
 	// Callback for the brush movement code
-	static void		OnWaitAtCorner( ServerEntity* ent );
+	static void		OnWaitAtCorner( ServerGameEntity* serverEntity );
 	// The train has been blocked by an obstacle, damage it or stop?
 	void			TrainBlocked( ServerGameEntity* other );
 

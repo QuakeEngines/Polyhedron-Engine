@@ -6,9 +6,18 @@
 //
 //
 */
-#include "../../g_local.h"              // SVGame.
-#include "../base/ServerGameEntity.h"      // BaseEntity.
-#include "InfoPlayerStart.h"            // Class.
+// Common Includes.
+#include "../../g_local.h"
+#include "../../effects.h"
+#include "../../entities.h"
+#include "../../utils.h"
+#include "../../brushfuncs.h"
+
+// Class Entities.
+#include "../base/ServerGameEntity.h"
+
+#include "InfoPlayerStart.h"
+
 
 // Constructor/Deconstructor.
 InfoPlayerStart::InfoPlayerStart(ServerEntity* svEntity) 

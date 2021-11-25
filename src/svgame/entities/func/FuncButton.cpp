@@ -40,7 +40,7 @@ void FuncButton::Spawn() {
 
 	// Mappers set angles to determine the movement direction of the button,
 	// so we gotta set the movement direction, then zero the entity's angles
-	SetMoveDirection( GetAngles(), trie );
+	SetMoveDirection( GetAngles(), true );
 	//SetAngles( vec3_zero() );
 
 	SetModel( GetModel() );
@@ -76,7 +76,7 @@ void FuncButton::Spawn() {
 		SetMaxHealth( GetHealth() );
 		SetDieCallback( &FuncButton::ButtonDie );
 		SetTakeDamage( TakeDamage::Yes );
-	} else if ( nullptr == serverEntity->targetName ) {
+	} else if ( targetNameStr.empty()) { // Admer WHAT THE FUCK <3
 		SetTouchCallback( &FuncButton::ButtonTouch );
 	}
 
@@ -104,7 +104,7 @@ void FuncButton::SpawnKey( const std::string& key, const std::string& value ) {
 	// I think serverEntity variables should just be set in ServerGameEntity::SpawnKey
 	// It doesn't make sense to set them only here, if these variables are available to every entity
 	if ( key == "speed" ) {
-		ParseFloatKeyValue( key, value, serverEntity->speed );
+		ParseFloatKeyValue( key, value, speed );
 	} else if ( key == "lip" ) {
 		ParseFloatKeyValue( key, value, lip );
 	} else {
@@ -115,8 +115,8 @@ void FuncButton::SpawnKey( const std::string& key, const std::string& value ) {
 //===============
 // FuncButton::OnButtonDone
 //===============
-void FuncButton::OnButtonDone( ServerEntity* self ) {
-	FuncButton* button = static_cast<FuncButton*>(self->classEntity);
+void FuncButton::OnButtonDone( ServerGameEntity* self ) {
+	FuncButton* button = static_cast<FuncButton*>(self);
 	button->ButtonDone();
 }
 
@@ -145,8 +145,8 @@ void FuncButton::ButtonReturn() {
 //===============
 // FuncButton::OnButtonWait
 //===============
-void FuncButton::OnButtonWait( ServerEntity* self ) {
-	FuncButton* button = static_cast<FuncButton*>(self->classEntity);
+void FuncButton::OnButtonWait( ServerGameEntity* self ) {
+	FuncButton* button = static_cast<FuncButton*>(self);
 	button->ButtonWait();
 }
 

@@ -69,9 +69,7 @@ void TargetEarthquake::QuakeThink() {
         lastQuakeTime = level.time + 0.5f;
     }
 
-    for ( auto * entity : serverGameEntities
-         | bef::Standard | bef::HasClient | bef::HasGroundEntity ) 
-    {
+    for ( auto * entity : serverGameEntities | SvgEF::HasClient | SvgEF::HasGroundEntity ) {
         entity->SetGroundEntity( nullptr );
         vec3_t newVelocity{
             crandom() * 150.0f,

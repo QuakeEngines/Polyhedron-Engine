@@ -258,48 +258,35 @@ ServerGameEntity* SVG_SpawnServerGameEntity(ServerEntity* ent, const std::string
 
 ServerEntity* SVG_PickTarget(char* targetName)
 {
-    ServerEntity* ent = nullptr;
-    int     num_choices = 0;
-    ServerEntity* choice[MAXCHOICES];
-
     // Can't go on without a target name, can we?
     if (!targetName) {
         gi.DPrintf("SVG_PickTarget called with NULL targetName\n");
         return NULL;
     }
 
+    ServerGameEntity* ent = nullptr;
+    ServerGameEntity* choice[MAXCHOICES];
+
     // Try and find the given entity that matches this targetName.
+    uint32_t numberOfChoices = 0;
+
     for (auto& ent : serverGameEntities | SvgEF::HasKeyValue("targetName", targetName)) {
         // If we did find one, add it to our list of targets to choose from.
-        choice[num_choices++] = ent;
+        choice[numberOfChoices++] = ent;
 
         // Break out in case of maximum choice limit.
-        if (num_choices == MAXCHOICES)
-            break;
-    }
-
-    while (1) {
-        ent = SVG_Find(ent, FOFS(targetName), targetName);
-        // If we can't find it, break out of this loop.
-        if (!ent)
+        if (numberOfChoices == MAXCHOICES)
             break;
 
-        // If we did find one, add it to our list of targets to choose from.
-        choice[num_choices++] = ent;
-
-        // Break out in case of maximum choice limit.
-        if (num_choices == MAXCHOICES)
-            break;
-    }
-
-    // If there is nothing to choose from, it means we never found an entity matching this targetname.
-    if (!num_choices) {
-        gi.DPrintf("SVG_PickTarget: target %s not found\n", targetName);
-        return NULL;
+        // If there is nothing to choose from, it means we never found an entity matching this targetname.
+        if (!numberOfChoices) {
+            gi.DPrintf("SVG_PickTarget: target %s not found\n", targetName);
+            return NULL;
+        }
     }
 
     // Return a random target use % to prevent out of bounds.
-    return choice[rand() % num_choices];
+    return choice[rand() % numberOfChoices];
 }
 
 //===============

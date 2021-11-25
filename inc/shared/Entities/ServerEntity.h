@@ -1,12 +1,14 @@
 // License here.
 #pragma once
 
-using EntityDictionary = std::map<std::string, std::string>;
+// Include 
+#include "shared/svgame.h"
+#include "shared/enties.h"
 
 //---------------------------------------------------------
 // Server ServerEntity Data.
 //---------------------------------------------------------
-struct ServerEntity {
+struct ServerEntity : public SynchedEntityBase {
     // Current entity state. (Contains all that'd be networked.)
     EntityState  state;
 

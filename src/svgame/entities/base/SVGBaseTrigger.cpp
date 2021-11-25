@@ -251,14 +251,14 @@ void SVGBaseTrigger::UseTargets(ServerGameEntity* activator) {
 
 			// Do not ALLOW an entity to use ITSELF. :)
 			if (triggerEntity == this) {
-				gi.WPrintf("WARNING: '%s' tried to use itself #%i used itself.\n", GetTypeInfo()->className, GetServerEntity()->state.number);
+				gi.CPrintf(this, PRINT_WARNING, "WARNING: '%s' tried to use itself #%i used itself.\n", GetTypeInfo()->className, GetServerEntity()->state.number);
 			} else {
 				triggerEntity->Use(this, activator);
 			}
 
 			// Make sure it is in use, if not, debug.
 			if (!triggerEntity->IsInUse()) {
-                gi.DPrintf("WARNING: ServerEntity #%i was removed while using targets\n", GetServerEntity()->state.number);
+                gi.CPrintf(this,PRINT_WARNING, "WARNING: ServerEntity #%i was removed while using targets\n", GetServerEntity()->state.number);
                 return;
 			}
 		}

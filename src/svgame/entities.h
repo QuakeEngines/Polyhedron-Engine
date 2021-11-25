@@ -26,10 +26,25 @@
 */
 #pragma once
 
-// Include this guy here, gotta do so to make it work.
+//--------------------------------------------------------
+// Include all our requirements from ServerEntity, to our
+// ServerGameEntity which depends on SynchedEntityBase.
+// 
+// Other ServerGameEntities exist too, based on the same philosophy.
+// Some people just want to be left alone, so we let them.
+// 
+// Sometimes they don't and mayne we a
+//--------------------------------------------------------
+#include "entities/EntityBase.h"
+#include "entities/PrivateEntityBase.h"
+#include "entities/SynchedEntityBase.h"
 #include "entities/base/ServerGameEntity.h"
-#include <ranges>
-#include <span>
+
+// Predefine.
+class SynchedEntityBase;
+
+// Using.
+using EntityDictionary = std::map<std::string, std::string>;
 
 //
 // Filter function namespace that actually contains the entity filter implementations.
