@@ -1,9 +1,7 @@
 // License here.
 #pragma once
 
-// Include 
-#include "shared/svgame.h"
-#include "shared/enties.h"
+class SynchedEntityBase;
 
 //---------------------------------------------------------
 // Server ServerEntity Data.

@@ -1,11 +1,6 @@
 // SVGame Core.
-#include "../g_local.h"		// SVGame.
-#include "../effects.h"		// Effects.
-#include "../entities.h"    // Entities.
-#include "../utils.h"		// Util funcs.
-
-// ServerEntity Bases.
-#include "EntityBase.h"
+#include <svgame/g_local.h>
+#include <shared/entities.h>
 
 // Constructor(s)
 EntityBase::EntityBase() {

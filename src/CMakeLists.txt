@@ -82,10 +82,6 @@ SET( SRC_SVGAME
 	svgame/utils.cpp
 	svgame/weapons.cpp 
 
-	svgame/entities/EntityBase.cpp
-	svgame/entities/PrivateEntityBase.cpp
-	svgame/entities/SynchedEntityBase.cpp
-
 	svgame/ai/MonsterAI.cpp
 #	svgame/entities/base/ServerEntity.cpp
 	svgame/entities/base/ServerGameEntity.cpp
@@ -421,7 +417,7 @@ SET(HEADERS_SHARED
 	../inc/shared/containers/IterableCArray.h
 
 	# Entities.
-	#../inc/shared/Entities/ServerEntity.h
+	../inc/shared/Entities/ServerEntity.h
 
 
 	# Interfaces
@@ -462,7 +458,10 @@ SET(HEADERS_SHARED
 )
 SET(SRC_SHARED
 	# Entities.
-	#shared/Entities/ServerEntity.cpp
+	shared/Entities/EntityBase.cpp
+	shared/Entities/PrivateEntityBase.cpp
+	shared/Entities/SynchedEntityBase.cpp
+	shared/Entities/ServerEntity.cpp
 
 	# Maths.
 	shared/math/plane.cpp

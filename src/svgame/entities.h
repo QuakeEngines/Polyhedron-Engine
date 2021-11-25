@@ -35,9 +35,9 @@
 // 
 // Sometimes they don't and mayne we a
 //--------------------------------------------------------
-#include "entities/EntityBase.h"
-#include "entities/PrivateEntityBase.h"
-#include "entities/SynchedEntityBase.h"
+#include "shared/Entities/EntityBase.h"
+#include "shared/PrivateEntityBase.h"
+#include "shared/SynchedEntityBase.h"
 #include "entities/base/ServerGameEntity.h"
 
 // Predefine.

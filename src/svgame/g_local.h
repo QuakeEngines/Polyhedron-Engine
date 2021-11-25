@@ -931,7 +931,7 @@ struct gclient_s {
 // Entities can be linked to their "classname", this will in turn make sure that
 // the proper inheritance entity is allocated.
 //-------------------
-using EntityDictionary = std::map<std::string, std::string>;
+//using EntityDictionary = std::map<std::string, std::string>;
 
 //struct ServerEntity {
 //    // Actual entity state member. Contains all data that is actually networked.

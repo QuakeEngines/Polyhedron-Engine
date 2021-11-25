@@ -4,9 +4,13 @@
 #include "../entities.h"    // Entities.
 #include "../utils.h"		// Util funcs.
 
+// Shared Entities.
+#include "shared/entities.h"
+
 // ServerEntity Bases.
-#include "EntityBase.h"
-#include "SynchedEntityBase.h"
+#include "shared/Entities/EntityBase.h"
+#include "shared/Entities/SynchedEntityBase.h"
+#include "shared/Entities/ServerEntity.h"
 
 // Constructor.
 //SynchedEntityBase::SynchedEntityBase() {

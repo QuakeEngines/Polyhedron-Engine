@@ -16,8 +16,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-#ifndef __INC_SHARED__SVGAME_H__
-#define __INC_SHARED__SVGAME_H__
+#pragma once
 
 #include "shared/list.h"
 #include "sharedgame/pmove.h"
@@ -62,11 +61,6 @@ struct gclient_s {
     // this point in the structure
     int         clientNumber;
 };
-
-#include "shared/Entities/ServerEntity.h"
-#else
-#include "shared/Entities/ServerEntity.h"
-
 #endif
 
 //===================
@@ -75,21 +69,6 @@ struct gclient_s {
 
 class ServerGameEntity;
 class PlayerEntity;
-
-//-------------------
-// ServerEntity, the server side entity structure. If you know what an entity is,
-// then you know what this is.
-// 
-// The actual ServerGameEntity class stors a handle to a ServerEntity. It is where 
-// the magic happens. Entities can be linked to their "classname", this will in turn 
-// make sure that the proper inheritance entity is allocated.
-//-------------------
-// Using for readability, I love it.
-using EntityDictionary = std::map<std::string, std::string>;
-
-// As silly as it seems, we do this for readability and actually a mere pair of functions too.
-using ServerEntityID = uint32_t;
-
 
 ///#endif      // GAME_INCLUDE
 
@@ -311,5 +290,3 @@ struct ServerGameExports {
     //int         numberOfEntities;     // current number, <= maxEntities
     //int         maxEntities;
 };
-
-#endif // __INC_SHARED__SVGAME_H__
