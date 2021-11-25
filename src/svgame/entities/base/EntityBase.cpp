@@ -11,3 +11,7 @@ EntityBase::EntityBase(ServerEntity* serverEntityHandle) {
     this->entityHandle = serverEntityHandle;
     this->entityHandle->inUse = true;
 }
+
+EntityBase::~EntityBase() {
+    this->entityHandle->inUse = false;
+}

@@ -13,7 +13,7 @@ protected:
     EntityBase(ServerEntity* serverEntityHandle);
 
     // Destructor.
-    virtual ~EntityBase() = default;
+    virtual ~EntityBase();
 
 public:
 
