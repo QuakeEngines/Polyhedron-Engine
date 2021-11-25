@@ -19,7 +19,7 @@
 #include "../trigger/TriggerDelayedUse.h"
 
 // Constructor/Deconstructor.
-SVGBaseTrigger::SVGBaseTrigger(ServerEntity* svEntity) : ServerGameEntity(svEntity) {
+SVGBaseTrigger::SVGBaseTrigger() : ServerGameEntity() {
 	//
 	// All callback functions best be nullptr.
 	//
@@ -52,9 +52,6 @@ SVGBaseTrigger::SVGBaseTrigger(ServerEntity* svEntity) : ServerGameEntity(svEnti
 	//health = 0;
 	//maxHealth = 0;
 	//deadFlag = DEAD_NO;
-}
-SVGBaseTrigger::~SVGBaseTrigger() {
-
 }
 
 // Interface functions. 
@@ -251,14 +248,14 @@ void SVGBaseTrigger::UseTargets(ServerGameEntity* activator) {
 
 			// Do not ALLOW an entity to use ITSELF. :)
 			if (triggerEntity == this) {
-				gi.CPrintf(this, PRINT_WARNING, "WARNING: '%s' tried to use itself #%i used itself.\n", GetTypeInfo()->className, GetEntityServerHandle()->state.number);
+				gi.DPrintf("WARNING: '%s' tried to use itself #%i.\n", GetTypeInfo()->className, GetEntityServerHandle()->state.number);
 			} else {
 				triggerEntity->Use(this, activator);
 			}
 
 			// Make sure it is in use, if not, debug.
 			if (!triggerEntity->IsInUse()) {
-                gi.CPrintf(this,PRINT_WARNING, "WARNING: ServerEntity #%i was removed while using targets\n", GetEntityServerHandle()->state.number);
+                gi.DPrintf("WARNING: ServerEntity #%i was removed while using targets\n", GetEntityServerHandle()->state.number);
                 return;
 			}
 		}

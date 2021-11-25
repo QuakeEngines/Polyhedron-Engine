@@ -35,13 +35,10 @@
 // 
 // Sometimes they don't and mayne we a
 //--------------------------------------------------------
-#include "shared/Entities/EntityBase.h"
-#include "shared/Entities/PrivateEntityBase.h"
-#include "shared/Entities/SynchedEntityBase.h"
-#include "shared/Entities/ServerGameEntity.h"
-
-// Predefine.
-class SynchedEntityBase;
+#include "entities/base/EntityBase.h"
+#include "entities/base/PrivateEntityBase.h"
+#include "entities/base/SynchedEntityBase.h"
+#include "entities/base/ServerGameEntity.h"
 
 // Using.
 using EntityDictionary = std::map<std::string, std::string>;
@@ -225,29 +222,9 @@ ServerEntity* SVG_Spawn(void);
 ServerEntity* SVG_CreateTargetChangeLevel(char* map);
 
 // Admer: quick little template function to spawn entities, until we have this code in a local game class :)
-template<typename entityClass>
-inline entityClass* SVG_CreateClassEntity(ServerEntity* edict = nullptr, bool allocateNewEdict = true) {
-    entityClass* entity = nullptr;
-    // If a null entity was passed, create a new one
-    if (edict == nullptr) {
-        if (allocateNewEdict) {
-            edict = SVG_Spawn();
-        } else {
-            gi.DPrintf("WARNING: tried to spawn a class entity when the edict is null\n");
-            return nullptr;
-        }
-    }
-    // Abstract classes will have AllocateInstance as nullptr, hence we gotta check for that
-    if (entityClass::ClassInfo.AllocateInstance) {
-        entity = static_cast<entityClass*>(entityClass::ClassInfo.AllocateInstance(edict)); // Entities that aren't in the type info system will error out here
-        edict->className = entity->GetTypeInfo()->className;
-        if (serverGameEntities[edict->state.number] == nullptr) {
-            serverGameEntities[edict->state.number] = entity;
-        } else {
-            gi.DPrintf("ERROR: edict %i is already taken\n", edict->state.number);
-        }
-    }
-    return entity;
+template<typename entityClass, typename... Args>
+inline entityClass* SVG_CreateClassEntity(Args&& ...args) {
+    return new entityClass(std::forward(args)...);
 }
 
 

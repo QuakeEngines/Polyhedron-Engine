@@ -24,8 +24,7 @@
 // 
 
 // Constructor/Deconstructor.
-TriggerDelayedUse::TriggerDelayedUse(ServerEntity* svEntity) 
-	: SVGBaseTrigger(svEntity) {
+TriggerDelayedUse::TriggerDelayedUse() {
 	//
 	// All callback functions best be nullptr.
 	//
@@ -38,9 +37,6 @@ TriggerDelayedUse::TriggerDelayedUse(ServerEntity* svEntity)
 	// Default values for members.
 	//
 	//lastHurtTime = 0.f;
-}
-TriggerDelayedUse::~TriggerDelayedUse() {
-
 }
 
 // Interface functions. 

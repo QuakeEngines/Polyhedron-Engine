@@ -74,6 +74,7 @@ class PlayerEntity;
 
 ///#endif      // GAME_INCLUDE
 
+#include "shared/Entities/ServerEntity.h"
 
 
 //===============================================================
@@ -209,6 +210,10 @@ struct ServerGameImports {
     void (*AddCommandString)(const char *text);
 
     void (*DebugGraph)(float value, int color);
+    
+    ServerEntity* (*GetEntityServerHandle)(ServerEntityID id);
+    int32_t (*GetNumberOfEntities)();
+    void (*SetNumberOfEntities)(int32_t num);
 };
 
 //
@@ -275,20 +280,4 @@ struct ServerGameExports {
     // The game can issue gi.argc() / gi.argv() commands to get the rest
     // of the parameters
     void (*ServerCommand) (void);
-
-    //
-    // global variables shared between game and server
-    //
-
-    // The edict array is allocated in the game dll so it
-    // can vary in size from one game to another.
-    //
-    // The size will be fixed when ge->Init() is called
-    //EntityPool pool;
-
-
-    //struct ServerEntity  *entities;
-    //int         entitySize;
-    //int         numberOfEntities;     // current number, <= maxEntities
-    //int         maxEntities;
 };

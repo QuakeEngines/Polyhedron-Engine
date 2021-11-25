@@ -21,7 +21,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "player/animations.h"
 
 // Class Entities.
-#include "shared/Entities/ServerGameEntity.h"
+#include "entities/base/ServerGameEntity.h"
 #include "entities/base/PlayerEntity.h"
 
 // Game Modes.

@@ -344,9 +344,9 @@ void SVG_InitializeCVars() {
 void SVG_AllocateGameClients() {
 // Move to server.
     //// Initialize all clients for this game
-    //game.maximumClients = maximumClients->value;
     //game.clients = (ServerClient*)gi.TagMalloc(game.maximumClients * sizeof(game.clients[0]), TAG_GAME); // CPP: Cast
-    //game.numberOfEntities = game.maximumClients + 1;
+    game.maximumClients = maximumClients->value;
+    gi.SetNumberOfEntities(game.maximumClients + 1);
 }
 
 //

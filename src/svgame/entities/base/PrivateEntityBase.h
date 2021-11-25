@@ -2,7 +2,7 @@
 #pragma once
 
 #include "EntityBase.h"
-#include "ServerEntity.h"
+#include "shared/Entities/ServerEntity.h"
 
 //---------------------------------------------------------
 // Used for entities that have no need to take up an entity
@@ -12,14 +12,11 @@
 //----------------------------------------------------------
 class PrivateEntityBase abstract : public EntityBase
 { 
-public:
-    // Constructor.
-    PrivateEntityBase();
-
-    // Deconstructor
-    virtual ~PrivateEntityBase();
-
 protected:
     // Internal memory 
     ServerEntity handleMemory;
+
+public:
+    // Constructor.
+    PrivateEntityBase();
 };

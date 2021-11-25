@@ -923,6 +923,10 @@ void SV_InitGameProgs(void)
     importAPI.SetAreaPortalState = PF_SetAreaPortalState;
     importAPI.AreasConnected = PF_AreasConnected;
 
+    importAPI.GetEntityServerHandle = GetEntityServerHandle;
+    importAPI.SetNumberOfEntities = SetNumberOfEntities;
+    importAPI.GetNumberOfEntities = GetNumberOfEntities;
+
     ge = entry(&importAPI);
     if (!ge) {
         Com_Error(ERR_DROP, "Server Game DLL returned NULL exports");

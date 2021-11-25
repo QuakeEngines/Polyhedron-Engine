@@ -64,8 +64,6 @@
 
 #define _USE_MATH_DEFINES
 // C++
-//#define inline __inline
-#define __func__ __FUNCTION__
 
 #ifdef _WIN64
 typedef __int64     ssize_t;

@@ -1544,7 +1544,7 @@ static void SV_PrepWorldFrame(void)
     if (!SV_FRAMESYNC)
         return;
 
-    for (i = 1; i < serverEntityPool.numberOfEntities; i++) {
+    for (i = 1; i < serverEntityPool.currentNumberOfEntities; i++) {
         ent = EDICT_NUM(i);
 
         // events only last for a single keyframe

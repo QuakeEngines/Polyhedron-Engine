@@ -3,7 +3,7 @@
 #include <string>
 
 class ServerGameEntity;
-typedef ServerEntity ServerEntity;
+struct ServerEntity;
 
 //===============
 // A static counter, used by TypeInfo to get compile-time IDs
@@ -30,7 +30,7 @@ private:
 //===============
 // TypeInfo, a system for getting runtime information about classes
 //===============
-using EntityAllocatorFn = ServerGameEntity* ( ServerEntity* );
+using EntityAllocatorFn = EntityBase* ( );
 
 class TypeInfo {
 public:
@@ -176,9 +176,9 @@ __DeclareTypeInfo( #className, #className, #superClass, TypeInfo::TypeFlag_Abstr
 // @param superClass (symbol) - the class this entity class inherits from
 #define DefineMapClass( mapClassName, className, superClass )	\
 using Base = superClass;										\
-static ServerGameEntity* AllocateInstance( ServerEntity* entity ) {		\
-	return new className( entity );								\
-}																\
+static EntityBase* AllocateInstance( ) {		\
+	return new className( );					\
+}												\
 __DeclareTypeInfo( mapClassName, #className, #superClass, TypeInfo::TypeFlag_MapSpawn, &className::AllocateInstance );
 
 // Declares type information the same as DefineMapClass, however, it doesn't allocate anything. 
@@ -195,7 +195,7 @@ __DeclareTypeInfo( mapClassName, #className, #superClass, TypeInfo::TypeFlag_Map
 // @param superClass (symbol) - the class this entity class inherits from
 #define DefineClass( className, superClass )					\
 using Base = superClass;										\
-static ServerGameEntity* AllocateInstance( ServerEntity* entity ) {		\
-	return new className( entity );								\
-}																\
+static EntityBase* AllocateInstance( ) {		\
+	return new className( );				\
+}												\
 __DeclareTypeInfo( #className, #className, #superClass, TypeInfo::TypeFlag_None, &className::AllocateInstance );

@@ -10,14 +10,13 @@
 #include "../../effects.h"		// Effects.
 #include "../../entities.h"		// Entities.
 #include "../../utils.h"		// Util funcs.
-#include "../s"
 #include "ServerGameEntity.h"
 
 #include "SVGBaseTrigger.h"
 #include "../trigger/TriggerDelayedUse.h"
 
 // Constructor/Deconstructor.
-ServerGameEntity::ServerGameEntity(ServerEntity* serverEntity) : SynchedEntityBase(serverEntity) {
+ServerGameEntity::ServerGameEntity() {
 	//
 	// All callback functions best be nullptr.
 	//
@@ -59,8 +58,10 @@ ServerGameEntity::ServerGameEntity(ServerEntity* serverEntity) : SynchedEntityBa
 	maxHealth = 0;
 	deadFlag = DEAD_NO;
 }
-ServerGameEntity::~ServerGameEntity() {
 
+ServerGameEntity::ServerGameEntity(ServerEntity* entity) :
+	SynchedEntityBase(entity)
+{
 }
 
 // Interface functions. 
@@ -349,7 +350,7 @@ void ServerGameEntity::SpawnKey(const std::string& key, const std::string& value
 		// Set SpawnFlags.
 		SetSpawnFlags(parsedSpawnFlags);
 	} else {
-		gi.DPrintf("ServerEntity ID: %i - classname: %s has unknown Key/Value['%s','%s']\n", GetEntityServerHandle()->state.number, GetEntityServerHandle()->className, key.c_str(), value.c_str());
+		gi.DPrintf("ServerEntity ID: %i - classname: %s has unknown Key/Value['%s','%s']\n", GetEntityServerHandle()->state.number, className, key.c_str(), value.c_str());
 	}
 }
 
@@ -543,7 +544,7 @@ void ServerGameEntity::UseTargets( ServerGameEntity* activatorOverride )
 //===============
 //
 void ServerGameEntity::LinkEntity() {
-	gi.LinkEntity(serverEntity);
+	gi.LinkEntity(GetEntityServerHandle());
 }
 
 //===============
@@ -552,7 +553,7 @@ void ServerGameEntity::LinkEntity() {
 // 
 //===============
 void ServerGameEntity::UnlinkEntity() {
-	gi.UnlinkEntity(serverEntity);
+	gi.UnlinkEntity(GetEntityServerHandle());
 }
 
 //===============
@@ -560,7 +561,7 @@ void ServerGameEntity::UnlinkEntity() {
 //===============
 void ServerGameEntity::Remove()
 {
-	serverEntity->serverFlags |= EntityServerFlags::Remove;
+	GetEntityServerHandle()->serverFlags |= EntityServerFlags::Remove;
 }
 
 //

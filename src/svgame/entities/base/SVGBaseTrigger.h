@@ -15,8 +15,7 @@ public:
     //
     // Constructor/Deconstructor.
     //
-    SVGBaseTrigger(ServerEntity* svEntity);
-    virtual ~SVGBaseTrigger();
+    SVGBaseTrigger();
 
     DefineAbstractClass( SVGBaseTrigger, ServerGameEntity );
 

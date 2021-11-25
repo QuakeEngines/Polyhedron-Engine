@@ -74,10 +74,9 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 // Reads more clearly.
 
-#define EDICT_POOL(c, n) ((ServerEntity *)((byte *)(c)->pool->entities.data() + (c)->pool->entitySize*(n)))
-
-#define EDICT_NUM(n) ((ServerEntity *)((byte *)entityPool.entities.data() + entityPool.entitySize*(n)))
-#define NUM_FOR_EDICT(e) ((int32_t)(((byte *)(e) - (byte *)entityPool.entities.data()) / entityPool.entitySize))
+#define EDICT_POOL(c, n) (&(c)->pool->entities[(n)])
+#define EDICT_NUM(n) (&serverEntityPool.entities[(n)])
+#define NUM_FOR_EDICT(e) (e - serverEntityPool.entities.data())
 
 //=============================================================================
 // Master/heartbeat settings.
@@ -212,6 +211,14 @@ typedef struct {
     unsigned    credit_cap;
     unsigned    cost;
 } RateLimit;
+
+// Server ServerEntity Pool.
+struct ServerEntityPool {
+    std::array<ServerEntity, MAX_EDICTS> entities;
+    int32_t currentNumberOfEntities{0};     // current number, <= maxEntities
+};
+
+extern ServerEntityPool serverEntityPool;
 
 typedef struct client_s {
     list_t entry;
@@ -585,6 +592,10 @@ void SV_PrintMiscInfo(void);
 
 #define ES_INUSE(s) \
     ((s)->modelIndex || (s)->effects || (s)->sound || (s)->eventID)
+
+ServerEntity* GetEntityServerHandle(ServerEntityID id);
+void SetNumberOfEntities(int32_t num);
+int32_t GetNumberOfEntities();
 
 void SV_BuildProxyClientFrame(client_t *client);
 void SV_BuildClientFrame(client_t *client);

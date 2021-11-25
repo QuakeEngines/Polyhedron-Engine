@@ -83,8 +83,10 @@ SET( SRC_SVGAME
 	svgame/weapons.cpp 
 
 	svgame/ai/MonsterAI.cpp
-#	svgame/entities/base/ServerEntity.cpp
-	#svgame/entities/base/ServerGameEntity.cpp
+	svgame/entities/base/EntityBase.cpp
+	svgame/entities/base/ServerGameEntity.cpp
+	svgame/entities/base/SynchedEntityBase.cpp
+	svgame/entities/base/PrivateEntityBase.cpp
 	svgame/entities/base/SVGBaseTrigger.cpp
 	svgame/entities/base/SVGBaseMover.cpp
 	svgame/entities/base/BodyCorpse.cpp
@@ -173,11 +175,12 @@ SET( SRC_SVGAME
 	svgame/entities.h
 	svgame/functionpointers.h
 	svgame/trigger.h
-	svgame/TypeInfo.h
 	svgame/utils.h
 	svgame/ai/MonsterAI.h
-	#svgame/entities/base/ServerEntity.h
-	#svgame/entities/base/ServerGameEntity.h
+	svgame/entities/base/TypeInfo.h
+	svgame/entities/base/ServerGameEntity.h
+	svgame/entities/base/PrivateEntityBase.h
+	svgame/entities/base/SynchedEntityBase.h
 	svgame/entities/base/SVGBaseTrigger.h
 	svgame/entities/base/SVGBaseMover.h
 	svgame/entities/base/BodyCorpse.h
@@ -419,7 +422,6 @@ SET(HEADERS_SHARED
 	# Entities.
 	../inc/shared/Entities/ServerEntity.h
 
-
 	# Interfaces
 	../inc/shared/interfaces/IClientGameExports.h
 	../inc/shared/interfaces/IClientGameImports.h
@@ -457,13 +459,6 @@ SET(HEADERS_SHARED
 	../inc/shared/ui.h 
 )
 SET(SRC_SHARED
-	# Entities.
-	shared/Entities/EntityBase.cpp
-	shared/Entities/PrivateEntityBase.cpp
-	shared/Entities/SynchedEntityBase.cpp
-	shared/Entities/ServerEntity.cpp
-	shared/Entities/ServerGameEntity.cpp
-
 	# Maths.
 	shared/math/plane.cpp
 	shared/math/vector3.cpp

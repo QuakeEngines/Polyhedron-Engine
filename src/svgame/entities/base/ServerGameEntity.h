@@ -12,9 +12,9 @@
 
 // It makes sense to include TypeInfo in ServerGameEntity.h, 
 // because this class absolutely requires it
-#include <shared/Entities/TypeInfo.h>
+#include "TypeInfo.h"
 
-class ServerGameEntity : public SynchedEntityBase {
+class ServerGameEntity abstract : public SynchedEntityBase {
 public:
     //------------------------------------------------------------
     //
@@ -28,15 +28,16 @@ public:
     using TakeDamageCallbackPointer = void(ServerGameEntity::*)(ServerGameEntity* other, float kick, int32_t damage);
     using DieCallbackPointer        = void(ServerGameEntity::*)(ServerGameEntity* inflictor, ServerGameEntity* attacker, int damage, const vec3_t& point);
 
+protected:
     //------------------------------------------------------------
     //
     // Construct/Destructor.
     //
     //------------------------------------------------------------
-    ServerGameEntity(ServerEntity* svEntity);
-    virtual ~ServerGameEntity();
+    ServerGameEntity();
+    ServerGameEntity(ServerEntity* entity);
 
-
+public:
     //------------------------------------------------------------
     //
     // Runtime Type Information.
