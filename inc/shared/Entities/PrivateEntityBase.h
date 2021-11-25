@@ -2,6 +2,7 @@
 #pragma once
 
 #include "EntityBase.h"
+#include "ServerEntity.h"
 
 //---------------------------------------------------------
 // Used for entities that have no need to take up an entity

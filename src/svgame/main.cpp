@@ -631,12 +631,12 @@ void SVG_RunFrame(void)
         if (!entity->IsInUse())
             continue;
 
-        if (!entity->GetServerEntity())
+        if (!entity->GetEntityServerHandle())
             continue;
 
         // Admer: entity was marked for removal at the previous tick
         if (entity->GetServerFlags() & EntityServerFlags::Remove) {
-            SVG_FreeEntity(entity->GetServerEntity());
+            SVG_FreeEntity(entity->GetEntityServerHandle());
             continue;
         }
 
@@ -647,7 +647,7 @@ void SVG_RunFrame(void)
         entity->SetOldOrigin(entity->GetOrigin());
 
         // If the ground entity moved, make sure we are still on it
-        if ((entity->GetGroundEntity() && entity->GetGroundEntity()->GetServerEntity())
+        if ((entity->GetGroundEntity() && entity->GetGroundEntity()->GetEntityServerHandle())
             && (entity->GetGroundEntity()->GetLinkCount() != entity->GetGroundEntityLinkCount())) {
             // Reset ground entity.
             entity->SetGroundEntity(nullptr);
@@ -662,7 +662,7 @@ void SVG_RunFrame(void)
         if (i > 0 && i <= maximumClients->value) {
             // Ensure the entity actually is owned by a client. 
             if (entity->GetClient())
-                game.gameMode->ClientBeginServerFrame(entity->GetServerEntity());
+                game.gameMode->ClientBeginServerFrame(entity->GetEntityServerHandle());
             continue;
         }
 

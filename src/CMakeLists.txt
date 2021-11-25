@@ -84,7 +84,7 @@ SET( SRC_SVGAME
 
 	svgame/ai/MonsterAI.cpp
 #	svgame/entities/base/ServerEntity.cpp
-	svgame/entities/base/ServerGameEntity.cpp
+	#svgame/entities/base/ServerGameEntity.cpp
 	svgame/entities/base/SVGBaseTrigger.cpp
 	svgame/entities/base/SVGBaseMover.cpp
 	svgame/entities/base/BodyCorpse.cpp
@@ -177,7 +177,7 @@ SET( SRC_SVGAME
 	svgame/utils.h
 	svgame/ai/MonsterAI.h
 	#svgame/entities/base/ServerEntity.h
-	svgame/entities/base/ServerGameEntity.h
+	#svgame/entities/base/ServerGameEntity.h
 	svgame/entities/base/SVGBaseTrigger.h
 	svgame/entities/base/SVGBaseMover.h
 	svgame/entities/base/BodyCorpse.h
@@ -462,6 +462,7 @@ SET(SRC_SHARED
 	shared/Entities/PrivateEntityBase.cpp
 	shared/Entities/SynchedEntityBase.cpp
 	shared/Entities/ServerEntity.cpp
+	shared/Entities/ServerGameEntity.cpp
 
 	# Maths.
 	shared/math/plane.cpp

@@ -10,7 +10,7 @@
 #include "../../effects.h"		// Effects.
 #include "../../entities.h"		// Entities.
 #include "../../utils.h"		// Util funcs.
-#include "../SynchedEntityBase.h"
+#include "../s"
 #include "ServerGameEntity.h"
 
 #include "SVGBaseTrigger.h"
@@ -349,7 +349,7 @@ void ServerGameEntity::SpawnKey(const std::string& key, const std::string& value
 		// Set SpawnFlags.
 		SetSpawnFlags(parsedSpawnFlags);
 	} else {
-		gi.DPrintf("ServerEntity ID: %i - classname: %s has unknown Key/Value['%s','%s']\n", GetServerEntity()->state.number, GetServerEntity()->className, key.c_str(), value.c_str());
+		gi.DPrintf("ServerEntity ID: %i - classname: %s has unknown Key/Value['%s','%s']\n", GetEntityServerHandle()->state.number, GetEntityServerHandle()->className, key.c_str(), value.c_str());
 	}
 }
 
@@ -493,7 +493,7 @@ void ServerGameEntity::UseTargets( ServerGameEntity* activatorOverride )
 		ServerGameEntity* victim = nullptr;
 		while ( victim = SVG_FindEntityByKeyValue( "targetname", GetKillTarget(), victim ) )
 		{	// It is going to die, free it.
-			SVG_FreeEntity( victim->GetServerEntity() );
+			SVG_FreeEntity( victim->GetEntityServerHandle() );
 		}
 
 		if ( !IsInUse() ) 
@@ -518,7 +518,7 @@ void ServerGameEntity::UseTargets( ServerGameEntity* activatorOverride )
 
 			if ( targetEntity == this ) 
 			{
-				gi.DPrintf( "WARNING: ServerEntity #%i used itself.\n", GetServerEntity()->state.number );
+				gi.DPrintf( "WARNING: ServerEntity #%i used itself.\n", GetEntityServerHandle()->state.number );
 			}
 			else 
 			{
@@ -528,7 +528,7 @@ void ServerGameEntity::UseTargets( ServerGameEntity* activatorOverride )
 			// Make sure it is in use
 			if ( !targetEntity->IsInUse() ) 
 			{
-				gi.DPrintf( "WARNING: ServerEntity #%i was removed while using targets\n", GetServerEntity()->state.number );
+				gi.DPrintf( "WARNING: ServerEntity #%i was removed while using targets\n", GetEntityServerHandle()->state.number );
 				return;
 			}
 		}

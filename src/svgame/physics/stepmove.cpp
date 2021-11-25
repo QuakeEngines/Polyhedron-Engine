@@ -127,7 +127,7 @@ void SVG_StepMove_CheckGround(ServerGameEntity* ent)
     //  if (!trace.startsolid && !trace.allsolid)
     //      VectorCopy (trace.endpos, ent->s.origin);
     if ((!trace.startSolid && !trace.allSolid) &&
-        (trace.ent && trace.ent->GetServerEntity())) {
+        (trace.ent && trace.ent->GetEntityServerHandle())) {
         ent->SetOrigin(trace.endPosition);
         ent->SetGroundEntity(trace.ent);
         ent->SetGroundEntityLinkCount(trace.ent->GetLinkCount());
@@ -168,10 +168,10 @@ qboolean SVG_MoveStep(ServerGameEntity* ent, vec3_t move, qboolean relink)
             newOrigin = ent->GetOrigin() + move;
 
             if (i == 0 && ent->GetEnemy()) {
-                if (!ent->GetServerEntity()->goalEntityPtr)
-                    ent->GetServerEntity()->goalEntityPtr = ent->GetEnemy()->GetServerEntity();
-                dz = ent->GetServerEntity()->state.origin[2] - ent->GetServerEntity()->goalEntityPtr->state.origin[2];
-                if (ent->GetServerEntity()->goalEntityPtr->client) {
+                if (!ent->GetEntityServerHandle()->goalEntityPtr)
+                    ent->GetEntityServerHandle()->goalEntityPtr = ent->GetEnemy()->GetEntityServerHandle();
+                dz = ent->GetEntityServerHandle()->state.origin[2] - ent->GetEntityServerHandle()->goalEntityPtr->state.origin[2];
+                if (ent->GetEntityServerHandle()->goalEntityPtr->client) {
                     if (dz > 40)
                         newOrigin.z -= 8;
                     if (!((ent->GetFlags() & EntityFlags::Swim) && (ent->GetWaterLevel() < 2)))
@@ -380,7 +380,7 @@ qboolean SV_StepDirection(ServerGameEntity* ent, float yaw, float dist)
     float       delta;
 
     ent->SetIdealYawAngle(yaw);
-    SVG_CalculateYawAngle(ent->GetServerEntity());
+    SVG_CalculateYawAngle(ent->GetEntityServerHandle());
 
     yaw = yaw * M_PI * 2 / 360;
     move[0] = std::cosf(yaw) * dist;
@@ -391,7 +391,7 @@ qboolean SV_StepDirection(ServerGameEntity* ent, float yaw, float dist)
 
     //    VectorCopy(ent->state.origin, oldorigin);
     if (SVG_MoveStep(ent, move, false)) {
-        delta = ent->GetServerEntity()->state.angles[vec3_t::Yaw] - ent->GetIdealYawAngle();
+        delta = ent->GetEntityServerHandle()->state.angles[vec3_t::Yaw] - ent->GetIdealYawAngle();
         if (delta > 45 && delta < 315) {
             // not turned far enough, so don't take the step
             ent->SetOrigin(oldOrigin);

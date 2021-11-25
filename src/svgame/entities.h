@@ -36,9 +36,9 @@
 // Sometimes they don't and mayne we a
 //--------------------------------------------------------
 #include "shared/Entities/EntityBase.h"
-#include "shared/PrivateEntityBase.h"
-#include "shared/SynchedEntityBase.h"
-#include "entities/base/ServerGameEntity.h"
+#include "shared/Entities/PrivateEntityBase.h"
+#include "shared/Entities/SynchedEntityBase.h"
+#include "shared/Entities/ServerGameEntity.h"
 
 // Predefine.
 class SynchedEntityBase;
@@ -54,15 +54,15 @@ namespace EntityFilterFunctions {
     //inline bool EntityInUse (const ServerEntity& ent) { return ent.inUse; }
     // @returns true in case the (server-)ServerEntity has a client attached to it.
     inline bool ServerEntityHasClient(ServerEntity& ent) { return static_cast<bool>(ent.client); }
+    
     // @returns true in case the (server-)ServerEntity has a Class ServerEntity attached to it.
-    inline bool ServerEntityHasClassEntity(ServerEntity& ent) { return static_cast<bool>(ent.className.empty()); }
-
+    inline bool ServerGameEntityHasClassEntity(ServerGameEntity& ent) { return static_cast<bool>(ent.GetClassName().empty()); }
     // Returns true in case the (server-)ServerEntity has a client attached to it.
     inline bool ServerGameEntityHasClient(ServerGameEntity* ent) { return ent->GetClient(); }
     // Returns true in case the BaseEntity has a ground entity set to it.
     inline bool ServerGameEntityHasGroundEntity(ServerGameEntity* ent) { return ent->GetGroundEntity(); }
     // Returns true in case the BaseEntity is properly linked to a server entity.
-    //line bool ServerGameEntityHasServerEntity(ServerGameEntity* ent) { return ent->GetServerEntity(); }
+    //line bool ServerGameEntityHasServerEntity(ServerGameEntity* ent) { return ent->GetEntityServerHandle(); }
     // Returns true if the BaseEntity contains the sought for targetname.
     inline bool ServerGameEntityHasTargetName(ServerGameEntity* ent) { return ent->GetTargetName() != "" && !ent->GetTargetName().empty(); }
     // Returns true in case the BaseEntity has a client attached to it.

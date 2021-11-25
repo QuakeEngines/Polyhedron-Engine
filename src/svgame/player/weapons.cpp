@@ -160,7 +160,7 @@ void SVG_ChangeWeapon(PlayerEntity*ent)
             i = ((client->persistent.activeWeapon->weaponModelIndex & 0xff) << 8);
         else
             i = 0;
-        ent->SetSkinNumber((ent->GetServerEntity() - g_entities - 1) | i);
+        ent->SetSkinNumber((ent->GetEntityServerHandle() - g_entities - 1) | i);
     }
 
     if (client->persistent.activeWeapon && client->persistent.activeWeapon->ammo)
@@ -258,12 +258,12 @@ void Use_Weapon(PlayerEntity *ent, gitem_t* item)
         ammoIndex = ITEM_INDEX(ammo_item);
 
         if (!client->persistent.inventory[ammoIndex]) {
-            gi.CPrintf(ent->GetServerEntity(), PRINT_HIGH, "No %s for %s.\n", ammo_item->pickupName, item->pickupName);
+            gi.CPrintf(ent->GetEntityServerHandle(), PRINT_HIGH, "No %s for %s.\n", ammo_item->pickupName, item->pickupName);
             return;
         }
 
         if (client->persistent.inventory[ammoIndex] < item->quantity) {
-            gi.CPrintf(ent->GetServerEntity(), PRINT_HIGH, "Not enough %s for %s.\n", ammo_item->pickupName, item->pickupName);
+            gi.CPrintf(ent->GetEntityServerHandle(), PRINT_HIGH, "Not enough %s for %s.\n", ammo_item->pickupName, item->pickupName);
             return;
         }
     }
@@ -290,7 +290,7 @@ void Drop_Weapon(PlayerEntity *ent, gitem_t *item)
     index = ITEM_INDEX(item);
     // see if we're already using it
     if (((item == client->persistent.activeWeapon) || (item == client->newWeapon)) && (client->persistent.inventory[index] == 1)) {
-        gi.CPrintf(ent->GetServerEntity(), PRINT_HIGH, "Can't drop current weapon\n");
+        gi.CPrintf(ent->GetEntityServerHandle(), PRINT_HIGH, "Can't drop current weapon\n");
         return;
     }
 
@@ -388,7 +388,7 @@ void Weapon_Generic(PlayerEntity *ent, int FRAME_ACTIVATE_LAST, int FRAME_FIRE_L
                 }
             } else {
                 if (level.time >= ent->GetDebouncePainTime()) {
-                    gi.Sound(ent->GetServerEntity(), CHAN_VOICE, gi.SoundIndex("weapons/noammo.wav"), 1, ATTN_NORM, 0);
+                    gi.Sound(ent->GetEntityServerHandle(), CHAN_VOICE, gi.SoundIndex("weapons/noammo.wav"), 1, ATTN_NORM, 0);
                     ent->SetDebouncePainTime(level.time + 1);
                 }
                 NoAmmoWeaponChange(ent);

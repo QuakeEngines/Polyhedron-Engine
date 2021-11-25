@@ -637,7 +637,7 @@ void DefaultGameMode::ClientBeginServerFrame(ServerEntity* serverEntity) {
     //if (deathmatch->value &&
     //    client->persistent.isSpectator != client->respawn.isSpectator &&
     //    (level.time - client->respawnTime) >= 5) {
-    //    spectator_respawn(ent->GetServerEntity());
+    //    spectator_respawn(ent->GetEntityServerHandle());
     //    return;
     //}
 
@@ -663,7 +663,7 @@ void DefaultGameMode::ClientBeginServerFrame(ServerEntity* serverEntity) {
 
             if ((client->latchedButtons & buttonMask) ||
                 (deathmatch->value && ((int)gamemodeflags->value & GameModeFlags::ForceRespawn))) {
-                game.gameMode->RespawnClient((PlayerEntity*)player->GetServerEntity());
+                game.gameMode->RespawnClient((PlayerEntity*)player->GetEntityServerHandle());
                 client->latchedButtons = 0;
             }
         }

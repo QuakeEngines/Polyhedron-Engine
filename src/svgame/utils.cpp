@@ -46,7 +46,7 @@ vec3_t SVG_PlayerProjectSource(ServerClient* client, const vec3_t& point, const 
 void Think_Delay(ServerGameEntity *ent)
 {
     //UTIL_UseTargets(ent, ent->GetActivator());
-    //SVG_FreeEntity(ent->GetServerEntity());
+    //SVG_FreeEntity(ent->GetEntityServerHandle());
 }
 
 

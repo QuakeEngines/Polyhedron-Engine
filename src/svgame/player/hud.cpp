@@ -240,9 +240,9 @@ void SVG_HUD_GenerateDMScoreboardLayout(ServerGameEntity *ent, ServerGameEntity 
         y = 32 + 32 * (i % 6);
 
         // add a dogtag
-        if (ent && cl_ent == ent->GetServerEntity())
+        if (ent && cl_ent == ent->GetEntityServerHandle())
             tag = "tag1";
-        else if (killer && cl_ent == killer->GetServerEntity())
+        else if (killer && cl_ent == killer->GetEntityServerHandle())
             tag = "tag2";
         else
             tag = NULL;
@@ -287,7 +287,7 @@ void HUD_SendDMScoreboardMessage(ServerGameEntity *ent)
         return;
 
     SVG_HUD_GenerateDMScoreboardLayout(ent, ent->GetEnemy());
-    gi.Unicast(ent->GetServerEntity(), true);
+    gi.Unicast(ent->GetEntityServerHandle(), true);
 }
 
 

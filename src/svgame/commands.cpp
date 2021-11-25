@@ -21,7 +21,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "player/animations.h"
 
 // Class Entities.
-#include "entities/base/ServerGameEntity.h"
+#include "shared/Entities/ServerGameEntity.h"
 #include "entities/base/PlayerEntity.h"
 
 // Game Modes.
@@ -270,18 +270,18 @@ Sets client to godmode
 argv(0) god
 ==================
 */
-void Cmd_God_f(ServerGameEntity *ent)
+void Cmd_God_f(ServerGameEntity *serverGameEntity)
 {
     if (deathmatch->value && !sv_cheats->value) {
-        gi.CPrintf(ent->GetServerEntity(), PRINT_HIGH, "You must run the server with '+set cheats 1' to enable this command.\n");
+        gi.CPrintf(serverGameEntity->GetEntityServerHandle(), PRINT_HIGH, "You must run the server with '+set cheats 1' to enable this command.\n");
         return;
     }
 
-    ent->SetFlags(ent->GetFlags() ^ EntityFlags::GodMode);
+    ent->SetFlags(serverGameEntity->GetFlags() ^ EntityFlags::GodMode);
     if (!(ent->GetFlags() & EntityFlags::GodMode))
-        gi.CPrintf(ent->GetServerEntity(), PRINT_HIGH, "godmode OFF\n");
+        gi.CPrintf(serverGameEntity->GetEntityServerHandle(), PRINT_HIGH, "godmode OFF\n");
     else
-        gi.CPrintf(ent->GetServerEntity(), PRINT_HIGH, "godmode ON\n");
+        gi.CPrintf(serverGameEntity->GetEntityServerHandle(), PRINT_HIGH, "godmode ON\n");
 }
 
 
@@ -294,18 +294,18 @@ Sets client to notarget
 argv(0) notarget
 ==================
 */
-void Cmd_Notarget_f(ServerGameEntity *ent)
+void Cmd_Notarget_f(ServerGameEntity *serverGameEntity)
 {
     if (deathmatch->value && !sv_cheats->value) {
-        gi.CPrintf(ent->GetServerEntity(), PRINT_HIGH, "You must run the server with '+set cheats 1' to enable this command.\n");
+        gi.CPrintf(serverGameEntity->GetEntityServerHandle(), PRINT_HIGH, "You must run the server with '+set cheats 1' to enable this command.\n");
         return;
     }
 
-    ent->SetFlags(ent->GetFlags() ^ EntityFlags::NoTarget);
-    if (!(ent->GetFlags() & EntityFlags::NoTarget))
-        gi.CPrintf(ent->GetServerEntity(), PRINT_HIGH, "notarget OFF\n");
+    serverGameEntity->SetFlags(serverGameEntity->GetFlags() ^ EntityFlags::NoTarget);
+    if (!(serverGameEntity->GetFlags() & EntityFlags::NoTarget))
+        gi.CPrintf(serverGameEntity->GetEntityServerHandle(), PRINT_HIGH, "notarget OFF\n");
     else
-        gi.CPrintf(ent->GetServerEntity(), PRINT_HIGH, "notarget ON\n");
+        gi.CPrintf(serverGameEntity->GetEntityServerHandle(), PRINT_HIGH, "notarget ON\n");
 }
 
 
@@ -316,19 +316,19 @@ Cmd_Noclip_f
 argv(0) noclip
 ==================
 */
-void Cmd_Noclip_f(ServerGameEntity *ent)
+void Cmd_Noclip_f(ServerGameEntity *serverGameEntity)
 {
     if (deathmatch->value && !sv_cheats->value) {
-        gi.CPrintf(ent->GetServerEntity(), PRINT_HIGH, "You must run the server with '+set cheats 1' to enable this command.\n");
+        gi.CPrintf(serverGameEntity->GetEntityServerHandle(), PRINT_HIGH, "You must run the server with '+set cheats 1' to enable this command.\n");
         return;
     }
 
-    if (ent->GetMoveType() == MoveType::NoClip) {
-        ent->SetMoveType(MoveType::Walk);
-        gi.CPrintf(ent->GetServerEntity(), PRINT_HIGH, "noclip OFF\n");
+    if (serverGameEntity->GetMoveType() == MoveType::NoClip) {
+        serverGameEntity->SetMoveType(MoveType::Walk);
+        gi.CPrintf(serverGameEntity->GetEntityServerHandle(), PRINT_HIGH, "noclip OFF\n");
     } else {
-        ent->SetMoveType(MoveType::NoClip);
-        gi.CPrintf(ent->GetServerEntity(), PRINT_HIGH, "noclip ON\n");
+        serverGameEntity->SetMoveType(MoveType::NoClip);
+        gi.CPrintf(serverGameEntity->GetEntityServerHandle(), PRINT_HIGH, "noclip ON\n");
     }
 }
 
@@ -349,16 +349,16 @@ void Cmd_Use_f(PlayerEntity *ent)
     s = gi.args(); // C++20: Added casts.
     it = SVG_FindItemByPickupName(s);
     if (!it) {
-        gi.CPrintf(ent->GetServerEntity(), PRINT_HIGH, "unknown item: %s\n", s);
+        gi.CPrintf(ent->GetEntityServerHandle(), PRINT_HIGH, "unknown item: %s\n", s);
         return;
     }
     if (!it->Use) {
-        gi.CPrintf(ent->GetServerEntity(), PRINT_HIGH, "Item is not usable.\n");
+        gi.CPrintf(ent->GetEntityServerHandle(), PRINT_HIGH, "Item is not usable.\n");
         return;
     }
     index = ITEM_INDEX(it);
     if (!ent->GetClient()->persistent.inventory[index]) {
-        gi.CPrintf(ent->GetServerEntity(), PRINT_HIGH, "Out of item: %s\n", s);
+        gi.CPrintf(ent->GetEntityServerHandle(), PRINT_HIGH, "Out of item: %s\n", s);
         return;
     }
 
@@ -382,16 +382,16 @@ void Cmd_Drop_f(PlayerEntity*ent)
     s = (const char*)gi.args(); // C++20: Added casts.
     it = SVG_FindItemByPickupName(s);
     if (!it) {
-        gi.CPrintf(ent->GetServerEntity(), PRINT_HIGH, "unknown item: %s\n", s);
+        gi.CPrintf(ent->GetEntityServerHandle(), PRINT_HIGH, "unknown item: %s\n", s);
         return;
     }
     if (!it->Drop) {
-        gi.CPrintf(ent->GetServerEntity(), PRINT_HIGH, "Item is not dropable.\n");
+        gi.CPrintf(ent->GetEntityServerHandle(), PRINT_HIGH, "Item is not dropable.\n");
         return;
     }
     index = ITEM_INDEX(it);
     if (!ent->GetClient()->persistent.inventory[index]) {
-        gi.CPrintf(ent->GetServerEntity(), PRINT_HIGH, "Out of item: %s\n", s);
+        gi.CPrintf(ent->GetEntityServerHandle(), PRINT_HIGH, "Out of item: %s\n", s);
         return;
     }
 
@@ -439,13 +439,13 @@ void Cmd_InvUse_f(PlayerEntity *ent)
     HUD_ValidateSelectedItem(ent);
 
     if (ent->GetClient()->persistent.selectedItem == -1) {
-        gi.CPrintf(ent->GetServerEntity(), PRINT_HIGH, "No item to use.\n");
+        gi.CPrintf(ent->GetEntityServerHandle(), PRINT_HIGH, "No item to use.\n");
         return;
     }
 
     it = &itemlist[ent->GetClient()->persistent.selectedItem];
     if (!it->Use) {
-        gi.CPrintf(ent->GetServerEntity(), PRINT_HIGH, "Item is not usable.\n");
+        gi.CPrintf(ent->GetEntityServerHandle(), PRINT_HIGH, "Item is not usable.\n");
         return;
     }
     it->Use(ent, it);
@@ -560,13 +560,13 @@ void Cmd_InvDrop_f(PlayerEntity *ent)
     HUD_ValidateSelectedItem(ent);
 
     if (ent->GetClient()->persistent.selectedItem == -1) {
-        gi.CPrintf(ent->GetServerEntity(), PRINT_HIGH, "No item to drop.\n");
+        gi.CPrintf(ent->GetEntityServerHandle(), PRINT_HIGH, "No item to drop.\n");
         return;
     }
 
     it = &itemlist[ent->GetClient()->persistent.selectedItem];
     if (!it->Drop) {
-        gi.CPrintf(ent->GetServerEntity(), PRINT_HIGH, "Item is not dropable.\n");
+        gi.CPrintf(ent->GetEntityServerHandle(), PRINT_HIGH, "Item is not dropable.\n");
         return;
     }
     it->Drop(ent, it);
@@ -655,7 +655,7 @@ void Cmd_Players_f(PlayerEntity *playerEntity)
         strcat(large, small);
     }
 
-    gi.CPrintf(playerEntity, PRINT_HIGH, "%s\n%i players\n", large, count);
+    gi.CPrintf(playerEntity->GetEntityServerHandle(), PRINT_HIGH, "%s\n%i players\n", large, count);
 }
 
 /*
@@ -679,28 +679,28 @@ void Cmd_Wave_f(PlayerEntity *playerEntity)
 
     switch (i) {
     case 0:
-        gi.CPrintf(ent, PRINT_HIGH, "flipoff\n");
+        gi.CPrintf(playerEntity->GetEntityServerHandle(), PRINT_HIGH, "flipoff\n");
         playerEntity->GetState().frame = FRAME_flip01 - 1;
         playerEntity->GetClient()->animation.endFrame = FRAME_flip12;
         break;
     case 1:
-        gi.CPrintf(ent, PRINT_HIGH, "salute\n");
+        gi.CPrintf(playerEntity->GetEntityServerHandle(), PRINT_HIGH, "salute\n");
         playerEntity->GetState().frame = FRAME_salute01 - 1;
         playerEntity->GetClient()->animation.endFrame = FRAME_salute11;
         break;
     case 2:
-        gi.CPrintf(ent, PRINT_HIGH, "taunt\n");
+        gi.CPrintf(playerEntity->GetEntityServerHandle(), PRINT_HIGH, "taunt\n");
         playerEntity->GetState().frame = FRAME_taunt01 - 1;
         playerEntity->GetClient()->animation.endFrame = FRAME_taunt17;
         break;
     case 3:
-        gi.CPrintf(ent, PRINT_HIGH, "wave\n");
+        gi.CPrintf(playerEntity->GetEntityServerHandle(), PRINT_HIGH, "wave\n");
         playerEntity->GetState().frame = FRAME_wave01 - 1;
         playerEntity->GetClient()->animation.endFrame = FRAME_wave11;
         break;
     case 4:
     default:
-        gi.CPrintf(ent, PRINT_HIGH, "point\n");
+        gi.CPrintf(playerEntity->GetEntityServerHandle(), PRINT_HIGH, "point\n");
         playerEntity->GetState().frame = FRAME_point01 - 1;
         playerEntity->GetClient()->animation.endFrame = FRAME_point12;
         break;
@@ -763,31 +763,34 @@ void Cmd_Say_f(PlayerEntity* playerEntity, qboolean team, qboolean arg0) {
     if (flood_msgs->value) {
         client = playerEntity->GetClient();
 
+        if (!client)
+            return;
+
         if (level.time < client->flood.lockTill) {
-            gi.CPrintf(ent, PRINT_HIGH, "You can't talk for %d more seconds\n",
+            gi.CPrintf(playerEntity->GetEntityServerHandle(), PRINT_HIGH, "You can't talk for %d more seconds\n",
                        (int)(client->flood.lockTill - level.time));
             return;
         }
-        i = cl->flood.whenHead - flood_msgs->value + 1;
+        i = client->flood.whenHead - flood_msgs->value + 1;
         if (i < 0)
-            i = (sizeof(cl->flood.when) / sizeof(cl->flood.when[0])) + i;
+            i = (sizeof(client->flood.when) / sizeof(client->flood.when[0])) + i;
         if (cl->flood.when[i] &&
-            level.time - cl->flood.when[i] < flood_persecond->value) {
-            cl->flood.lockTill = level.time + flood_waitdelay->value;
+            level.time - client->flood.when[i] < flood_persecond->value) {
+            client->flood.lockTill = level.time + flood_waitdelay->value;
             gi.CPrintf(ent, PRINT_CHAT, "Flood protection:  You can't talk for %d seconds.\n",
                        (int)flood_waitdelay->value);
             return;
         }
-        cl->flood.whenHead = (cl->flood.whenHead + 1) %
-                             (sizeof(cl->flood.when) / sizeof(cl->flood.when[0]));
-        cl->flood.when[cl->flood.whenHead] = level.time;
+        client->flood.whenHead = (cl->flood.whenHead + 1) %
+                             (sizeof(cl->flood.when) / sizeof(client->flood.when[0]));
+        client->flood.when[client->flood.whenHead] = level.time;
     }
 
     if (dedicated->value)
         gi.CPrintf(NULL, PRINT_CHAT, "%s", message.c_str());
 
     for (j = 1; j <= game.maximumClients; j++) {
-        PlayerEntity *other = serverGameEntities[j];
+        PlayerEntity* other = dynamic_cast<PlayerEntity*>(serverGameEntities[j]);
         if (!other->IsInUse())
             continue;
         if (!other->GetClient())
@@ -796,7 +799,7 @@ void Cmd_Say_f(PlayerEntity* playerEntity, qboolean team, qboolean arg0) {
             if (!SVG_OnSameTeam(playerEntity, other))
                 continue;
         }
-        gi.CPrintf(other->GetServerEntity(), PRINT_CHAT, "%s", message.c_str());
+        gi.CPrintf(other->GetEntityServerHandle(), PRINT_CHAT, "%s", message.c_str());
     }
 }
 
@@ -873,7 +876,7 @@ void SVG_ClientCommand(PlayerEntity *playerEntity)
     else if (Q_stricmp(cmd, "drop") == 0)
         Cmd_Drop_f(ent);
     else if (Q_stricmp(cmd, "give") == 0)
-        Cmd_Give_f(ent->GetServerEntity());
+        Cmd_Give_f(ent->GetEntityServerHandle());
     else if (Q_stricmp(cmd, "god") == 0)
         Cmd_God_f(ent);
     else if (Q_stricmp(cmd, "notarget") == 0)
@@ -881,7 +884,7 @@ void SVG_ClientCommand(PlayerEntity *playerEntity)
     else if (Q_stricmp(cmd, "noclip") == 0)
         Cmd_Noclip_f(ent);
     else if (Q_stricmp(cmd, "inven") == 0)
-        Cmd_Inven_f(ent->GetServerEntity());
+        Cmd_Inven_f(ent->GetEntityServerHandle());
     else if (Q_stricmp(cmd, "invnext") == 0)
         SelectNextItem(ent, -1);
     else if (Q_stricmp(cmd, "invprev") == 0)

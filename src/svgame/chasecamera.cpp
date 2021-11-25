@@ -179,6 +179,6 @@ void SVG_GetChaseTarget(PlayerEntity *ent)
     //        return;
     //    }
     //}
-    //gi.CenterPrintf(ent->GetServerEntity(), "No other players to chase.");
+    //gi.CenterPrintf(ent->GetEntityServerHandle(), "No other players to chase.");
 }
 

@@ -39,7 +39,7 @@ ServerGameEntity* serverGameEntities[MAX_EDICTS];
 //auto FetchModernMethod(std::size_t start, std::size_t end) {
 //    return BaseEntityRange(&serverGameEntities[start], &serverGameEntities[end]) |
 //        std::views::filter([](ServerGameEntity* ent) {
-//            return ent != nullptr && ent->GetServerEntity() && ent->IsInUse();
+//            return ent != nullptr && ent->GetEntityServerHandle() && ent->IsInUse();
 //        }
 //    );
 //}
@@ -327,7 +327,7 @@ ServerEntity* SVG_Find(ServerEntity* from, int fieldofs, const char* match)
 // entity dictionary.
 //===============
 ServerGameEntity* SVG_FindEntityByKeyValue(const std::string& fieldKey, const std::string& fieldValue, ServerGameEntity* lastEntity) {
-    //ServerEntity* serverEnt = (lastEntity ? lastEntity->GetServerEntity() : nullptr);
+    //ServerEntity* serverEnt = (lastEntity ? lastEntity->GetEntityServerHandle() : nullptr);
 
     //if (!lastEntity)
     //    serverEnt = g_entities;

@@ -35,7 +35,7 @@ struct ServerEntityPool {
 
 // Seeks the server entity pool for a free entity (aka inUse = false), and returns
 // a pointer to it.
-ServerEntity* GetServerEntity(ServerEntityID id, qboolean inUseAllowed = true) {
+ServerEntity* GetEntityServerHandle(ServerEntityID id, qboolean inUseAllowed = true) {
     // Ensure our ID is in range.
     if (id < 0) {
         Com_LPrintf(PRINT_WARNING, "Invalid ServerEntityID: '%i' passed to %s" __func__ ".", id);

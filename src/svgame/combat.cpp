@@ -17,15 +17,15 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 */
 // g_combat.c
 
-#include "g_local.h"         // Include SVGame funcs.
+#include "g_local.h"
 #include "entities.h"
-#include "utils.h"           // Include Utilities funcs.
+#include "brushfuncs.h"
+#include "entities/base/ServerGameEntity.h"
+#include "entities/base/PlayerEntity.h"
 
 // Game Mode interface.
 #include "gamemodes/IGameMode.h"
 
-// Class Entities.
-#include "entities/base/ServerGameEntity.h"
 
 //
 //===============

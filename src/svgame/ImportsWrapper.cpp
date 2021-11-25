@@ -25,7 +25,7 @@ void SVG_CenterPrint(ServerGameEntity* ent, const std::string& str) {
     if (!ent)
         return;
 
-    gi.CenterPrintf(ent->GetServerEntity(), "%s", str.c_str());
+    gi.CenterPrintf(ent->GetEntityServerHandle(), "%s", str.c_str());
 }
 
 //
@@ -39,7 +39,7 @@ void SVG_Sound(ServerGameEntity* ent, int32_t channel, int32_t soundIndex, float
     if (!ent)
         return;
 
-    gi.Sound(ent->GetServerEntity(), channel, soundIndex, volume, attenuation, timeOffset);
+    gi.Sound(ent->GetEntityServerHandle(), channel, soundIndex, volume, attenuation, timeOffset);
 }
 
 
@@ -81,7 +81,7 @@ std::vector<ServerGameEntity*> SVG_BoxEntities(const vec3_t& mins, const vec3_t&
 //
 SVGTrace SVG_Trace(const vec3_t& start, const vec3_t& mins, const vec3_t& maxs, const vec3_t& end, ServerGameEntity* passent, const int32_t& contentMask) {
     // Fetch server entity in case one was passed to us.
-    ServerEntity* serverPassEntity = (passent ? passent->GetServerEntity() : NULL);
+    ServerEntity* serverPassEntity = (passent ? passent->GetEntityServerHandle() : NULL);
 
     // Execute server trace.
     trace_t trace = gi.Trace(start, mins, maxs, end, serverPassEntity, contentMask);

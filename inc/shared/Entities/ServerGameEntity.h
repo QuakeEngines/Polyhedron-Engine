@@ -12,11 +12,9 @@
 
 // It makes sense to include TypeInfo in ServerGameEntity.h, 
 // because this class absolutely requires it
-#include "../../TypeInfo.h"
+#include <shared/Entities/TypeInfo.h>
 
-class SynchedEntityBase;
-
-class ServerGameEntity : public ServerEntity {
+class ServerGameEntity : public SynchedEntityBase {
 public:
     //------------------------------------------------------------
     //
@@ -108,11 +106,11 @@ public:
 
     // @returns The entity's mins in world coordinates.
     inline const vec3_t& GetAbsoluteMin() {
-        return serverEntity->absoluteMin;
+        return entityHandle->absoluteMin;
     }
     // @returns The entity's maxs in world coordinates.
     inline const vec3_t& GetAbsoluteMax() {
-        return serverEntity->absoluteMax;
+        return entityHandle->absoluteMax;
     }
 
     // @returns The entity which activated this entity. (If any)
@@ -122,7 +120,7 @@ public:
     
     // @returns The angles of where this entity is pointing at.
     inline const vec3_t& GetAngles() {
-        return serverEntity->state.angles;
+        return entityHandle->state.angles;
     }
 
     // @returns The current angular velocity of where this entity is pointing at.
@@ -147,12 +145,12 @@ public:
 
     // @returns A pointer to the client belonging to this entity. (If any.)
     gclient_s* GetClient() {
-        return serverEntity->client;
+        return entityHandle->client;
     }
 
     // @returns the entity's current Clipping Mask.
     inline const int32_t GetClipMask() {
-        return serverEntity->clipMask;
+        return entityHandle->clipMask;
     }
 
     // @returns The damage this entity will give if messed with. 
@@ -173,7 +171,7 @@ public:
 
     // @returns The effects of this entity.
     inline const uint32_t GetEffects() {
-        return serverEntity->state.effects;
+        return entityHandle->state.effects;
     }
 
     // @returns The enemy entity pointer (if any.)
@@ -181,15 +179,9 @@ public:
         return enemyEntity;
     }
 
-
-    // @returns a reference to the 'entityDictionary'.
-    virtual inline EntityDictionary &GetEntityDictionary() {
-        return serverEntity->entityDictionary;
-    }
-
     // @returns the current entity EventID, these are reset each frame.
     inline const uint8_t GetEventID() {
-        return serverEntity->state.eventID;
+        return entityHandle->state.eventID;
     }
 
     // @returns The entity's general flags, coming from the EntityFlags enum.
@@ -199,7 +191,7 @@ public:
 
     // @returns The current animation frame of the entity.
     inline const int32_t GetFrame() {
-        return serverEntity->state.frame;
+        return entityHandle->state.frame;
     }
 
     // @returns The entity's own gravity.
@@ -229,7 +221,7 @@ public:
 
     // Get the 'inuse' value.
     inline qboolean IsInUse() {
-        return serverEntity->inUse;
+        return entityHandle->inUse;
     }
 
     // Get the 'killTarget' entity value.
@@ -240,11 +232,11 @@ public:
     // Get the 'linkCount' value.
     inline const int32_t GetLinkCount() {
         // WID: Should we really do this? Fixes a bug when MiscExploboxes are on top of each other and "die".
-        if (!serverEntity) {
+        if (!entityHandle) {
             return 0;
         }
 
-        return serverEntity->linkCount;
+        return entityHandle->linkCount;
     }
 
     // Return the 'mass' value.
@@ -259,7 +251,7 @@ public:
 
     // Return the bounding box 'maxs' value.
     inline const vec3_t& GetMaxs() {
-        return serverEntity->maxs;
+        return entityHandle->maxs;
     }
 
     // Return the 'message' value.
@@ -269,7 +261,7 @@ public:
 
     // Return the bounding box 'mins' value.
     inline const vec3_t& GetMins() {
-        return serverEntity->mins;
+        return entityHandle->mins;
     }
    
     // Return the 'model' value.
@@ -279,16 +271,16 @@ public:
 
     // Return the 'modelIndex, modelIndex1, modelIndex2, modelIndex3' values.
     inline const int32_t GetModelIndex() {
-        return serverEntity->state.modelIndex;
+        return entityHandle->state.modelIndex;
     }
     inline const int32_t GetModelIndex2() {
-        return serverEntity->state.modelIndex2;
+        return entityHandle->state.modelIndex2;
     }
     inline const int32_t GetModelIndex3() {
-        return serverEntity->state.modelIndex3;
+        return entityHandle->state.modelIndex3;
     }
     inline const int32_t GetModelIndex4() {
-        return serverEntity->state.modelIndex4;
+        return entityHandle->state.modelIndex4;
     }
 
     // Return the 'movetype' value.
@@ -312,7 +304,7 @@ public:
     }
 
     inline const int32_t GetNumber() {
-        return serverEntity->state.number;
+        return entityHandle->state.number;
     }
 
     // Return the 'oldEnemyPtr' entity pointer.
@@ -322,12 +314,12 @@ public:
 
     // Return the 'oldOrigin' value.
     inline const vec3_t& GetOldOrigin() {
-        return serverEntity->state.oldOrigin;
+        return entityHandle->state.oldOrigin;
     }
 
     // Return the 'origin' value.
     inline const vec3_t &GetOrigin() {
-        return serverEntity->state.origin;
+        return entityHandle->state.origin;
     }
 
     // Get the 'owner' value.
@@ -337,7 +329,7 @@ public:
 
     // Return the 'renderEffects' value.
     inline const int32_t GetRenderEffects() {
-        return serverEntity->state.renderEffects;
+        return entityHandle->state.renderEffects;
     }
 
     // Get the 'pathTarget' entity value.
@@ -349,22 +341,22 @@ public:
 
     // Return the 'serverFlags' value.
     inline const int32_t GetServerFlags() {
-        return serverEntity->serverFlags;
+        return entityHandle->serverFlags;
     }
 
     // Return the 'skinNumber' value.
     inline const int32_t GetSkinNumber() {
-        return serverEntity->state.skinNumber;
+        return entityHandle->state.skinNumber;
     }
 
     // Return the 'size' value.
     inline const vec3_t& GetSize() {
-        return serverEntity->size;
+        return entityHandle->size;
     }
 
     // Return the 'solid' value.
     inline const uint32_t GetSolid() {
-        return serverEntity->solid;
+        return entityHandle->solid;
     }
 
     // Return the 'spawnFlags' value.
@@ -374,7 +366,7 @@ public:
 
     // Return a reference to the serverEntity its state.
     inline EntityState& GetState() {
-        return serverEntity->state;
+        return entityHandle->state;
     }
     // Return the 'style' value.
     inline const int32_t GetStyle() {
@@ -383,7 +375,7 @@ public:
 
     // Return the 'sound' value.
     inline const int32_t GetSound() {
-        return serverEntity->state.sound;
+        return entityHandle->state.sound;
     }
 
     // Return the 'takeDamage' value.
@@ -451,17 +443,17 @@ public:
     //------------------------------------------------------------
     // Return the bounding box absolute 'min' value.
     inline void SetAbsoluteMin(const vec3_t &absMin) {
-        serverEntity->absoluteMin = absMin;
+        entityHandle->absoluteMin = absMin;
     }
 
     // Return the bounding box absolute 'max' value.
     inline void SetAbsoluteMax(const vec3_t &absMax) {
-        serverEntity->absoluteMax = absMax;
+        entityHandle->absoluteMax = absMax;
     }
 
     // Return the 'angles' value.
     inline void SetAngles(const vec3_t& angles, bool resetAngles = false) {
-        serverEntity->state.angles = angles;
+        entityHandle->state.angles = angles;
     }
 
     // Set the 'angularVelocity' value.
@@ -471,13 +463,13 @@ public:
 
     // Set the 'mins', and 'maxs' values of the entity bounding box.
     inline void SetBoundingBox(const vec3_t& mins, const vec3_t& maxs) {
-        serverEntity->mins = mins;
-        serverEntity->maxs = maxs;
+        entityHandle->mins = mins;
+        entityHandle->maxs = maxs;
     }
 
     // Return the 'clipmask' value.
     inline void SetClipMask(const int32_t &clipMask) {
-        serverEntity->clipMask = clipMask;
+        entityHandle->clipMask = clipMask;
     }
 
     // Set the 'damage' value.
@@ -497,7 +489,7 @@ public:
 
     // Set the 'effects' value.
     inline void SetEffects(const uint32_t &effects) {
-        serverEntity->state.effects = effects;
+        entityHandle->state.effects = effects;
     }
 
     // Set the 'enemyPtr' pointer.
@@ -507,7 +499,7 @@ public:
 
     // Return the 'eventID' value.
     inline void SetEventID(const uint8_t &eventID) {
-        serverEntity->state.eventID = eventID;
+        entityHandle->state.eventID = eventID;
     }
 
     // Set the 'flags' value.
@@ -517,7 +509,7 @@ public:
 
     // Set the 'frame' value.
     inline void SetFrame(const int32_t &frame) {
-        serverEntity->state.frame = frame;;
+        entityHandle->state.frame = frame;;
     }
 
     // Set the 'gravity' value.
@@ -549,7 +541,7 @@ public:
 
     // Set the 'inuse' value.
     inline void SetInUse(const qboolean& inUse) {
-        serverEntity->inUse = inUse;
+        entityHandle->inUse = inUse;
     }
     
     // Set the 'killTargetSTr' value.
@@ -559,7 +551,7 @@ public:
 
     // Set the 'linkCount' value.
     inline void SetLinkCount(const int32_t &linkCount) {
-        serverEntity->linkCount = linkCount;
+        entityHandle->linkCount = linkCount;
     }
 
     // Set the 'mass' value.
@@ -574,7 +566,7 @@ public:
 
     // Set the 'maxs' value.
     inline void SetMaxs(const vec3_t& maxs) {
-        serverEntity->maxs = maxs;
+        entityHandle->maxs = maxs;
     }
 
     // Set the 'messageStr' value.
@@ -584,21 +576,21 @@ public:
     
     // Set the 'mins' value.
     inline void SetMins(const vec3_t& mins) {
-        serverEntity->mins = mins;
+        entityHandle->mins = mins;
     }
 
     // Set the 'modelIndex, modelIndex1, modelIndex2, modelIndex3' values.
     inline void SetModelIndex(const int32_t& index) {
-        serverEntity->state.modelIndex = index;
+        entityHandle->state.modelIndex = index;
     }
     inline void SetModelIndex2(const int32_t& index) {
-        serverEntity->state.modelIndex2 = index;
+        entityHandle->state.modelIndex2 = index;
     }
     inline void SetModelIndex3(const int32_t& index) {
-        serverEntity->state.modelIndex3 = index;
+        entityHandle->state.modelIndex3 = index;
     }
     inline void SetModelIndex4(const int32_t& index) {
-        serverEntity->state.modelIndex4 = index;
+        entityHandle->state.modelIndex4 = index;
     }
 
     // Set the 'model' value.
@@ -607,7 +599,7 @@ public:
         this->model = model;
 
         // Set the model.
-        gi.SetModel(serverEntity, model.c_str());
+        gi.SetModel(entityHandle, model.c_str());
 
         // Set model index.
         SetModelIndex(gi.ModelIndex(model.c_str()));
@@ -638,7 +630,7 @@ public:
     }
     
     inline void SetNumber(const int32_t number) {
-        serverEntity->state.number = number;
+        entityHandle->state.number = number;
     }
 
     // Set the 'oldEnemyPtr' pointer.
@@ -648,12 +640,12 @@ public:
 
     // Set the 'origin' value.
     inline void SetOldOrigin(const vec3_t& oldOrigin) {
-        serverEntity->state.oldOrigin = oldOrigin;
+        entityHandle->state.oldOrigin = oldOrigin;
     }
 
     // Set the 'origin' value.
     inline void SetOrigin(const vec3_t& origin) {
-        serverEntity->state.origin = origin;
+        entityHandle->state.origin = origin;
     }
 
     // Set the 'owner' value.
@@ -663,32 +655,32 @@ public:
 
     // Set the 'renderEffects' value.
     inline void SetRenderEffects(const int32_t& renderEffects) {
-        serverEntity->state.renderEffects = renderEffects;
+        entityHandle->state.renderEffects = renderEffects;
     }
 
     // Set the 'serverFlags' value.
     inline void SetServerFlags(const int32_t &serverFlags) {
-        serverEntity->serverFlags = serverFlags;
+        entityHandle->serverFlags = serverFlags;
     }
 
     // Set the 'skinNumber' value.
     inline void SetSkinNumber(const int32_t& skinNumber) {
-        serverEntity->state.skinNumber = skinNumber;
+        entityHandle->state.skinNumber = skinNumber;
     }
 
     // Sest the 'size' value.
     inline void SetSize(const vec3_t& size) {
-        serverEntity->size = size;
+        entityHandle->size = size;
     }
 
     // Set the 'solid' value.
     inline void SetSolid(const uint32_t &solid) {
-        serverEntity->solid = solid;
+        entityHandle->solid = solid;
     }
 
     // Sets the 'sound' value.
     inline void SetSound(const int32_t& sound) {
-        serverEntity->state.sound = sound;
+        entityHandle->state.sound = sound;
     }
 
     // Set the 'spawnFlags' value.
@@ -698,7 +690,7 @@ public:
 
     // Set another copy of a serverEntity its state.
     inline void SetState(const EntityState &state) {
-        serverEntity->state = state;
+        entityHandle->state = state;
     }
 
     // Set the 'style' value.
@@ -779,7 +771,6 @@ public:
         return vec3_zero();
     }
 
-
     //------------------------------------------------------------
     // 
     // General ServerEntity Functions.
@@ -795,15 +786,15 @@ public:
     // Unlink the entity from the world for collision testing.
     void UnlinkEntity();
 
-    // Returns the server entity pointer.
-    inline ServerEntity* GetServerEntity() {
-        return serverEntity;
-    }
-
-    // Used only in SVG_FreeEntity
-    inline void SetServerEntity( ServerEntity* svEntity )
-    {
-        serverEntity = svEntity;
+    //// Returns the server entity pointer.
+    //inline ServerEntity* GetEntityServerHandle() {
+    //    return serverEntity;
+    //}
+    // A strongly discouraged function. Do not use it unless you know what you are doing,
+    // If you use it incorrectly: Congratulations, you just ruined the entire reason why this
+    // entity wrapping and all exists.
+    inline ServerEntity *GetEntityServerHandle() {
+        return entityHandle;
     }
 
 protected:
@@ -821,8 +812,6 @@ protected:
     qboolean ParseStringKeyValue(const std::string& key, const std::string& value, std::string& stringValue);
     qboolean ParseVector3KeyValue(const std::string& key, const std::string& value, vec3_t& vectorValue);
 
-    // The actual server entity this class is a member of.
-    ServerEntity *serverEntity;
 
     //
     // Other base entity members. (These were old fields in edict_T back in the day.)
@@ -838,6 +827,7 @@ protected:
     //---------------------------------
     // -- Classname.
     std::string className;
+
 
     //---------------------------------
     // Sounds.
@@ -1032,4 +1022,18 @@ public:
     void SVGBaseEntityThinkRemove(void);
     // "No" thinking
     void SVGBaseEntityThinkNull() { }
+
+    //------------------------------------------------------------
+    // 
+    // Dictionary Functions.
+    // 
+    //------------------------------------------------------------
+    // Entity dictionary.
+    using EntityDictionary = std::map<std::string, std::string>;
+    EntityDictionary entityDictionary;
+
+    // @returns a reference to the 'entityDictionary'.
+    inline EntityDictionary &GetEntityDictionary() {
+        return entityDictionary;
+    }
 };

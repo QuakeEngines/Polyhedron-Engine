@@ -69,7 +69,7 @@ void weapon_supershotgun_fire(PlayerEntity * ent)
 
     // send muzzle flash
     gi.WriteByte(SVG_CMD_MUZZLEFLASH);
-    //gi.WriteShort(ent->GetServerEntity() - g_entities);
+    //gi.WriteShort(ent->GetEntityServerHandle() - g_entities);
     gi.WriteShort(ent->GetNumber());
     gi.WriteByte(MuzzleFlashType::SuperShotgun | is_silenced);
     vec3_t origin = ent->GetOrigin();

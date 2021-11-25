@@ -1,12 +1,10 @@
 // License here.
 #pragma once
 
-class SynchedEntityBase;
-
 //---------------------------------------------------------
 // Server ServerEntity Data.
 //---------------------------------------------------------
-struct ServerEntity : public SynchedEntityBase {
+struct ServerEntity {
     // Current entity state. (Contains all that'd be networked.)
     EntityState  state;
 
@@ -44,10 +42,4 @@ struct ServerEntity : public SynchedEntityBase {
 
     // Entities can have owners, yes.
     ServerEntity    *owner;
-
-    // Classname.
-    std::string className;
-
-    // Entity dictionary.
-    EntityDictionary entityDictionary;
 };

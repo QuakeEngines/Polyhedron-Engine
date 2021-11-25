@@ -127,5 +127,5 @@ void TriggerDelayedUse::TriggerDelayedUseThink() {
 	UseTargets(GetActivator());
 
 	// Free this entity.
-	SVG_FreeEntity(GetServerEntity());
+	SVG_FreeEntity(GetEntityServerHandle());
 }

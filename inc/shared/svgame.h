@@ -46,9 +46,11 @@ struct Solid {
 };
 
 //===============================================================
-static constexpr uint32_t MAX_ENT_CLUSTERS = 16;
+// ServerEntity ID <-- You are a mere number...
+using ServerEntityID = uint32_t;
 
-#include "shared/Entities/ServerEntity.h"
+// Maximumn entity clusters.
+static constexpr uint32_t MAX_ENT_CLUSTERS = 16;
 
 // Silly typedef gotta rid it somehow.
 typedef struct gclient_s ServerClient;
