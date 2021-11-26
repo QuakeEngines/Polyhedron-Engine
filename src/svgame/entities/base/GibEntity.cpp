@@ -19,8 +19,8 @@
 #include "GibEntity.h"
 
 // Constructor/Deconstructor.
-GibEntity::GibEntity(ServerEntity* svEntity)
-    : ServerGameEntity(svEntity) {
+GibEntity::GibEntity()
+    : ServerGameEntity() {
 
 }
 class SynchedEntityBase;

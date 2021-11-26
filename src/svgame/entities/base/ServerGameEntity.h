@@ -639,50 +639,7 @@ public:
         this->oldEnemyEntity = oldEnemy;
     }
 
-    // Set the 'origin' value.
-    inline void SetOldOrigin(const vec3_t& oldOrigin) {
-        entityHandle->state.oldOrigin = oldOrigin;
-    }
-
-    // Set the 'origin' value.
-    inline void SetOrigin(const vec3_t& origin) {
-        entityHandle->state.origin = origin;
-    }
-
-    // Set the 'owner' value.
-    inline void SetOwner(ServerGameEntity* owner) {
-        this->ownerEntity = owner;
-    }
-
-    // Set the 'renderEffects' value.
-    inline void SetRenderEffects(const int32_t& renderEffects) {
-        entityHandle->state.renderEffects = renderEffects;
-    }
-
-    // Set the 'serverFlags' value.
-    inline void SetServerFlags(const int32_t &serverFlags) {
-        entityHandle->serverFlags = serverFlags;
-    }
-
-    // Set the 'skinNumber' value.
-    inline void SetSkinNumber(const int32_t& skinNumber) {
-        entityHandle->state.skinNumber = skinNumber;
-    }
-
-    // Sest the 'size' value.
-    inline void SetSize(const vec3_t& size) {
-        entityHandle->size = size;
-    }
-
-    // Set the 'solid' value.
-    inline void SetSolid(const uint32_t &solid) {
-        entityHandle->solid = solid;
-    }
-
-    // Sets the 'sound' value.
-    inline void SetSound(const int32_t& sound) {
-        entityHandle->state.sound = sound;
-    }
+ 
 
     // Set the 'spawnFlags' value.
     inline void SetSpawnFlags(const int32_t& spawnFlags) {
