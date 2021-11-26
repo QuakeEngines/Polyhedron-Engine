@@ -7,29 +7,31 @@
 // Base entity for gibs.
 //
 */
-#ifndef __SVGAME_ENTITIES_BASE_GIBENTITY_H__
-#define __SVGAME_ENTITIES_BASE_GIBENTITY_H__
+#pragma once
 
+
+struct ServerEntity;
 class ServerGameEntity;
+class SynchedEntityBase;
 
-class GibEntity : public ServerGameEntity {
+class GibEntity : public ServerGameEntity  {
 public:
     // Constructor/Deconstructor.
-    GibEntity(ServerEntity* svEntity);
+    GibEntity(ServerGameEntity * svEntity);
     virtual ~GibEntity();
 
-    DefineClass(GibEntity, ServerGameEntity);
+    DefineMapClassSelfConstruct("GibEntity", SynchedEntityBase, ServerGameEntity);
 
     //
     // Interface functions. 
     //
-    void Precache() override;    // Precaches data.
-    void Spawn() override;       // Spawns the entity.
-    void Respawn() override;     // Respawns the entity.
-    void PostSpawn() override;   // PostSpawning is for handling entity references, since they may not exist yet during a spawn period.
-    void Think() override;       // General entity thinking routine.
+    void Precache() final;    // Precaches data.
+    void Spawn() final;       // Spawns the entity.
+    void Respawn() final;     // Respawns the entity.
+    void PostSpawn() final;   // PostSpawning is for handling entity references, since they may not exist yet during a spawn period.
+    void Think() final;       // General entity thinking routine.
 
-    void SpawnKey(const std::string& key, const std::string& value)  override;
+    void SpawnKey(const std::string& key, const std::string& value)  final;
 
     //
     // GibEntity functions.
@@ -52,5 +54,3 @@ protected:
 private:
 
 };
-
-#endif // __SVGAME_ENTITIES_BASE_GIBENTITY_H__

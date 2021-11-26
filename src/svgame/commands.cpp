@@ -170,7 +170,7 @@ void Cmd_Give_f(PlayerEntity *playerEntity)
     }
 
     if (deathmatch->value && !sv_cheats->value) {
-        gi.CPrintf(playerEntity, PRINT_HIGH, "You must run the server with '+set cheats 1' to enable this command.\n");
+        gi.CPrintf(playerEntity->GetEntityServerHandle(), PRINT_HIGH, "You must run the server with '+set cheats 1' to enable this command.\n");
         return;
     }
 
@@ -233,13 +233,13 @@ void Cmd_Give_f(PlayerEntity *playerEntity)
         name = gi.argv(1); // C++20: Added cast.
         it = SVG_FindItemByPickupName(name);
         if (!it) {
-            gi.CPrintf(playerEntity, PRINT_HIGH, "unknown item\n");
+            gi.CPrintf(playerEntity->GetEntityServerHandle(), PRINT_HIGH, "unknown item\n");
             return;
         }
     }
 
     if (!it->Pickup) {
-        gi.CPrintf(playerEntity, PRINT_HIGH, "non-pickup item\n");
+        gi.CPrintf(playerEntity->GetEntityServerHandle(), PRINT_HIGH, "non-pickup item\n");
         return;
     }
 
@@ -270,18 +270,18 @@ Sets client to godmode
 argv(0) god
 ==================
 */
-void Cmd_God_f(ServerGameEntity *serverGameEntity)
+void Cmd_God_f(ServerEntity *serverEntity)
 {
     if (deathmatch->value && !sv_cheats->value) {
-        gi.CPrintf(serverGameEntity->GetEntityServerHandle(), PRINT_HIGH, "You must run the server with '+set cheats 1' to enable this command.\n");
+        gi.CPrintf(serverEntity->GetEntityServerHandle(), PRINT_HIGH, "You must run the server with '+set cheats 1' to enable this command.\n");
         return;
     }
 
-    ent->SetFlags(serverGameEntity->GetFlags() ^ EntityFlags::GodMode);
+    ent->SetFlags(serverEntity->GetFlags() ^ EntityFlags::GodMode);
     if (!(ent->GetFlags() & EntityFlags::GodMode))
-        gi.CPrintf(serverGameEntity->GetEntityServerHandle(), PRINT_HIGH, "godmode OFF\n");
+        gi.CPrintf(serverEntity, PRINT_HIGH, "godmode OFF\n");
     else
-        gi.CPrintf(serverGameEntity->GetEntityServerHandle(), PRINT_HIGH, "godmode ON\n");
+        gi.CPrintf(serverEntity, PRINT_HIGH, "godmode ON\n");
 }
 
 
@@ -294,18 +294,18 @@ Sets client to notarget
 argv(0) notarget
 ==================
 */
-void Cmd_Notarget_f(ServerGameEntity *serverGameEntity)
+void Cmd_Notarget_f(ServerEntity *serverEntity)
 {
     if (deathmatch->value && !sv_cheats->value) {
-        gi.CPrintf(serverGameEntity->GetEntityServerHandle(), PRINT_HIGH, "You must run the server with '+set cheats 1' to enable this command.\n");
+        gi.CPrintf(serverEntity->GetEntityServerHandle(), PRINT_HIGH, "You must run the server with '+set cheats 1' to enable this command.\n");
         return;
     }
 
-    serverGameEntity->SetFlags(serverGameEntity->GetFlags() ^ EntityFlags::NoTarget);
-    if (!(serverGameEntity->GetFlags() & EntityFlags::NoTarget))
-        gi.CPrintf(serverGameEntity->GetEntityServerHandle(), PRINT_HIGH, "notarget OFF\n");
+    serverEntity->SetFlags(serverEntity->GetFlags() ^ EntityFlags::NoTarget);
+    if (!(serverEntity->GetFlags() & EntityFlags::NoTarget))
+        gi.CPrintf(serverEntity->GetEntityServerHandle(), PRINT_HIGH, "notarget OFF\n");
     else
-        gi.CPrintf(serverGameEntity->GetEntityServerHandle(), PRINT_HIGH, "notarget ON\n");
+        gi.CPrintf(serverEntity->GetEntityServerHandle(), PRINT_HIGH, "notarget ON\n");
 }
 
 
@@ -316,19 +316,19 @@ Cmd_Noclip_f
 argv(0) noclip
 ==================
 */
-void Cmd_Noclip_f(ServerGameEntity *serverGameEntity)
+void Cmd_Noclip_f(ServerEntity *serverEntity)
 {
     if (deathmatch->value && !sv_cheats->value) {
-        gi.CPrintf(serverGameEntity->GetEntityServerHandle(), PRINT_HIGH, "You must run the server with '+set cheats 1' to enable this command.\n");
+        gi.CPrintf(serverEntity->GetEntityServerHandle(), PRINT_HIGH, "You must run the server with '+set cheats 1' to enable this command.\n");
         return;
     }
 
-    if (serverGameEntity->GetMoveType() == MoveType::NoClip) {
-        serverGameEntity->SetMoveType(MoveType::Walk);
-        gi.CPrintf(serverGameEntity->GetEntityServerHandle(), PRINT_HIGH, "noclip OFF\n");
+    if (serverEntity->GetMoveType() == MoveType::NoClip) {
+        serverEntity->SetMoveType(MoveType::Walk);
+        gi.CPrintf(serverEntity->GetEntityServerHandle(), PRINT_HIGH, "noclip OFF\n");
     } else {
-        serverGameEntity->SetMoveType(MoveType::NoClip);
-        gi.CPrintf(serverGameEntity->GetEntityServerHandle(), PRINT_HIGH, "noclip ON\n");
+        serverEntity->SetMoveType(MoveType::NoClip);
+        gi.CPrintf(serverEntity->GetEntityServerHandle(), PRINT_HIGH, "noclip ON\n");
     }
 }
 

@@ -443,13 +443,13 @@ public:
     //
     //------------------------------------------------------------
     // Return the bounding box absolute 'min' value.
-    inline void SetAbsoluteMin(const vec3_t &absMin) {
-        entityHandle->absoluteMin = absMin;
+    inline void SetAbsoluteMin(const vec3_t &absoluteMin) {
+        entityHandle->absoluteMin = absoluteMin;
     }
 
     // Return the bounding box absolute 'max' value.
-    inline void SetAbsoluteMax(const vec3_t &absMax) {
-        entityHandle->absoluteMax = absMax;
+    inline void SetAbsoluteMax(const vec3_t &absoluteMax) {
+        entityHandle->absoluteMax = absoluteMax;
     }
 
     // Return the 'angles' value.

@@ -11,7 +11,7 @@
 #ifndef __SVGAME_ENTITIES_BASE_BODYCORPSE_H__
 #define __SVGAME_ENTITIES_BASE_BODYCORPSE_H__
 
-class ServerGameEntity;
+class SynchedBasedEntity ;
 
 class BodyCorpse : public ServerGameEntity {
 public:
@@ -19,7 +19,7 @@ public:
     BodyCorpse(ServerEntity* svEntity);
     virtual ~BodyCorpse();
 
-    DefineClass(BodyCorpse, ServerGameEntity);
+    DefineClass(BodyCorpse, ServerGameEntity, SynchedBasedEntity);
 
     //
     // Interface functions. 

@@ -181,6 +181,15 @@ static EntityBase* AllocateInstance( ) {		\
 }												\
 __DeclareTypeInfo( mapClassName, #className, #superClass, TypeInfo::TypeFlag_MapSpawn, &className::AllocateInstance );
 
+// Declares without initializing the type information for this class, so it can be done by hand on the fly. 
+// NOTE: multiple inheritance not supported
+// @param mapClassName (string) - the map classname of this entity, used during entity spawning
+// @param className (symbol) - the internal C++ class name
+// @param superClass (symbol) - the class this entity class inherits from
+#define DefineMapClassSelfConstruct( mapClassName, className, superClass )	\
+using Base = superClass;										\
+__DeclareTypeInfo( mapClassName, #className, #superClass, TypeInfo::TypeFlag_MapSpawn, nullptr );
+
 // Declares type information the same as DefineMapClass, however, it doesn't allocate anything. 
 // Used by InfoNull. Cannot be instantiated. 
 // Its type flag is TypeFlag_MapSpawn, but it has a nullptr AllocateInstance. This is to avoid

@@ -37,7 +37,7 @@ float ClientGameExports::ClientCalculateFieldOfView(float fieldOfViewX, float wi
 // ClientGameExports::ClientClearState
 //
 //---------------
-void ClientGameExports::ClientClearState() {
+void ClientGameExports::ClientClearState(ServerEntity *serverEntity) {
     // Clear Effects.
     CLG_ClearEffects();
 
@@ -156,7 +156,7 @@ void ClientGameExports::DemoSeek() {
 // ClientGameExports::ClientBegin
 //
 //---------------
-void ClientGameExports::ClientBegin() {
+void ClientGameExports::ClientBegin(ServerEntity *serverEntity) {
 
 }
 
@@ -164,7 +164,7 @@ void ClientGameExports::ClientBegin() {
 // ClientGameExports::ClientDeltaFrame
 //
 //---------------
-void ClientGameExports::ClientDeltaFrame() {
+void ClientGameExports::ClientDeltaFrame(ServerEntity *serverEntity) {
     // Called each time a valid client frame has been 
     SCR_SetCrosshairColor();
 }
@@ -173,7 +173,7 @@ void ClientGameExports::ClientDeltaFrame() {
 // ClientGameExports::ClientFrame
 //
 //---------------
-void ClientGameExports::ClientFrame() {
+void ClientGameExports::ClientFrame(ServerEntity *serverEntity) {
     // Advance local effects.
 #if USE_DLIGHTS
     CLG_RunDLights();
@@ -187,7 +187,7 @@ void ClientGameExports::ClientFrame() {
 // ClientGameExports::ClientDisconnect
 //
 //---------------
-void ClientGameExports::ClientDisconnect() {
+void ClientGameExports::ClientDisconnect(ServerEntity *serverEntity) {
     // Clear the chat hud.
     SCR_ClearChatHUD_f();
 }

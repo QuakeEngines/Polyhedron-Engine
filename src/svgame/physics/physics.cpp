@@ -490,8 +490,8 @@ qboolean SVG_Push(ServerGameEntity *pusher, vec3_t move, vec3_t amove)
         // Fetch its properties to work with.
         qboolean isInUse = check->IsInUse();
         int32_t moveType = check->GetMoveType();
-        vec3_t absMin = check->GetAbsoluteMin();
-        vec3_t absMax = check->GetAbsoluteMax();
+        vec3_t absoluteMin = check->GetAbsoluteMin();
+        vec3_t absoluteMax = check->GetAbsoluteMax();
 
         if (!isInUse)
             continue;
@@ -508,12 +508,12 @@ qboolean SVG_Push(ServerGameEntity *pusher, vec3_t move, vec3_t amove)
         // if the entity is standing on the pusher, it will definitely be moved
         if (check->GetGroundEntity() != pusher) {
             // see if the ent needs to be tested
-            if (absMin[0] >= maxs[0]
-                || absMin[1] >= maxs[1]
-                || absMin[2] >= maxs[2]
-                || absMax[0] <= mins[0]
-                || absMax[1] <= mins[1]
-                || absMax[2] <= mins[2])
+            if (absoluteMin[0] >= maxs[0]
+                || absoluteMin[1] >= maxs[1]
+                || absoluteMin[2] >= maxs[2]
+                || absoluteMax[0] <= mins[0]
+                || absoluteMax[1] <= mins[1]
+                || absoluteMax[2] <= mins[2])
                 continue;
 
             // see if the ent's bbox is inside the pusher's final position

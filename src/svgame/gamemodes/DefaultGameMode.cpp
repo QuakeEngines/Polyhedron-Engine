@@ -929,15 +929,11 @@ qboolean DefaultGameMode::ClientConnect(ServerEntity* serverEntity, char *userin
 // 
 // Called when a client is ready to be placed in the game after connecting.
 //===============
-void DefaultGameMode::ClientBegin(ServerEntity* serverEntity) {
+void DefaultGameMode::ClientBegin(ServerEntity *serverEntity) {
     if (!serverEntity) {
         gi.DPrintf("ClientBegin executed with invalid (nullptr) serverEntity");
         return;
     }
-
-    // Setup the client for the server entity.
-    serverEntity->client = game.clients + (serverEntity - g_entities - 1);
-
     // We got our own deathmatch mode class, it should copy this function and modify it to tis needs.
     //if (deathmatch->value) {
     //    ClientBeginDeathmatch(ent);
@@ -947,6 +943,9 @@ void DefaultGameMode::ClientBegin(ServerEntity* serverEntity) {
     // If there is already a body waiting for us (a loadgame), just
     // take it, otherwise spawn one from scratch
     if (serverEntity->inUse == true) {
+        // Setup the client in its already existing slot
+        serverEntity->client = game.clients + (serverEntity - serverGameEntities - 1);
+
         // The client has cleared the client side viewAngles upon
         // connecting to the server, which is different than the
         // state when the game is saved, so we need to compensate
@@ -1506,7 +1505,7 @@ void DefaultGameMode::PutClientInServer(ServerEntity *ent) {
 // 
 // Respawns a client (if that is what the game mode wants).
 //===============
-void DefaultGameMode::RespawnClient(PlayerEntity* ent) {
+void DefaultGameMode::RespawnClient(ServerEntity* ent) {
     // Kept around here to port later to other gamemodes.
     //if (deathmatch->value || coop->value) {
     //    // Spectator's don't leave bodies

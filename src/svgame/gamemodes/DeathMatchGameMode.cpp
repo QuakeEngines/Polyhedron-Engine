@@ -100,7 +100,7 @@ void DeathMatchGameMode::ClientBegin(ServerEntity* serverEntity) {
     ClientEndServerFrame(serverEntity);
 }
 
-void DeathMatchGameMode::PutClientInServer(ServerEntity *ent) {
+void DeathMatchGameMode::PutClientInServer(Serverentity *ent) {
     // Find a spawn point for this client to be "placed"/"put" at.
     vec3_t  mins = PM_MINS;
     vec3_t  maxs = PM_MAXS;
@@ -481,7 +481,7 @@ void DeathMatchGameMode::ClientUpdateObituary(ServerGameEntity* self, ServerGame
 // 
 // Respawns a client after intermission and hitting a button.
 //===============
-void DeathMatchGameMode::RespawnClient(PlayerEntity* ent) {
+void DeathMatchGameMode::RespawnClient(ServerEntity* ent) {
     // Spectator's don't leave bodies
     if (ent->GetMoveType() != MoveType::NoClip)
         SpawnClientCorpse(ent);
@@ -506,7 +506,7 @@ void DeathMatchGameMode::RespawnClient(PlayerEntity* ent) {
 // 
 // Respawns a spectator after intermission and hitting a button.
 //===============
-void DeathMatchGameMode::RespawnSpectator(PlayerEntity* ent) {
+void DeathMatchGameMode::RespawnSpectator(ServerEntity* ent) {
     // Spectator's don't leave bodies
     if (ent->GetMoveType() != MoveType::NoClip)
         SpawnClientCorpse(ent);

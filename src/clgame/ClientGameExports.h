@@ -6,6 +6,9 @@
 
 #include "shared/interfaces/IClientGameExports.h"
 
+
+struct ServerEntity* serverEntity;
+
 //---------------------------------------------------------------------
 // MAIN interface to implement. It holds pointers to actual sub interfaces,
 // which one of course has to implement as well.
@@ -25,17 +28,17 @@ public:
     //---------------------------------------------------------------------
     // Called after all downloads are done. (Aka, a map has started.)
     // Not used for demos.
-    void ClientBegin() final;
+    virtual void ClientBegin(ServerEntity *serverEntity) final;
     // Called upon whenever a client disconnects, for whichever reason.
     // Could be him quiting, or pinging out etc.
-    void ClientClearState() final;
+    virtual void ClientClearState(ServerEntity *serverEntity) final;
     // Called each VALID client frame. Handle per VALID frame basis 
     // things here.
-    void ClientDeltaFrame() final;
+    virtual void ClientDeltaFrame(ServerEntity *serverEntity) final;
     // Called each client frame. Handle per frame basis things here.
-    void ClientFrame() final;
+    virtual void ClientFrame(ServerEntity *serverEntity) final;
     // Called when a disconnect even occures. Including those for Com_Error
-    void ClientDisconnect() final;
+    virtual void ClientDisconnect(ServerEntity *serverEntity) final;
 
     //---------------------------------------------------------------------
     // Update related.

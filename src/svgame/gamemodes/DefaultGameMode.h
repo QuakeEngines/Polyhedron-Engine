@@ -50,13 +50,13 @@ public:
     //
     // Client related callbacks.
     // 
-    virtual qboolean ClientConnect(PlayerEntity* serverEntity, char *userinfo) override;
-    virtual void ClientBegin(PlayerEntity* serverEntity) override;
-    virtual void ClientBeginServerFrame(PlayerEntity* serverEntity) override;
-    virtual void ClientEndServerFrame(PlayerEntity *serverEntity) override;
-    virtual void ClientDisconnect(PlayerEntity* ent) override;
-    virtual void ClientUserinfoChanged(PlayerEntity* ent, char *userinfo) override;
-    virtual void ClientUpdateObituary(PlayerEntity* self, ServerGameEntity* inflictor, ServerGameEntity* attacker) override;
+    virtual qboolean ClientConnect(ServerEntity * serverEntity, char *userinfo) override;
+    virtual void ClientBegin(ServerEntity * serverEntity) override;
+    virtual void ClientBeginServerFrame(ServerEntity * serverEntity) override;
+    virtual void ClientEndServerFrame(ServerEntity *serverEntity) override;
+    virtual void ClientDisconnect(ServerEntity  * ent) override;
+    virtual void ClientUserinfoChanged(ServerEntity* ent, char *userinfo) override;
+    virtual void ClientUpdateObituary(ServerGameEntity* self, ServerGameEntity* inflictor, ServerGameEntity* attacker) override;
 
     //
     // Client related functions/utilities.
@@ -66,7 +66,7 @@ public:
 
     virtual void SelectClientSpawnPoint(ServerEntity* ent, vec3_t& origin, vec3_t& angles, const std::string &classname) override;
     virtual void PutClientInServer(ServerEntity *ent) override;
-    virtual void RespawnClient(PlayerEntity* ent) override;
+    virtual void RespawnClient(ServerEntity* ent) override;
 
     // Some information that should be persistant, like health,
     // is still stored in the edict structure, so it needs to

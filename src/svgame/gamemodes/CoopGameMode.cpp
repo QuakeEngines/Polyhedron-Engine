@@ -48,7 +48,7 @@ qboolean CoopGameMode::CanDamage(ServerGameEntity* target, ServerGameEntity* inf
 // CoopGameMode::ClientUpdateObituary.
 // 
 //===============
-void CoopGameMode::ClientUpdateObituary(PlayerEntity* self, ServerGameEntity* inflictor, ServerGameEntity* attacker) {
+void CoopGameMode::ClientUpdateObituary(ServerGameEntity* self, ServerGameEntity* inflictor, ServerGameEntity* attacker) {
     std::string message; // String stating what happened to whichever entity. "suicides", "was squished" etc.
     std::string messageAddition; // String stating what is additioned to it, "'s shrapnell" etc. Funny stuff.
 

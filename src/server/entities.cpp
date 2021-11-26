@@ -34,7 +34,7 @@ ServerEntity* GetEntityServerHandle(ServerEntityID id) {
         Com_Error(ERR_DROP, "Invalid ServerEntityID: '%i' passed to %s.", id, __func__);
     }
 
-    return &svEntityPool.entities[id];
+    return &serverEntityPool.entities[id];
 }
 
 void SetNumberOfEntities(int32_t num) {
@@ -42,11 +42,11 @@ void SetNumberOfEntities(int32_t num) {
         Com_Error(ERR_DROP, "Invalid NumberOfEntities: '%i' passed to %s.", num, __func__);
     }
 
-    svEntityPool.currentNumberOfEntities = num;
+    serverEntityPool.currentNumberOfEntities = num;
 }
 
 int32_t GetNumberOfEntities() {
-    return svEntityPool.currentNumberOfEntities;
+    return serverEntityPool.currentNumberOfEntities;
 }
 
 /*

@@ -638,7 +638,7 @@ void SV_LinkEntity(cm_t *cm, ServerEntity *ent);
 void PF_LinkEntity(ServerEntity *ent);
 // Needs to be called any time an entity changes origin, mins, maxs,
 // or solid.  Automatically unlinks if needed.
-// sets ent->v.absMin and ent->v.absMax
+// sets ent->v.absoluteMin and ent->v.absoluteMax
 // sets ent->leafnums[] for pvs determination even if the entity
 // is not solid
 

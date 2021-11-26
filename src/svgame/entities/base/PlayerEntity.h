@@ -9,26 +9,27 @@
 #ifndef __SVGAME_ENTITIES_MISC_PLAYERCLIENT_H__
 #define __SVGAME_ENTITIES_MISC_PLAYERCLIENT_H__
 
+class SynchedEntityBase;
 class ServerGameEntity;
 
-class PlayerEntity : public ServerGameEntity {
+class PlayerEntity : public SynchedEntityBase {
 public:
     // Constructor/Deconstructor.
-    PlayerEntity(ServerEntity* svEntity);
+    PlayerEntity();
     virtual ~PlayerEntity();
 
-    DefineMapClass("PlayerEntity", PlayerEntity, ServerGameEntity);
+    DefineMapClassSelfConstruct("PlayerEntity", SynchedEntityBase, ServerGameEntity);
 
     //
     // Interface functions. 
     //
-    void Precache() override;    // Precaches data.
-    void Spawn() override;       // Spawns the entity.
-    void Respawn() override;     // Respawns the entity.
-    void PostSpawn() override;   // PostSpawning is for handling entity references, since they may not exist yet during a spawn period.
-    void Think() override;       // General entity thinking routine.
+    virtual void Precache() final;    // Precaches data.
+    virtual void Spawn() final;       // Spawns the entity.
+    virtual void Respawn() final;     // Respawns the entity.
+    virtual void PostSpawn() final;   // PostSpawning is for handling entity references, since they may not exist yet during a spawn period.
+    virtual void Think() final;       // General entity thinking routine.
 
-    void SpawnKey(const std::string& key, const std::string& value)  override;
+    virtual void SpawnKey(const std::string& key, const std::string& value) final;
 
     //
     // Callback functions.
@@ -65,7 +66,7 @@ public:
     // Client.
     // Sets the 'client' pointer.
     void SetClient(gclient_s* client) {
-        serverEntity->client = client;
+        entityHandle->client = client;
     }
 
     // Debounce Touch Time.

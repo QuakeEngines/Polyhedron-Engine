@@ -20,8 +20,8 @@
 
 
 // Constructor/Deconstructor.
-InfoPlayerStart::InfoPlayerStart(ServerEntity* svEntity) 
-    : ServerGameEntity(svEntity) {
+InfoPlayerStart::InfoPlayerStart() 
+    : ServerGameEntity() {
 
 }
 InfoPlayerStart::~InfoPlayerStart() {

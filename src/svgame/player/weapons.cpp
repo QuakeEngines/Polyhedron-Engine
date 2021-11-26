@@ -80,8 +80,8 @@ void SVG_PlayerNoise(ServerGameEntity *who, vec3_t where, int type)
     }
 
     VectorCopy(where, noise->state.origin);
-    VectorSubtract(where, noise->maxs, noise->absMin);
-    VectorAdd(where, noise->maxs, noise->absMax);
+    VectorSubtract(where, noise->maxs, noise->absoluteMin);
+    VectorAdd(where, noise->maxs, noise->absoluteMax);
     noise->teleportTime = level.time;
     gi.LinkEntity(noise);
 }

@@ -266,12 +266,12 @@ struct ServerGameExports {
     void (*WriteLevel)(const char *filename);
     void (*ReadLevel)(const char *filename);
 
-    qboolean (*ClientConnect)(PlayerEntity *ent, char *userinfo);
-    void (*ClientBegin)(PlayerEntity *ent);
-    void (*ClientUserinfoChanged)(PlayerEntity *ent, char *userinfo);
-    void (*ClientDisconnect)(PlayerEntity *ent);
-    void (*ClientCommand)(PlayerEntity *ent);
-    void (*ClientThink)(PlayerEntity *ent, ClientMoveCommand *cmd);
+    qboolean (*ClientConnect)(ServerEntity *ent, char *userinfo);
+    void (*ClientBegin)(ServerEntity *ent);
+    void (*ClientUserinfoChanged)(ServerEntity *ent, char *userinfo);
+    void (*ClientDisconnect)(ServerEntity *ent);
+    void (*ClientCommand)(ServerEntity *ent);
+    void (*ClientThink)(ServerEntity *ent, ClientMoveCommand *cmd);
 
     void (*RunFrame)(void);
 

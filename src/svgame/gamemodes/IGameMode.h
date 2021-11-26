@@ -41,19 +41,19 @@ public:
     // Called when a client connects. This does not get called between
     // load games, of course. A client is still connected to the current
     // game session in that case.
-    virtual qboolean ClientConnect(PlayerEntity* playerEntity , char* userinfo) = 0;
+    virtual qboolean ClientConnect(ServerEntity* playerEntity , char* userinfo) = 0;
     // Called when a client has finished connecting, and is ready
     // to be placed into the game.This will happen every map load.
-    virtual void ClientBegin(PlayerEntity* playerEntity) = 0;
+    virtual void ClientBegin(ServerEntity* playerEntity) = 0;
     // This will be called once for all clients at the start of each server 
     // frame. Before running any other entities in the world.
-    virtual void ClientBeginServerFrame(PlayerEntity* playerEntity) = 0;
+    virtual void ClientBeginServerFrame(ServerEntity* playerEntity) = 0;
     // Called for each player at the end of the server frame and right 
     // after spawning.
-    virtual void ClientEndServerFrame(PlayerEntity *playerEntity) = 0;
+    virtual void ClientEndServerFrame(ServerEntity *playerEntity) = 0;
     // Called when a client disconnects. This does not get called between
     // load games.
-    virtual void ClientDisconnect(PlayerEntity* playerEntity) = 0;
+    virtual void ClientDisconnect(ServerEntity* playerEntity) = 0;
     //called whenever the player updates a userinfo variable.
 
     // The game can override any of the settings in place
@@ -61,7 +61,7 @@ public:
     virtual void ClientUserinfoChanged(PlayerEntity* playerEntity, char *userinfo) = 0;
     // Called in order to process "obituary" updates, aka with what weapon did this client
     // or did other clients, kill any other client/entity.
-    virtual void ClientUpdateObituary(PlayerEntity* self, ServerGameEntity* inflictor, ServerGameEntity* attacker) = 0;
+    virtual void ClientUpdateObituary(ServerGameEntity* self, ServerGameEntity* inflictor, ServerGameEntity* attacker) = 0;
     
 
     //
@@ -84,7 +84,7 @@ public:
     // call this function again to respawn our player.
     virtual void PutClientInServer(ServerEntity* ent) = 0;
     // Respawns a client (if that is what the game mode wants).
-    virtual void RespawnClient(PlayerEntity* ent) = 0;
+    virtual void RespawnClient(ServerEntity* ent) = 0;
 
      // Some information that should be persistant, like health,
     // is still stored in the edict structure, so it needs to

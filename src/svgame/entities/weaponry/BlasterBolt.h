@@ -6,18 +6,19 @@
 //
 //
 */
-#ifndef __SVGAME_ENTITIES_WEAPONRY_BLASTERBOLT_H__
-#define __SVGAME_ENTITIES_WEAPONRY_BLASTERBOLT_H__
+#pragma once
 
+struct ServerEntity;
 class ServerGameEntity;
+class SynchedEntityBase;
 
 class BlasterBolt : public ServerGameEntity {
 public:
     // Constructor/Deconstructor.
-    BlasterBolt(ServerEntity* svEntity);
+    BlasterBolt();
     virtual ~BlasterBolt();
 
-    DefineClass( BlasterBolt, ServerGameEntity );
+    DefineClass( BlasterBolt, ServerGameEntity);
 
     //
     // Interface functions. 
@@ -46,5 +47,3 @@ protected:
 private:
 
 };
-
-#endif // __SVGAME_ENTITIES_WEAPONRY_BLASTERBOLT_H__

@@ -113,7 +113,7 @@ void SV_ClearWorld(void)
     }
 
     // make sure all entities are unlinked
-    for (i = 0; i < serverEntityPool.maxEntities; i++) {
+    for (i = 0; i < MAX_EDICTS; i++) {
         ent = EDICT_NUM(i);
         ent->area.prev = ent->area.next = NULL;
     }
@@ -182,23 +182,23 @@ void SV_LinkEntity(cm_t *cm, ServerEntity *ent)
                 max = v;
         }
         for (i = 0; i < 3; i++) {
-            ent->absMin[i] = ent->state.origin[i] - max;
-            ent->absMax[i] = ent->state.origin[i] + max;
+            ent->absoluteMin[i] = ent->state.origin[i] - max;
+            ent->absoluteMax[i] = ent->state.origin[i] + max;
         }
     } else {
         // normal
-        VectorAdd(ent->state.origin, ent->mins, ent->absMin);
-        VectorAdd(ent->state.origin, ent->maxs, ent->absMax);
+        VectorAdd(ent->state.origin, ent->mins, ent->absoluteMin);
+        VectorAdd(ent->state.origin, ent->maxs, ent->absoluteMax);
     }
 
     // because movement is clipped an epsilon away from an actual edge,
     // we must fully check even when bounding boxes don't quite touch
-    ent->absMin[0] -= 1;
-    ent->absMin[1] -= 1;
-    ent->absMin[2] -= 1;
-    ent->absMax[0] += 1;
-    ent->absMax[1] += 1;
-    ent->absMax[2] += 1;
+    ent->absoluteMin[0] -= 1;
+    ent->absoluteMin[1] -= 1;
+    ent->absoluteMin[2] -= 1;
+    ent->absoluteMax[0] += 1;
+    ent->absoluteMax[1] += 1;
+    ent->absoluteMax[2] += 1;
 
 // link to PVS leafs
     ent->numClusters = 0;
@@ -206,7 +206,7 @@ void SV_LinkEntity(cm_t *cm, ServerEntity *ent)
     ent->areaNumber2 = 0;
 
     //get all leafs, including solids
-    num_leafs = CM_BoxLeafs(cm, ent->absMin, ent->absMax,
+    num_leafs = CM_BoxLeafs(cm, ent->absoluteMin, ent->absoluteMax,
                             leafs, MAX_TOTAL_ENT_LEAFS, &topnode);
 
     // set areas
@@ -219,7 +219,7 @@ void SV_LinkEntity(cm_t *cm, ServerEntity *ent)
             if (ent->areaNumber && ent->areaNumber != area) {
                 if (ent->areaNumber2 && ent->areaNumber2 != area && sv.serverState == ServerState::Loading) {
                     Com_DPrintf("Object touching 3 areas at %f %f %f\n",
-                                ent->absMin[0], ent->absMin[1], ent->absMin[2]);
+                                ent->absoluteMin[0], ent->absoluteMin[1], ent->absoluteMin[2]);
                 }
                 ent->areaNumber2 = area;
             } else
@@ -322,9 +322,9 @@ void PF_LinkEntity(ServerEntity *ent)
     while (1) {
         if (node->axis == -1)
             break;
-        if (ent->absMin[node->axis] > node->dist)
+        if (ent->absoluteMin[node->axis] > node->dist)
             node = node->children[0];
-        else if (ent->absMax[node->axis] < node->dist)
+        else if (ent->absoluteMax[node->axis] < node->dist)
             node = node->children[1];
         else
             break;        // crosses the node
@@ -358,12 +358,12 @@ static void SV_AreaEntities_r(areanode_t *node)
     LIST_FOR_EACH(ServerEntity, check, start, area) {
         if (check->solid == Solid::Not)
             continue;        // deactivated
-        if (check->absMin[0] > area_maxs[0]
-            || check->absMin[1] > area_maxs[1]
-            || check->absMin[2] > area_maxs[2]
-            || check->absMax[0] < area_mins[0]
-            || check->absMax[1] < area_mins[1]
-            || check->absMax[2] < area_mins[2])
+        if (check->absoluteMin[0] > area_maxs[0]
+            || check->absoluteMin[1] > area_maxs[1]
+            || check->absoluteMin[2] > area_maxs[2]
+            || check->absoluteMax[0] < area_mins[0]
+            || check->absoluteMax[1] < area_mins[1]
+            || check->absoluteMax[2] < area_mins[2])
             continue;        // not touching
 
         if (area_count == area_maxcount) {

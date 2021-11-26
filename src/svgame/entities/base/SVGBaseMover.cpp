@@ -17,7 +17,7 @@
 #include "SVGBaseMover.h"
 
 // Constructor/Deconstructor.
-SVGBaseMover::SVGBaseMover(ServerEntity* svEntity) : SVGBaseTrigger(svEntity) {
+SVGBaseMover::SVGBaseMover(ServerEntity* svEntity) : SVGBaseTrigger() {
 	//
 	// Default values for members.
 	//
@@ -157,7 +157,7 @@ void SVGBaseMover::SwapPositions() {
 // =========================
 void SVGBaseMover::BrushMoveDone() {
 	SetVelocity( vec3_zero() );
-	moveInfo.OnEndFunction( serverEntity );
+	moveInfo.OnEndFunction( GetEntityServerHandle() );
 }
 
 //===============

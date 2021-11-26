@@ -20,7 +20,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "utils.h"           // Include Utilities funcs.
 #include "player/hud.h"      // Include HUD funcs.
 
-#include "entities/SynchedEntityBase.h"
+#include "entities/base/SynchedEntityBase.h"
 #include "entities/base/ServerGameEntity.h"
 #include "entities/base/PlayerEntity.h"
 
@@ -680,7 +680,7 @@ Items can't be immediately dropped to floor, because they might
 be on an entity that hasn't spawned yet.
 ============
 */
-void SVG_SpawnItem(ServerGameEntity *serverGameEntity, gitem_t *item)
+void SVG_SpawnItem(ServerEntity *serverGameEntity, gitem_t *item)
 {
     SVG_PrecacheItem(item);
 
@@ -978,7 +978,7 @@ void SP_item_health_small(ServerGameEntity *self)
 
 /*QUAKED item_health_large (.3 .3 1) (-16 -16 -16) (16 16 16)
 */
-void SP_item_health_large(ServerGameEntity *self)
+void SP_item_health_large(ServerEntity *self)
 {
     if (deathmatch->value && ((int)gamemodeflags->value & GameModeFlags::NoHealth)) {
         SVG_FreeEntity(self);
@@ -986,14 +986,14 @@ void SP_item_health_large(ServerGameEntity *self)
     }
 
 //    self->model = "models/items/healing/large/tris.md2";
-    self->count = 25;
+    //self->count = 25;
     SVG_SpawnItem(self, SVG_FindItemByPickupName("Health"));
     gi.SoundIndex("items/l_health.wav");
 }
 
 /*QUAKED item_health_mega (.3 .3 1) (-16 -16 -16) (16 16 16)
 */
-void SP_item_health_mega(ServerGameEntity *self)
+void SP_item_health_mega(ServerEntity *self)
 {
     if (deathmatch->value && ((int)gamemodeflags->value & GameModeFlags::NoHealth)) {
         SVG_FreeEntity(self);
@@ -1001,7 +1001,7 @@ void SP_item_health_mega(ServerGameEntity *self)
     }
 
 //    self->model = "models/items/mega_h/tris.md2";
-    self->count = 100;
+    //self->count = 100;
     SVG_SpawnItem(self, SVG_FindItemByPickupName("Health"));
     gi.SoundIndex("items/m_health.wav");
     self->style = HEALTH_IGNORE_MAX | HEALTH_TIMED;

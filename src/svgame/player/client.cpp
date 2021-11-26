@@ -49,11 +49,11 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 // The game can override any of the settings in place
 // (forcing skins or names, etc) before copying it off.
 //================
-void SVG_ClientUserinfoChanged(PlayerEntity* playerEntity, char* userinfo) {
+void SVG_ClientUserinfoChanged(ServerEntity *serverEntity, char* userinfo) {
     if (!PlayerEntity)
         return;
 
-    game.gameMode->ClientUserinfoChanged(ent, userinfo);
+    game.gameMode->ClientUserinfoChanged(serverEntity, userinfo);
 }
 
 
@@ -410,7 +410,7 @@ This will be called once for each client frame, which will
 usually be a couple times for each server frame.
 ==============
 */
-void SVG_ClientThink(PlayerEntity *playerEntity, ClientMoveCommand *moveCommand)
+void SVG_ClientThink(ServerEntity *serverEntity, ClientMoveCommand *moveCommand)
 {
     ServerClient* client = nullptr;
     PlayerEntity *classEntity = nullptr;

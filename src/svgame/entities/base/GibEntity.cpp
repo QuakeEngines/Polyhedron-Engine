@@ -23,6 +23,16 @@ GibEntity::GibEntity(ServerEntity* svEntity)
     : ServerGameEntity(svEntity) {
 
 }
+class SynchedEntityBase;
+class ServerGameEntity;
+
+class PlayerEntity : public SynchedEntityBase {
+public:
+    // Constructor/Deconstructor.
+    PlayerEntity();
+    virtual ~PlayerEntity();
+
+    DefineMapClassSelfConstruct("PlayerEntity", SynchedEntityBase, ServerGameEntity);
 GibEntity::~GibEntity() {
 
 }

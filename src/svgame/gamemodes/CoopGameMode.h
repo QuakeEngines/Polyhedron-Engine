@@ -24,7 +24,7 @@ public:
     //
     virtual qboolean CanDamage(ServerGameEntity* targ, ServerGameEntity* inflictor) override;
     // Coop has its own Obituary madness.
-    virtual void ClientUpdateObituary(PlayerEntity* self, ServerGameEntity* inflictor, ServerGameEntity* attacker) override;
+    virtual void ClientUpdateObituary(ServerEntity* self, ServerGameEntity* inflictor, ServerGameEntity* attacker) override;
 
 private:
 

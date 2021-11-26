@@ -16,11 +16,12 @@
 
 // Class Entities.
 #include "../base/ServerGameEntity.h"
+#include "../base/SynchBasedEntity.h"
 #include "BodyCorpse.h"
 
 // Constructor/Deconstructor.
-BodyCorpse::BodyCorpse(ServerEntity* svEntity)
-    : ServerGameEntity(svEntity) {
+BodyCorpse::BodyCorpse(ServerEntity * svEntity)
+    : SynchedBasedEntity(svEntity) {
 
 }
 BodyCorpse::~BodyCorpse() {
@@ -133,6 +134,6 @@ void BodyCorpse::BodyCorpseDie(ServerGameEntity* inflictor, ServerGameEntity* at
     //SetThinkCallback(&ServerGameEntity::SVGBaseEntityThinkRemove);
     //SetNextThinkTime(level.time + FRAMETIME);
     // Remove body.
-    SetModelIndex(0);
-    //Remove();
+    //SetModelIndex(0);
+    Remove();
 }

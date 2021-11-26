@@ -364,22 +364,22 @@ void SVG_AllocateGamePlayerClientEntities() {
     // Allocate a classentity for each client in existence.
     for (int32_t i = 1; i < maximumClients + 1; i++) {
         // Fetch server entity.
-        ServerEntity* serverEntity = &serverGameEntities[i];
+        PlayerEntity* serverEntity = serverGameEntities[i];
 
         // Initialize entity.
         SVG_InitEntity(serverEntity);
 
         // Allocate their class entities appropriately.
-        serverEntity->classEntity = SVG_CreateClassEntity<PlayerEntity>(serverEntity, false); //SVG_SpawnClassEntity(serverEntity, serverEntity->className);
+        serverEntity = SVG_CreateClassEntity<PlayerEntity*>(serverEntity, false); //SVG_SpawnClassEntity(serverEntity, serverEntity->className);
         
         // Be sure to reset their inuse, after all, they aren't in use.
-        serverEntity->classEntity->SetInUse(false);
+        serverEntity->SetInUse(false);
 
         // Fetch client index.
         const int32_t clientIndex = i - 1; // Same as the older: serverEntity - g_entities - 1;
 
         // Assign the designated client to this PlayerEntity entity.
-        ((PlayerEntity*)serverEntity->classEntity)->SetClient(&game.clients[clientIndex]);
+        ((PlayerEntity*)serverEntity)->SetClient(&game.clients[clientIndex]);
     }
 }
 
@@ -610,10 +610,10 @@ void SVG_RunFrame(void)
     // "even the world gets a chance to Think", it does.
     //
     // Fetch the WorldSpawn entity number.
-    int32_t stateNumber = g_entities[0].state.number;
+    //int32_t stateNumber = entities[0].state.number;
 
-    // Fetch the corresponding base entity.
-    ServerGameEntity* entity = serverGameEntities[stateNumber];
+    //// Fetch the corresponding base entity.
+    //ServerGameEntity* entity = serverGameEntities[stateNumber];
 
     // Loop through the server entities, and run the base entity frame if any exists.
     for (int32_t i = 0; i < globals.numberOfEntities; i++) {

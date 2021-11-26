@@ -960,7 +960,7 @@ struct gclient_s {
 //    //================================
 //    int32_t serverFlags;
 //    vec3_t mins, maxs;
-//    vec3_t absMin, absMax, size;
+//    vec3_t absoluteMin, absoluteMax, size;
 //    uint32_t solid;
 //    int32_t clipMask;
 //    ServerEntity *owner;

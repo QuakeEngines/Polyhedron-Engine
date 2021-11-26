@@ -104,7 +104,7 @@ struct PlayerMove {
     float hookPullSpeed;
 
     // Entities touched (out)
-    struct ServerEntity* touchedEntities[PM_MAX_TOUCH_ENTS];
+    ServerEntity* touchedEntities[PM_MAX_TOUCH_ENTS];
     int32_t numTouchedEntities;
 
     // Pointer to the entity that is below the player. (out)
