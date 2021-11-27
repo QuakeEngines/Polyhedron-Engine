@@ -18,16 +18,26 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 #pragma once
 
+// Shared API include requirements.
 #include "shared/list.h"
+
+// Shared Entity API include requirements.
+#include "shared/Entities/Base/ServerEntity.h"
+
+// Shared Game API include requirements.
 #include "sharedgame/pmove.h"
 #include "sharedgame/protocol.h"
 
+//===============================================================
 //-------------------
 static constexpr uint32_t SVGAME_API_VERSION_MAJOR = VERSION_MAJOR;
 static constexpr uint32_t SVGAME_API_VERSION_MINOR = VERSION_MINOR;
 static constexpr uint32_t SVGAME_API_VERSION_POINT = VERSION_POINT;
 //-------------------
-
+//===============================================================
+// ServerEntityID <-- int32_t instead of uint32_t since -1 states it is a
+// private non synched entity.
+using ServerEntityID = int32_t;
 
 // ServerEntity->serverFlags
 struct EntityServerFlags {
@@ -46,11 +56,6 @@ struct Solid {
 };
 
 //===============================================================
-// ServerEntity ID <-- You are a mere number...
-using ServerEntityID = uint32_t;
-
-// Maximumn entity clusters.
-static constexpr uint32_t MAX_ENT_CLUSTERS = 16;
 
 // Silly typedef gotta rid it somehow.
 typedef struct gclient_s ServerClient;
@@ -68,13 +73,13 @@ struct gclient_s {
 //===================
 // Predefinition for the API functions.
 //===================
+// First include the real shared ServerEntity struct that is known
+// by client AND server.
+#include "shared/Entities/Base/ServerEntity.h"
 
+// In come the predefinition for the API functions.
 class ServerGameEntity;
 class PlayerEntity;
-
-///#endif      // GAME_INCLUDE
-
-#include "shared/Entities/ServerEntity.h"
 
 
 //===============================================================
@@ -154,8 +159,9 @@ struct ServerGameImports {
     //---------------------------------------------------------------------
     // ServerEntity management.
     //---------------------------------------------------------------------
-    ServerEntity (* GetServerEntityByID)(ServerEntityID id);
-    ServerEntity (* GetFreeServerEntity)();
+    ServerEntity* (*GetEntityServerHandle)(ServerEntityID id);
+    int32_t (*GetNumberOfEntities)();
+    void (*SetNumberOfEntities)(ServerEntityID numberOf);
 
     //---------------------------------------------------------------------
     // An entity will never be sent to a client or used for collision
@@ -210,10 +216,6 @@ struct ServerGameImports {
     void (*AddCommandString)(const char *text);
 
     void (*DebugGraph)(float value, int color);
-    
-    ServerEntity* (*GetEntityServerHandle)(ServerEntityID id);
-    int32_t (*GetNumberOfEntities)();
-    void (*SetNumberOfEntities)(int32_t num);
 };
 
 //

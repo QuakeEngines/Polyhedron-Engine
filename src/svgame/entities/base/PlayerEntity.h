@@ -6,9 +6,9 @@
 //
 //
 */
-#ifndef __SVGAME_ENTITIES_MISC_PLAYERCLIENT_H__
-#define __SVGAME_ENTITIES_MISC_PLAYERCLIENT_H__
+#pragma once
 
+struct ServerEntity;
 class SynchedEntityBase;
 class ServerGameEntity;
 
@@ -229,5 +229,3 @@ private:
         v_blend[3] = a2;
     }
 };
-
-#endif // __SVGAME_ENTITIES_MISC_PLAYERCLIENT_H__

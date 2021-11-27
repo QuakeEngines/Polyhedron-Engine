@@ -17,7 +17,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 */
 #include "g_local.h"
 #include "entities.h"
-#include "chasecamera.h"
+#include "ChaseCamera.h"
 
 #include "entities/base/ServerGameEntity.h"
 #include "entities/base/PlayerEntity.h"

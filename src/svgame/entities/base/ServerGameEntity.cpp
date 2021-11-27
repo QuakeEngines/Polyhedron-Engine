@@ -10,8 +10,8 @@
 #include "../../effects.h"		// Effects.
 #include "../../entities.h"		// Entities.
 #include "../../utils.h"		// Util funcs.
-#include "ServerGameEntity.h"
 
+#include "ServerGameEntity.h"
 #include "SVGBaseTrigger.h"
 #include "../trigger/TriggerDelayedUse.h"
 
@@ -544,7 +544,7 @@ void ServerGameEntity::UseTargets( ServerGameEntity* activatorOverride )
 //===============
 //
 void ServerGameEntity::LinkEntity() {
-	gi.LinkEntity(GetEntityServerHandle());
+	//gi.LinkEntity(GetEntityServerHandle());
 }
 
 //===============
@@ -553,7 +553,7 @@ void ServerGameEntity::LinkEntity() {
 // 
 //===============
 void ServerGameEntity::UnlinkEntity() {
-	gi.UnlinkEntity(GetEntityServerHandle());
+	//gi.UnlinkEntity(GetEntityServerHandle());
 }
 
 //===============
@@ -561,7 +561,7 @@ void ServerGameEntity::UnlinkEntity() {
 //===============
 void ServerGameEntity::Remove()
 {
-	GetEntityServerHandle()->serverFlags |= EntityServerFlags::Remove;
+	//GetEntityServerHandle()->serverFlags |= EntityServerFlags::Remove;
 }
 
 //
@@ -569,5 +569,5 @@ void ServerGameEntity::Remove()
 //
 void ServerGameEntity::SVGBaseEntityThinkRemove(void) {
 	//SVG_FreeEntity(serverEntity);
-	Remove();
+	//Remove();
 }

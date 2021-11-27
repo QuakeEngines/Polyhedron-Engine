@@ -55,7 +55,7 @@ public:
     virtual void ClientBeginServerFrame(ServerEntity * serverEntity) override;
     virtual void ClientEndServerFrame(ServerEntity *serverEntity) override;
     virtual void ClientDisconnect(ServerEntity  * ent) override;
-    virtual void ClientUserinfoChanged(ServerEntity* ent, char *userinfo) override;
+    virtual void ClientUserinfoChanged(ServerGameEntity* ent, char *userinfo) override;
     virtual void ClientUpdateObituary(ServerGameEntity* self, ServerGameEntity* inflictor, ServerGameEntity* attacker) override;
 
     //

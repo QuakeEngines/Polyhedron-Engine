@@ -1,6 +1,8 @@
 // License here.
 #pragma once
 
+struct ServerEntity;
+
 //---------------------------------------------------------
 // EntityBase - Points to a server entity handle.
 //---------------------------------------------------------
@@ -10,6 +12,7 @@ protected:
     // Handle to the server entity. (Assumed to be internal)
     ServerEntity  *entityHandle;
     
+    // Constructor.
     EntityBase(ServerEntity* serverEntityHandle);
 
     // Destructor.
@@ -79,6 +82,7 @@ public:
     }
     inline void SetModelIndex4(const int32_t& index) {
         entityHandle->state.modelIndex4 = index;
+    }
 
     // Set the 'origin' value.
     inline void SetOldOrigin(const vec3_t& oldOrigin) {
@@ -88,11 +92,6 @@ public:
     // Set the 'origin' value.
     inline void SetOrigin(const vec3_t& origin) {
         entityHandle->state.origin = origin;
-    }
-
-    // Set the 'owner' value.
-    inline void SetOwner(ServerGameEntity* owner) {
-        this->ownerEntity = owner;
     }
 
     // Set the 'renderEffects' value.

@@ -13,24 +13,24 @@
 
 class SynchedBasedEntity ;
 
-class BodyCorpse : public ServerGameEntity {
+class BodyCorpse : public SynchedBasedEntity {
 public:
     // Constructor/Deconstructor.
     BodyCorpse(ServerEntity* svEntity);
     virtual ~BodyCorpse();
 
-    DefineClass(BodyCorpse, ServerGameEntity, SynchedBasedEntity);
+    DefineClass(BodyCorpse, SynchedBasedEntity, ServerGameEntity);
 
     //
     // Interface functions. 
     //
-    void Precache() override;    // Precaches data.
-    void Spawn() override;       // Spawns the entity.
-    void Respawn() override;     // Respawns the entity.
-    void PostSpawn() override;   // PostSpawning is for handling entity references, since they may not exist yet during a spawn period.
-    void Think() override;       // General entity thinking routine.
+    void Precache() final;    // Precaches data.
+    void Spawn() final;       // Spawns the entity.
+    void Respawn() final;     // Respawns the entity.
+    void PostSpawn() final;   // PostSpawning is for handling entity references, since they may not exist yet during a spawn period.
+    void Think() final;       // General entity thinking routine.
 
-    void SpawnKey(const std::string& key, const std::string& value)  override;
+    void SpawnKey(const std::string& key, const std::string& value) final;
 
     //
     // Callback functions.

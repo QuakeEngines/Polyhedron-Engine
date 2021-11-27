@@ -2,8 +2,8 @@
 
 #include <string>
 
-class ServerGameEntity;
 struct ServerEntity;
+class ServerGameEntity;
 
 //===============
 // A static counter, used by TypeInfo to get compile-time IDs

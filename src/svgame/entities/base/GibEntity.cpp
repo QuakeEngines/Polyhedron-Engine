@@ -19,23 +19,12 @@
 #include "GibEntity.h"
 
 // Constructor/Deconstructor.
-GibEntity::GibEntity()
-    : ServerGameEntity() {
+GibEntity::GibEntity(ServerEntity* serverEntity)
+    : ServerGameEntity(ServerEntity* serverEntity) {
 
 }
 class SynchedEntityBase;
 class ServerGameEntity;
-
-class PlayerEntity : public SynchedEntityBase {
-public:
-    // Constructor/Deconstructor.
-    PlayerEntity();
-    virtual ~PlayerEntity();
-
-    DefineMapClassSelfConstruct("PlayerEntity", SynchedEntityBase, ServerGameEntity);
-GibEntity::~GibEntity() {
-
-}
 
 //
 //===============

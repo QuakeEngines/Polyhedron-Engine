@@ -45,7 +45,7 @@ q_printf(2, 3);
 #endif // CGAME_INCLUDE
 
 // game print flags
-#define PRINT_LOW           0       // pickup messages
-#define PRINT_MEDIUM        1       // death messages
-#define PRINT_HIGH          2       // critical messages
-#define PRINT_CHAT          3       // chat messages 
+#define PRINT_LOW           0       // Pickup messages
+#define PRINT_MEDIUM        1       // Death messages
+#define PRINT_HIGH          2       // Critical messages
+#define PRINT_CHAT          3       // Chat messages 

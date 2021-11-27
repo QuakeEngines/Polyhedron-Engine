@@ -232,7 +232,7 @@ void SVG_Client_CalculateBlend(PlayerEntity *ent)
     ServerClient* client = nullptr;
 
     if (!ent || !(client = ent->GetClient()) ||
-        !ent->IsSubclassOf<PlayerEntity>()) {
+        !ent->IsSubclassOf<PlayerEntity*>()) {
         return;
     }
 

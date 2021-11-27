@@ -37,7 +37,7 @@ ServerEntity* GetEntityServerHandle(ServerEntityID id) {
     return &serverEntityPool.entities[id];
 }
 
-void SetNumberOfEntities(int32_t num) {
+void SetNumberOfEntities(ServerEntityID num) {
     if (num > MAX_EDICTS) {
         Com_Error(ERR_DROP, "Invalid NumberOfEntities: '%i' passed to %s.", num, __func__);
     }
@@ -45,9 +45,10 @@ void SetNumberOfEntities(int32_t num) {
     serverEntityPool.currentNumberOfEntities = num;
 }
 
-int32_t GetNumberOfEntities() {
+ServerEntityID GetNumberOfEntities() {
     return serverEntityPool.currentNumberOfEntities;
 }
+
 
 /*
 =============================================================================

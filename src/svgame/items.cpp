@@ -20,9 +20,9 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "utils.h"           // Include Utilities funcs.
 #include "player/hud.h"      // Include HUD funcs.
 
-#include "entities/base/SynchedEntityBase.h"
-#include "entities/base/ServerGameEntity.h"
-#include "entities/base/PlayerEntity.h"
+//#include "entities/base/SynchedEntityBase.h"
+//#include "entities/base/ServerGameEntity.h"
+//#include "entities/base/PlayerEntity.h"
 
 #include "weapons/blaster.h"
 #include "weapons/machinegun.h"

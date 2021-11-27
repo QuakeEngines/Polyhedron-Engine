@@ -7,230 +7,224 @@ cmake_minimum_required (VERSION 3.8)
 ###############################################################################
 ###################### CLIENT GAME
 SET(SRC_CLGAME
-	clgame/ClientGameExports.cpp
-	clgame/ClientGameImports.cpp
+	CLGame/ClientGameExports.cpp
+	CLGame/ClientGameImports.cpp
 
-	clgame/exports/Core.cpp
-	clgame/exports/Entities.cpp
-	clgame/exports/Media.cpp
-	clgame/exports/Movement.cpp
-	clgame/exports/Prediction.cpp
-	clgame/exports/Screen.cpp
-	clgame/exports/ServerMessage.cpp
-	clgame/exports/View.cpp
+	CLGame/Exports/Core.cpp
+	CLGame/Exports/Entities.cpp
+	CLGame/Exports/Media.cpp
+	CLGame/Exports/Movement.cpp
+	CLGame/Exports/Prediction.cpp
+	CLGame/Exports/Screen.cpp
+	CLGame/Exports/ServerMessage.cpp
+	CLGame/Exports/View.cpp
 
-	clgame/clg_effects.cpp
-	clgame/clg_entities.cpp
-	clgame/clg_input.cpp
-	clgame/clg_main.cpp
-	clgame/clg_media.cpp
-	clgame/clg_newfx.cpp
-	clgame/clg_parse.cpp
-	clgame/clg_predict.cpp
-	clgame/clg_screen.cpp
-	clgame/clg_tents.cpp
-	clgame/clg_view.cpp
+	CLGame/clg_effects.cpp
+	CLGame/clg_entities.cpp
+	CLGame/clg_input.cpp
+	CLGame/clg_main.cpp
+	CLGame/clg_media.cpp
+	CLGame/clg_newfx.cpp
+	CLGame/clg_parse.cpp
+	CLGame/clg_predict.cpp
+	CLGame/clg_screen.cpp
+	CLGame/clg_tents.cpp
+	CLGame/clg_view.cpp
 
-	clgame/clgame.def
+	CLGame/clgame.def
 )
 
 SET(HEADERS_CLGAME
-	clgame/ClientGameExports.h
-	clgame/ClientGameImports.h
+	CLGame/ClientGameExports.h
+	CLGame/ClientGameImports.h
 
-	clgame/exports/Core.h
-	clgame/exports/Entities.h
-	clgame/exports/Media.h
-	clgame/exports/Movement.h
-	clgame/exports/Prediction.h
-	clgame/exports/Screen.h
-	clgame/exports/ServerMessage.h
-	clgame/exports/View.h
+	CLGame/Exports/Core.h
+	CLGame/Exports/Entities.h
+	CLGame/Exports/Media.h
+	CLGame/Exports/Movement.h
+	CLGame/Exports/Prediction.h
+	CLGame/Exports/Screen.h
+	CLGame/Exports/ServerMessage.h
+	CLGame/Exports/View.h
 
-	clgame/clg_effects.h
-	clgame/clg_entities.h
-	clgame/clg_input.h
-	clgame/clg_local.h
-	clgame/clg_main.h
-	clgame/clg_media.h
-	clgame/clg_newfx.h
-	clgame/clg_parse.h
-	clgame/clg_predict.h
-	clgame/clg_screen.h
-	clgame/clg_tents.h
-	clgame/clg_view.h
+	CLGame/clg_effects.h
+	CLGame/clg_entities.h
+	CLGame/clg_input.h
+	CLGame/clg_local.h
+	CLGame/clg_main.h
+	CLGame/clg_media.h
+	CLGame/clg_newfx.h
+	CLGame/clg_parse.h
+	CLGame/clg_predict.h
+	CLGame/clg_screen.h
+	CLGame/clg_tents.h
+	CLGame/clg_view.h
 )
 
 # Server game DLL
 # Throw all sources in here, but group them elsewhere
 SET( SRC_SVGAME 
-	svgame/brushfuncs.cpp
-	svgame/chasecamera.cpp
-	svgame/commands.cpp
-	svgame/combat.cpp
-	svgame/effects.cpp
-	svgame/entities.cpp
-	svgame/functionpointers.cpp
-	svgame/items.cpp
-	svgame/ImportsWrapper.cpp
-	svgame/main.cpp
-	svgame/effects.cpp
-	svgame/save.cpp
-	svgame/spawn.cpp
-	svgame/svcmds.cpp
-	svgame/trigger.cpp
-	svgame/utils.cpp
-	svgame/weapons.cpp 
+	SVGame/ChaseCamera.cpp
+	SVGame/Commands.cpp
+	SVGame/Combat.cpp
+	SVGame/Effects.cpp
+	SVGame/Entities.cpp
+	SVGame/FunctionPointers.cpp
+	SVGame/Items.cpp
+	SVGame/ImportsWrapper.cpp
+	SVGame/Main.cpp
+	SVGame/Save.cpp
+	SVGame/Spawn.cpp
+	SVGame/ServerCommands.cpp
+	SVGame/Trigger.cpp
+	SVGame/Utilities.cpp
+	SVGame/Weapons.cpp 
 
-	svgame/ai/MonsterAI.cpp
-	svgame/entities/base/EntityBase.cpp
-	svgame/entities/base/ServerGameEntity.cpp
-	svgame/entities/base/SynchedEntityBase.cpp
-	svgame/entities/base/PrivateEntityBase.cpp
-	svgame/entities/base/SVGBaseTrigger.cpp
-	svgame/entities/base/SVGBaseMover.cpp
-	svgame/entities/base/BodyCorpse.cpp
-	svgame/entities/base/DebrisEntity.cpp
-	svgame/entities/base/GibEntity.cpp
-	svgame/entities/base/PlayerEntity.cpp
-	#svgame/entities/info/InfoNotNull.cpp
-	svgame/entities/info/InfoNull.cpp
-	svgame/entities/info/InfoPlayerCoop.cpp
-	svgame/entities/info/InfoPlayerDeathmatch.cpp
-	svgame/entities/info/InfoPlayerIntermission.cpp
-	svgame/entities/info/InfoPlayerStart.cpp
-	svgame/entities/func/FuncAreaportal.cpp
-	svgame/entities/func/FuncButton.cpp
-	#svgame/entities/func/FuncConveyor.cpp
-	svgame/entities/func/FuncDoor.cpp 
-	svgame/entities/func/FuncDoorRotating.cpp
-	svgame/entities/func/FuncExplosive.cpp 
-	#svgame/entities/func/FuncKillbox.cpp
-	#svgame/entities/func/FuncObject.cpp
-	#svgame/entities/func/FuncPlat.cpp
-	svgame/entities/func/FuncRotating.cpp
-	svgame/entities/func/FuncTimer.cpp
-	svgame/entities/func/FuncTrain.cpp 
-	svgame/entities/func/FuncWall.cpp
-	#svgame/entities/func/FuncWater.cpp
-	#svgame/entities/misc/MiscExplobox.cpp
-	#svgame/entities/misc/MiscGibArm.cpp 
-	#svgame/entities/misc/MiscGibLeg.cpp 
-	#svgame/entities/misc/MiscGibHead.cpp 
-	svgame/entities/misc/MiscExplosionBox.cpp
-	svgame/entities/misc/MiscServerModel.cpp
-	#svgame/entities/misc/MiscTeleporter.cpp
-	#svgame/entities/misc/MiscTeleporterDest.cpp
-	svgame/entities/path/PathCorner.cpp
-	#svgame/entities/target/TargetBlaster.cpp
-	#svgame/entities/target/TargetChangelevel.cpp
-	#svgame/entities/target/TargetCrosslevel_target.cpp
-	#svgame/entities/target/TargetCrosslevel_trigger.cpp
-	svgame/entities/target/TargetEarthquake.cpp
-	svgame/entities/target/TargetExplosion.cpp
-	#svgame/entities/target/TargetLightramp.cpp
-	#svgame/entities/target/TargetSpawner.cpp
-	svgame/entities/target/TargetSpeaker.cpp
-	#svgame/entities/target/TargetSplash.cpp
-	svgame/entities/target/TargetTempEntity.cpp
-	svgame/entities/trigger/TriggerCounter.cpp
-	#svgame/entities/trigger/TriggerElevator.cpp
-	svgame/entities/trigger/TriggerGravity.cpp
-	#svgame/entities/trigger/TriggerKey.cpp
-	#svgame/entities/trigger/TriggerMonsterjump.cpp
-	svgame/entities/trigger/TriggerPush.cpp
-	svgame/entities/trigger/TriggerAlways.cpp
-	svgame/entities/trigger/TriggerAutoDoor.cpp
-	svgame/entities/trigger/TriggerDelayedUse.cpp
-	svgame/entities/trigger/TriggerHurt.cpp
-	svgame/entities/trigger/TriggerMultiple.cpp
-	svgame/entities/trigger/TriggerOnce.cpp
-	svgame/entities/trigger/TriggerRelay.cpp
-	svgame/entities/weaponry/BlasterBolt.cpp
-	svgame/entities/world/Light.cpp
-	svgame/entities/world/WorldSpawn.cpp
-	svgame/gamemodes/DefaultGameMode.cpp
-	svgame/gamemodes/CoopGameMode.cpp
-	svgame/gamemodes/DeathMatchGameMode.cpp
-	svgame/physics/physics.cpp
-	svgame/physics/stepmove.cpp
-	svgame/player/client.cpp
-	svgame/player/hud.cpp
-	svgame/player/trail.cpp
-	svgame/player/player.cpp
-	svgame/player/view.cpp
-	svgame/player/weapons.cpp
-	svgame/weapons/blaster.cpp
-	svgame/weapons/machinegun.cpp
-	svgame/weapons/shotgun.cpp
-	svgame/weapons/supershotgun.cpp
-    svgame/svgame.def
+	SVGame/AI/MonsterAI.cpp
+	SVGame/Entities/Base/ServerGameEntity.cpp
+	SVGame/Entities/Base/SVGBaseTrigger.cpp
+	SVGame/Entities/Base/SVGBaseMover.cpp
+	SVGame/Entities/Base/BodyCorpse.cpp
+	SVGame/Entities/Base/DebrisEntity.cpp
+	SVGame/Entities/Base/GibEntity.cpp
+	SVGame/Entities/Base/PlayerEntity.cpp
+	#SVGame/Entities/Info/InfoNotNull.cpp
+	SVGame/Entities/Info/InfoNull.cpp
+	SVGame/Entities/Info/InfoPlayerCoop.cpp
+	SVGame/Entities/Info/InfoPlayerDeathmatch.cpp
+	SVGame/Entities/Info/InfoPlayerIntermission.cpp
+	SVGame/Entities/Info/InfoPlayerStart.cpp
+	SVGame/Entities/Func/FuncAreaportal.cpp
+	SVGame/Entities/Func/FuncButton.cpp
+	#SVGame/Entities/Func/FuncConveyor.cpp
+	SVGame/Entities/Func/FuncDoor.cpp 
+	SVGame/Entities/Func/FuncDoorRotating.cpp
+	SVGame/Entities/Func/FuncExplosive.cpp 
+	#SVGame/Entities/Func/FuncKillbox.cpp
+	#SVGame/Entities/Func/FuncObject.cpp
+	#SVGame/Entities/Func/FuncPlat.cpp
+	SVGame/Entities/Func/FuncRotating.cpp
+	SVGame/Entities/Func/FuncTimer.cpp
+	SVGame/Entities/Func/FuncTrain.cpp 
+	SVGame/Entities/Func/FuncWall.cpp
+	#SVGame/Entities/Func/FuncWater.cpp
+	#SVGame/Entities/Misc/MiscExplobox.cpp
+	#SVGame/Entities/Misc/MiscGibArm.cpp 
+	#SVGame/Entities/Misc/MiscGibLeg.cpp 
+	#SVGame/Entities/Misc/MiscGibHead.cpp 
+	SVGame/Entities/Misc/MiscExplosionBox.cpp
+	SVGame/Entities/Misc/MiscServerModel.cpp
+	#SVGame/Entities/Misc/MiscTeleporter.cpp
+	#SVGame/Entities/Misc/MiscTeleporterDest.cpp
+	SVGame/entities/path/PathCorner.cpp
+	#SVGame/Entities/Target/TargetBlaster.cpp
+	#SVGame/Entities/Target/TargetChangelevel.cpp
+	#SVGame/Entities/Target/TargetCrosslevel_target.cpp
+	#SVGame/Entities/Target/TargetCrosslevel_trigger.cpp
+	SVGame/Entities/Target/TargetEarthquake.cpp
+	SVGame/Entities/Target/TargetExplosion.cpp
+	#SVGame/Entities/Target/TargetLightramp.cpp
+	#SVGame/Entities/Target/TargetSpawner.cpp
+	SVGame/Entities/Target/TargetSpeaker.cpp
+	#SVGame/Entities/Target/TargetSplash.cpp
+	SVGame/Entities/Target/TargetTempEntity.cpp
+	SVGame/Entities/Trigger/TriggerCounter.cpp
+	#SVGame/Entities/Trigger/TriggerElevator.cpp
+	SVGame/Entities/Trigger/TriggerGravity.cpp
+	#SVGame/Entities/Trigger/TriggerKey.cpp
+	#SVGame/Entities/Trigger/TriggerMonsterjump.cpp
+	SVGame/Entities/Trigger/TriggerPush.cpp
+	SVGame/Entities/Trigger/TriggerAlways.cpp
+	SVGame/Entities/Trigger/TriggerAutoDoor.cpp
+	SVGame/Entities/Trigger/TriggerDelayedUse.cpp
+	SVGame/Entities/Trigger/TriggerHurt.cpp
+	SVGame/Entities/Trigger/TriggerMultiple.cpp
+	SVGame/Entities/Trigger/TriggerOnce.cpp
+	SVGame/Entities/Trigger/TriggerRelay.cpp
+	SVGame/entities/weaponry/BlasterBolt.cpp
+	SVGame/entities/world/Light.cpp
+	SVGame/entities/world/WorldSpawn.cpp
+	SVGame/Gamemodes/DefaultGameMode.cpp
+	SVGame/Gamemodes/CoopGameMode.cpp
+	SVGame/Gamemodes/DeathMatchGameMode.cpp
+	SVGame/Physics/physics.cpp
+	SVGame/Physics/stepmove.cpp
+	SVGame/Player/client.cpp
+	SVGame/Player/hud.cpp
+	SVGame/Player/trail.cpp
+	SVGame/Player/player.cpp
+	SVGame/Player/view.cpp
+	SVGame/Player/weapons.cpp
+	SVGame/Weapons/blaster.cpp
+	SVGame/Weapons/machinegun.cpp
+	SVGame/Weapons/shotgun.cpp
+	SVGame/Weapons/supershotgun.cpp
+    SVGame/svgame.def
     )
     
     SET ( HEADERS_SVGAME
-	svgame/g_local.h
-	svgame/brushfuncs.h
-	svgame/chasecamera.h
-	svgame/effects.h
-	svgame/entities.h
-	svgame/functionpointers.h
-	svgame/trigger.h
-	svgame/utils.h
-	svgame/ai/MonsterAI.h
-	svgame/entities/base/TypeInfo.h
-	svgame/entities/base/ServerGameEntity.h
-	svgame/entities/base/PrivateEntityBase.h
-	svgame/entities/base/SynchedEntityBase.h
-	svgame/entities/base/SVGBaseTrigger.h
-	svgame/entities/base/SVGBaseMover.h
-	svgame/entities/base/BodyCorpse.h
-	svgame/entities/base/DebrisEntity.h
-	svgame/entities/base/GibEntity.h
-	svgame/entities/base/PlayerEntity.h
-	svgame/entities/func/FuncAreaportal.h
-	svgame/entities/func/FuncButton.h
-	svgame/entities/func/FuncDoor.h
-	svgame/entities/func/FuncDoorRotating.h
-	svgame/entities/func/FuncExplosive.h
-	svgame/entities/func/FuncRotating.h
-	svgame/entities/func/FuncTimer.h
-	svgame/entities/func/FuncTrain.h
-	svgame/entities/func/FuncWall.h
-	svgame/entities/info/InfoPlayerStart.h
-	svgame/entities/misc/MiscExplosionBox.h
-	svgame/entities/misc/MiscServerModel.h
-	svgame/entities/path/PathCorner.h
-	svgame/entities/target/TargetEarthquake.h
-	svgame/entities/target/TargetExplosion.h
-	svgame/entities/target/TargetSpeaker.h
-	svgame/entities/target/TargetTempEntity.h
-	svgame/entities/trigger/TriggerAlways.h
-	svgame/entities/trigger/TriggerAutoDoor.h
-	svgame/entities/trigger/TriggerCounter.h
-	svgame/entities/trigger/TriggerDelayedUse.h
-	svgame/entities/trigger/TriggerHurt.h
-	svgame/entities/trigger/TriggerGravity.h
-	svgame/entities/trigger/TriggerMultiple.h
-	svgame/entities/trigger/TriggerOnce.h
-	svgame/entities/trigger/TriggerPush.h
-	svgame/entities/trigger/TriggerRelay.h
-	svgame/entities/weaponry/BlasterBolt.h
-	svgame/entities/world/Light.h
-	svgame/entities/world/WorldSpawn.h
-	svgame/gamemodes/DefaultGameMode.h
-	svgame/gamemodes/CoopGameMode.h
-	svgame/gamemodes/DeathMatchGameMode.h
-	svgame/gamemodes/IGameMode.h
-	svgame/player/animations.h
-	svgame/player/client.h
-	svgame/player/player.h
-	svgame/player/view.h
-	svgame/player/weapons.h
-	svgame/weapons/blaster.h
-	svgame/weapons/machinegun.h
-	svgame/weapons/shotgun.h
-	svgame/weapons/supershotgun.h
-    svgame/svgame.def
+		SVGame/g_local.h
+		SVGame/ChaseCamera.h
+		SVGame/effects.h
+		SVGame/entities.h
+		SVGame/functionpointers.h
+		SVGame/trigger.h
+		SVGame/utils.h
+		SVGame/ai/MonsterAI.h
+
+	#	SVGame/Entities/Base/ServerGameEntity.h
+		SVGame/Entities/Base/PrivateEntityBase.cpp
+		shared/Entities/Base/SynchedEntityBase.cpp
+		SVGame/Entities/Base/SVGBaseTrigger.h
+		SVGame/Entities/Base/SVGBaseMover.h
+		SVGame/Entities/Base/BodyCorpse.h
+		SVGame/Entities/Base/DebrisEntity.h
+		SVGame/Entities/Base/GibEntity.h
+		SVGame/Entities/Base/PlayerEntity.h
+		SVGame/Entities/Func/FuncAreaportal.h
+		SVGame/Entities/Func/FuncButton.h
+		SVGame/Entities/Func/FuncDoor.h
+		SVGame/Entities/Func/FuncDoorRotating.h
+		SVGame/Entities/Func/FuncExplosive.h
+		SVGame/Entities/Func/FuncRotating.h
+		SVGame/Entities/Func/FuncTimer.h
+		SVGame/Entities/Func/FuncTrain.h
+		SVGame/Entities/Func/FuncWall.h
+		SVGame/Entities/Info/InfoPlayerStart.h
+		SVGame/Entities/Misc/MiscExplosionBox.h
+		SVGame/Entities/Misc/MiscServerModel.h
+		SVGame/Entities/Path/PathCorner.h
+		SVGame/Entities/Target/TargetEarthquake.h
+		SVGame/Entities/Target/TargetExplosion.h
+		SVGame/Entities/Target/TargetSpeaker.h
+		SVGame/Entities/Target/TargetTempEntity.h
+		SVGame/Entities/Trigger/TriggerAlways.h
+		SVGame/Entities/Trigger/TriggerAutoDoor.h
+		SVGame/Entities/Trigger/TriggerCounter.h
+		SVGame/Entities/Trigger/TriggerDelayedUse.h
+		SVGame/Entities/Trigger/TriggerHurt.h
+		SVGame/Entities/Trigger/TriggerGravity.h
+		SVGame/Entities/Trigger/TriggerMultiple.h
+		SVGame/Entities/Trigger/TriggerOnce.h
+		SVGame/Entities/Trigger/TriggerPush.h
+		SVGame/Entities/Trigger/TriggerRelay.h
+		SVGame/Entities/Weaponry/BlasterBolt.h
+		SVGame/Entities/World/Light.h
+		SVGame/Entities/World/WorldSpawn.h
+		SVGame/Gamemodes/DefaultGameMode.h
+		SVGame/Gamemodes/CoopGameMode.h
+		SVGame/Gamemodes/DeathMatchGameMode.h
+		SVGame/Gamemodes/IGameMode.h
+		SVGame/Player/animations.h
+		SVGame/Player/client.h
+		SVGame/Player/player.h
+		SVGame/Player/view.h
+		SVGame/Player/weapons.h
+		SVGame/Weapons/blaster.h
+		SVGame/Weapons/machinegun.h
+		SVGame/Weapons/shotgun.h
+		SVGame/Weapons/supershotgun.h
+		SVGame/svgame.def
     )
     
     ###################### Client.
@@ -420,7 +414,8 @@ SET(HEADERS_SHARED
 	../inc/shared/containers/IterableCArray.h
 
 	# Entities.
-	../inc/shared/Entities/ServerEntity.h
+	../inc/shared/Entities/Base/ServerEntity.h
+	../inc/shared/Entities/Base/EntityBase.h
 
 	# Interfaces
 	../inc/shared/interfaces/IClientGameExports.h
@@ -463,6 +458,9 @@ SET(SRC_SHARED
 	shared/math/plane.cpp
 	shared/math/vector3.cpp
 	shared/math.cpp
+
+	# Entities.
+	shared/Entities/Base/EntityBase.cpp
 	
 	# Random
 	shared/shared.cpp
@@ -647,7 +645,13 @@ if (CONFIG_BUILD_SV_GAME)
 	# Used for sharedgame code(such as pmove), so we can ifdef certain parts specific to client or server.	
 	ADD_DEFINITIONS(-DSHAREDGAME_SERVER=1)
 	# Add library.
-	ADD_LIBRARY(svgame SHARED ${SRC_SVGAME} ${HEADERS_SVGAME} ${SRC_SHARED} ${HEADERS_SHARED} ${SRC_SHAREDGAME} ${HEADERS_SHAREDGAME})
+	ADD_LIBRARY(svgame SHARED 
+		${SRC_SVGAME} 
+		${HEADERS_SVGAME} 
+		${SRC_SHARED} 
+		${HEADERS_SHARED} 
+		${SRC_SHAREDGAME} 
+		${HEADERS_SHAREDGAME})
 endif()
 
 # Optional build target.
@@ -754,7 +758,7 @@ SOURCE_GROUP( TREE ${CMAKE_SOURCE_DIR} FILES ${HEADERS_CLIENT})
 SOURCE_GROUP( TREE ${CMAKE_SOURCE_DIR} FILES ${SRC_SERVER})
 SOURCE_GROUP( TREE ${CMAKE_SOURCE_DIR} FILES ${HEADERS_SERVER})
 
-# Old SVGame source grouping - it just bundled *everything* into svgame/sources and svgame/headers, eugh -Admer
+# Old SVGame source grouping - it just bundled *everything* into SVGame/sources and SVGame/headers, eugh -Admer
 #SOURCE_GROUP("svgame" FILES ${SRC_SVGAME})
 #SOURCE_GROUP("svgame" FILES ${HEADERS_SVGAME})
 

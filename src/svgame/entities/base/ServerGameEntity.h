@@ -10,9 +10,13 @@
 */
 #pragma once
 
+#include "shared/Entities/TypeInfo.h"
+
 // It makes sense to include TypeInfo in ServerGameEntity.h, 
 // because this class absolutely requires it
-#include "TypeInfo.h"
+struct ServerEntity;
+class SynchedEntityBase;
+class ServerGameEntity;
 
 class ServerGameEntity abstract : public SynchedEntityBase {
 public:

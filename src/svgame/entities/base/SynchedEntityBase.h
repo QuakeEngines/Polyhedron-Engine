@@ -1,7 +1,7 @@
 // License here.
 #pragma once
 
-#include "EntityBase.h"
+#include "shared/Entities/Base/EntityBase.h"
 
 //---------------------------------------------------------
 // Used for when an entity has to be in sync with the server.
@@ -16,12 +16,12 @@ public:
     // Dispatch Callback Function Pointers.
     //
     //------------------------------------------------------------
-    using ThinkCallbackPointer      = void(ServerGameEntity::*)(void);
-    using UseCallbackPointer        = void(ServerGameEntity::*)(ServerGameEntity* other, ServerGameEntity* activator);
-    using TouchCallbackPointer      = void(ServerGameEntity::*)(ServerGameEntity* self, ServerGameEntity* other, cplane_t* plane, csurface_t* surf);
-    using BlockedCallbackPointer    = void(ServerGameEntity::*)(ServerGameEntity* other);
-    using TakeDamageCallbackPointer = void(ServerGameEntity::*)(ServerGameEntity* other, float kick, int32_t damage);
-    using DieCallbackPointer        = void(ServerGameEntity::*)(ServerGameEntity* inflictor, ServerGameEntity* attacker, int damage, const vec3_t& point);
+    using ThinkCallbackPointer      = void(SynchedEntityBase::*)(void);
+    using UseCallbackPointer        = void(SynchedEntityBase::*)(SynchedEntityBase* other, SynchedEntityBase* activator);
+    using TouchCallbackPointer      = void(SynchedEntityBase::*)(SynchedEntityBase* self, SynchedEntityBase* other, cplane_t* plane, csurface_t* surf);
+    using BlockedCallbackPointer    = void(SynchedEntityBase::*)(SynchedEntityBase* other);
+    using TakeDamageCallbackPointer = void(SynchedEntityBase::*)(SynchedEntityBase* other, float kick, int32_t damage);
+    using DieCallbackPointer        = void(SynchedEntityBase::*)(SynchedEntityBase* inflictor, SynchedEntityBase* attacker, int damage, const vec3_t& point);
 
 protected:
     // pick a free slot

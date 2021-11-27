@@ -18,7 +18,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 */
 // General.
 #include "../g_local.h"     // SVGame.
-#include "../chasecamera.h" // Chase Camera.
+#include "../ChaseCamera.h" // Chase Camera.
 #include "../effects.h"     // Effects.
 #include "../entities.h"    // Entities.
 #include "../utils.h"       // Util funcs.

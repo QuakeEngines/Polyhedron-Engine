@@ -18,7 +18,6 @@
 #include "../../gamemodes/IGameMode.h"
 
 // Class Entities.
-#include "../base/ServerGameEntity.h"
 #include "PlayerEntity.h"
 
 // Constructor/Deconstructor.

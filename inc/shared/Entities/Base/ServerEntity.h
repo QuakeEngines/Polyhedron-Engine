@@ -1,6 +1,7 @@
 // License here.
 #pragma once
-
+// Maximumn serverEntity clusters.
+static constexpr uint32_t MAX_ENT_CLUSTERS = 16;
 //---------------------------------------------------------
 // Server ServerEntity Data.
 //---------------------------------------------------------

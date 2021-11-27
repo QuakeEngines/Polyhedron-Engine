@@ -14,4 +14,5 @@
 PrivateEntityBase::PrivateEntityBase() :
     handleMemory{ .state = { .number = -1 } },
     EntityBase(&handleMemory) {
+
 }

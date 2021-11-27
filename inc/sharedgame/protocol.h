@@ -8,8 +8,7 @@
 // the client here.
 //
 */
-#ifndef __SHAREDGAME_PROTOCOL_H__
-#define __SHAREDGAME_PROTOCOL_H__
+#pragma once
 
 //-------------------
 // These are server game commands that get send to the client game module.
@@ -17,7 +16,7 @@
 //
 // The enum starts at 22, and has room up to 32 for custom commands.
 //-------------------
-typedef enum {
+enum ServerGameCommands {
     SVG_CMD_MUZZLEFLASH = 22,
     SVG_CMD_MUZZLEFLASH2,
     SVG_CMD_TEMP_ENTITY,
@@ -25,7 +24,7 @@ typedef enum {
     SVG_CMD_INVENTORY,
 
     SVG_CMD_NUM_TYPES
-} ServerGameCommands;
+};
 
 //-------------------
 // These are client game commands that get send to the server game module.
@@ -33,10 +32,6 @@ typedef enum {
 //
 // The enum starts at 13, and has room up to 32 for custom commands.
 //-------------------
-typedef enum {
+enum ClientGameCommands {
     CLG_CMD_NUM_TYPES = 13,
-} ClientGameCommands;
-
-
-
-#endif
+};

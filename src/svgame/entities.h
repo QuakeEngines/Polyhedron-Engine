@@ -35,10 +35,13 @@
 // 
 // Sometimes they don't and mayne we a
 //--------------------------------------------------------
-#include "entities/base/EntityBase.h"
-#include "entities/base/PrivateEntityBase.h"
-#include "entities/base/SynchedEntityBase.h"
+// Include our shared entity classes.
+#include "shared/entities.h"
+
+// ServerGame Specific.
 #include "entities/base/ServerGameEntity.h"
+
+// Predeclare
 
 // Using.
 using EntityDictionary = std::map<std::string, std::string>;

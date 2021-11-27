@@ -14,13 +14,11 @@
 #include "../../player/view.h"          // Include Player View functions..
 #include "../../utils.h"                // Util funcs.
 
-ServerGameEntity.h"// Class Entities.
-#include "../base/
+#include "../base/ServerGameEntity.h"
 #include "BlasterBolt.h"
 
 // Constructor/Deconstructor.
-BlasterBolt::BlasterBolt() 
-    : ServerGameEntity() {
+BlasterBolt::BlasterBolt() : ServerGameEntity() {
 
 }
 BlasterBolt::~BlasterBolt() {
