@@ -201,7 +201,7 @@ SET( SRC_SVGAME
 		## Source: SVGame - Entities - Base
 		#SVGame/Entities/Base/ServerGameEntity.h
 		SVGame/Entities/Base/PrivateEntityBase.cpp
-		shared/Entities/Base/SynchedEntityBase.cpp
+		SVGame/Entities/Base/SynchedEntityBase.cpp
 		SVGame/Entities/Base/SVGBaseTrigger.h
 		SVGame/Entities/Base/SVGBaseMover.h
 		SVGame/Entities/Base/PlayerEntity.h

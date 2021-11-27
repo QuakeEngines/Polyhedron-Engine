@@ -10,7 +10,7 @@
 */
 #pragma once
 
-#include "shared/Entities/TypeInfo.h"
+#include "Shared/Entities/TypeInfo.h"
 
 // It makes sense to include TypeInfo in ServerGameEntity.h, 
 // because this class absolutely requires it

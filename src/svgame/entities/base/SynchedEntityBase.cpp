@@ -5,7 +5,7 @@
 #include "../../../utils.h"		// Util funcs.
 
 // Shared Entities.
-#include "shared/entities.h"
+#include "Shared/entities.h"
 
 // Constructor.
 SynchedEntityBase::SynchedEntityBase() :

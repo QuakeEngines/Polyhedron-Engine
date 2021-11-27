@@ -20,14 +20,14 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef __SVGAME_G_LOCAL_H__
 #define __SVGAME_G_LOCAL_H__
 
-#include "shared/shared.h"
-#include "shared/list.h"
+#include "Shared/shared.h"
+#include "Shared/list.h"
 
 // define GAME_INCLUDE so that game.h does not define the
 // short, server-visible ServerClient and ServerEntity structures,
 // because we define the full size ones in this file
 #define GAME_INCLUDE
-#include "shared/svgame.h"
+#include "Shared/svgame.h"
 #include "sharedgame/sharedgame.h" // Include SG Base.
 #include "sharedgame/protocol.h"
 

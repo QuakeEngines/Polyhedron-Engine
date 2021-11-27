@@ -8,8 +8,8 @@
 */
 #pragma once
 
-#include "shared/Entities/Base/EntityBase.h"
-#include "shared/Entities/Base/ServerEntity.h"
+#include "Shared/Entities/Base/EntityBase.h"
+#include "Shared/Entities/Base/ServerEntity.h"
 
 //---------------------------------------------------------
 // Used for entities that have no need to take up an entity

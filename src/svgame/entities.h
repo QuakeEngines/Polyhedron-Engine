@@ -36,7 +36,7 @@
 // Sometimes they don't and mayne we a
 //--------------------------------------------------------
 // Include our shared entity classes.
-#include "shared/entities.h"
+#include "Shared/entities.h"
 
 // ServerGame Specific.
 #include "entities/base/ServerGameEntity.h"

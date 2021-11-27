@@ -20,8 +20,8 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "g_local.h"
 #include "entities.h"
 #include "brushfuncs.h"
-#include "shared/Entities/Base/ServerGameEntity.h"
-#include "shared/Entities/Base/PlayerEntity.h"
+#include "Shared/Entities/Base/ServerGameEntity.h"
+#include "Shared/Entities/Base/PlayerEntity.h"
 
 // Game Mode interface.
 #include "gamemodes/IGameMode.h"

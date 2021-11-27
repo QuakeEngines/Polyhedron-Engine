@@ -21,7 +21,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 // common.c -- misc functions used in client and server
 //
 
-#include "shared/shared.h"
+#include "Shared/shared.h"
 
 #include "common/bsp.h"
 #include "common/cmd.h"

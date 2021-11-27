@@ -25,8 +25,8 @@
 
 // (Client/Game) related.
 #include "client/gamemodule.h"   // TODO: How come it can find client.h??
-#include "shared/cltypes.h"
-#include "shared/clgame.h"
+#include "Shared/cltypes.h"
+#include "Shared/clgame.h"
 
 // Contains the functions being exported to client game dll.
 IClientGameExports *cge;

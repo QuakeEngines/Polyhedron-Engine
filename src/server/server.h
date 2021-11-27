@@ -17,9 +17,9 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 */
 // server.h
 
-#include "shared/shared.h"
-#include "shared/list.h"
-#include "shared/svgame.h"
+#include "Shared/shared.h"
+#include "Shared/list.h"
+#include "Shared/svgame.h"
 
 #include "common/bsp.h"
 #include "common/cmd.h"

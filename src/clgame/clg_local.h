@@ -19,9 +19,9 @@
 #define CGAME_INCLUDE 1
 
 // Shared.
-#include "shared/shared.h"
-#include "shared/list.h"
-#include "shared/refresh.h"
+#include "Shared/shared.h"
+#include "Shared/list.h"
+#include "Shared/refresh.h"
 
 // Common.
 #include "common/cmodel.h"
@@ -35,8 +35,8 @@
 #include "sharedgame/protocol.h"
 
 // Shared Client Game Headers.
-#include "shared/cltypes.h"
-#include "shared/clgame.h"
+#include "Shared/cltypes.h"
+#include "Shared/clgame.h"
 
 // "Shared" cl frametime.
 // WID: TODO: Make these part of the ClientGameImports instead.

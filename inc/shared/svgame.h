@@ -19,10 +19,10 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #pragma once
 
 // Shared API include requirements.
-#include "shared/list.h"
+#include "Shared/list.h"
 
 // Shared Entity API include requirements.
-#include "shared/Entities/Base/ServerEntity.h"
+#include "Shared/Entities/Base/ServerEntity.h"
 
 // Shared Game API include requirements.
 #include "sharedgame/pmove.h"
@@ -75,7 +75,7 @@ struct gclient_s {
 //===================
 // First include the real shared ServerEntity struct that is known
 // by client AND server.
-#include "shared/Entities/Base/ServerEntity.h"
+#include "Shared/Entities/Base/ServerEntity.h"
 
 // In come the predefinition for the API functions.
 class ServerGameEntity;

@@ -17,7 +17,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 */
 // cvar.c -- dynamic variable tracking
 
-#include "shared/shared.h"
+#include "Shared/shared.h"
 #include "common/cmd.h"
 #include "common/common.h"
 #include "common/cvar.h"

@@ -29,7 +29,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 // After that, we check for whether we are on a ladder, ducking, on-ground, in-water,
 // and/or in air. We execute the right movement according to that.
 //
-#include "shared/shared.h"
+#include "Shared/shared.h"
 #include "sharedgame/sharedgame.h"
 #include "sharedgame/pmove.h"
 
