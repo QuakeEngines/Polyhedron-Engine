@@ -7,13 +7,13 @@
 //
 */
 #include "../../g_local.h"		// SVGame.
-#include "../../effects.h"		// Effects.
-#include "../../entities.h"		// Entities.
-#include "../../utils.h"		// Util funcs.
+#include "../../Effects.h"		// Effects.
+#include "../../Entities.h"		// Entities.
+#include "../../Utilities.h"		// Util funcs.
 
 #include "ServerGameEntity.h"
 #include "SVGBaseTrigger.h"
-#include "../trigger/TriggerDelayedUse.h"
+#include "../Trigger/TriggerDelayedUse.h"
 
 // Constructor/Deconstructor.
 ServerGameEntity::ServerGameEntity() {
