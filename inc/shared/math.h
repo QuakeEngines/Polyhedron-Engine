@@ -16,8 +16,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-#ifndef __SHARED__MATH_H__
-#define __SHARED__MATH_H__
+#pragma once
 
 //-----------------
 // Utilities
@@ -27,41 +26,39 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 //-----------------
 // Vectors
 //-----------------
-#include "Shared/math/vector2.h"
-#include "Shared/math/vector3.h"
-#include "Shared/math/vector4.h"
-#include "Shared/math/vector5.h"
+#include "Shared/Math/vector2.h"
+#include "Shared/Math/vector3.h"
+#include "Shared/Math/vector5.h"
+#include "Shared/Math/vector4.h"
 
 //-----------------
 // Matrixes
 //-----------------
-#include "Shared/math/matrix3.h"
-#include "Shared/math/matrix4.h"
+#include "Shared/Math/matrix3.h"
+#include "Shared/Math/matrix4.h"
 
 //-----------------
 // Plane
 //-----------------
-#include "Shared/math/plane.h"
+#include "Shared/Math/plane.h"
 
 //-----------------
 // Colors
 //-----------------
-#include "Shared/math/color.h"
+#include "Shared/Math/color.h"
 
 //-----------------
 // Rectangles.
 //-----------------
-#include "Shared/math/rectangle.h"
+#include "Shared/Math/rectangle.h"
 
 //-----------------
 // Quaternion.
 //-----------------
-#include "Shared/math/quaternion.h"
+#include "Shared/Math/quaternion.h"
 
 //-----------------
 // TODO: These should ultimately be removed and/or replaced.
 //-----------------
 #define NUMVERTEXNORMALS    162
 extern const vec3_t bytedirs[NUMVERTEXNORMALS];
-
-#endif // __SHARED__MATH_H__

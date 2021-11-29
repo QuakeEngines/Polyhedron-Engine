@@ -7,8 +7,7 @@
 // Default game mode to run, allows for all sorts of stuff.
 //
 */
-#ifndef __SVGAME_GAMEMODES_DEFAULTGAMEMODE_H__
-#define __SVGAME_GAMEMODES_DEFAULTGAMEMODE_H__
+#pragma once 
 
 #include "IGameMode.h"
 
@@ -26,37 +25,37 @@ public:
     //
     // Combat GameRules checks.
     //
-    virtual qboolean GetEntityTeamName(ServerGameEntity* ent, std::string &teamName) override;
-    virtual qboolean OnSameTeam(ServerGameEntity* ent1, ServerGameEntity* ent2) override;
-    virtual qboolean CanDamage(ServerGameEntity* targ, ServerGameEntity* inflictor) override;
+    virtual qboolean GetEntityTeamName(SynchedEntityBase* ent, std::string &teamName) override;
+    virtual qboolean OnSameTeam(SynchedEntityBase* ent1, SynchedEntityBase* ent2) override;
+    virtual qboolean CanDamage(SynchedEntityBase* targ, SynchedEntityBase* inflictor) override;
     virtual BaseEntityVector FindBaseEnitiesWithinRadius(const vec3_t& origin, float radius, uint32_t excludeSolidFlags) override;
 
     //
     // Combat GameMode actions.
     //
-    virtual void EntityKilled(ServerGameEntity* target, ServerGameEntity* inflictor, ServerGameEntity* attacker, int32_t damage, vec3_t point) override;
-    virtual void InflictDamage(ServerGameEntity* target, ServerGameEntity* inflictor, ServerGameEntity* attacker, const vec3_t& dmgDir, const vec3_t& point, const vec3_t& normal, int32_t damage, int32_t knockBack, int32_t dflags, int32_t mod) override;
-    virtual void InflictRadiusDamage(ServerGameEntity* inflictor, ServerGameEntity* attacker, float damage, ServerGameEntity* ignore, float radius, int32_t mod) override;
+    virtual void EntityKilled(SynchedEntityBase* target, SynchedEntityBase* inflictor, SynchedEntityBase* attacker, int32_t damage, vec3_t point) override;
+    virtual void InflictDamage(SynchedEntityBase* target, SynchedEntityBase* inflictor, SynchedEntityBase* attacker, const vec3_t& dmgDir, const vec3_t& point, const vec3_t& normal, int32_t damage, int32_t knockBack, int32_t dflags, int32_t mod) override;
+    virtual void InflictRadiusDamage(SynchedEntityBase* inflictor, SynchedEntityBase* attacker, float damage, SynchedEntityBase* ignore, float radius, int32_t mod) override;
     virtual void SetCurrentMeansOfDeath(int32_t meansOfDeath) override;
     virtual const int32_t& GetCurrentMeansOfDeath() override;
 
     //
     // Random Gameplay Functions.
     //
-    virtual void SpawnClientCorpse(ServerGameEntity* ent) override;
+    virtual void SpawnClientCorpse(SynchedEntityBase* ent) override;
     virtual void SpawnTempDamageEntity(int32_t type, const vec3_t& origin, const vec3_t& normal, int32_t damage) override;
     virtual vec3_t CalculateDamageVelocity(int32_t damage) override;
     
     //
     // Client related callbacks.
     // 
-    virtual qboolean ClientConnect(ServerEntity * serverEntity, char *userinfo) override;
-    virtual void ClientBegin(ServerEntity * serverEntity) override;
+    virtual qboolean ClientConnect(ServerEntity *serverEntity, char *userinfo) override;
+    virtual void ClientBegin(ServerEntity *serverEntity) override;
     virtual void ClientBeginServerFrame(ServerEntity * serverEntity) override;
     virtual void ClientEndServerFrame(ServerEntity *serverEntity) override;
-    virtual void ClientDisconnect(ServerEntity  * ent) override;
-    virtual void ClientUserinfoChanged(ServerGameEntity* ent, char *userinfo) override;
-    virtual void ClientUpdateObituary(ServerGameEntity* self, ServerGameEntity* inflictor, ServerGameEntity* attacker) override;
+    virtual void ClientDisconnect(ServerEntity  * serverEntity) override;
+    virtual void ClientUserinfoChanged(PlayerEntity* playerEntity, char *userinfo) override;
+    virtual void ClientUpdateObituary(SynchedEntityBase* self, SynchedEntityBase* inflictor, SynchedEntityBase* attacker) override;
 
     //
     // Client related functions/utilities.
@@ -79,5 +78,3 @@ public:
 private:
 
 };
-
-#endif // __SVGAME_GAMEMODES_DEFAULTGAMEMODE_H__

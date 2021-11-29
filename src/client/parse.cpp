@@ -17,9 +17,9 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 */
 // cl_parse.c  -- parse a message received from the server
 
-#include "client.h"
-#include "client/gamemodule.h"
-#include "Shared/clgame.h"
+#include "Client.h"
+#include "Client/GameModule.h"
+#include "Shared/ClientGame.h"
 
 // N&C: Cheesy hack, we need to actually make this extern in a header.
 extern IClientGameExports* cge;

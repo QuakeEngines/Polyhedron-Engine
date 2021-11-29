@@ -18,7 +18,7 @@ public:
     PlayerEntity();
     virtual ~PlayerEntity();
 
-    DefineMapClassSelfConstruct("PlayerEntity", SynchedEntityBase, ServerGameEntity);
+    DefineMapClassSelfConstruct("PlayerEntity", SynchedEntityBase, EntityBase);
 
     //
     // Interface functions. 

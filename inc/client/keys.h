@@ -26,8 +26,8 @@ void    Key_CharEvent(int key);
 
 qboolean    Key_GetOverstrikeMode(void);
 void        Key_SetOverstrikeMode(qboolean overstrike);
-keydest_t   Key_GetDest(void);
-void        Key_SetDest(keydest_t dest);
+KeyInputDestination   Key_GetDest(void);
+void        Key_SetDest(KeyInputDestination dest);
 
 int         Key_IsDown(int key);
 int         Key_AnyKeyDown(void);
@@ -41,6 +41,6 @@ const char  *Key_GetBindingForKey(int keynum);
 int			Key_EnumBindings(int key, const char *binding);
 void		Key_WriteBindings(qhandle_t f);
 
-void		Key_WaitKey(keywaitcb_t wait, void *arg);
+void		Key_WaitKey(KeyboardWaitCallback wait, void *arg);
 
 #endif // KEYS_H

@@ -23,7 +23,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "common/cvar.h"
 #include "common/error.h"
 #include "common/files.h"
-#include "common/prompt.h"
+#include "common/CommandPrompt.h"
 #include "system/system.h"
 #include "client/client.h"
 #include "format/pak.h"

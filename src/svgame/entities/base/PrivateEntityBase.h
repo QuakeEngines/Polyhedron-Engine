@@ -2,7 +2,7 @@
 // LICENSE HERE.
 
 //
-// PlayerEntityBase.h
+// PrivateEntityBase.h
 //
 //
 */

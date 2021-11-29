@@ -268,9 +268,9 @@ class IClientGameImportKeyboard {
 	// Sets key in overstrike mode.
 	virtual void SetOverstrikeMode(qboolean overStrike) = 0;
 	// Returns the current client state key destination.
-	virtual keydest_t GetDest(void) = 0;
+	virtual KeyInputDestination GetDest(void) = 0;
 	// Sets the key destination.
-	virtual void SetDest(keydest_t dest) = 0;
+	virtual void SetDest(KeyInputDestination dest) = 0;
 	// Returns key down status: if > 1, it is auto-repeating
 	virtual int32_t IsDown(int32_t key) = 0;
 	// Returns total number of keys down.

@@ -21,13 +21,13 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "Player/Animations.h"
 
 // Class Entities.
-#include "Entities/Base/ServerGameEntity.h"
+#include "Entities/Base/SynchedEntityBase.h"
 #include "Entities/Base/PlayerEntity.h"
 
 // Game Modes.
 #include "Gamemodes/IGameMode.h"
 
-char *ClientTeam(ServerGameEntity *ent)
+char *ClientTeam(SynchedEntityBase *ent)
 {
     char        *p;
     static char value[512];

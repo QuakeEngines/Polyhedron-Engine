@@ -165,7 +165,7 @@ void Key_SetOverstrikeMode(qboolean overstrike)
 Key_GetDest
 ===================
 */
-keydest_t Key_GetDest(void)
+KeyInputDestination Key_GetDest(void)
 {
     return cls.key_dest;
 }
@@ -175,14 +175,14 @@ keydest_t Key_GetDest(void)
 Key_SetDest
 ===================
 */
-void Key_SetDest(keydest_t dest)
+void Key_SetDest(KeyInputDestination dest)
 {
     int diff;
 
 // if not connected, console or menu should be up
     if (cls.connectionState < ClientConnectionState::Active && !(dest & (KEY_MENU | KEY_CONSOLE))) {
         
-        dest = (keydest_t)(dest | KEY_CONSOLE); // CPP: dest |= KEY_CONSOLE;
+        dest = (KeyInputDestination)(dest | KEY_CONSOLE); // CPP: dest |= KEY_CONSOLE;
     }
 
     diff = cls.key_dest ^ dest;

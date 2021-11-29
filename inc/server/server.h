@@ -16,10 +16,9 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-#ifndef SERVER_H
-#define SERVER_H
+#pragma once
 
-#include "common/net/net.h"
+#include "Common/Net/Net.h"
 
 #if USE_ICMP
 void SV_ErrorEvent(NetAdr *from, int ee_errno, int ee_info);
@@ -38,11 +37,6 @@ void            SV_SetServerState (uint32_t serverSate); // WATISDEZE: Added for
 char *SV_GetSaveInfo(const char *dir);
 #endif
 
-// svgame.c
-
-
 // user.c
 void SV_PreRunCmd(void);
 void SV_RunCmdCleanup(void);
-
-#endif // SERVER_H

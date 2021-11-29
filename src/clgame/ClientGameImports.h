@@ -139,8 +139,8 @@ class ClientGameImportFileSystem : public IClientGameImportFileSystem {
 class ClientGameImportKeyboard : public IClientGameImportKeyboard {
 	qboolean GetOverstrikeMode(void);
 	void SetOverstrikeMode(qboolean overStrike);
-	keydest_t GetDest(void);
-	void SetDest(keydest_t dest);
+	KeyInputDestination GetDest(void);
+	void SetDest(KeyInputDestination dest);
 	int32_t IsDown(int32_t key);
 	int32_t AnyKeyDown(void);
 	int32_t StringToKeynum(const char* str);

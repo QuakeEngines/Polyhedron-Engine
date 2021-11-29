@@ -17,19 +17,18 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 */
 // g_local.h -- local definitions for game module
 
-#ifndef __SVGAME_G_LOCAL_H__
-#define __SVGAME_G_LOCAL_H__
+#pragma once 
 
-#include "Shared/shared.h"
-#include "Shared/list.h"
+#include "Shared/Shared.h"
+#include "Shared/List.h"
 
 // define GAME_INCLUDE so that game.h does not define the
 // short, server-visible ServerClient and ServerEntity structures,
 // because we define the full size ones in this file
 #define GAME_INCLUDE
-#include "Shared/svgame.h"
+#include "Shared/ServerGame.h"
 #include "sharedgame/sharedgame.h" // Include SG Base.
-#include "sharedgame/protocol.h"
+#include "sharedgame/Protocol.h"
 
 // the "gameversion" client command will print32_t this plus compile date
 #define GAMEVERSION "basepoly"
@@ -1042,5 +1041,3 @@ struct gclient_s {
 //
 //    gitem_t *item;          // for bonus items
 //};
-
-#endif

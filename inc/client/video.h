@@ -16,9 +16,7 @@ You should have received a copy of the GNU General Public License along
 with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
-
-#ifndef VIDEO_H
-#define VIDEO_H
+#pragma once
 
 extern cvar_t       *vid_rtx;
 extern cvar_t       *vid_geometry;
@@ -57,5 +55,3 @@ qboolean VID_GetFullscreen(rect_t *rc, int *freq_p, int *depth_p);
 qboolean VID_GetGeometry(rect_t *rc);
 void VID_SetGeometry(rect_t *rc);
 void VID_ToggleFullscreen(void);
-
-#endif // VIDEO_H

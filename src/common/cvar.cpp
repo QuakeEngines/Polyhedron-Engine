@@ -22,7 +22,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "common/common.h"
 #include "common/cvar.h"
 #include "common/files.h"
-#include "common/prompt.h"
+#include "common/CommandPrompt.h"
 #include "common/utils.h"
 #include "common/zone.h"
 #include "client/client.h"

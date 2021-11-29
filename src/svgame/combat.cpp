@@ -18,13 +18,12 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 // g_combat.c
 
 #include "g_local.h"
-#include "entities.h"
-#include "brushfuncs.h"
-#include "Shared/Entities/Base/ServerGameEntity.h"
-#include "Shared/Entities/Base/PlayerEntity.h"
+#include "Entities.h"
+#include "Entities/Base/SynchedEntityBase.h"
+#include "Entities/Base/PlayerEntity.h"
 
 // Game Mode interface.
-#include "gamemodes/IGameMode.h"
+#include "Gamemodes/IGameMode.h"
 
 
 //
@@ -55,7 +54,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 // DamageFlags::IgnoreProtection    kills godmode, armor, everything
 //===============
 //
-void SVG_InflictDamage(ServerGameEntity *targ, ServerGameEntity *inflictor, ServerGameEntity *attacker, const vec3_t &dmgDir, const vec3_t &point, const vec3_t &normal, int damage, int knockBack, int dflags, int mod)
+void SVG_InflictDamage(SynchedEntityBase *targ, SynchedEntityBase *inflictor, SynchedEntityBase *attacker, const vec3_t &dmgDir, const vec3_t &point, const vec3_t &normal, int damage, int knockBack, int dflags, int mod)
 {
     game.gameMode->InflictDamage(targ, inflictor, attacker, dmgDir, point, normal, damage, knockBack, dflags, mod);
 }
@@ -69,7 +68,7 @@ void SVG_InflictDamage(ServerGameEntity *targ, ServerGameEntity *inflictor, Serv
 // go haywire on because we appreciate to put them into a lot of misery. Just sayin' ;-) :P
 //===============
 //
-void SVG_InflictRadiusDamage(ServerGameEntity *inflictor, ServerGameEntity *attacker, float damage, ServerGameEntity *ignore, float radius, int mod)
+void SVG_InflictRadiusDamage(SynchedEntityBase *inflictor, SynchedEntityBase *attacker, float damage, SynchedEntityBase *ignore, float radius, int mod)
 {
     game.gameMode->InflictRadiusDamage(inflictor, attacker, damage, ignore, radius, mod);
 }

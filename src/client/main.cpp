@@ -21,7 +21,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "client.h"
 #include "client/ui/ui.h"
-#include "client/sound/vorbis.h"
+#include "client/SoundDrivers/vorbis.h"
 #include "client/gamemodule.h"
 
 cvar_t  *rcon_address;

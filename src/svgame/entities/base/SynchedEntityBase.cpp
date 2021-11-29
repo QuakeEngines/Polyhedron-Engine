@@ -1,19 +1,19 @@
 // SVGame Core.
-#include "../../../g_local.h"		// SVGame.
-#include "../../../effects.h"		// Effects.
-#include "../../../entities.h"    // Entities.
-#include "../../../utils.h"		// Util funcs.
+#include "../../../g_local.h"	// SVGame.
+#include "../../../Effects.h"	// Effects.
+#include "../../../Entities.h"	// Entities.
+#include "../../../Utils.h"		// Util funcs.
 
 // Shared Entities.
-#include "Shared/entities.h"
+#include "Shared/Entities.h"
 
 // Constructor.
 SynchedEntityBase::SynchedEntityBase() :
-	EntityBase(QueryFreeServerEntity()) {
+	EntityBase(EntityBase::QueryFreeServerEntity()) {
 };
 
-SynchedEntityBase::SynchedEntityBase(ServerEntity* entity) :
-	EntityBase(entity) {
+SynchedEntityBase::SynchedEntityBase(ServerEntity* serverEntity) :
+	EntityBase(serverEntity) {
 };
 
 /*static*/ ServerEntity* SynchedEntityBase::QueryFreeServerEntity()

@@ -8,10 +8,10 @@
 */
 // Common Includes.
 #include "../../g_local.h"
-#include "../../effects.h"
-#include "../../entities.h"
-#include "../../utils.h"
-#include "../../physics/stepmove.h
+#include "../../Effects.h"
+#include "../../Entities.h"
+#include "../../Utilities.h"
+#include "../../Physics/Stepmove.h
 
 
 // Misc Server Model ServerEntity.

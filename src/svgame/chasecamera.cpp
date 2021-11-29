@@ -16,11 +16,11 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 #include "g_local.h"
-#include "entities.h"
+#include "Entities.h"
 #include "ChaseCamera.h"
 
-#include "entities/base/ServerGameEntity.h"
-#include "entities/base/PlayerEntity.h"
+#include "Entities/Base/SynchedEntityBase.h"
+#include "Entities/Base/PlayerEntity.h"
 
 void SVG_UpdateChaseCam(PlayerEntity *ent)
 {

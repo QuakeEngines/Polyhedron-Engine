@@ -26,13 +26,13 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "common/cmodel.h"
 #include "common/common.h"
 #include "common/cvar.h"
-#include "common/field.h"
+#include "common/LineEditField.h"
 #include "common/files.h"
 //#include "common/pmove.h"
 #include "common/msg.h"
 #include "common/net/netchan.h"
 #include "common/net/net.h"
-#include "common/prompt.h"
+#include "common/CommandPrompt.h"
 #include "common/protocol.h"
 #include "common/sizebuffer.h"
 #include "common/zone.h"
@@ -44,7 +44,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "client/client.h"
 #include "client/input.h"
 #include "client/keys.h"
-#include "client/sound/sound.h"
+#include "client/SoundDrivers/sound.h"
 #include "client/ui.h"
 #include "client/video.h"
 
@@ -129,7 +129,7 @@ typedef struct {
 
 struct ClientStatic {
     int32_t    connectionState;
-    keydest_t   key_dest;
+    KeyInputDestination   key_dest;
 
     active_t    active;
 

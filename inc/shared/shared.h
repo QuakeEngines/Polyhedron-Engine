@@ -16,8 +16,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-#ifndef __SHARED_SHARED_H__
-#define __SHARED_SHARED_H__
+#pragma once
 
 //-----------------
 // shared.h -- included first by ALL program modules
@@ -75,7 +74,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 //-----------------
 // Platform specific includes.
 //-----------------
-#include "Shared/platform.h"
+#include "Shared/Platform.h"
 
 
 //
@@ -179,7 +178,7 @@ constexpr int32_t WORLD_SIZE = (MAX_WORLD_COORD - MIN_WORLD_COORD);
 //
 //=============================================================================
 //
-#include "Shared/endian.h"
+#include "Shared/Endian.h"
 
 
 //
@@ -189,7 +188,7 @@ constexpr int32_t WORLD_SIZE = (MAX_WORLD_COORD - MIN_WORLD_COORD);
 //
 //=============================================================================
 //
-#include "Shared/math.h"
+#include "Shared/Math.h"
 
 
 //
@@ -198,7 +197,7 @@ constexpr int32_t WORLD_SIZE = (MAX_WORLD_COORD - MIN_WORLD_COORD);
 //	Engine Tick Rate Settings.
 //
 //=============================================================================
-#include "Shared/tickrate.h"
+#include "Shared/TickRate.h"
 
 
 //
@@ -208,7 +207,7 @@ constexpr int32_t WORLD_SIZE = (MAX_WORLD_COORD - MIN_WORLD_COORD);
 //
 //=============================================================================
 //
-#include "Shared/common.h"
+#include "Shared/Common.h"
 
 
 
@@ -264,7 +263,7 @@ void    Info_Print(const char* infostring);
 //
 //=============================================================================
 //
-#include "Shared/keys.h"
+#include "Shared/KeyboardKeys.h"
 
 
 
@@ -275,7 +274,7 @@ void    Info_Print(const char* infostring);
 //
 //=============================================================================
 //
-#include "Shared/ui.h"
+#include "Shared/UserInterface.h"
 
 //-----------------
 // Color defines, modify these as you please for custom colors.
@@ -432,7 +431,7 @@ inline static uint32_t CS_SIZE(uint32_t cs) {
 //
 //=============================================================================
 //
-#include "Shared/pmove.h"
+#include "Shared/PlayerMove.h"
 
 
 
@@ -443,7 +442,7 @@ inline static uint32_t CS_SIZE(uint32_t cs) {
 //
 //=============================================================================
 //
-#include "Shared/messaging.h"
+#include "Shared/Messaging.h"
 
 
 //
@@ -471,8 +470,8 @@ typedef struct file_info_s {
 //
 //=============================================================================
 //
-#include "Shared/qstring.h"
-#include "Shared/strings.h"
+#include "Shared/QString.h"
+#include "Shared/Strings.h"
 
 
 //
@@ -482,7 +481,7 @@ typedef struct file_info_s {
 //
 //=============================================================================
 //
-#include "Shared/collision.h"
+#include "Shared/Collision.h"
 
 
 //
@@ -566,5 +565,3 @@ struct UserFields {
     static constexpr int32_t MuteMiscellaneous = 32;
     static constexpr int32_t PlayerFieldOfView = 64;
 };
-
-#endif // __SHARED_SHARED_H__

@@ -7,15 +7,15 @@
 //
 */
 #include "../g_local.h"          // SVGame.
-#include "../effects.h"     // Effects.
-#include "../entities.h"    // Entities.
-#include "../utils.h"       // Util funcs.
+#include "../Effects.h"     // Effects.
+#include "../Entities.h"    // Entities.
+#include "../Utilities.h"       // Util funcs.
 
 // Server Game Base ServerEntity.
-#include "../entities/base/ServerGameEntity.h"
-#include "../entities/base/BodyCorpse.h"
-#include "../entities/base/PlayerEntity.h"
-#include "../entities/info/InfoPlayerStart.h"
+#include "../Entities/Base/SynchedEntityBase.h"
+#include "../Entities/Base/PlayerEntity.h"
+#include "../Entities/Info/InfoPlayerStart.h"
+#include "../Entities/World/BodyCorpse.h"
 
 // Weapons.h
 #include "../player/client.h"
@@ -395,12 +395,12 @@ void DefaultGameMode::InflictDamage(ServerGameEntity* target, ServerGameEntity* 
 // DefaultGameMode::InflictDamage
 // 
 //===============
-void DefaultGameMode::InflictRadiusDamage(ServerGameEntity* inflictor, ServerGameEntity* attacker, float damage, ServerGameEntity* ignore, float radius, int32_t mod) {
+void DefaultGameMode::InflictRadiusDamage(SynchedEntityBase* inflictor, SynchedEntityBase* attacker, float damage, SynchedEntityBase* ignore, float radius, int32_t mod) {
     // Damage point counter for radius sum ups.
     float   points = 0.f;
 
     // Actual entity loop pointer.
-    ServerGameEntity* ent = nullptr;
+    SynchedEntityBase* ent = nullptr;
 
     // N&C: From Yamagi Q2, to prevent issues.
     if (!inflictor || !attacker) {

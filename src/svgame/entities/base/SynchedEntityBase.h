@@ -24,9 +24,10 @@ public:
     using DieCallbackPointer        = void(SynchedEntityBase::*)(SynchedEntityBase* inflictor, SynchedEntityBase* attacker, int damage, const vec3_t& point);
 
 protected:
-    // pick a free slot
+    // Pick a free slot
     SynchedEntityBase();
-    // specify a specific slot to override
+    
+    // Specify a specific slot to override
     SynchedEntityBase(ServerEntity* entity);
 
     // Queries a free server entity slot for usage in case of the first constructor.

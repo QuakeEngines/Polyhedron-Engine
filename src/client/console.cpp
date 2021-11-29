@@ -136,8 +136,8 @@ void Con_Close(qboolean force)
     Con_ClearTyping();
     Con_ClearNotify_f();
 
-    // CPP: WARNING: Cast keydest_t.
-    Key_SetDest((keydest_t)(cls.key_dest & ~KEY_CONSOLE));
+    // CPP: WARNING: Cast KeyInputDestination.
+    Key_SetDest((KeyInputDestination)(cls.key_dest & ~KEY_CONSOLE));
 
     con.destHeight = con.currentHeight = 0;
     con.mode = CON_POPUP;
@@ -157,8 +157,8 @@ void Con_Popup(qboolean force)
         con.mode = CON_POPUP;
     }
 
-    // CPP: WARNING: Cast keydest_t.
-    Key_SetDest((keydest_t)(cls.key_dest | KEY_CONSOLE));
+    // CPP: WARNING: Cast KeyInputDestination.
+    Key_SetDest((KeyInputDestination)(cls.key_dest | KEY_CONSOLE));
     Con_RunConsole();
 }
 
@@ -177,8 +177,8 @@ static void toggle_console(consoleMode_t mode, chatMode_t chat)
     Con_ClearNotify_f();
 
     if (cls.key_dest & KEY_CONSOLE) {
-        // CPP: WARNING: Cast keydest_t.
-        Key_SetDest((keydest_t)(cls.key_dest & ~KEY_CONSOLE));
+        // CPP: WARNING: Cast KeyInputDestination.
+        Key_SetDest((KeyInputDestination)(cls.key_dest & ~KEY_CONSOLE));
         con.mode = CON_POPUP;
         con.chat = CHAT_NONE;
         return;
@@ -190,8 +190,8 @@ static void toggle_console(consoleMode_t mode, chatMode_t chat)
     }
 
     // toggling console discards chat message
-    // CPP: WARNING: Cast keydest_t.
-    Key_SetDest((keydest_t)((cls.key_dest | KEY_CONSOLE) & ~KEY_MESSAGE));
+    // CPP: WARNING: Cast KeyInputDestination.
+    Key_SetDest((KeyInputDestination)((cls.key_dest | KEY_CONSOLE) & ~KEY_MESSAGE));
     con.mode = mode;
     con.chat = chat;
 }
@@ -309,8 +309,8 @@ static void start_message_mode(chatMode_t mode)
 
     con.chat = mode;
     IF_Replace(&con.chatPrompt.inputLine, Cmd_RawArgs());
-    // CPP: WARNING: Cast keydest_t.
-    Key_SetDest((keydest_t)(cls.key_dest | KEY_MESSAGE));
+    // CPP: WARNING: Cast KeyInputDestination.
+    Key_SetDest((KeyInputDestination)(cls.key_dest | KEY_MESSAGE));
 }
 
 static void Con_MessageMode_f(void)
@@ -1263,13 +1263,13 @@ void Key_Message(int key)
             Con_Say(cmd);
         }
         // CPP: WARNING: Keydest_t cast.
-        Key_SetDest((keydest_t)(cls.key_dest & ~KEY_MESSAGE));
+        Key_SetDest((KeyInputDestination)(cls.key_dest & ~KEY_MESSAGE));
         return;
     }
 
     if (key == K_ESCAPE) {
         // CPP: WARNING: Keydest_t cast.
-        Key_SetDest((keydest_t)(cls.key_dest & ~KEY_MESSAGE));
+        Key_SetDest((KeyInputDestination)(cls.key_dest & ~KEY_MESSAGE));
         IF_Clear(&con.chatPrompt.inputLine);
         return;
     }

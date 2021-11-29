@@ -18,9 +18,9 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 // g_utils.c -- misc utility functions for game module
 
 #include "g_local.h"
-#include "entities.h"
-#include "utils.h"
-#include "entities/base/ServerGameEntity.h"
+#include "Entities.h"
+#include "Utilities.h"
+#include "Entities/Base/ServerGameEntity.h"
 
 vec3_t SVG_ProjectSource(const vec3_t &point, const vec3_t &distance, const vec3_t &forward, const vec3_t &right)
 {

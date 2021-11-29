@@ -16,12 +16,11 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-#ifndef CLIENT_H
-#define CLIENT_H
+#pragma once
 
-#include "common/cmd.h"
-#include "common/net/net.h"
-#include "common/utils.h"
+#include "Common/Command.h"
+#include "Common/Net/Net.h"
+#include "Common/Utils.h"
 
 #if USE_CLIENT
 
@@ -96,7 +95,6 @@ extern const uint32_t   colorTable[8];
 
 qboolean SCR_ParseColor(const char *s, color_t *color);
 
-
 #else // USE_CLIENT
 
 #define CL_Init()                       (void)0
@@ -117,5 +115,3 @@ qboolean SCR_ParseColor(const char *s, color_t *color);
 #define SCR_EndLoadingPlaque()          (void)0
 
 #endif // !USE_CLIENT
-
-#endif // CLIENT_H

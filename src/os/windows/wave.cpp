@@ -17,7 +17,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 */
 
 #include "client.h"
-#include "client/sound/dma.h"
+#include "client/SoundDrivers/dma.h"
 #include <mmsystem.h>
 
 // 64K is > 1 second at 16-bit, 22050 Hz

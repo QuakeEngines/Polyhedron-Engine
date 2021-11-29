@@ -6,8 +6,7 @@
 // N&C SVGame: Client Header
 // 
 //
-#ifndef __SVGAME_PLAYER_CLIENT_H__
-#define __SVGAME_PLAYER_CLIENT_H__
+#pragma once
 
 class PlayerEntity;
 
@@ -27,5 +26,3 @@ void SVG_ClientUserinfoChanged(ServerEntity* ent, char* userinfo);
 void SVG_ClientThink(PlayerEntity* playerClient, ClientMoveCommand* cmd);
 
 void SVG_ClientEndServerFrames(void);
-
-#endif // __SVGAME_PLAYER_CLIENT_H__

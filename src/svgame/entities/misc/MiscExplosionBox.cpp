@@ -7,9 +7,9 @@
 //
 */
 #include "../../g_local.h"          // SVGame.
-#include "../../effects.h"          // Effects.
-#include "../../utils.h"            // Util funcs.
-#include "../../physics/stepmove.h" // Stepmove funcs.
+#include "../../Effects.h"          // Effects.
+#include "../../Utilities.h"            // Util funcs.
+#include "../../Physics/Stepmove.h" // Stepmove funcs.
 
 // Server Game Base ServerEntity.
 #include "../base/ServerGameEntity.h"

@@ -20,9 +20,9 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "common/cmd.h"
 #include "common/common.h"
 #include "common/cvar.h"
-#include "common/field.h"
+#include "common/LineEditField.h"
 #include "common/net/net.h"
-#include "common/prompt.h"
+#include "common/CommandPrompt.h"
 #include "system/system.h"
 #include "tty.h"
 
