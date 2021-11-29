@@ -1,7 +1,7 @@
 // License here.
 #pragma once
 
-#include "Shared/Entities/Base/EntityBase.h"
+#include "EntityBase.h"
 
 //---------------------------------------------------------
 // Used for when an entity has to be in sync with the server.

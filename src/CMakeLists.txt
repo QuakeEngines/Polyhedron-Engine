@@ -30,6 +30,7 @@ SET(SRC_CLGAME
 	CLGame/TemporaryEntities.cpp
 	CLGame/View.cpp
 
+			## Source: SVGame - Win32 .def file.
 	CLGame/ClientGame.def
 )
 
@@ -72,7 +73,7 @@ SET( SRC_SVGAME
 	SVGame/Items.cpp
 	SVGame/ImportsWrapper.cpp
 	SVGame/Main.cpp
-	SVGame/Save.cpp
+	#SVGame/Save.cpp
 	SVGame/Spawn.cpp
 	SVGame/ServerCommands.cpp
 	SVGame/Trigger.cpp
@@ -184,7 +185,7 @@ SET( SRC_SVGAME
 	SVGame/Weapons/Machinegun.cpp
 	SVGame/Weapons/Shotgun.cpp
 	SVGame/Weapons/SuperShotgun.cpp
-    SVGame/svgame.def
+    SVGame/ServerGame.def
     )
     
     SET ( HEADERS_SVGAME
@@ -199,8 +200,10 @@ SET( SRC_SVGAME
 
 		## Source: SVGame - Entities - Base
 		#SVGame/Entities/Base/ServerGameEntity.h
+		SVGame/Entities/Base/EntityBase.h
 		SVGame/Entities/Base/PrivateEntityBase.cpp
 		SVGame/Entities/Base/SynchedEntityBase.cpp
+
 		SVGame/Entities/Base/SVGBaseTrigger.h
 		SVGame/Entities/Base/SVGBaseMover.h
 		SVGame/Entities/Base/PlayerEntity.h
@@ -270,8 +273,8 @@ SET( SRC_SVGAME
 		SVGame/Weapons/Shotgun.h
 		SVGame/Weapons/SuperShotgun.h
 
-		## Source: SVGame - .
-		SVGame/svgame.def
+		## Source: SVGame - Win32 .def file.
+		SVGame/ServerGame.def
     )
     
     ###################### Client.
@@ -459,8 +462,7 @@ SET(HEADERS_SHARED
 
 	# Entities.
 	../inc/Shared/Entities/Base/ServerEntity.h
-	../inc/Shared/Entities/Base/EntityBase.h
-
+	
 	# Interfaces
 	../inc/Shared/Interfaces/IClientGameExports.h
 	../inc/Shared/Interfaces/IClientGameImports.h
@@ -499,21 +501,20 @@ SET(HEADERS_SHARED
 )
 SET(SRC_SHARED
 	# Maths.
-	Shared/math/Plane.cpp
-	Shared/math/Vector3.cpp
-	Shared/math.cpp
-
-	# Entities.
-	Shared/Entities/Base/EntityBase.cpp
+	Shared/Math/Plane.cpp
+	Shared/Math/Vector3.cpp
+	Shared/Math.cpp
 	
 	# Random
 	Shared/Shared.cpp
 )
 
-###################### UNIX Client Specific.
+##
+##### Unix - Client Specific.
+##
 SET(SRC_UNIX
-	OS/unix/hunk.cpp
-	OS/unix/system.cpp
+	OS/unix/Hunk.cpp
+	OS/unix/System.cpp
 	OS/unix/tty.cpp
 )
 SET(SRC_UNIX_CLIENT
@@ -522,11 +523,13 @@ SET(SRC_UNIX_CLIENT
 	OS/sdl2/time.cpp
 )
 
-###################### Windows Client Specific.
+##
+##### Windows - Client Specific.
+##
 SET(SRC_WINDOWS
-	OS/Windows/debug.cpp
-	OS/Windows/hunk.cpp
-	OS/Windows/system.cpp
+	OS/Windows/Debug.cpp
+	OS/Windows/Hunk.cpp
+	OS/Windows/System.cpp
 )
 SET(SRC_WINDOWS_CLIENT
 	OS/Windows/wave.cpp
@@ -540,7 +543,9 @@ SET(HEADERS_WINDOWS
 	OS/Windows/threads/threads.h
 )
 
-###################### VKPT.
+##
+##### VKPT.
+##
 SET(SRC_VKPT
 	Refresh/VkPt/asvgf.cpp
 	Refresh/VkPt/bloom.cpp

@@ -17,7 +17,6 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 */
 
 #include "g_local.h"
-#include "functionpointers.h"
 
 //#define _DEBUG
 typedef struct {

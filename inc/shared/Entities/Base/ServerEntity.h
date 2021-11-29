@@ -18,7 +18,7 @@ struct ServerEntity {
     // a slot in the ServerEntity array.
     qboolean    inUse;
 
-    int         linkCount;
+    int32_t         linkCount;
 
     // FIXME: move these fields to a server private sv_entity_t
     list_t      area;           // Linked to a division node or leaf

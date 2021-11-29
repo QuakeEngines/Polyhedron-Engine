@@ -1,6 +1,8 @@
 // SVGame Core.
 #include "../../g_local.h"
-#include "../../entities.h"
+#include "../../Entities.h"
+
+#include "Shared/Entities/TypeInfo.h"
 
 // Constructor(s)
 EntityBase::EntityBase(ServerEntity* serverEntityHandle) {

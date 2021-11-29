@@ -16,11 +16,11 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 #include "g_local.h"
-#include "entities.h"
-#include "utils.h"
+#include "Entities.h"
+#include "Utilities.h"
 
-#include "entities/base/ServerGameEntity.h"
-#include "entities/weaponry/BlasterBolt.h"
+#include "Entities/Base/SynchedEntityBase.h"
+#include "Entities/Weaponry/BlasterBolt.h"
 
 /*
 =================

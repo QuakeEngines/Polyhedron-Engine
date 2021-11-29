@@ -20,22 +20,22 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "g_local.h"          // Include SVGame header.
 
 // Entities.
-#include "entities.h"
-#include "entities/base/ServerGameEntity.h"
-#include "entities/base/PlayerEntity.h"
+#include "Entities.h"
+#include "Entities/Base/SynchedEntityBase.h"
+#include "Entities/Base/PlayerEntity.h"
 
 // Gamemodes.
-#include "gamemodes/IGameMode.h"
-#include "gamemodes/DefaultGameMode.h"
-#include "gamemodes/CoopGameMode.h"
-#include "gamemodes/DeathMatchGameMode.h"
+#include "Gamemodes/IGameMode.h"
+#include "Gamemodes/DefaultGameMode.h"
+#include "Gamemodes/CoopGameMode.h"
+#include "Gamemodes/DeathMatchGameMode.h"
 
 // Player related.
-#include "player/client.h"      // Include Player Client header.
-#include "player/view.h"        // Include Player View header.
+#include "Player/client.h"      // Include Player Client header.
+#include "Player/view.h"        // Include Player View header.
 
 // Physics related.
-#include "physics/stepmove.h"
+#include "Physics/Stepmove.h"
 
 
 //-----------------

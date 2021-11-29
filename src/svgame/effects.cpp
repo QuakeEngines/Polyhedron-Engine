@@ -8,18 +8,18 @@
 //
 
 #include "g_local.h"         // Include SVGame funcs.
-#include "entities.h"
-#include "utils.h"           // Include Utilities funcs.
-#include "effects.h"
+#include "Entities.h"
+#include "Utilities.h"           // Include Utilities funcs.
+#include "Effects.h"
 
 // Game Mode interface.
-#include "gamemodes/IGameMode.h"
+#include "Gamemodes/IGameMode.h"
 
 // Class Entities.
-#include "entities/base/ServerGameEntity.h"
-#include "entities/base/PlayerEntity.h"
-#include "entities/base/DebrisEntity.h"
-#include "entities/base/GibEntity.h"
+#include "Entities/Base/SynchedEntityBase.h"
+#include "Entities/Base/PlayerEntity.h"
+#include "Entities/World/DebrisEntity.h"
+#include "Entities/World/GibEntity.h"
 
 
 //=================
@@ -27,7 +27,7 @@
 // 
 // Throws a gib entity around at the location of "self".
 //=================
-void SVG_ThrowGib(ServerGameEntity*self, const char *gibname, int damage, int type)
+void SVG_ThrowGib(SynchedEntityBase * self, const char *gibname, int damage, int type)
 {
     // Create a gib entity.
     GibEntity* gibClassEntity = SVG_CreateClassEntity<GibEntity>();
