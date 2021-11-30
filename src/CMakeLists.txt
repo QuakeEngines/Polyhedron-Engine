@@ -366,7 +366,7 @@ SET(SRC_SERVER
 	Server/Save.cpp
 )
 SET(HEADERS_SERVER
-	Server/server.h
+	Server/Server.h
 )
 
 ###################### Common.
@@ -490,7 +490,7 @@ SET(HEADERS_SHARED
 	../inc/Shared/KeyboardKeys.h 
 	../inc/Shared/List.h 
 	../inc/Shared/Math.h 
-	../inc/Shared/Messaging.h 
+	../inc/Shared/Messages.h 
 	../inc/Shared/Platform.h
 	../inc/Shared/Refresh.h 
 	../inc/Shared/QString.h 

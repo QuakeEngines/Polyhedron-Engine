@@ -215,16 +215,16 @@ void ED_CallSpawn(ServerEntity *serverEntity)
     SynchedEntityBase *serverGameEntity = SVG_SpawnClassEntity( serverEntity, serverEntity->className );
     // If we did not find the classname, then give up
     if ( !serverGameEntity ) {
-        SVG_FreeEntity( serverEntity );
+        SVG_FreeEntity(serverEntity);
         return;
     }
     // Initialise the entity with its respected keyvalue properties
     for ( const auto& keyValueEntry : serverEntity->entityDictionary ) {
-        serverGameEntity ->SpawnKey( keyValueEntry.first, keyValueEntry.second );
+        serverGameEntity->SpawnKey(keyValueEntry.first, keyValueEntry.second );
     }
     // Precache and spawn, to set the entity up
-    serverGameEntity ->Precache();
-    serverGameEntity ->Spawn();
+    serverGameEntity->Precache();
+    serverGameEntity->Spawn();
 }
 
 /*
