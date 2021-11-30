@@ -14,14 +14,14 @@
 #include "../../brushfuncs.h"
 
 // Class Entities.
-#include "../base/ServerGameEntity.h"
+#include "../base/SynchedEntityBase.h.h"
 
 #include "InfoPlayerStart.h"
 
 
 // Constructor/Deconstructor.
 InfoPlayerStart::InfoPlayerStart() 
-    : ServerGameEntity() {
+    : SynchedEntityBase.h() {
 
 }
 InfoPlayerStart::~InfoPlayerStart() {

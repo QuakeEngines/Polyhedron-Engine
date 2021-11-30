@@ -16,11 +16,10 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-#ifndef COMMON_H
-#define COMMON_H
+#pragma once 
 
-#include "common/cmd.h"
-#include "common/utils.h"
+#include "Common/Command.h"
+#include "Common/Utilities.h"
 
 //
 // common.h -- definitions common between client and server, but not game.dll
@@ -182,5 +181,3 @@ extern time_t       com_startTime;
 
 void Qcommon_Init(int argc, char **argv);
 void Qcommon_Frame(void);
-
-#endif // COMMON_H

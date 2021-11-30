@@ -20,17 +20,17 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 // client.h -- Win32 client stuff
 //
 
-#include "Shared/shared.h"
-#include "common/common.h"
-#include "common/cvar.h"
-#include "common/files.h"
+#include "Shared/Shared.h"
+#include "Common/Common.h"
+#include "Common/cvar.h"
+#include "Common/Files.h"
 #if USE_CLIENT
-#include "client/client.h"
-#include "client/input.h"
-#include "client/keys.h"
-#include "client/ui.h"
-#include "client/video.h"
-#include "refresh/refresh.h"
+#include "Client/Client.h"
+#include "Client/Input.h"
+#include "Client/Keys.h"
+#include "Client/UserInterface.h"
+#include "Client/Video.h"
+#include "Refresh/Refresh.h"
 #endif
 #include "system/system.h"
 

@@ -12,12 +12,12 @@
 #include "../../Utilities.h"	// Util funcs.
 
 // Class Entities.
-#include "ServerGameEntity.h"
-#include "SVGBaseTrigger.h"
+#include "SynchedEntityBase.h.h"
+#include "BaseTrigger.h"
 #include "SVGBaseMover.h"
 
 // Constructor/Deconstructor.
-SVGBaseMover::SVGBaseMover(ServerEntity* svEntity) : SVGBaseTrigger() {
+SVGBaseMover::SVGBaseMover(ServerEntity* svEntity) : BaseTrigger() {
 	//
 	// Default values for members.
 	//

@@ -18,7 +18,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "../g_local.h"
 #include "../entities.h"
-#include "../entities/base/ServerGameEntity.h"
+#include "../Entities/Base/SynchedEntityBase.h"
 #include "../entities/base/PlayerEntity.h"
 #include "hud.h"
 #include "animations.h"

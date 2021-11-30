@@ -19,16 +19,16 @@ public:
 
 	// These static methods here are required for mover logic, since the legacy code
 	// we ported simply operates on global functions & function pointers
-	static void OnButtonDone( ServerGameEntity* self );
+	static void OnButtonDone( SynchedEntityBase * self );
 	void		ButtonDone(); // The button is done moving, it is fully pressed
 	void		ButtonReturn(); // The button is returning from "pressed" to "sticking out"
-	static void OnButtonWait( ServerGameEntity* self );
+	static void OnButtonWait( SynchedEntityBase * self );
 	void		ButtonWait(); // The button is waiting for further interactions
 	void		ButtonFire(); // The button has just been pressed, do something
 	
-	void		ButtonUse( ServerGameEntity* other, ServerGameEntity* activator );
-	void		ButtonTouch( ServerGameEntity* self, ServerGameEntity* other, cplane_t* plane, csurface_t* surf );
-	void		ButtonDie( ServerGameEntity* inflictor, ServerGameEntity* attacker, int damage, const vec3_t& point );
+	void		ButtonUse( SynchedEntityBase * other, SynchedEntityBase * activator );
+	void		ButtonTouch( SynchedEntityBase * self, SynchedEntityBase * other, cplane_t* plane, csurface_t* surf );
+	void		ButtonDie( SynchedEntityBase * inflictor, SynchedEntityBase * attacker, int damage, const vec3_t& point );
 };
 
 

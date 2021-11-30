@@ -16,12 +16,12 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-#include "Shared/shared.h"
-#include "common/cmd.h"
-#include "common/common.h"
-#include "common/cvar.h"
+#include "Shared/Shared.h"
+#include "Common/Command.h"
+#include "Common/Common.h"
+#include "Common/cvar.h"
 #include "common/LineEditField.h"
-#include "common/net/net.h"
+#include "Common/Net/Net.h"
 #include "common/CommandPrompt.h"
 #include "system/system.h"
 #include "tty.h"

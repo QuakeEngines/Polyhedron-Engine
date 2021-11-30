@@ -10,7 +10,7 @@
 #ifndef __SVGAME_ENTITIES_TRIGGER_TRIGGERMULTIPLE_H__
 #define __SVGAME_ENTITIES_TRIGGER_TRIGGERMULTIPLE_H__
 
-class TriggerMultiple : public SVGBaseTrigger {
+class TriggerMultiple : public BaseTrigger {
 public:
     //
     // Constructor/Deconstructor.
@@ -18,7 +18,7 @@ public:
     TriggerMultiple(ServerEntity* svEntity);
     virtual ~TriggerMultiple();
 
-    DefineMapClass( "trigger_multiple", TriggerMultiple, SVGBaseTrigger );
+    DefineMapClass( "trigger_multiple", TriggerMultiple, BaseTrigger );
 
     //
     // Interface functions. 
@@ -37,9 +37,9 @@ public:
 
     // Callback functions.
     void TriggerMultipleThinkWait(void);
-    void TriggerMultipleTouch(ServerGameEntity* self, ServerGameEntity* other, cplane_t* plane, csurface_t* surf);
-    void TriggerMultipleEnable(ServerGameEntity* other, ServerGameEntity* activator);
-    void TriggerMultipleUse(ServerGameEntity* other, ServerGameEntity* activator);
+    void TriggerMultipleTouch(SynchedEntityBase * self, SynchedEntityBase * other, cplane_t* plane, csurface_t* surf);
+    void TriggerMultipleEnable(SynchedEntityBase * other, SynchedEntityBase * activator);
+    void TriggerMultipleUse(SynchedEntityBase * other, SynchedEntityBase * activator);
 
     //
     // Get/Set
@@ -49,7 +49,7 @@ protected:
     //
     // Trigger function.
     //
-    void Trigger(ServerGameEntity* activator);
+    void Trigger(SynchedEntityBase * activator);
 
     //
     // Other base entity members. (These were old fields in edict_T back in the day.)

@@ -9,8 +9,8 @@
 #include "../../entities.h"
 #include "../../utils.h"
 
-#include "../base/ServerGameEntity.h"
-#include "../base/SVGBaseTrigger.h"
+#include "../base/SynchedEntityBase.h.h"
+#include "../base/BaseTrigger.h"
 
 #include "TriggerGravity.h"
 
@@ -50,6 +50,6 @@ void TriggerGravity::SpawnKey( const std::string& key, const std::string& value 
 //===============
 // TriggerGravity::GravityTouch
 //===============
-void TriggerGravity::GravityTouch( ServerGameEntity* self, ServerGameEntity* other, cplane_t* plane, csurface_t* surf ) {
+void TriggerGravity::GravityTouch( SynchedEntityBase * self, SynchedEntityBase * other, cplane_t* plane, csurface_t* surf ) {
 	other->SetGravity( GetGravity() );
 }

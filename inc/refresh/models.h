@@ -25,7 +25,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 // models.h -- common models manager
 //
 #include "Shared/refresh.h"
-#include "system/hunk.h"
+#include "System/Hunk.h"
 #include "common/error.h"
 
 #define MOD_Malloc(size)    Hunk_Alloc(&model->hunk, size)

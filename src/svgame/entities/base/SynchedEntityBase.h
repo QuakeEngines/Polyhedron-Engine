@@ -1,7 +1,7 @@
 // License here.
 #pragma once
 
-#include "EntityBase.h"
+class EntityBase;
 
 //---------------------------------------------------------
 // Used for when an entity has to be in sync with the server.
@@ -49,7 +49,7 @@ public:
     }
 
     // @returns The entity which activated this entity. (If any)
-    inline ServerGameEntity* GetActivator() {
+    inline SynchedEntityBase * GetActivator() {
         return activator;
     }
 
@@ -110,7 +110,7 @@ public:
     }
 
     // @returns The enemy entity pointer (if any.)
-    inline ServerGameEntity* GetEnemy() {
+    inline SynchedEntityBase * GetEnemy() {
         return enemyEntity;
     }
 
@@ -135,7 +135,7 @@ public:
     }
 
     // @returns The ground entity (if any).
-    inline ServerGameEntity* GetGroundEntity() {
+    inline SynchedEntityBase * GetGroundEntity() {
         return groundEntity;
     }
 
@@ -243,7 +243,7 @@ public:
     }
 
     // Return the 'oldEnemyPtr' entity pointer.
-    ServerGameEntity* GetOldEnemy() {
+    SynchedEntityBase * GetOldEnemy() {
         return oldEnemyEntity;
     }
 
@@ -258,7 +258,7 @@ public:
     }
 
     // Get the 'owner' value.
-    inline ServerGameEntity* GetOwner() {
+    inline SynchedEntityBase * GetOwner() {
         return this->ownerEntity;
     }
 
@@ -333,12 +333,12 @@ public:
     }
 
     // Return the 'teamChain' entity value.
-    inline ServerGameEntity* GetTeamChainEntity() {
+    inline SynchedEntityBase * GetTeamChainEntity() {
         return teamChainEntity;
     }
 
     // Return the 'teamMaster' entity value.
-    inline ServerGameEntity *GetTeamMasterEntity() {
+    inline SynchedEntityBase*GetTeamMasterEntity() {
         return teamMasterEntity;
     }
 
@@ -428,7 +428,7 @@ public:
     }
 
     // Set the 'enemyPtr' pointer.
-    inline void SetEnemy(ServerGameEntity* enemy) {
+    inline void SetEnemy(SynchedEntityBase * enemy) {
         this->enemyEntity = enemy;
     }
 
@@ -453,8 +453,8 @@ public:
     }
 
     // Set the 'groundEntitPtr' entity.
-    inline void SetGroundEntity(ServerGameEntity* groundEntity) {
-        // Set ServerGameEntity variant ground entity.
+    inline void SetGroundEntity(SynchedEntityBase * groundEntity) {
+        // Set SynchedEntityBasevariant ground entity.
         this->groundEntity = groundEntity;
     }
 
@@ -551,11 +551,11 @@ public:
     }
 
     // @set a pointer to the entity that triggered firstNoiseEntity
-    inline const ServerGameEntity* SetFirstNoiseEntity() {
+    inline const SynchedEntityBase * SetFirstNoiseEntity() {
         return firstNoiseEntity;
     }
     // @set a pointer to the entity that triggered secondNoiseEntity
-    inline const ServerGameEntity* SetSecondNoiseEntity() {
+    inline const SynchedEntityBase * SetSecondNoiseEntity() {
         return secondNoiseEntity;
     }
 
@@ -569,7 +569,7 @@ public:
     }
 
     // Set the 'oldEnemyPtr' pointer.
-    inline void SetOldEnemy(ServerGameEntity* oldEnemy) {
+    inline void SetOldEnemy(SynchedEntityBase * oldEnemy) {
         this->oldEnemyEntity = oldEnemy;
     }
 
@@ -584,7 +584,7 @@ public:
     }
 
     // Set the 'owner' value.
-    inline void SetOwner(ServerGameEntity* owner) {
+    inline void SetOwner(SynchedEntityBase * owner) {
         this->ownerEntity = owner;
     }
 
@@ -648,12 +648,12 @@ public:
     }
 
     // Set the 'teamChain' entity value.
-    inline void SetTeamChainEntity(ServerGameEntity* entity) {
+    inline void SetTeamChainEntity(SynchedEntityBase * entity) {
         teamChainEntity = entity;
     }
 
     // Set the 'teamMaster' entity value.
-    inline void SetTeamMasterEntity(ServerGameEntity* entity) {
+    inline void SetTeamMasterEntity(SynchedEntityBase * entity) {
         teamMasterEntity = entity;
     }
 
@@ -814,11 +814,11 @@ protected:
     // Move Target ServerEntity.
     ServerEntity* moveTargetPtr;
     // The entity that activated this
-    ServerGameEntity* activator;
+    SynchedEntityBase * activator;
     // The entity that activated the noise.
-    ServerGameEntity* firstNoiseEntity;
+    SynchedEntityBase * firstNoiseEntity;
     // The entity that activated the second noise.
-    ServerGameEntity* secondNoiseEntity;
+    SynchedEntityBase * secondNoiseEntity;
 
 
     // Yaw Speed. (Should be for monsters...)
@@ -869,19 +869,19 @@ protected:
     // ServerEntity pointers.
     // 
     // Current active enemy, NULL if not any.    
-    ServerGameEntity *enemyEntity;
+    SynchedEntityBase*enemyEntity;
     // Ground entity we're standing on.
-    ServerGameEntity *groundEntity;
+    SynchedEntityBase*groundEntity;
     // Old enemy, NULL if not any.
-    ServerGameEntity *oldEnemyEntity;
+    SynchedEntityBase*oldEnemyEntity;
 
     // Owner pointer. (Such as, did the player fire a blaster bolt? If so, the owner is...)
-    ServerGameEntity* ownerEntity;
+    SynchedEntityBase * ownerEntity;
 
     // Team Chain Pointer.
-    ServerGameEntity* teamChainEntity;
+    SynchedEntityBase * teamChainEntity;
     // Master Pointer.
-    ServerGameEntity* teamMasterEntity;
+    SynchedEntityBase * teamMasterEntity;
 
 public:
     //
@@ -955,6 +955,7 @@ public:
     // Callback implementations that can be set by all child entities.
     //
     void SVGBaseEntityThinkRemove(void);
+
     // "No" thinking
     void SVGBaseEntityThinkNull() { }
 
@@ -964,11 +965,10 @@ public:
     // 
     //------------------------------------------------------------
     // Entity dictionary.
-    using EntityDictionary = std::map<std::string, std::string>;
-    EntityDictionary entityDictionary;
+    //EntityDictionary entityDictionary;
 
-    // @returns a reference to the 'entityDictionary'.
-    inline EntityDictionary &GetEntityDictionary() {
-        return entityDictionary;
-    }
+    //// @returns a reference to the 'entityDictionary'.
+    //inline EntityDictionary &GetEntityDictionary() {
+    //    return entityHandle->;
+    //}
 };

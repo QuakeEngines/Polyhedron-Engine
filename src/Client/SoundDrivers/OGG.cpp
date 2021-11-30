@@ -36,7 +36,7 @@
 
 #include <errno.h>
 
-#include "Shared/shared.h"
+#include "Shared/Shared.h"
 #include "sound.h"
 #include "client/SoundDrivers/vorbis.h"
 

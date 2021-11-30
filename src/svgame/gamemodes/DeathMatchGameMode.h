@@ -24,14 +24,14 @@ public:
     //
     // DeathMatch unique function implementations.
     virtual void PutClientInServer(ServerEntity* ent) override;
-    virtual qboolean CanDamage(ServerGameEntity* targ, ServerGameEntity* inflictor) override;
+    virtual qboolean CanDamage(SynchedEntityBase * targ, SynchedEntityBase * inflictor) override;
     virtual void ClientBegin(ServerEntity* serverEntity) override;
     virtual void ClientBeginServerFrame(ServerEntity* serverEntity) override;
     
     virtual void RespawnClient(ServerEntity* ent) override;
     virtual void RespawnSpectator(ServerEntity* ent);
 
-    virtual void ClientUpdateObituary(ServerGameEntity* self, ServerGameEntity* inflictor, ServerGameEntity* attacker) override;
+    virtual void ClientUpdateObituary(SynchedEntityBase * self, SynchedEntityBase * inflictor, SynchedEntityBase * attacker) override;
 
 private:
 

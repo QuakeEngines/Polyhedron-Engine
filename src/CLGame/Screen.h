@@ -6,8 +6,7 @@
 //
 */
 
-#ifndef __CLGAME_SCREEN_H__
-#define __CLGAME_SCREEN_H__
+#pragma once 
 
 // Number of "sb_pics"
 static constexpr int32_t STAT_PICS = 11;              // Number of "sb_pics"
@@ -65,5 +64,3 @@ void SCR_DrawCenterString(void);
 void SCR_DrawObjects(void);
 void SCR_DrawFPS(void);
 void SCR_DrawChatHUD(void);
-
-#endif // __CLGAME_SCREEN_H__

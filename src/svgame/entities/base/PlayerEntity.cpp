@@ -7,15 +7,15 @@
 //
 */
 #include "../../g_local.h"              // SVGame.
-#include "../../effects.h"              // Effects.
-#include "../../entities.h"             // Entities.
-#include "../../player/client.h"        // Player Client functions.
-#include "../../player/animations.h"    // Include Player Client Animations.
-#include "../../player/view.h"          // Include Player View functions..
-#include "../../utils.h"                // Util funcs.
+#include "../../Effects.h"              // Effects.
+#include "../../Entities.h"             // Entities.
+#include "../../Player/client.h"        // Player Client functions.
+#include "../../Player/animations.h"    // Include Player Client Animations.
+#include "../../Player/view.h"          // Include Player View functions..
+#include "../../Utilities.h"                // Util funcs.
 
 // Game Mode interface.
-#include "../../gamemodes/IGameMode.h"
+#include "../../Gamemodes/IGameMode.h"
 
 // Class Entities.
 #include "PlayerEntity.h"
@@ -136,7 +136,7 @@ void PlayerEntity::SpawnKey(const std::string& key, const std::string& value) {
 // Callback that is fired any time the player dies. As such, it kindly takes care of doing this.
 //===============
 //
-void PlayerEntity::PlayerClientDie(ServerGameEntity* inflictor, ServerGameEntity* attacker, int damage, const vec3_t& point) {
+void PlayerEntity::PlayerClientDie(SynchedEntityBase * inflictor, SynchedEntityBase * attacker, int damage, const vec3_t& point) {
     // Fetch server entity.
     ServerEntity* serverEntity = GetEntityServerHandle();
 
@@ -343,7 +343,7 @@ void PlayerEntity::SetSound() {
 // Sets the clients view to look at the killer.
 //===============
 //
-void PlayerEntity::LookAtKiller(ServerGameEntity* inflictor, ServerGameEntity* attacker)
+void PlayerEntity::LookAtKiller(SynchedEntityBase * inflictor, SynchedEntityBase * attacker)
 {
     // Fetch client.
     ServerClient* client = GetClient();

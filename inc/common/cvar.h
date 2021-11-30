@@ -19,7 +19,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef CVAR_H
 #define CVAR_H
 
-#include "common/cmd.h"
+#include "Common/Command.h"
 
 /*
 cvar_t variables are used to hold scalar or string variables that can be

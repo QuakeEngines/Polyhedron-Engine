@@ -21,7 +21,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "../utils.h"
 #include "stepmove.h"
 
-#include "../entities/base/ServerGameEntity.h"
+#include "../Entities/Base/SynchedEntityBase.h"
 
 /*
 
@@ -48,7 +48,7 @@ solid_edge items only clip against bsp models.
 //
 //===============
 //
-ServerGameEntity *SVG_TestEntityPosition(ServerGameEntity *ent)
+SynchedEntityBase*SVG_TestEntityPosition(SynchedEntityBase*ent)
 {
     SVGTrace trace;
     int     mask;
@@ -74,7 +74,7 @@ ServerGameEntity *SVG_TestEntityPosition(ServerGameEntity *ent)
 // Keeps an entity its velocity within max boundaries. (-sv_maxvelocity, sv_maxvelocity)
 //===============
 //
-void SVG_BoundVelocity(ServerGameEntity *ent)
+void SVG_BoundVelocity(SynchedEntityBase*ent)
 {
     vec3_t velocity = ent->GetVelocity();
 
@@ -93,7 +93,7 @@ void SVG_BoundVelocity(ServerGameEntity *ent)
 // Runs entity thinking code for this frame if necessary
 //===============
 //
-qboolean SVG_RunThink(ServerGameEntity *ent)
+qboolean SVG_RunThink(SynchedEntityBase*ent)
 {
     float   thinktime;
 
@@ -145,9 +145,9 @@ qboolean SVG_RunThink(ServerGameEntity *ent)
 // Two entities have touched, so run their touch functions
 //===============
 //
-void SVG_Impact(ServerGameEntity *e1, SVGTrace *trace)
+void SVG_Impact(SynchedEntityBase*e1, SVGTrace *trace)
 {
-    ServerGameEntity *e2 = nullptr;
+    SynchedEntityBase*e2 = nullptr;
 //  cplane_t    backplane;
 
     if (trace) {
@@ -224,9 +224,9 @@ static vec3_t ClipVelocity(const vec3_t in, const vec3_t normal, float bounce) {
 //===============
 //
 #define MAX_CLIP_PLANES 5
-int SVG_FlyMove(ServerGameEntity *ent, float time, int mask)
+int SVG_FlyMove(SynchedEntityBase*ent, float time, int mask)
 {
-    ServerGameEntity     *hit;
+    SynchedEntityBase    *hit;
     int         bumpcount, numbumps;
     vec3_t      dir;
     float       d;
@@ -357,7 +357,7 @@ int SVG_FlyMove(ServerGameEntity *ent, float time, int mask)
 //
 //===============
 //
-void SVG_AddGravity(ServerGameEntity *ent)
+void SVG_AddGravity(SynchedEntityBase*ent)
 {
     // Fetch velocity.
     vec3_t velocity = ent->GetVelocity();
@@ -384,7 +384,7 @@ void SVG_AddGravity(ServerGameEntity *ent)
 // Does not change the entities velocity at all
 //===============
 //
-SVGTrace SVG_PushEntity(ServerGameEntity *ent, vec3_t push)
+SVGTrace SVG_PushEntity(SynchedEntityBase*ent, vec3_t push)
 {
     SVGTrace trace;
     int     mask;
@@ -426,7 +426,7 @@ retry:
 
 
 typedef struct {
-    ServerGameEntity *ent;
+    SynchedEntityBase*ent;
     vec3_t  origin;
     vec3_t  angles;
 #if USE_SMOOTH_DELTA_ANGLES
@@ -435,7 +435,7 @@ typedef struct {
 } pushed_t;
 pushed_t    pushed[MAX_EDICTS], *pushed_p;
 
-ServerGameEntity *obstacle;
+SynchedEntityBase*obstacle;
 
 
 //
@@ -446,11 +446,11 @@ ServerGameEntity *obstacle;
 // otherwise riders would continue to slide.
 //===============
 //
-qboolean SVG_Push(ServerGameEntity *pusher, vec3_t move, vec3_t amove)
+qboolean SVG_Push(SynchedEntityBase*pusher, vec3_t move, vec3_t amove)
 {
     int e;
-    ServerGameEntity* check = NULL;
-    ServerGameEntity* block = NULL;
+    SynchedEntityBase * check = NULL;
+    SynchedEntityBase * block = NULL;
     pushed_t    *p = NULL;
     vec3_t      org, org2, move2, forward, right, up;
 
@@ -610,10 +610,10 @@ qboolean SVG_Push(ServerGameEntity *pusher, vec3_t move, vec3_t amove)
 // push all box objects
 //===============
 //
-void SVG_Physics_Pusher(ServerGameEntity *ent)
+void SVG_Physics_Pusher(SynchedEntityBase*ent)
 {
     vec3_t      move, amove;
-    ServerGameEntity     *part, *mv;
+    SynchedEntityBase    *part, *mv;
 
     // if not a team captain, so movement will be handled elsewhere
     if (ent->GetFlags() & EntityFlags::TeamSlave)
@@ -682,7 +682,7 @@ void SVG_Physics_Pusher(ServerGameEntity *ent)
 // Non moving objects can only Think
 //===============
 //
-void SVG_Physics_None(ServerGameEntity *ent)
+void SVG_Physics_None(SynchedEntityBase*ent)
 {
     SVG_RunThink(ent);
 }
@@ -694,7 +694,7 @@ void SVG_Physics_None(ServerGameEntity *ent)
 // A moving object that doesn't obey physics
 //===============
 //
-void SVG_Physics_Noclip(ServerGameEntity *ent)
+void SVG_Physics_Noclip(SynchedEntityBase*ent)
 {
 // regular thinking
     if (!SVG_RunThink(ent))
@@ -723,7 +723,7 @@ void SVG_Physics_Noclip(ServerGameEntity *ent)
 // Toss, bounce, and fly movement.  When onground, do nothing.
 //===============
 //
-void SVG_Physics_Toss(ServerGameEntity *ent)
+void SVG_Physics_Toss(SynchedEntityBase*ent)
 {
     // Regular thinking
     SVG_RunThink(ent);
@@ -815,7 +815,7 @@ void SVG_Physics_Toss(ServerGameEntity *ent)
         gi.PositionedSound(ent->GetOrigin(), g_entities, CHAN_AUTO, gi.SoundIndex("misc/h2ohit1.wav"), 1, 1, 0);
 
     // Move teamslaves
-    for (ServerGameEntity *slave = ent->GetTeamChainEntity(); slave; slave = slave->GetTeamChainEntity()) {
+    for (SynchedEntityBase*slave = ent->GetTeamChainEntity(); slave; slave = slave->GetTeamChainEntity()) {
         // Set origin and link them in.
         slave->SetOrigin(ent->GetOrigin());
         slave->LinkEntity();
@@ -842,7 +842,7 @@ constexpr float STEPMOVE_WATERFRICTION = 1.f;
 // Does what it says it does.
 //===============
 //
-void SVG_AddRotationalFriction(ServerGameEntity *ent)
+void SVG_AddRotationalFriction(SynchedEntityBase*ent)
 { 
     // Acquire the rotational velocity first.
     vec3_t angularVelocity = ent->GetAngularVelocity();
@@ -883,7 +883,7 @@ void SVG_AddRotationalFriction(ServerGameEntity *ent)
 // FIXME: is this true ?
 //===============
 //
-void SVG_Physics_Step(ServerGameEntity *ent)
+void SVG_Physics_Step(SynchedEntityBase*ent)
 {
     // Stores whether to play a "surface hit" sound.
     qboolean    hitSound = false;
@@ -895,7 +895,7 @@ void SVG_Physics_Step(ServerGameEntity *ent)
     }
 
     // Fetch ground entity pointer. (This can be the newly found entity ofc.)
-    ServerGameEntity* groundEntity = ent->GetGroundEntity();
+    SynchedEntityBase * groundEntity = ent->GetGroundEntity();
 
     // Store whether we had a ground entity at all.
     qboolean wasOnGround = (groundEntity ? true : false);
@@ -1024,7 +1024,7 @@ void SVG_Physics_Step(ServerGameEntity *ent)
 // Determines what kind of run/thinking method to execute.
 //===============
 //
-void SVG_RunEntity(ServerGameEntity *ent)
+void SVG_RunEntity(SynchedEntityBase*ent)
 {
     //if (ent->PreThink)
     //    ent->PreThink(ent);

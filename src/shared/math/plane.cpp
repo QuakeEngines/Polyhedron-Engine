@@ -3,7 +3,7 @@
 //
 // plane.cpp
 //
-#include "Shared/shared.h"
+#include "Shared/Shared.h"
 
 void SetPlaneType(cplane_t* plane)
 {

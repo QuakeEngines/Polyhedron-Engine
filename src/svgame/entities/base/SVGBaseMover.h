@@ -10,9 +10,9 @@
 */
 #pragma once
 
-class SVGBaseTrigger;
+class BaseTrigger;
 
-using PushMoveEndFunction = void(ServerGameEntity*);
+using PushMoveEndFunction = void(SynchedEntityBase *);
 
 
 constexpr uint32_t PlatLowTrigger = 1U;
@@ -58,7 +58,7 @@ struct PushMoveInfo {
     PushMoveEndFunction* OnEndFunction;
 };
 
-class SVGBaseMover : public SVGBaseTrigger {
+class SVGBaseMover : public BaseTrigger {
 public:
     //
     // Constructor/Deconstructor.
@@ -66,7 +66,7 @@ public:
     SVGBaseMover(ServerEntity* svEntity);
     virtual ~SVGBaseMover();
 
-    DefineAbstractClass( SVGBaseMover, SVGBaseTrigger );
+    DefineAbstractClass( SVGBaseMover, BaseTrigger );
 
     //
     // Interface functions. 

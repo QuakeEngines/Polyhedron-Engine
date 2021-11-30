@@ -4,7 +4,15 @@
 struct ServerEntity;
 
 //---------------------------------------------------------
-// EntityBase - Points to a server entity handle.
+// EntityBase represents a game entity and all of the data 
+// and logic it contains to make it data to make an entity function
+// as long as it has a proper backing object for its entity state.
+// 
+// Synced entities will use a ServerEntity slot as a backing entity, 
+// allowing the server to sync the entity to clients.
+// 
+// Private entities will use their own internal entity state, so they aren't 
+// visible to the server. 
 //---------------------------------------------------------
 class EntityBase
 {
@@ -18,7 +26,24 @@ protected:
     // Destructor.
     virtual ~EntityBase();
 
+    DefineTopAbstractClass(EntityBase);
+
 public:
+
+    // Checks if this entity class is exactly the given class
+    // @param entityClass: an entity class which must inherint from SynchedEntityBase.h
+    template<typename entityClass>
+    bool IsClass() const { // every entity has a ClassInfo, thanks to the DefineXYZ macro
+        return GetTypeInfo()->IsClass( entityClass::ClassInfo );
+    }
+
+    // Checks if this entity class is a subclass of another, or is the same class
+    // @param entityClass: an entity class which must inherint from SynchedEntityBase.h
+    template<typename entityClass>
+    bool IsSubclassOf() const {
+        return GetTypeInfo()->IsSubclassOf( entityClass::ClassInfo );
+    }
+
     // Return the 'renderEffects' value.
     inline const int32_t GetRenderEffects() {
         return entityHandle->state.renderEffects;

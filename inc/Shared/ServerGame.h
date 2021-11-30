@@ -21,7 +21,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 // Predeclared.
 
 // Shared API include requirements.
-#include "Shared/shared.h"
+#include "Shared/Shared.h"
 #include "Shared/List.h"
 
 // Shared Game API include requirements.
@@ -63,7 +63,7 @@ struct gclient_s {
 #include "Shared/Entities/Base/ServerEntity.h"
 
 // In come the predefinition for the API functions.
-class ServerGameEntity;
+class SynchedEntityBase;
 class PlayerEntity;
 
 

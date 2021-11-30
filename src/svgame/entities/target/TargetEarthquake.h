@@ -1,17 +1,17 @@
 
 #pragma once
 
-class TargetEarthquake : public ServerGameEntity {
+class TargetEarthquake : public SynchedEntityBase{
 public:
 	TargetEarthquake( ServerEntity* entity );
 	virtual ~TargetEarthquake() = default;
 
-	DefineMapClass( "target_earthquake", TargetEarthquake, ServerGameEntity );
+	DefineMapClass( "target_earthquake", TargetEarthquake, SynchedEntityBase);
 
 	void Spawn() override;
 	void SpawnKey( const std::string& key, const std::string& value ) override;
 
-	void QuakeUse( ServerGameEntity* other, ServerGameEntity* activator );
+	void QuakeUse( SynchedEntityBase * other, SynchedEntityBase * activator );
 	void QuakeThink();
 
 private:

@@ -11,7 +11,7 @@
 #include "../../physics/stepmove.h"
 #include "../../brushfuncs.h"
 
-#include "../base/ServerGameEntity.h"
+#include "../base/SynchedEntityBase.h.h"
 
 #include "FuncTimer.h"
 
@@ -74,7 +74,7 @@ void FuncTimer::TimerThink() {
 //===============
 // FuncTimer::TimerUse
 //===============
-void FuncTimer::TimerUse( ServerGameEntity* other, ServerGameEntity* activator ) {
+void FuncTimer::TimerUse( SynchedEntityBase * other, SynchedEntityBase * activator ) {
 	this->activator = activator;
 
 	// If on, turn it off

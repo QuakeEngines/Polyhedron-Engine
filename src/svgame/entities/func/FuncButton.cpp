@@ -11,8 +11,8 @@
 #include "../../physics/stepmove.h"
 #include "../../brushfuncs.h"
 
-#include "../base/ServerGameEntity.h"
-#include "../base/SVGBaseTrigger.h"
+#include "../base/SynchedEntityBase.h.h"
+#include "../base/BaseTrigger.h"
 #include "../base/SVGBaseMover.h"
 
 #include "FuncButton.h"
@@ -101,7 +101,7 @@ void FuncButton::Spawn() {
 // FuncButton::SpawnKey
 //===============
 void FuncButton::SpawnKey( const std::string& key, const std::string& value ) {
-	// I think serverEntity variables should just be set in ServerGameEntity::SpawnKey
+	// I think serverEntity variables should just be set in SynchedEntityBase.h::SpawnKey
 	// It doesn't make sense to set them only here, if these variables are available to every entity
 	if ( key == "speed" ) {
 		ParseFloatKeyValue( key, value, speed );
@@ -115,7 +115,7 @@ void FuncButton::SpawnKey( const std::string& key, const std::string& value ) {
 //===============
 // FuncButton::OnButtonDone
 //===============
-void FuncButton::OnButtonDone( ServerGameEntity* self ) {
+void FuncButton::OnButtonDone( SynchedEntityBase * self ) {
 	FuncButton* button = static_cast<FuncButton*>(self);
 	button->ButtonDone();
 }
@@ -145,7 +145,7 @@ void FuncButton::ButtonReturn() {
 //===============
 // FuncButton::OnButtonWait
 //===============
-void FuncButton::OnButtonWait( ServerGameEntity* self ) {
+void FuncButton::OnButtonWait( SynchedEntityBase * self ) {
 	FuncButton* button = static_cast<FuncButton*>(self);
 	button->ButtonWait();
 }
@@ -186,7 +186,7 @@ void FuncButton::ButtonFire() {
 //===============
 // FuncButton::ButtonUse
 //===============
-void FuncButton::ButtonUse( ServerGameEntity* other, ServerGameEntity* activator ) {
+void FuncButton::ButtonUse( SynchedEntityBase * other, SynchedEntityBase * activator ) {
 	this->activator = activator;
 	ButtonFire();
 }
@@ -194,7 +194,7 @@ void FuncButton::ButtonUse( ServerGameEntity* other, ServerGameEntity* activator
 //===============
 // FuncButton::ButtonTouch
 //===============
-void FuncButton::ButtonTouch( ServerGameEntity* self, ServerGameEntity* other, cplane_t* plane, csurface_t* surf ) {
+void FuncButton::ButtonTouch( SynchedEntityBase * self, SynchedEntityBase * other, cplane_t* plane, csurface_t* surf ) {
 	if ( !other->GetClient() || other->GetHealth() <= 0 ) {
 		return;
 	}
@@ -206,7 +206,7 @@ void FuncButton::ButtonTouch( ServerGameEntity* self, ServerGameEntity* other, c
 //===============
 // FuncButton::ButtonDie
 //===============
-void FuncButton::ButtonDie( ServerGameEntity* inflictor, ServerGameEntity* attacker, int damage, const vec3_t& point ) {
+void FuncButton::ButtonDie( SynchedEntityBase * inflictor, SynchedEntityBase * attacker, int damage, const vec3_t& point ) {
 	activator = attacker;
 	SetHealth( GetMaxHealth() );
 	SetTakeDamage( TakeDamage::No );

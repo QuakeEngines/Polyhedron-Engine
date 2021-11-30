@@ -13,8 +13,8 @@
 #include "../../utils.h"       // Util funcs.
 
 // Class entities.
-#include "../base/ServerGameEntity.h"
-#include "../base/SVGBaseTrigger.h"
+#include "../base/SynchedEntityBase.h.h"
+#include "../base/BaseTrigger.h"
 
 // Delayed use.
 #include "TriggerDelayedUse.h"

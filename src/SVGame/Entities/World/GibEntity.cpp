@@ -15,16 +15,16 @@
 #include "../../utils.h"                // Util funcs.
 
 // Class Entities.
-#include "../base/ServerGameEntity.h"
+#include "../base/SynchedEntityBase.h.h"
 #include "GibEntity.h"
 
 // Constructor/Deconstructor.
 GibEntity::GibEntity(ServerEntity* serverEntity)
-    : ServerGameEntity(ServerEntity* serverEntity) {
+    : SynchedEntityBase.h(ServerEntity* serverEntity) {
 
 }
 class SynchedEntityBase;
-class ServerGameEntity;
+class SynchedEntityBase.h;
 
 //
 //===============
@@ -118,7 +118,7 @@ void GibEntity::ClipGibVelocity(vec3_t &velocity) {
 //
 // 'other' is the actual entity that is spawning these gibs.
 //===============
-//float GibEntity::CalculateVelocityForDamage(ServerGameEntity *other, const int32_t damage, vec3_t &velocity) {
+//float GibEntity::CalculateVelocityForDamage(SynchedEntityBase*other, const int32_t damage, vec3_t &velocity) {
 //    // Calculate the velocity based on the damage passed over.
 //    velocity = {
 //        100.f * crandom(),
@@ -149,7 +149,7 @@ void GibEntity::GibEntityThink() {
 
     // Play frames for these meshes, cut the crap at frame 10.
     if (GetFrame() == 10) {
-        SetThinkCallback(&ServerGameEntity::SVGBaseEntityThinkRemove);
+        SetThinkCallback(&SynchedEntityBase.h::SVGBaseEntityThinkRemove);
         SetNextThinkTime(level.time + 8 + random() * 10);
     }
 }
@@ -158,7 +158,7 @@ void GibEntity::GibEntityThink() {
 // GibEntity::GibEntityTouch
 //
 //===============
-void GibEntity::GibEntityTouch(ServerGameEntity* self, ServerGameEntity* other, cplane_t* plane, csurface_t* surf) {
+void GibEntity::GibEntityTouch(SynchedEntityBase * self, SynchedEntityBase * other, cplane_t* plane, csurface_t* surf) {
     vec3_t  right;
 
     if (!GetGroundEntity())
@@ -189,7 +189,7 @@ void GibEntity::GibEntityTouch(ServerGameEntity* self, ServerGameEntity* other, 
 // Savely call Remove so it queues up for removal without causing 
 // serverEntity/classEntity conflicts.
 //===============
-void GibEntity::GibEntityDie(ServerGameEntity* inflictor, ServerGameEntity* attacker, int damage, const vec3_t& point) {
+void GibEntity::GibEntityDie(SynchedEntityBase * inflictor, SynchedEntityBase * attacker, int damage, const vec3_t& point) {
     // Time to queue it for removal.
     Remove();
 }

@@ -16,8 +16,8 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-#include "Shared/shared.h"
-#include "common/mdfour.h"
+#include "Shared/Shared.h"
+#include "Common/MDFour.h"
 
 #if SIZEOF_INT > 4
 #define LARGE_INT32

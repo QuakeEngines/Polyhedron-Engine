@@ -14,7 +14,7 @@
 #include "../../brushfuncs.h"
 
 // Class Entities.
-#include "../base/ServerGameEntity.h"
+#include "../base/SynchedEntityBase.h.h"
 
 #include "InfoPlayerStart.h"
 #include "InfoPlayerCoop.h"

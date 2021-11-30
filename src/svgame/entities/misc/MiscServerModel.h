@@ -8,16 +8,16 @@
 */
 #pragma once
 
-class ServerGameEntity;
-class SVGBaseTrigger;
+class SynchedEntityBase.h;
+class BaseTrigger;
 
-class MiscServerModel : public SVGBaseTrigger {
+class MiscServerModel : public BaseTrigger {
 public:
     // Constructor/Deconstructor.
     MiscServerModel(ServerEntity* svEntity);
     virtual ~MiscServerModel();
 
-    DefineMapClass("misc_servermodel", MiscServerModel, SVGBaseTrigger);
+    DefineMapClass("misc_servermodel", MiscServerModel, BaseTrigger);
 
     //
     // Interface functions. 
@@ -71,10 +71,10 @@ public:
     //
     // Callback Functions.
     //
-    //void MiscServerModelBoxUse(ServerGameEntity* caller, ServerGameEntity* activator);
+    //void MiscServerModelBoxUse(SynchedEntityBase * caller, SynchedEntityBase * activator);
     void MiscServerModelThink(void);
-    void MiscServerModelDie(ServerGameEntity* inflictor, ServerGameEntity* attacker, int damage, const vec3_t& point);
-    //void MiscServerModelTouch(ServerGameEntity* self, ServerGameEntity* other, cplane_t* plane, csurface_t* surf);
+    void MiscServerModelDie(SynchedEntityBase * inflictor, SynchedEntityBase * attacker, int damage, const vec3_t& point);
+    //void MiscServerModelTouch(SynchedEntityBase * self, SynchedEntityBase * other, cplane_t* plane, csurface_t* surf);
 
     // Set when exploding, after a minor delay.
     //void MiscServerModelBoxExplode(void);

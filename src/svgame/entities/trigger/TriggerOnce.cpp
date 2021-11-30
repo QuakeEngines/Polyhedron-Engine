@@ -10,8 +10,8 @@
 #include "../../g_local.h"     // SVGame.
 #include "../../effects.h"     // Effects.
 #include "../../utils.h"       // Util funcs.
-#include "../base/ServerGameEntity.h"
-#include "../base/SVGBaseTrigger.h"
+#include "../base/SynchedEntityBase.h.h"
+#include "../base/BaseTrigger.h"
 #include "TriggerMultiple.h" 
 #include "TriggerOnce.h"
 
@@ -110,7 +110,7 @@ void TriggerOnce::SpawnKey(const std::string& key, const std::string& value) {
 	}
 }
 
-void TriggerOnce::Trigger(ServerGameEntity* activator) {
+void TriggerOnce::Trigger(SynchedEntityBase * activator) {
 	// Parent trigger.
 	Base::Trigger(activator);
 }
@@ -133,7 +133,7 @@ void TriggerOnce::TriggerOnceThinkWait() {
 // 'Touch' callback, to hurt the entities touching it.
 //===============
 //
-void TriggerOnce::TriggerOnceTouch(ServerGameEntity* self, ServerGameEntity* other, cplane_t* plane, csurface_t* surf) {
+void TriggerOnce::TriggerOnceTouch(SynchedEntityBase * self, SynchedEntityBase * other, cplane_t* plane, csurface_t* surf) {
 	if (this == other)
 		return;
 
@@ -169,7 +169,7 @@ void TriggerOnce::TriggerOnceTouch(ServerGameEntity* self, ServerGameEntity* oth
 // 'Use' callback, whenever the trigger is activated.
 //===============
 //
-void TriggerOnce::TriggerOnceUse(ServerGameEntity* other, ServerGameEntity* activator) {
+void TriggerOnce::TriggerOnceUse(SynchedEntityBase * other, SynchedEntityBase * activator) {
 	// Trigger itself.
 	Trigger(activator);
 }
@@ -181,7 +181,7 @@ void TriggerOnce::TriggerOnceUse(ServerGameEntity* other, ServerGameEntity* acti
 // 'Use' callback, whenever the trigger wasn't, but still has to be activated.
 //===============
 //
-void TriggerOnce::TriggerOnceEnable(ServerGameEntity* other, ServerGameEntity* activator) {
+void TriggerOnce::TriggerOnceEnable(SynchedEntityBase * other, SynchedEntityBase * activator) {
 	// Set the new solid, since it wasn't Solid::Trigger when disabled.
 	SetSolid(Solid::Trigger);
 

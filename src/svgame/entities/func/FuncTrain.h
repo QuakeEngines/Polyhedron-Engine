@@ -1,7 +1,7 @@
 #pragma once
 
-class ServerGameEntity;
-class SVGBaseTrigger;
+class SynchedEntityBase.h;
+class BaseTrigger;
 class SVGBaseMover;
 class PathCorner;
 
@@ -22,7 +22,7 @@ public:
 	void			PostSpawn() override;
 	void			SpawnKey( const std::string& key, const std::string& value ) override;
 
-	void			TrainUse( ServerGameEntity* other, ServerGameEntity* activator );
+	void			TrainUse( SynchedEntityBase * other, SynchedEntityBase * activator );
 
 	// Travels to the next path_corner
 	void			NextCornerThink();
@@ -31,9 +31,9 @@ public:
 	// Waits at the arrived path_corner
 	void			WaitAtCorner();
 	// Callback for the brush movement code
-	static void		OnWaitAtCorner( ServerGameEntity* serverEntity );
+	static void		OnWaitAtCorner( SynchedEntityBase * serverEntity );
 	// The train has been blocked by an obstacle, damage it or stop?
-	void			TrainBlocked( ServerGameEntity* other );
+	void			TrainBlocked( SynchedEntityBase * other );
 
 private:
 	PathCorner*		currentPathEntity{ nullptr };

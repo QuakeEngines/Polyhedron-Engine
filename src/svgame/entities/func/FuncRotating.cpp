@@ -11,8 +11,8 @@
 #include "../../physics/stepmove.h"
 #include "../../brushfuncs.h"
 
-#include "../base/ServerGameEntity.h"
-#include "../base/SVGBaseTrigger.h"
+#include "../base/SynchedEntityBase.h.h"
+#include "../base/BaseTrigger.h"
 #include "../base/SVGBaseMover.h"
 
 #include "FuncRotating.h"
@@ -74,14 +74,14 @@ void FuncRotating::Spawn() {
 //===============
 // FuncRotating::RotatorBlocked
 //===============
-void FuncRotating::RotatorBlocked( ServerGameEntity* other ) {
+void FuncRotating::RotatorBlocked( SynchedEntityBase * other ) {
 	SVG_InflictDamage( other, this, this, vec3_zero(), GetOrigin(), vec3_zero(), GetDamage(), 1, 0, MeansOfDeath::Crush );
 }
 
 //===============
 // FuncRotating::RotatorHurtTouch
 //===============
-void FuncRotating::RotatorHurtTouch( ServerGameEntity* self, ServerGameEntity* other, cplane_t* plane, csurface_t* surf ) {
+void FuncRotating::RotatorHurtTouch( SynchedEntityBase * self, SynchedEntityBase * other, cplane_t* plane, csurface_t* surf ) {
 	if ( vec3_length( GetAngularVelocity() ) ) {
 		RotatorBlocked( other );
 	}
@@ -90,7 +90,7 @@ void FuncRotating::RotatorHurtTouch( ServerGameEntity* self, ServerGameEntity* o
 //===============
 // FuncRotating::RotatorUse
 //===============
-void FuncRotating::RotatorUse( ServerGameEntity* other, ServerGameEntity* activator ) {
+void FuncRotating::RotatorUse( SynchedEntityBase * other, SynchedEntityBase * activator ) {
 	if ( vec3_equal( GetAngularVelocity(), vec3_zero() ) ) {
 		SetSound( 0 );
 		SetAngularVelocity( vec3_zero() );

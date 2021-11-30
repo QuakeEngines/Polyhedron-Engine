@@ -16,11 +16,11 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-#include "Shared/shared.h"
+#include "Shared/Shared.h"
 #include "system/system.h"
-#include "common/cvar.h"
-#include "common/common.h"
-#include "common/files.h"
+#include "Common/cvar.h"
+#include "Common/Common.h"
+#include "Common/Files.h"
 #include "dynamic.h"
 #include "AL/alc.h"
 

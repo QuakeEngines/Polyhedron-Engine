@@ -1,12 +1,12 @@
 
 #pragma once
 
-class FuncExplosive : public ServerGameEntity {
+class FuncExplosive : public SynchedEntityBase{
 public:
 	FuncExplosive( ServerEntity* entity );
 	virtual ~FuncExplosive() = default;
 
-	DefineMapClass( "func_explosive", FuncExplosive, ServerGameEntity );
+	DefineMapClass( "func_explosive", FuncExplosive, SynchedEntityBase);
 
 	// Spawn flags
 	static constexpr int32_t SF_StartDeactivated = 1 << 0;
@@ -15,7 +15,7 @@ public:
 
 	void Spawn() override;
 
-	void ExplosiveDeath( ServerGameEntity* inflictor, ServerGameEntity* attacker, int damage, const vec3_t& point );
-	void ExplosiveUse( ServerGameEntity* other, ServerGameEntity* activator );
-	void ExplosiveAppearUse( ServerGameEntity* other, ServerGameEntity* activator );
+	void ExplosiveDeath( SynchedEntityBase * inflictor, SynchedEntityBase * attacker, int damage, const vec3_t& point );
+	void ExplosiveUse( SynchedEntityBase * other, SynchedEntityBase * activator );
+	void ExplosiveAppearUse( SynchedEntityBase * other, SynchedEntityBase * activator );
 };

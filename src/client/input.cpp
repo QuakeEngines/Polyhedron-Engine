@@ -17,11 +17,11 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 */
 // cl.input.c  -- builds an intended movement command to send to the server
 
-#include "client.h"
-#include "client/gamemodule.h"
-#include "Shared/clgame.h"
-#include "sharedgame/sharedgame.h"
-#include "system/lirc.h"
+#include "Client.h"
+#include "Client/GameModule.h"
+#include "Shared/ClientGame.h"
+#include "SharedGame/SharedGame.h"
+#include "System/Lirc.h"
 
 static cvar_t    *cl_nodelta;
 static cvar_t    *cl_maxpackets;

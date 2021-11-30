@@ -1,15 +1,35 @@
-// SVGame Core.
-#include "../../../g_local.h"	// SVGame.
-#include "../../../Effects.h"	// Effects.
-#include "../../../Entities.h"	// Entities.
-#include "../../../Utils.h"		// Util funcs.
+//// SVGame Core.
+//#include "../../../g_local.h"	// SVGame.
+//#include "../../../Effects.h"	// Effects.
+//#include "../../../Entities.h"	// Entities.
+//#include "../../../Utils.h"		// Util funcs.
+//
+//// Shared Entities.
+//#include "Shared/Entities.h"
 
-// Shared Entities.
-#include "Shared/Entities.h"
+/*
+// LICENSE HERE.
 
+//
+// SynchedEntityBase.h.cpp
+//
+//
+*/
+#include "../../g_local.h"		// SVGame.
+#include "../../Effects.h"		// Effects.
+#include "../../Entities.h"		// Entities.
+#include "../../Utilities.h"		// Util funcs.
+
+#include "SynchedEntityBase.h"
+#include "BaseTrigger.h"
+#include "../Trigger/TriggerDelayedUse.h"
+
+//
 // Constructor.
+//
 SynchedEntityBase::SynchedEntityBase() :
-	EntityBase(EntityBase::QueryFreeServerEntity()) {
+	EntityBase(SynchedEntityBase::QueryFreeServerEntity()) {
+
 };
 
 SynchedEntityBase::SynchedEntityBase(ServerEntity* serverEntity) :

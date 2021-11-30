@@ -16,20 +16,20 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 #include "g_local.h"         // Include SVGame funcs.
-#include "entities.h"        // Entities.
-#include "utils.h"           // Include Utilities funcs.
+#include "Entities.h"        // Entities.
+#include "Utilities.h"           // Include Utilities funcs.
 #include "player/hud.h"      // Include HUD funcs.
 
-//#include "entities/base/SynchedEntityBase.h"
-//#include "entities/base/ServerGameEntity.h"
-//#include "entities/base/PlayerEntity.h"
+#include "Entities/Base/EntityBase.h"
+#include "Entities/Base/SynchedEntityBase.h"
+#include "entities/base/PlayerEntity.h"
 
-#include "weapons/blaster.h"
-#include "weapons/machinegun.h"
-#include "weapons/shotgun.h"
-#include "weapons/supershotgun.h"
+#include "Weapons/Blaster.h"
+#include "Weapons/Machinegun.h"
+#include "Weapons/Shotgun.h"
+#include "Weapons/SuperShotgun.h"
 
-qboolean    Pickup_Weapon(ServerGameEntity *ent, PlayerEntity *other);
+qboolean    Pickup_Weapon(SynchedEntityBase*ent, PlayerEntity *other);
 void        Use_Weapon(PlayerEntity *ent, gitem_t *inv);
 void        Drop_Weapon(PlayerEntity *ent, gitem_t *inv);
 
@@ -101,13 +101,13 @@ gitem_t *SVG_FindItemByPickupName(const char *pickup_name) // C++20: STRING: Add
 
 //======================================================================
 
-void DoRespawn(ServerGameEntity *ent)
+void DoRespawn(SynchedEntityBase*ent)
 {
     //if (!ent)
     //    return;
 
     //if (ent->team) {
-    //    ServerGameEntity *master;
+    //    SynchedEntityBase*master;
     //    int count;
     //    int choice;
 
@@ -130,7 +130,7 @@ void DoRespawn(ServerGameEntity *ent)
     //ent->state.event = EntityEvent::ItemRespawn;
 }
 
-void SVG_SetRespawn(ServerGameEntity *serverEntity, float delay)
+void SVG_SetRespawn(SynchedEntityBase*serverEntity, float delay)
 {
     if (!serverEntity)
         return;
@@ -146,7 +146,7 @@ void SVG_SetRespawn(ServerGameEntity *serverEntity, float delay)
 
 //======================================================================
 
-qboolean Pickup_Powerup(ServerGameEntity *ent, ServerGameEntity  *other)
+qboolean Pickup_Powerup(SynchedEntityBase*ent, SynchedEntityBase *other)
 {
     //int     quantity;
 
@@ -216,7 +216,7 @@ qboolean SVG_AddAmmo(PlayerEntity *playerEntity, gitem_t *item, int32_t count)
     return true;
 }
 
-qboolean Pickup_Ammo(ServerGameEntity *ent, PlayerEntity*other)
+qboolean Pickup_Ammo(SynchedEntityBase*ent, PlayerEntity*other)
 {
     //int         oldcount;
     //int         count;
@@ -247,7 +247,7 @@ qboolean Pickup_Ammo(ServerGameEntity *ent, PlayerEntity*other)
 
 void Drop_Ammo(PlayerEntity *ent, gitem_t *item)
 {
-    //ServerGameEntity *dropped;
+    //SynchedEntityBase*dropped;
     //int     index;
 
     //index = ITEM_INDEX(item);
@@ -273,7 +273,7 @@ void Drop_Ammo(PlayerEntity *ent, gitem_t *item)
 
 //======================================================================
 
-void MegaHealth_think(ServerGameEntity *self)
+void MegaHealth_think(SynchedEntityBase*self)
 {
     //if (self->owner->health > self->owner->maxHealth) {
     //    self->nextThinkTime = level.time + 1;
@@ -287,7 +287,7 @@ void MegaHealth_think(ServerGameEntity *self)
     //    SVG_FreeEntity(self);
 }
 
-qboolean Pickup_Health(ServerGameEntity *ent, ServerGameEntity *other)
+qboolean Pickup_Health(SynchedEntityBase*ent, SynchedEntityBase*other)
 {
 //    if (!(ent->style & HEALTH_IGNORE_MAX))
 //        if (other->health >= other->maxHealth)
@@ -317,7 +317,7 @@ qboolean Pickup_Health(ServerGameEntity *ent, ServerGameEntity *other)
 
 //======================================================================
 
-int SVG_ArmorIndex(ServerGameEntity *ent)
+int SVG_ArmorIndex(SynchedEntityBase*ent)
 {
     if (!ent)
         return 0;
@@ -334,7 +334,7 @@ int SVG_ArmorIndex(ServerGameEntity *ent)
     return 0;
 }
 
-qboolean Pickup_Armor(ServerGameEntity *ent, PlayerEntity *other)
+qboolean Pickup_Armor(SynchedEntityBase*ent, PlayerEntity *other)
 {
     //int             old_armor_index;
     //gitem_armor_t   *oldinfo;
@@ -401,7 +401,7 @@ qboolean Pickup_Armor(ServerGameEntity *ent, PlayerEntity *other)
 SVG_TouchItem
 ===============
 */
-void SVG_TouchItem(ServerGameEntity *ent, ServerGameEntity *other, cplane_t *plane, csurface_t *surf)
+void SVG_TouchItem(SynchedEntityBase*ent, SynchedEntityBase*other, cplane_t *plane, csurface_t *surf)
 {
     //qboolean    taken;
 
@@ -459,7 +459,7 @@ void SVG_TouchItem(ServerGameEntity *ent, ServerGameEntity *other, cplane_t *pla
 
 //======================================================================
 
-void drop_temp_touch(ServerGameEntity *ent, ServerGameEntity *other, cplane_t *plane, csurface_t *surf)
+void drop_temp_touch(SynchedEntityBase*ent, SynchedEntityBase*other, cplane_t *plane, csurface_t *surf)
 {
     if (other == ent->GetOwner())
         return;
@@ -467,7 +467,7 @@ void drop_temp_touch(ServerGameEntity *ent, ServerGameEntity *other, cplane_t *p
     //SVG_TouchItem(ent, other, plane, surf);
 }
 
-void drop_make_touchable(ServerGameEntity *serverGameEntity)
+void drop_make_touchable(SynchedEntityBase*serverGameEntity)
 {
 //    serverGameEntity->SetTouchCallback(S)
 //    ent->Touch = SVG_TouchItem;
@@ -477,10 +477,10 @@ void drop_make_touchable(ServerGameEntity *serverGameEntity)
 //    }
 }
 
-ServerGameEntity *SVG_DropItem(PlayerEntity *ent, gitem_t *item)
+SynchedEntityBase*SVG_DropItem(PlayerEntity *ent, gitem_t *item)
 {
     return NULL;
-//    ServerGameEntity *dropped;
+//    SynchedEntityBase*dropped;
 //    vec3_t  forward, right;
 //    vec3_t  offset;
 //
@@ -524,9 +524,9 @@ ServerGameEntity *SVG_DropItem(PlayerEntity *ent, gitem_t *item)
 //    return dropped;
 }
 
-void Use_Item(ServerGameEntity *serverEntity, ServerGameEntity *other, ServerGameEntity *activator)
+void Use_Item(SynchedEntityBase *synchedEntity, SynchedEntityBase *other, SynchedEntityBase* activator)
 {
-    serverEntity->SetServerFlags(serverEntity->GetServerFlags() & ~EntityServerFlags::NoClient);
+    synchedEntity->SetServerFlags(synchedEntity->GetServerFlags() & ~EntityServerFlags::NoClient);
 //    ent->Use = NULL;
 
 //    if (ent->spawnFlags & ItemSpawnFlags::NoTouch) {
@@ -537,7 +537,7 @@ void Use_Item(ServerGameEntity *serverEntity, ServerGameEntity *other, ServerGam
 ////        ent->Touch = SVG_TouchItem;
 //    }
 
-    serverEntity->LinkEntity();
+    synchedEntity->LinkEntity();
 }
 
 //======================================================================
@@ -547,7 +547,7 @@ void Use_Item(ServerGameEntity *serverEntity, ServerGameEntity *other, ServerGam
 droptofloor
 ================
 */
-void droptofloor(ServerGameEntity *serverEntity)
+void droptofloor(SynchedEntityBase*serverEntity)
 {
 //    trace_t     tr;
 //    vec3_t      dest;
@@ -719,7 +719,7 @@ void SVG_SpawnItem(ServerEntity *serverGameEntity, gitem_t *item)
     //    }
     //}
 
-    if (coop->value && (strcmp(serverGameEntity->GetClassName(), "key_power_cube") == 0)) {
+    //if (coop->value && (strcmp(serverGameEntity->GetClassName(), "key_power_cube") == 0)) {
 //        ent->spawnFlags |= (1 << (8 + level.powerCubes));
         level.powerCubes++;
     }
@@ -732,8 +732,8 @@ void SVG_SpawnItem(ServerEntity *serverGameEntity, gitem_t *item)
     ent->item = item;
 //    ent->nextThinkTime = level.time + 2 * FRAMETIME;    // items start after other solids
 //    ent->Think = droptofloor;
-    ent->state.effects = item->worldModelFlags;
-    ent->state.renderEffects = RenderEffects::Glow;
+    //ent->state.effects = item->worldModelFlags;
+    //ent->state.renderEffects = RenderEffects::Glow;
     //if (ent->model)
     //    gi.ModelIndex(ent->model);
 }
@@ -947,10 +947,10 @@ gitem_t itemlist[] = {
 
 /*QUAKED item_health (.3 .3 1) (-16 -16 -16) (16 16 16)
 */
-void SP_item_health(ServerGameEntity *self)
+void SP_item_health(SynchedEntityBase *self)
 {
     if (deathmatch->value && ((int)gamemodeflags->value & GameModeFlags::NoHealth)) {
-        SVG_FreeEntity(self);
+        self->Remove();
         return;
     }
 
@@ -962,49 +962,49 @@ void SP_item_health(ServerGameEntity *self)
 
 /*QUAKED item_health_small (.3 .3 1) (-16 -16 -16) (16 16 16)
 */
-void SP_item_health_small(ServerGameEntity *self)
+void SP_item_health_small(SynchedEntityBase*self)
 {
-    if (deathmatch->value && ((int)gamemodeflags->value & GameModeFlags::NoHealth)) {
-        SVG_FreeEntity(self);
-        return;
-    }
-
-//    self->model = "models/items/healing/stimpack/tris.md2";
-    self->count = 2;
-    SVG_SpawnItem(self, SVG_FindItemByPickupName("Health"));
-    self->style = HEALTH_IGNORE_MAX;
-    gi.SoundIndex("items/s_health.wav");
+//    if (deathmatch->value && ((int)gamemodeflags->value & GameModeFlags::NoHealth)) {
+//        SVG_FreeEntity(self);
+//        return;
+//    }
+//
+////    self->model = "models/items/healing/stimpack/tris.md2";
+//    self->count = 2;
+//    SVG_SpawnItem(self, SVG_FindItemByPickupName("Health"));
+//    self->style = HEALTH_IGNORE_MAX;
+//    gi.SoundIndex("items/s_health.wav");
 }
 
 /*QUAKED item_health_large (.3 .3 1) (-16 -16 -16) (16 16 16)
 */
 void SP_item_health_large(ServerEntity *self)
 {
-    if (deathmatch->value && ((int)gamemodeflags->value & GameModeFlags::NoHealth)) {
-        SVG_FreeEntity(self);
-        return;
-    }
-
-//    self->model = "models/items/healing/large/tris.md2";
-    //self->count = 25;
-    SVG_SpawnItem(self, SVG_FindItemByPickupName("Health"));
-    gi.SoundIndex("items/l_health.wav");
+//    if (deathmatch->value && ((int)gamemodeflags->value & GameModeFlags::NoHealth)) {
+//        SVG_FreeEntity(self);
+//        return;
+//    }
+//
+////    self->model = "models/items/healing/large/tris.md2";
+//    //self->count = 25;
+//    SVG_SpawnItem(self, SVG_FindItemByPickupName("Health"));
+//    gi.SoundIndex("items/l_health.wav");
 }
 
 /*QUAKED item_health_mega (.3 .3 1) (-16 -16 -16) (16 16 16)
 */
 void SP_item_health_mega(ServerEntity *self)
 {
-    if (deathmatch->value && ((int)gamemodeflags->value & GameModeFlags::NoHealth)) {
-        SVG_FreeEntity(self);
-        return;
-    }
-
-//    self->model = "models/items/mega_h/tris.md2";
-    //self->count = 100;
-    SVG_SpawnItem(self, SVG_FindItemByPickupName("Health"));
-    gi.SoundIndex("items/m_health.wav");
-    self->style = HEALTH_IGNORE_MAX | HEALTH_TIMED;
+//    if (deathmatch->value && ((int)gamemodeflags->value & GameModeFlags::NoHealth)) {
+//        SVG_FreeEntity(self);
+//        return;
+//    }
+//
+////    self->model = "models/items/mega_h/tris.md2";
+//    //self->count = 100;
+//    SVG_SpawnItem(self, SVG_FindItemByPickupName("Health"));
+//    gi.SoundIndex("items/m_health.wav");
+//   // self->style = HEALTH_IGNORE_MAX | HEALTH_TIMED;
 }
 
 

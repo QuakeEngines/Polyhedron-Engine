@@ -4,24 +4,24 @@
 //
 // ImportsWrapper.cpp
 //
-// Any import function that desires the use of ServerGameEntity instead of
+// Any import function that desires the use of SynchedEntityBaseinstead of
 // a specific ServerEntity, resides in here.
 //
 // This is to wrap it up nicely.
 //
 */
 #include "g_local.h"          // Include SVGame header.
-#include "entities.h"
-#include "entities/base/ServerGameEntity.h"
+#include "Entities.h"
+#include "Entities/Base/SynchedEntityBase.h"
 
 //
 //===============
 // SVG_CenterPrint
 //
-// Wraps up gi.CenterPrintf for ServerGameEntity, and nice std::string hurray.
+// Wraps up gi.CenterPrintf for SynchedEntityBase.h, and nice std::string hurray.
 //===============
 //
-void SVG_CenterPrint(ServerGameEntity* ent, const std::string& str) {
+void SVG_CenterPrint(SynchedEntityBase * ent, const std::string& str) {
     if (!ent)
         return;
 
@@ -32,10 +32,10 @@ void SVG_CenterPrint(ServerGameEntity* ent, const std::string& str) {
 //===============
 // SVG_CenterPrint
 //
-// Wraps up gi.Sound for ServerGameEntity.
+// Wraps up gi.Sound for SynchedEntityBase.h.
 //===============
 //
-void SVG_Sound(ServerGameEntity* ent, int32_t channel, int32_t soundIndex, float volume, float attenuation, float timeOffset) {
+void SVG_Sound(SynchedEntityBase * ent, int32_t channel, int32_t soundIndex, float volume, float attenuation, float timeOffset) {
     if (!ent)
         return;
 
@@ -50,9 +50,9 @@ void SVG_Sound(ServerGameEntity* ent, int32_t channel, int32_t soundIndex, float
 // Returns an std::vector containing the found boxed entities. Will not exceed listCount.
 //===============
 //
-std::vector<ServerGameEntity*> SVG_BoxEntities(const vec3_t& mins, const vec3_t& maxs, int32_t listCount, int32_t areaType) {
+std::vector<SynchedEntityBase *> SVG_BoxEntities(const vec3_t& mins, const vec3_t& maxs, int32_t listCount, int32_t areaType) {
     ServerEntity* boxedServerEntities[MAX_EDICTS];
-    std::vector<ServerGameEntity*> boxedBaseEntities;
+    std::vector<SynchedEntityBase *> boxedBaseEntities;
 
     // Ensure the listCount can't exceed the max edicts.
     if (listCount > MAX_EDICTS) {
@@ -62,7 +62,7 @@ std::vector<ServerGameEntity*> SVG_BoxEntities(const vec3_t& mins, const vec3_t&
     // Box the entities.
     int32_t numEntities = gi.BoxEntities(mins, maxs, boxedServerEntities, MAX_EDICTS, AREA_SOLID);
 
-    // Go through the boxed entities list, and store there classEntities (ServerGameEntity aka baseEntities).
+    // Go through the boxed entities list, and store there classEntities (SynchedEntityBaseaka baseEntities).
     for (int32_t i = 0; i < numEntities; i++) {
         if (serverGameEntities[boxedServerEntities[i]->state.number] != nullptr)
             boxedBaseEntities.push_back(serverGameEntities[boxedServerEntities[i]->state.number]);
@@ -76,10 +76,10 @@ std::vector<ServerGameEntity*> SVG_BoxEntities(const vec3_t& mins, const vec3_t&
 //===============
 // SVG_Trace
 //
-// The defacto trace function to use, for ServerGameEntity and its derived family & friends.
+// The defacto trace function to use, for SynchedEntityBaseand its derived family & friends.
 //===============
 //
-SVGTrace SVG_Trace(const vec3_t& start, const vec3_t& mins, const vec3_t& maxs, const vec3_t& end, ServerGameEntity* passent, const int32_t& contentMask) {
+SVGTrace SVG_Trace(const vec3_t& start, const vec3_t& mins, const vec3_t& maxs, const vec3_t& end, SynchedEntityBase * passent, const int32_t& contentMask) {
     // Fetch server entity in case one was passed to us.
     ServerEntity* serverPassEntity = (passent ? passent->GetEntityServerHandle() : NULL);
 

@@ -22,10 +22,10 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 // images.c -- image reading and writing functions
 //
 
-#include "Shared/shared.h"
-#include "common/common.h"
-#include "common/cvar.h"
-#include "common/files.h"
+#include "Shared/Shared.h"
+#include "Common/Common.h"
+#include "Common/cvar.h"
+#include "Common/Files.h"
 #include "refresh/images.h"
 #include "format/pcx.h"
 #include "format/wal.h"

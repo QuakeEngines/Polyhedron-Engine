@@ -9,8 +9,8 @@
 #pragma once
 
 struct ServerEntity;
+class EntityBase;
 class SynchedEntityBase;
-class ServerGameEntity;
 
 class PlayerEntity : public SynchedEntityBase {
 public:
@@ -34,7 +34,7 @@ public:
     //
     // Callback functions.
     //
-    void PlayerClientDie(ServerGameEntity* inflictor, ServerGameEntity* attacker, int damage, const vec3_t& point);
+    void PlayerClientDie(SynchedEntityBase * inflictor, SynchedEntityBase * attacker, int damage, const vec3_t& point);
 
     //
     // Get/Set
@@ -211,7 +211,7 @@ private:
     //
     // Private utility functions.
     //
-    void LookAtKiller(ServerGameEntity* inflictor, ServerGameEntity* attacker);
+    void LookAtKiller(SynchedEntityBase * inflictor, SynchedEntityBase * attacker);
 
     //Adds the specific blend of colors on top of each other.
     static void AddScreenBlend(float r, float g, float b, float a, float *v_blend)

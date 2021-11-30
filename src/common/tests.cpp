@@ -16,11 +16,11 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-#include "Shared/shared.h"
-#include "common/bsp.h"
-#include "common/cmd.h"
-#include "common/common.h"
-#include "common/files.h"
+#include "Shared/Shared.h"
+#include "Common/BSP.h"
+#include "Common/Command.h"
+#include "Common/Common.h"
+#include "Common/Files.h"
 #include "common/tests.h"
 #include "refresh/refresh.h"
 #include "system/system.h"

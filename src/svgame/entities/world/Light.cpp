@@ -8,8 +8,8 @@
 */
 #include "../../g_local.h"              // SVGame.
 
-#include "../base/ServerGameEntity.h"
-#include "../base/SVGBaseTrigger.h"
+#include "../base/SynchedEntityBase.h.h"
+#include "../base/BaseTrigger.h"
 #include "Light.h"
 
 // SpawnFlags.
@@ -17,7 +17,7 @@
 #define TRIGGERABLE 2
 
 // Constructor/Deconstructor.
-Light::Light(ServerEntity* svEntity) : SVGBaseTrigger(svEntity) {
+Light::Light(ServerEntity* svEntity) : BaseTrigger(svEntity) {
 
 }
 Light::~Light() {
@@ -66,7 +66,7 @@ void Light::Think() {
     Base::Think();
 }
 
-void Light::LightUse(ServerGameEntity* other, ServerGameEntity* activator) {
+void Light::LightUse(SynchedEntityBase * other, SynchedEntityBase * activator) {
     // Get spawnflags.
     int32_t spawnFlags = GetSpawnFlags();
 
@@ -117,7 +117,7 @@ void Light::SpawnKey(const std::string& key, const std::string& value) {
     }
     // Parent class spawnkey.
     else {
-        ServerGameEntity::SpawnKey(key, value);
+        SynchedEntityBase.h::SpawnKey(key, value);
     }
 }
 

@@ -15,12 +15,12 @@
 #include "../../utils.h"                // Util funcs.
 
 // Class Entities.
-#include "../base/ServerGameEntity.h"
+#include "../base/SynchedEntityBase.h.h"
 #include "DebrisEntity.h"
 
 // Constructor/Deconstructor.
 DebrisEntity::DebrisEntity(ServerEntity* svEntity)
-    : ServerGameEntity(svEntity) {
+    : SynchedEntityBase.h(svEntity) {
 
 }
 DebrisEntity::~DebrisEntity() {
@@ -94,7 +94,7 @@ void DebrisEntity::SpawnKey(const std::string& key, const std::string& value) {
 //
 // Spawn gibs to make things gore like :P
 //===============
-void DebrisEntity::DebrisEntityDie(ServerGameEntity* inflictor, ServerGameEntity* attacker, int damage, const vec3_t& point) {
+void DebrisEntity::DebrisEntityDie(SynchedEntityBase * inflictor, SynchedEntityBase * attacker, int damage, const vec3_t& point) {
     // Save to queue for removal.
     Remove();
 }

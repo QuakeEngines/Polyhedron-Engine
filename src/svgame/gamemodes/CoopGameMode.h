@@ -22,9 +22,9 @@ public:
     //
     // Functions defining game rules. Such as, CanDamage, Can... IsAllowedTo...
     //
-    virtual qboolean CanDamage(ServerGameEntity* targ, ServerGameEntity* inflictor) override;
+    virtual qboolean CanDamage(SynchedEntityBase * targ, SynchedEntityBase * inflictor) override;
     // Coop has its own Obituary madness.
-    virtual void ClientUpdateObituary(ServerEntity* self, ServerGameEntity* inflictor, ServerGameEntity* attacker) override;
+    virtual void ClientUpdateObituary(SynchedEntityBase* self, SynchedEntityBase * inflictor, SynchedEntityBase * attacker) override;
 
 private:
 

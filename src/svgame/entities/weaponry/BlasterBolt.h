@@ -9,33 +9,33 @@
 #pragma once
 
 struct ServerEntity;
-class ServerGameEntity;
+class EntityBaseh;
 class SynchedEntityBase;
 
-class BlasterBolt : public ServerGameEntity {
+class BlasterBolt : public SynchedEntityBase{
 public:
     // Constructor/Deconstructor.
     BlasterBolt();
     virtual ~BlasterBolt();
 
-    DefineClass( BlasterBolt, ServerGameEntity);
+    DefineClass( BlasterBolt, SynchedEntityBase);
 
     //
     // Interface functions. 
     //
-    void Precache() override;    // Precaches data.
-    void Spawn() override;       // Spawns the entity.
-    void Respawn() override;     // Respawns the entity.
-    void PostSpawn() override;   // PostSpawning is for handling entity references, since they may not exist yet during a spawn period.
-    void Think() override;       // General entity thinking routine.
+    virtual void Precache() override;    // Precaches data.
+    virtual void Spawn() override;       // Spawns the entity.
+    virtual void Respawn() override;     // Respawns the entity.
+    virtual void PostSpawn() override;   // PostSpawning is for handling entity references, since they may not exist yet during a spawn period.
+    virtual void Think() override;       // General entity thinking routine.
 
-    void SpawnKey(const std::string& key, const std::string& value)  override;
+    virtual void SpawnKey(const std::string& key, const std::string& value)  override;
 
     //
     // Callback functions.
     //
     //
-    void BlasterBoltTouch(ServerGameEntity* self, ServerGameEntity* other, cplane_t* plane, csurface_t* surf);
+    void BlasterBoltTouch(SynchedEntityBase * self, SynchedEntityBase * other, cplane_t* plane, csurface_t* surf);
 
     //
     // Get/Set

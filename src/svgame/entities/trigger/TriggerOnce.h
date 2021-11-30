@@ -37,9 +37,9 @@ public:
 
     // Callback functions.
     void TriggerOnceThinkWait(void);
-    void TriggerOnceTouch(ServerGameEntity* self, ServerGameEntity* other, cplane_t* plane, csurface_t* surf);
-    void TriggerOnceEnable(ServerGameEntity* other, ServerGameEntity* activator);
-    void TriggerOnceUse(ServerGameEntity* other, ServerGameEntity* activator);
+    void TriggerOnceTouch(SynchedEntityBase * self, SynchedEntityBase * other, cplane_t* plane, csurface_t* surf);
+    void TriggerOnceEnable(SynchedEntityBase * other, SynchedEntityBase * activator);
+    void TriggerOnceUse(SynchedEntityBase * other, SynchedEntityBase * activator);
 
     //
     // Get/Set
@@ -49,7 +49,7 @@ protected:
     //
     // Trigger function.
     //
-    void Trigger(ServerGameEntity* activator);
+    void Trigger(SynchedEntityBase * activator);
 
     //
     // Other base entity members. (These were old fields in edict_T back in the day.)

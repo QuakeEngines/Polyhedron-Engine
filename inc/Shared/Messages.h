@@ -7,8 +7,7 @@
 // Contains messaging related structures.
 //
 */
-#ifndef __SHARED__MESSAGING_H__
-#define __SHARED__MESSAGING_H__
+#pragma once
 
 //
 //=============================================================================
@@ -129,5 +128,3 @@ struct PlayerState {
 
     short       stats[MAX_STATS]; // Fast status bar updates
 }; 
-
-#endif // __SHARED__MESSAGING_H__

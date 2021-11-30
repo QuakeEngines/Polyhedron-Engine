@@ -8,15 +8,15 @@
 */
 #pragma once
 
-class ServerGameEntity;
+class SynchedEntityBase.h;
 
-class InfoPlayerStart : public ServerGameEntity {
+class InfoPlayerStart : public SynchedEntityBase{
 public:
     // Constructor/Deconstructor.
     InfoPlayerStart(ServerEntity* svEntity);
     virtual ~InfoPlayerStart();
 
-    DefineMapClass( "info_player_start", InfoPlayerStart, ServerGameEntity );
+    DefineMapClass( "info_player_start", InfoPlayerStart, SynchedEntityBase);
 
     // Interface functions. 
     void Precache();    // Precaches data.

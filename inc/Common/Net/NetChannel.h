@@ -16,12 +16,11 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-#ifndef NET_CHAN_H
-#define NET_CHAN_H
+#pragma once
 
-#include "common/msg.h"
-#include "common/net/net.h"
-#include "common/sizebuffer.h"
+#include "Common/Messaging.h"
+#include "Common/Net/Net.h"
+#include "Common/SizeBuffer.h"
 
 //struct NetChannel {
 //    int         protocol;
@@ -146,5 +145,3 @@ void Netchan_Close(NetChannel*netchan);
     NET_SendPacket(sock, CONST_STR_LEN("\xff\xff\xff\xff" data), addr)
 
 //============================================================================
-
-#endif // NET_CHAN_H

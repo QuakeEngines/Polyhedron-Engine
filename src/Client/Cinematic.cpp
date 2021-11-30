@@ -21,7 +21,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "client.h"
 #include "client/SoundDrivers/sound.h"
 #include "client/SoundDrivers/vorbis.h"
-#include "common/files.h"
+#include "Common/Files.h"
 #include "refresh/images.h"
 
 typedef struct

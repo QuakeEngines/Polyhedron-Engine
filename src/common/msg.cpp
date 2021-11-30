@@ -16,11 +16,11 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-#include "Shared/shared.h"
-#include "common/msg.h"
-#include "common/protocol.h"
-#include "common/sizebuffer.h"
-#include "sharedgame/protocol.h"
+#include "Shared/Shared.h"
+#include "Common/Messaging.h"
+#include "Common/Protocol.h"
+#include "Common/SizeBuffer.h"
+#include "SharedGame/Protocol.h"
 
 
 

@@ -99,7 +99,7 @@ void SVG_ThrowGib(SynchedEntityBase * self, const char *gibname, int damage, int
     gibClassEntity->SetAngularVelocity(angularVelocity);
 
     // Setup the Gib think function and its think time.
-    gibClassEntity->SetThinkCallback(&ServerGameEntity::SVGBaseEntityThinkRemove);
+    gibClassEntity->SetThinkCallback(&SynchedEntityBase::SVGBaseEntityThinkRemove);
     gibClassEntity->SetNextThinkTime(level.time + 10 + random() * 10);
 
     // Link entity into the world.
@@ -169,10 +169,10 @@ void SVG_ThrowClientHead(PlayerEntity* self, int damage) {
 // 
 // Thorws a debris piece around.
 //=================
-void SVG_ThrowDebris(ServerGameEntity *self, const char *modelname, float speed, const vec3_t &origin) // C++20: STRING: Added const to char*
+void SVG_ThrowDebris(SynchedEntityBase* self, const char *modelname, float speed, const vec3_t &origin) // C++20: STRING: Added const to char*
 {
     // Chunk ServerEntity.
-    ServerGameEntity* chunkEntity = SVG_CreateClassEntity<DebrisEntity>();
+    SynchedEntityBase * chunkEntity = SVG_CreateClassEntity<DebrisEntity>();
 
     // Set the origin.
     chunkEntity->SetOrigin(origin);
@@ -201,7 +201,7 @@ void SVG_ThrowDebris(ServerGameEntity *self, const char *modelname, float speed,
     chunkEntity->SetAngularVelocity(angularVelocity);
 
     // Set up the thinking machine.
-    chunkEntity->SetThinkCallback(&ServerGameEntity::SVGBaseEntityThinkRemove);
+    chunkEntity->SetThinkCallback(&SynchedEntityBase::SVGBaseEntityThinkRemove);
     chunkEntity->SetNextThinkTime(level.time + 5 + random() * 5);
 
     // Setup the other properties.
@@ -219,7 +219,7 @@ void SVG_ThrowDebris(ServerGameEntity *self, const char *modelname, float speed,
 // 
 // Sends an explosion effect as a TE cmd, and queues the entity up for removal.
 //=================
-void SVG_BecomeExplosion1(ServerGameEntity *self)
+void SVG_BecomeExplosion1(SynchedEntityBase*self)
 {
     // Fetch origin.
     vec3_t origin = self->GetOrigin();
@@ -240,7 +240,7 @@ void SVG_BecomeExplosion1(ServerGameEntity *self)
 // 
 // Sends an explosion effect as a TE cmd, and queues the entity up for removal.
 //=================
-void SVG_BecomeExplosion2(ServerGameEntity*self)
+void SVG_BecomeExplosion2(SynchedEntityBase *self)
 {
     // Fetch origin.
     vec3_t origin = self->GetOrigin();

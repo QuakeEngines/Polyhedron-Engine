@@ -23,7 +23,7 @@
 // Constructor/Deconstructor.
 //
 MiscServerModel::MiscServerModel(ServerEntity* svEntity)
-    : SVGBaseTrigger(svEntity) {
+    : BaseTrigger(svEntity) {
 
 }
 MiscServerModel::~MiscServerModel() {
@@ -237,7 +237,7 @@ void MiscServerModel::SpawnKey(const std::string& key, const std::string& value)
 //// 
 //// So that mappers can trigger this entity in order to blow it up
 //// ==============
-//void MiscServerModel::MiscServerModelUse(ServerGameEntity* caller, ServerGameEntity* activator) {
+//void MiscServerModel::MiscServerModelUse(SynchedEntityBase * caller, SynchedEntityBase * activator) {
 //    MiscServerModelDie(caller, activator, 999, GetOrigin());
 //}
 
@@ -353,7 +353,7 @@ void MiscServerModel::MiscServerModelThink(void) {
 //// 'Die' callback, the explosion box has been damaged too much.
 ////===============
 ////
-void MiscServerModel::MiscServerModelDie(ServerGameEntity* inflictor, ServerGameEntity* attacker, int damage, const vec3_t& point) {
+void MiscServerModel::MiscServerModelDie(SynchedEntityBase * inflictor, SynchedEntityBase * attacker, int damage, const vec3_t& point) {
     // ServerEntity is dying, it can't take any more damage.
     SetTakeDamage(TakeDamage::No);
 
@@ -384,7 +384,7 @@ void MiscServerModel::MiscServerModelDie(ServerGameEntity* inflictor, ServerGame
 //// 'Touch' callback, to calculate the direction to move into.
 ////===============
 ////
-//void MiscServerModel::MiscServerModelTouch(ServerGameEntity* self, ServerGameEntity* other, cplane_t* plane, csurface_t* surf) {
+//void MiscServerModel::MiscServerModelTouch(SynchedEntityBase * self, SynchedEntityBase * other, cplane_t* plane, csurface_t* surf) {
 //    // Safety checks.
 //    if (!self)
 //        return;

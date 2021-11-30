@@ -9,8 +9,8 @@
 #include "../../entities.h"
 #include "../../utils.h"
 
-#include "../base/ServerGameEntity.h"
-#include "../base/SVGBaseTrigger.h"
+#include "../base/SynchedEntityBase.h.h"
+#include "../base/BaseTrigger.h"
 
 #include "TriggerCounter.h"
 
@@ -47,7 +47,7 @@ void TriggerCounter::SpawnKey( const std::string& key, const std::string& value 
 //===============
 // TriggerCounter::CounterUse
 //===============
-void TriggerCounter::CounterUse( ServerGameEntity* other, ServerGameEntity* activator ) {
+void TriggerCounter::CounterUse( SynchedEntityBase * other, SynchedEntityBase * activator ) {
 	if ( !count ) {
 		return;
 	}
@@ -69,8 +69,8 @@ void TriggerCounter::CounterUse( ServerGameEntity* other, ServerGameEntity* acti
 
 	this->activator = activator;
 
-	// Mike made a funny decision to put using targets *only* into SVGBaseTrigger
+	// Mike made a funny decision to put using targets *only* into BaseTrigger
 	// which doesn't really make sense when you think about it, so now we have
-	// ServerGameEntity::UseTargets and SVGBaseTrigger::UseTargets
-	ServerGameEntity::UseTargets();
+	// SynchedEntityBase.h::UseTargets and BaseTrigger::UseTargets
+	SynchedEntityBase.h::UseTargets();
 }

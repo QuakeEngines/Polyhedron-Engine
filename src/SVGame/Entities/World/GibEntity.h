@@ -11,27 +11,27 @@
 
 
 struct ServerEntity;
-class ServerGameEntity;
+class SynchedEntityBase.h;
 class SynchedEntityBase;
 
-class GibEntity : public ServerGameEntity  {
+class GibEntity : public SynchedEntityBase {
 public:
     // Constructor/Deconstructor.
-    GibEntity(ServerGameEntity * svEntity);
+    GibEntity(SynchedEntityBase* svEntity);
     virtual ~GibEntity();
 
-    DefineMapClassSelfConstruct("GibEntity", SynchedEntityBase, ServerGameEntity);
+    DefineMapClassSelfConstruct("GibEntity", SynchedEntityBase, SynchedEntityBase);
 
     //
     // Interface functions. 
     //
-    void Precache() final;    // Precaches data.
-    void Spawn() final;       // Spawns the entity.
-    void Respawn() final;     // Respawns the entity.
-    void PostSpawn() final;   // PostSpawning is for handling entity references, since they may not exist yet during a spawn period.
-    void Think() final;       // General entity thinking routine.
+    virtual void Precache() final;    // Precaches data.
+    virtual void Spawn() final;       // Spawns the entity.
+    virtual void Respawn() final;     // Respawns the entity.
+    virtual void PostSpawn() final;   // PostSpawning is for handling entity references, since they may not exist yet during a spawn period.
+    virtual void Think() final;       // General entity thinking routine.
 
-    void SpawnKey(const std::string& key, const std::string& value)  final;
+    virtual void SpawnKey(const std::string& key, const std::string& value)  final;
 
     //
     // GibEntity functions.
@@ -46,8 +46,8 @@ public:
     //
     //
     void GibEntityThink();
-    void GibEntityDie(ServerGameEntity* inflictor, ServerGameEntity* attacker, int damage, const vec3_t& point);
-    void GibEntityTouch(ServerGameEntity* self, ServerGameEntity* other, cplane_t* plane, csurface_t* surf);
+    void GibEntityDie(SynchedEntityBase * inflictor, SynchedEntityBase * attacker, int damage, const vec3_t& point);
+    void GibEntityTouch(SynchedEntityBase * self, SynchedEntityBase * other, cplane_t* plane, csurface_t* surf);
 
 protected:
 

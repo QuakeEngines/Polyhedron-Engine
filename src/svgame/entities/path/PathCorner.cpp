@@ -49,6 +49,6 @@ void PathCorner::SpawnKey( const std::string& key, const std::string& value ) {
 //===============
 // PathCorner::OnReachedCorner
 //===============
-void PathCorner::OnReachedCorner( ServerGameEntity* traveler ) {
+void PathCorner::OnReachedCorner( SynchedEntityBase * traveler ) {
     // Not implemented   
 }

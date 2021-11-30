@@ -1,6 +1,6 @@
 #pragma once
 
-class ServerGameEntity;
+class SynchedEntityBase.h;
 class SVGBaseMover;
 class FuncDoor;
 

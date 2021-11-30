@@ -16,15 +16,15 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-#include "Shared/shared.h"
-#include "common/common.h"
-#include "common/cvar.h"
+#include "Shared/Shared.h"
+#include "Common/Common.h"
+#include "Common/cvar.h"
 #include "common/msg.h"
 #include "common/enet/netchan.h"
-#include "common/net/net.h"
-#include "common/protocol.h"
-#include "common/sizebuffer.h"
-#include "common/zone.h"
+#include "Common/Net/Net.h"
+#include "Common/Protocol.h"
+#include "Common/SizeBuffer.h"
+#include "Common/Zone.h"
 #include "system/system.h"
 
 /*

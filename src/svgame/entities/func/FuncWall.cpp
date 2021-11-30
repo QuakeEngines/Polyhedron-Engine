@@ -9,7 +9,7 @@
 #include "../../entities.h"
 #include "../../utils.h"
 
-#include "../base/ServerGameEntity.h"
+#include "../base/SynchedEntityBase.h.h"
 
 #include "FuncWall.h"
 
@@ -69,7 +69,7 @@ void FuncWall::Spawn() {
 //===============
 // FuncWall::WallUse
 //===============
-void FuncWall::WallUse( ServerGameEntity* other, ServerGameEntity* activator ) {
+void FuncWall::WallUse( SynchedEntityBase * other, SynchedEntityBase * activator ) {
     if ( GetSolid() == Solid::Not ) {
         SetSolid( Solid::BSP );
         SetServerFlags( GetServerFlags() & ~EntityServerFlags::NoClient );

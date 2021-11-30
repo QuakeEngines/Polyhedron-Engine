@@ -6,8 +6,7 @@
 //
 */
 
-#ifndef __CLGAME_MAIN_H__
-#define __CLGAME_MAIN_H__
+#pragma once
 
 // Externs.
 // Contains the function pointers being passed in from the engine.
@@ -30,5 +29,3 @@ void Com_WPrint(const char* fmt, ...);
 void Com_EPrint(const char* fmt, ...);
 void Com_Error(ErrorType code, const char* fmt, ...);
 void Com_LPrintf(PrintType type, const char* fmt, ...);
-
-#endif // __CLGAME_MAIN_H__

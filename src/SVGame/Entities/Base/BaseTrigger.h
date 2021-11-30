@@ -2,22 +2,23 @@
 // LICENSE HERE.
 
 //
-// SVGBaseTrigger.h
+// BaseTrigger.h
 //
 // Base Trigger class, for brush and point entities. (Yes we can do this.)
 //
 */
-#ifndef __SVGAME_ENTITIES_BASE_SVGBASETRIGGER_H__
-#define __SVGAME_ENTITIES_BASE_SVGBASETRIGGER_H__
+#pragma once
 
-class SVGBaseTrigger : public ServerGameEntity {
+class SynchedEntityBase;
+
+class BaseTrigger : public SynchedEntityBase {
 public:
     //
     // Constructor/Deconstructor.
     //
-    SVGBaseTrigger();
+    BaseTrigger();
 
-    DefineAbstractClass( SVGBaseTrigger, ServerGameEntity );
+    DefineAbstractClass( BaseTrigger, SynchedEntityBase );
 
     //
     // Interface functions. 
@@ -33,13 +34,13 @@ public:
     //
     // Trigger functions.
     //
-    void UseTargets(ServerGameEntity* activator);
+    void UseTargets(EntityBase * activator);
 
     //
     // Get/Set
     // 
     // Return the 'activatorEntity' entity pointer.
-    ServerGameEntity* GetActivator() {
+    EntityBase * GetActivator() {
         return activatorEntity;
     }
 
@@ -47,7 +48,7 @@ public:
     // ServerEntity Set Functions.
     //
     // Set the 'activatorEntity' pointer.
-    inline void SetActivator(ServerGameEntity* activator) {
+    inline void SetActivator(EntityBase * activator) {
         this->activatorEntity = activator;
     }
 
@@ -86,17 +87,17 @@ protected:
     // ServerEntity pointers.
     // 
     //// ServerEntity that activated this entity, NULL if none.
-    ServerGameEntity* activatorEntity;
+    EntityBase * activatorEntity;
     //// Current active enemy, NULL if not any.    
-    //ServerGameEntity* enemyEntity;
+    //SynchedEntityBase * enemyEntity;
     //// Ground entity we're standing on.
-    //ServerGameEntity* groundEntity;
+    //SynchedEntityBase * groundEntity;
     //// Old enemy, NULL if not any.
-    //ServerGameEntity* oldEnemyEntity;
+    //SynchedEntityBase * oldEnemyEntity;
     //// Team Chain Pointer.
-    //ServerGameEntity* teamChainEntity;
+    //SynchedEntityBase * teamChainEntity;
     //// Master Pointer.
-    //ServerGameEntity* teamMasterEntity;
+    //SynchedEntityBase * teamMasterEntity;
 
 public:
 
@@ -112,5 +113,3 @@ protected:
     //TakeDamageCallbackPointer   takeDamageFunction;
     //DieCallbackPointer          dieFunction;
 };
-
-#endif // __SVGAME_ENTITIES_BASE_CBASEENTITY_H__

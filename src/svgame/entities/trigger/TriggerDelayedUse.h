@@ -10,14 +10,14 @@
 #ifndef __SVGAME_ENTITIES_TRIGGER_TRIGGERDELAYEDUSE_H__
 #define __SVGAME_ENTITIES_TRIGGER_TRIGGERDELAYEDUSE_H__
 
-class TriggerDelayedUse : public SVGBaseTrigger {
+class TriggerDelayedUse : public BaseTrigger {
 public:
     //
     // Constructor/Deconstructor.
     //
     TriggerDelayedUse();
 
-    DefineClass( TriggerDelayedUse, SVGBaseTrigger );
+    DefineClass( TriggerDelayedUse, BaseTrigger );
 
     //
     // Interface functions. 

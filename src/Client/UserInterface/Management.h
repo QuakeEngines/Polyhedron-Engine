@@ -17,18 +17,18 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-#include "Shared/shared.h"
-#include "Shared/list.h"
-#include "common/cmd.h"
-#include "common/common.h"
-#include "common/cvar.h"
+#include "Shared/Shared.h"
+#include "Shared/List.h"
+#include "Common/Command.h"
+#include "Common/Common.h"
+#include "Common/cvar.h"
 #include "common/LineEditField.h"
-#include "common/zone.h"
-#include "client/keys.h"
-#include "client/SoundDrivers/sound.h"
-#include "client/client.h"
-#include "client/ui.h"
-#include "refresh/refresh.h"
+#include "Common/Zone.h"
+#include "Client/keys.h"
+#include "Client/SoundDrivers/sound.h"
+#include "Client/Client.h"
+#include "Client/UserInterface.h"
+#include "Refresh/Refresh.h"
 
 #define UI_Malloc(s)        Z_TagMalloc(s, TAG_UI)
 #define UI_Mallocz(s)       Z_TagMallocz(s, TAG_UI)

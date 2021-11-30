@@ -9,7 +9,7 @@
 #include "../../entities.h"
 #include "../../utils.h"
 
-#include "../base/ServerGameEntity.h"
+#include "../base/SynchedEntityBase.h.h"
 
 #include "TargetExplosion.h"
 
@@ -32,7 +32,7 @@ void TargetExplosion::Spawn() {
 //===============
 // TargetExplosion::ExplosionUse
 //===============
-void TargetExplosion::ExplosionUse( ServerGameEntity* other, ServerGameEntity* activator ) {
+void TargetExplosion::ExplosionUse( SynchedEntityBase * other, SynchedEntityBase * activator ) {
 	this->activator = activator;
 
 	if ( !GetDelayTime() ) {

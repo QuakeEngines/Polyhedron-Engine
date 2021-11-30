@@ -9,16 +9,16 @@
 #ifndef __SVGAME_ENTITIES_MISC_MISCEXPLOSIONBOX_H__
 #define __SVGAME_ENTITIES_MISC_MISCEXPLOSIONBOX_H__
 
-class ServerGameEntity;
-class SVGBaseTrigger;
+class SynchedEntityBase.h;
+class BaseTrigger;
 
-class MiscExplosionBox : public SVGBaseTrigger {
+class MiscExplosionBox : public BaseTrigger {
 public:
     // Constructor/Deconstructor.
     MiscExplosionBox(ServerEntity* svEntity);
     virtual ~MiscExplosionBox();
 
-    DefineMapClass( "misc_explobox", MiscExplosionBox, SVGBaseTrigger );
+    DefineMapClass( "misc_explobox", MiscExplosionBox, BaseTrigger );
 
     //
     // Interface functions. 
@@ -32,10 +32,10 @@ public:
     //
     // Callback Functions.
     //
-    void ExplosionBoxUse( ServerGameEntity* caller, ServerGameEntity* activator );
+    void ExplosionBoxUse( SynchedEntityBase * caller, SynchedEntityBase * activator );
     void ExplosionBoxThink(void);
-    void ExplosionBoxDie(ServerGameEntity* inflictor, ServerGameEntity* attacker, int damage, const vec3_t& point);
-    void ExplosionBoxTouch(ServerGameEntity* self, ServerGameEntity* other, cplane_t* plane, csurface_t* surf);
+    void ExplosionBoxDie(SynchedEntityBase * inflictor, SynchedEntityBase * attacker, int damage, const vec3_t& point);
+    void ExplosionBoxTouch(SynchedEntityBase * self, SynchedEntityBase * other, cplane_t* plane, csurface_t* surf);
 
     // Set when exploding, after a minor delay.
     void MiscExplosionBoxExplode(void);

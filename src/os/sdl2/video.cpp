@@ -21,23 +21,23 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 // video.c
 //
 
-#include "Shared/shared.h"
-#include "common/cvar.h"
-#include "common/common.h"
-#include "common/files.h"
-#include "common/zone.h"
-#include "client/client.h"
-#include "client/input.h"
-#include "client/keys.h"
-#include "client/ui.h"
-#include "client/video.h"
-#include "refresh/refresh.h"
-#include "system/system.h"
+#include "Shared/Shared.h"
+#include "Common/cvar.h"
+#include "Common/Common.h"
+#include "Common/Files.h"
+#include "Common/Zone.h"
+#include "Client/Client.h"
+#include "Client/Input.h"
+#include "Client/keys.h"
+#include "Client/UserInterface.h"
+#include "Client/Video.h"
+#include "Refresh/Refresh.h"
+#include "System/System.h"
 #include "../res/q2pro.xbm"
 #include <SDL.h>
 
 // RMLUI.
-#include "client/rmlui/rmlui.h"
+#include "Client/RMLUserInterface/RmlUserInterface.h"
 
 #ifdef _WINDOWS
 #include <ShellScalingAPI.h>

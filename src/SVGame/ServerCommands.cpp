@@ -18,6 +18,14 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "g_local.h"
 
+#include "Shared/Entities.h"
+
+// ServerGame Specific.
+#include "Entities/Base/EntityBase.h"
+#include "Entities/Base/SynchedEntityBase.h"
+
+// Predeclare
+#include "Shared/Entities/TypeInfo.h"
 
 void    Svcmd_Test_f(void)
 {

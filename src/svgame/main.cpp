@@ -111,7 +111,7 @@ void SVG_AllocateGameClients();
 void SVG_AllocateGamePlayerClientEntities();
 void SVG_InitializeCVars();
 
-void SVG_RunEntity(ServerGameEntity *ent);
+void SVG_RunEntity(SynchedEntityBase*ent);
 void SVG_WriteGame(const char *filename, qboolean autosave);
 void SVG_ReadGame(const char *filename);
 void SVG_WriteLevel(const char *filename);
@@ -613,7 +613,7 @@ void SVG_RunFrame(void)
     //int32_t stateNumber = entities[0].state.number;
 
     //// Fetch the corresponding base entity.
-    //ServerGameEntity* entity = serverGameEntities[stateNumber];
+    //SynchedEntityBase * entity = serverGameEntities[stateNumber];
 
     // Loop through the server entities, and run the base entity frame if any exists.
     for (int32_t i = 0; i < globals.numberOfEntities; i++) {
@@ -621,7 +621,7 @@ void SVG_RunFrame(void)
         stateNumber = g_entities[i].state.number;
 
         // Fetch the corresponding base entity.
-        ServerGameEntity* entity = serverGameEntities[stateNumber];
+        SynchedEntityBase * entity = serverGameEntities[stateNumber];
 
         // Is it even valid?
         if (entity == nullptr)

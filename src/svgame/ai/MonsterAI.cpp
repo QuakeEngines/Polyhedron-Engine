@@ -9,7 +9,7 @@
 //
 */
 #include "../g_local.h"     // SVGame.
-#include "../effects.h"     // Effects.
-#include "../utils.h"       // Util.
-#include "sharedgame/sharedgame.h"
+#include "../Effects.h"     // Effects.
+#include "../Utilities.h"       // Util.
+#include "SharedGame/SharedGame.h"
 #include "MonsterAI.h"

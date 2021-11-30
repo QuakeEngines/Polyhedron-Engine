@@ -18,38 +18,38 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 // client.h -- primary header for client
 
-#include "Shared/shared.h"
-#include "Shared/list.h"
+#include "Shared/Shared.h"
+#include "Shared/List.h"
 
-#include "common/bsp.h"
-#include "common/cmd.h"
-#include "common/cmodel.h"
-#include "common/common.h"
-#include "common/cvar.h"
-#include "common/LineEditField.h"
-#include "common/files.h"
+#include "Common/BSP.h"
+#include "Common/Command.h"
+#include "Common/CollisionModel.h"
+#include "Common/Common.h"
+#include "Common/cvar.h"
+#include "Common/LineEditField.h"
+#include "Common/files.h"
 //#include "common/pmove.h"
-#include "common/msg.h"
-#include "common/net/netchan.h"
-#include "common/net/net.h"
-#include "common/CommandPrompt.h"
-#include "common/protocol.h"
-#include "common/sizebuffer.h"
-#include "common/zone.h"
+#include "Common/Messaging.h"
+#include "Common/Net/NetChannel.h"
+#include "Common/Net/Net.h"
+#include "Common/CommandPrompt.h"
+#include "Common/Protocol.h"
+#include "Common/SizeBuffer.h"
+#include "Common/Zone.h"
 
-#include "system/system.h"
-#include "refresh/refresh.h"
-#include "server/server.h"
+#include "System/System.h"
+#include "Refresh/Refresh.h"
+#include "Server/Server.h"
 
-#include "client/client.h"
-#include "client/input.h"
-#include "client/keys.h"
-#include "client/SoundDrivers/sound.h"
-#include "client/ui.h"
-#include "client/video.h"
+#include "Client/Client.h"
+#include "Client/Input.h"
+#include "Client/keys.h"
+#include "Client/SoundDrivers/Sound.h"
+#include "Client/UserInterface.h"
+#include "Client/Video.h"
 
 // Shared Game includes.
-#include "sharedgame/protocol.h" // PMOVE: Remove once the game modules init pmove themselves using CLG_ParseServerData.
+#include "SharedGame/Protocol.h" // PMOVE: Remove once the game modules init pmove themselves using CLG_ParseServerData.
 
 #if USE_ZLIB
 #include <zlib.h>
@@ -60,7 +60,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 // N&C: Most structures related to the client have been moved over here.
 // They are shared to the client game dll, since it is tightly coupled.
-#include "Shared/cltypes.h"
+#include "Shared/ClientGameTypes.h"
 
 // N&C: TODO: REMOVE ONCE ALL OF THIS HAS MOVED TO THE GAME MODULE.
 extern explosion_t  cl_explosions[MAX_EXPLOSIONS];

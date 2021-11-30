@@ -10,7 +10,7 @@
 #ifndef __SVGAME_ENTITIES_TRIGGER_TRIGGERHURT_H__
 #define __SVGAME_ENTITIES_TRIGGER_TRIGGERHURT_H__
 
-class TriggerHurt : public SVGBaseTrigger {
+class TriggerHurt : public BaseTrigger {
 public:
     //
     // Constructor/Deconstructor.
@@ -18,7 +18,7 @@ public:
     TriggerHurt(ServerEntity* svEntity);
     virtual ~TriggerHurt();
 
-    DefineMapClass( "trigger_hurt", TriggerHurt, SVGBaseTrigger );
+    DefineMapClass( "trigger_hurt", TriggerHurt, BaseTrigger );
 
     //
     // Interface functions. 
@@ -36,8 +36,8 @@ public:
     //
 
     // Callback functions.
-    void TriggerHurtTouch(ServerGameEntity* self, ServerGameEntity* other, cplane_t* plane, csurface_t* surf);
-    void TriggerHurtUse(ServerGameEntity* other, ServerGameEntity* activator);
+    void TriggerHurtTouch(SynchedEntityBase * self, SynchedEntityBase * other, cplane_t* plane, csurface_t* surf);
+    void TriggerHurtUse(SynchedEntityBase * other, SynchedEntityBase * activator);
 
     //
     // Get/Set

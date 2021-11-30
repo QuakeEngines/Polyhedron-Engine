@@ -28,7 +28,7 @@
 
 //--------------------------------------------------------
 // Include all our requirements from ServerEntity, to our
-// ServerGameEntity which depends on SynchedEntityBase.
+// SynchedEntityBasewhich depends on SynchedEntityBase.
 // 
 // Other ServerGameEntities exist too, based on the same philosophy.
 // Some people just want to be left alone, so we let them.
@@ -39,12 +39,12 @@
 #include "Shared/Entities.h"
 
 // ServerGame Specific.
-#include "Entities/Base/ServerGameEntity.h"
+#include "Entities/Base/EntityBase.h"
+#include "Entities/Base/SynchedEntityBase.h"
 
 // Predeclare
+#include "Shared/Entities/TypeInfo.h"
 
-// Using.
-using EntityDictionary = std::map<std::string, std::string>;
 
 //
 // Filter function namespace that actually contains the entity filter implementations.
@@ -56,22 +56,22 @@ namespace EntityFilterFunctions {
     inline bool ServerEntityHasClient(ServerEntity& ent) { return static_cast<bool>(ent.client); }
     
     // @returns true in case the (server-)ServerEntity has a Class ServerEntity attached to it.
-    inline bool ServerGameEntityHasClassEntity(ServerGameEntity& ent) { return static_cast<bool>(ent.GetClassName().empty()); }
+    inline bool SynchedGameEntityHasClassEntity(SynchedEntityBase& ent) { return static_cast<bool>(ent.GetClassName().empty()); }
     // Returns true in case the (server-)ServerEntity has a client attached to it.
-    inline bool ServerGameEntityHasClient(ServerGameEntity* ent) { return ent->GetClient(); }
+    inline bool SynchedGameEntityHasClient(SynchedEntityBase * ent) { return ent->GetClient(); }
     // Returns true in case the BaseEntity has a ground entity set to it.
-    inline bool ServerGameEntityHasGroundEntity(ServerGameEntity* ent) { return ent->GetGroundEntity(); }
+    inline bool SynchedGameEntityHasGroundEntity(SynchedEntityBase* ent) { return ent->GetGroundEntity(); }
     // Returns true in case the BaseEntity is properly linked to a server entity.
-    //line bool ServerGameEntityHasServerEntity(ServerGameEntity* ent) { return ent->GetEntityServerHandle(); }
+    //line bool ServerGameEntityHasServerEntity(SynchedEntityBase * ent) { return ent->GetEntityServerHandle(); }
     // Returns true if the BaseEntity contains the sought for targetname.
-    inline bool ServerGameEntityHasTargetName(ServerGameEntity* ent) { return ent->GetTargetName() != "" && !ent->GetTargetName().empty(); }
+    inline bool ServerGameEntityHasTargetName(SynchedEntityBase * ent) { return ent->GetTargetName() != "" && !ent->GetTargetName().empty(); }
     // Returns true in case the BaseEntity has a client attached to it.
-    //inline bool ServerGameEntityInUse(ServerGameEntity* ent) { return ent->IsInUse(); }
+    //inline bool ServerGameEntityInUse(SynchedEntityBase * ent) { return ent->IsInUse(); }
     // Returns true if the BaseEntity is NOT a nullptr.
-    //inline bool ServerGameEntityIsValidPointer(ServerGameEntity* ent) { return ent != nullptr; }
+    //inline bool ServerGameEntityIsValidPointer(SynchedEntityBase * ent) { return ent != nullptr; }
 
     // Returns true in case the BaseEntity has the queried for classname.
-    //inline bool BaseEntityHasClass(ServerGameEntity* ent, std::string classname) { return ent->GetClassName() == classname; }
+    //inline bool BaseEntityHasClass(SynchedEntityBase * ent, std::string classname) { return ent->GetClassName() == classname; }
 };
 
 //
@@ -81,14 +81,14 @@ namespace ServerGameEntityFilters {
     using namespace std::views;
 
     // BaseEntity Filters to employ by pipelining. Very nice and easy method of doing loops.
-    inline auto HasGroundEntity = std::views::filter( &EntityFilterFunctions::ServerGameEntityHasGroundEntity);
-    inline auto HasClient = std::views::filter ( &EntityFilterFunctions::ServerGameEntityHasClient );
+    inline auto HasGroundEntity = std::views::filter( &EntityFilterFunctions::SynchedGameEntityHasGroundEntity);
+    inline auto HasClient = std::views::filter ( &EntityFilterFunctions::SynchedGameEntityHasClassEntity );
 
     // WID: TODO: This one actually has to move into EntityFilterFunctions, and then
     // be referred to from here. However, I am unsure how to do that as of yet.
     inline auto HasClassName(const std::string& classname) {
         return std::ranges::views::filter(
-            [classname /*need a copy!*/](ServerGameEntity* ent) {
+            [classname /*need a copy!*/](SynchedEntityBase  * ent) {
                 return ent->GetClassName() == classname;
             }
         );
@@ -98,13 +98,16 @@ namespace ServerGameEntityFilters {
     // be referred to from here. However, I am unsure how to do that as of yet.
     inline auto HasKeyValue(const std::string& fieldKey, const std::string& fieldValue) {
         return std::ranges::views::filter(
-            [fieldKey, fieldValue /*need a copy!*/](ServerGameEntity *ent) {
-                auto& dictionary = ent->GetEntityDictionary();
+            [fieldKey, fieldValue /*need a copy!*/](SynchedEntityBase *ent) {
+                if (ent) {
+                    //EntityDictionary& dictionary = ent->GetEntityDictionary();
 
-                if (dictionary.find(fieldKey) != dictionary.end()) {
-                    if (dictionary[fieldKey] == fieldValue) {
-                        return true;
-                    }
+                    //if (dictionary.find(fieldKey) != dictionary.end()) {
+                    //    if (dictionary[fieldKey] == fieldValue) {
+                    //        return true;
+                    //    }
+                    //}
+                    return false;
                 }
 
                 return false;
@@ -117,7 +120,7 @@ namespace ServerGameEntityFilters {
     template <typename ClassType>
     auto IsClassOf() {
         return std::ranges::views::filter(
-            [](ServerGameEntity* ent) {
+            [](EntityBase * ent) {
                 return ent->IsClass<ClassType>();
             }
         );
@@ -126,7 +129,7 @@ namespace ServerGameEntityFilters {
     template <typename ClassType>
     auto IsSubclassOf() {
         return std::ranges::views::filter(
-            [](ServerGameEntity* ent) {
+            [](EntityBase * ent) {
                 return ent->IsSubclassOf<ClassType>();
             }
         );
@@ -136,7 +139,7 @@ namespace ServerGameEntityFilters {
     // be referred to from here. However, I am unsure how to do that as of yet.
     inline auto WithinRadius(vec3_t origin, float radius, uint32_t excludeSolidFlags) {
         return std::ranges::views::filter(
-            [origin, radius, excludeSolidFlags/*need a copy!*/](ServerGameEntity* ent) {
+            [origin, radius, excludeSolidFlags/*need a copy!*/](SynchedEntityBase * ent) {
                 // Find distances between entity origins.
                 vec3_t entityOrigin = origin - (ent->GetOrigin() + vec3_scale(ent->GetMins() + ent->GetMaxs(), 0.5f));
 
@@ -161,7 +164,7 @@ namespace SvgEF = ServerGameEntityFilters; // Shortcut, lesser typing.
 //
 // C++ using magic.
 // 
-using ServerGameEntitySpan = std::span<ServerGameEntity*>;
+using ServerGameEntitySpan = std::span<SynchedEntityBase *>;
 
 // Returns a span containing all ServerEntities in the range of:
 // [start] to [start + count].
@@ -169,7 +172,7 @@ using ServerGameEntitySpan = std::span<ServerGameEntity*>;
 // This span can be quired on by several filters to ensure you only
 // acquire a list of entities with specific demands.
 template <std::size_t start, std::size_t count>
-inline auto GetServerEntityRange() -> std::span<ServerGameEntity, count> {
+inline auto GetServerEntityRange() -> std::span<SynchedEntityBase, count> {
     return std::span(serverGameEntities).subspan<start, count>();
 }
 inline ServerGameEntitySpan GetServerEntityRange(std::size_t start, std::size_t count) {
@@ -182,8 +185,8 @@ inline ServerGameEntitySpan GetServerEntityRange(std::size_t start, std::size_t 
 //
 // C++ using magic.
 //
-using GameEntitySpan = std::span<ServerGameEntity*>;
-using GameEntityVector = std::vector<ServerGameEntity*>;
+using GameEntitySpan = std::span<SynchedEntityBase *>;
+using GameEntityVector = std::vector<SynchedEntityBase *>;
 
 // Returns a span containing all ServerGameEntities in the range of:
 // [start] to [start + count].
@@ -191,7 +194,7 @@ using GameEntityVector = std::vector<ServerGameEntity*>;
 // This span can be quired on by several filters to ensure you only
 // acquire a list of entities with specific demands.
 template <std::size_t start, std::size_t count>
-inline auto GetGameEntityRange() -> std::span<ServerGameEntity*, count> {
+inline auto GetGameEntityRange() -> std::span<SynchedEntityBase *, count> {
     return std::span(serverGameEntities).subspan<start, count>();
 }
 inline auto GetGameEntityRange(std::size_t start, std::size_t count) {
@@ -210,7 +213,7 @@ ServerEntity* SVG_Find(ServerEntity* from, int32_t fieldofs, const char* match);
 // All that might sound silly, but the key here is customization.
 //BaseEntityVector SVG_FindEntitiesWithinRadius(vec3_t org, float rad, uint32_t excludeSolidFlags = Solid::Not);
 // Find entities based on their field(key), and field(value).
-ServerGameEntity* SVG_FindEntityByKeyValue(const std::string& fieldKey, const std::string& fieldValue, ServerGameEntity* lastEntity = nullptr);
+SynchedEntityBase * SVG_FindEntityByKeyValue(const std::string& fieldKey, const std::string& fieldValue, SynchedEntityBase * lastEntity = nullptr);
 
 
 //
@@ -234,6 +237,6 @@ inline entityClass* SVG_CreateClassEntity(Args&& ...args) {
 //
 // ClassEntity handling.
 //
-ServerGameEntity* SVG_GetWorldSpawnEntity();
-ServerGameEntity* SVG_SpawnClassEntity(ServerEntity* ent, const std::string& className);
+SynchedEntityBase * SVG_GetWorldSpawnEntity();
+SynchedEntityBase * SVG_SpawnClassEntity(ServerEntity* ent, const std::string& className);
 void SVG_FreeClassEntity(ServerEntity* ent);

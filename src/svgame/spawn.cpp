@@ -167,7 +167,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 // SVG_SpawnClassEntity
 //
 //
-#include "entities/base/ServerGameEntity.h"
+#include "Entities/Base/SynchedEntityBase.h"
 
 /*
 =============
@@ -212,7 +212,7 @@ void ED_CallSpawn(ServerEntity *serverEntity)
     serverEntity->className = ED_NewString( entityDictionary["classname"].c_str() );
     
     // Fetch/allocate game entity based on that.
-    ServerGameEntity *serverGameEntity = SVG_SpawnClassEntity( serverEntity, serverEntity->className );
+    SynchedEntityBase *serverGameEntity = SVG_SpawnClassEntity( serverEntity, serverEntity->className );
     // If we did not find the classname, then give up
     if ( !serverGameEntity ) {
         SVG_FreeEntity( serverEntity );
@@ -345,7 +345,7 @@ All but the last will have the teamchain field set to the next one
 void SVG_FindTeams(void)
 {
     ServerEntity* e, * e2;
-    ServerGameEntity* chain = nullptr;;
+    SynchedEntityBase * chain = nullptr;;
     int     i, j;
     int     c, c2;
 
@@ -374,7 +374,7 @@ void SVG_FindTeams(void)
         c2++;
         for (j = i + 1, e2 = e + 1 ; j < globals.numberOfEntities ; j++, e2++) {
             // Fetch class entity.
-            ServerGameEntity* classEntity2 = serverGameEntities[e->state.number];
+            SynchedEntityBase * classEntity2 = serverGameEntities[e->state.number];
 
             if (classEntity2 == NULL)
                 continue;

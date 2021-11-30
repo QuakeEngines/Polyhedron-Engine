@@ -20,7 +20,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "../g_local.h"      // SVGame funcs.
 #include "../utils.h"        // Util funcs.
 
-#include "../entities/base/ServerGameEntity.h"
+#include "../Entities/Base/SynchedEntityBase.h"
 
 #define STEPSIZE    18
 
@@ -35,7 +35,7 @@ is not a staircase.
 */
 int c_yes, c_no;
 
-qboolean SVG_StepMove_CheckBottom(ServerGameEntity* ent)
+qboolean SVG_StepMove_CheckBottom(SynchedEntityBase * ent)
 {
     vec3_t  start, stop;
     SVGTrace trace;
@@ -96,7 +96,7 @@ realcheck:
     return true;
 }
 
-void SVG_StepMove_CheckGround(ServerGameEntity* ent)
+void SVG_StepMove_CheckGround(SynchedEntityBase * ent)
 {
     vec3_t      point;
     SVGTrace     trace;
@@ -148,7 +148,7 @@ pr_global_struct->trace_normal is set to the normal of the blocking wall
 */
 //FIXME since we need to test end position contents here, can we avoid doing
 //it again later in catagorize position?
-qboolean SVG_MoveStep(ServerGameEntity* ent, vec3_t move, qboolean relink)
+qboolean SVG_MoveStep(SynchedEntityBase * ent, vec3_t move, qboolean relink)
 {
     float       dz;
     SVGTrace    trace;
@@ -374,7 +374,7 @@ facing it.
 
 ======================
 */
-qboolean SV_StepDirection(ServerGameEntity* ent, float yaw, float dist)
+qboolean SV_StepDirection(SynchedEntityBase * ent, float yaw, float dist)
 {
     vec3_t      move, oldOrigin;
     float       delta;
@@ -410,7 +410,7 @@ qboolean SV_StepDirection(ServerGameEntity* ent, float yaw, float dist)
 SVG_WalkStepMove
 ===============
 */
-qboolean SVG_StepMove_Walk(ServerGameEntity* ent, float yaw, float dist)
+qboolean SVG_StepMove_Walk(SynchedEntityBase * ent, float yaw, float dist)
 {
     vec3_t  move;
 

@@ -16,10 +16,9 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-#ifndef SYSTEM_H
-#define SYSTEM_H
+#pragma once
 
-#include "common/utils.h"
+#include "Common/Utilities.h"
 
 // loads the dll and returns entry pointer
 void    *Sys_LoadLibrary(const char *path, const char *sym, void **handle);
@@ -61,5 +60,3 @@ extern cvar_t   *sys_libdir;
 extern cvar_t   *sys_homedir;
 extern cvar_t   *sys_forcegamelib;
 extern cvar_t   *sys_forcecgamelib;
-
-#endif // SYSTEM_H

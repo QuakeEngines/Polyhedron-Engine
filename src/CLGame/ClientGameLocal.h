@@ -26,7 +26,7 @@
 // Common.
 #include "Common/CollisionModel.h"
 #include "Common/Command.h"
-#include "Common/Message.h"
+#include "Common/Messaging.h"
 #include "Common/Protocol.h"
 
 // Shared Game Headers.

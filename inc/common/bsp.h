@@ -21,9 +21,9 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef BSP_H
 #define BSP_H
 
-#include "Shared/list.h"
+#include "Shared/List.h"
 #include "common/error.h"
-#include "system/hunk.h"
+#include "System/Hunk.h"
 #include "format/bsp.h"
 
 #ifndef MIPLEVELS

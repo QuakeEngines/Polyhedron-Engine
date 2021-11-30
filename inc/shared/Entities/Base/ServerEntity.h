@@ -4,10 +4,21 @@
 // Maximumn serverEntity clusters.
 static constexpr uint32_t MAX_ENT_CLUSTERS = 16;
 
+// Using.
+using EntityDictionary = std::map<std::string, std::string>;
+
+// Include TypeInfo here.
+#include "Shared/Entities/TypeInfo.h"
+
 //---------------------------------------------------------
 // Server ServerEntity Data.
 //---------------------------------------------------------
 struct ServerEntity {
+protected:
+    // Top entity, contains our dictionary too after all.
+    DefineTopAbstractClass(ServerEntity);
+
+public:
     // Current entity state. (Contains all that'd be networked.)
     EntityState  state;
 
@@ -45,4 +56,7 @@ struct ServerEntity {
 
     // Entities can have owners, yes.
     ServerEntity    *owner;
+
+    // Entity
+    EntityDictionary entityDictionary;
 };

@@ -11,8 +11,8 @@
 #include "../../physics/stepmove.h"
 #include "../../brushfuncs.h"
 
-#include "../base/ServerGameEntity.h"
-#include "../base/SVGBaseTrigger.h"
+#include "../base/SynchedEntityBase.h.h"
+#include "../base/BaseTrigger.h"
 #include "../base/SVGBaseMover.h"
 
 #include "../func/FuncDoor.h"
@@ -23,7 +23,7 @@
 // TriggerAutoDoor::ctor
 //===============
 TriggerAutoDoor::TriggerAutoDoor( ServerEntity* entity )
-	: SVGBaseTrigger( entity ) {
+	: BaseTrigger( entity ) {
 	debounceTouchTime = 0.0f;
 }
 
@@ -42,7 +42,7 @@ void TriggerAutoDoor::Spawn() {
 //===============
 // TriggerAutoDoor::AutoDoorTouch
 //===============
-void TriggerAutoDoor::AutoDoorTouch( ServerGameEntity* self, ServerGameEntity* other, cplane_t* plane, csurface_t* surf ) {
+void TriggerAutoDoor::AutoDoorTouch( SynchedEntityBase * self, SynchedEntityBase * other, cplane_t* plane, csurface_t* surf ) {
 	bool isMonster = other->GetServerFlags() & EntityServerFlags::Monster;
 	// Alternatively, when we have a BaseMonster class:
 	// isMonster = other->IsSubclassOf<BaseMonster>();
@@ -70,7 +70,7 @@ void TriggerAutoDoor::AutoDoorTouch( ServerGameEntity* self, ServerGameEntity* o
 //===============
 // TriggerAutoDoor::Create
 //===============
-TriggerAutoDoor* TriggerAutoDoor::Create( ServerGameEntity* ownerEntity, vec3_t ownerMaxs, vec3_t ownerMins ) {
+TriggerAutoDoor* TriggerAutoDoor::Create( SynchedEntityBase * ownerEntity, vec3_t ownerMaxs, vec3_t ownerMins ) {
 	TriggerAutoDoor* autoDoor = SVG_CreateClassEntity<TriggerAutoDoor>();
 	autoDoor->SetOwner( ownerEntity );
 	autoDoor->SetMaxs( ownerMaxs );

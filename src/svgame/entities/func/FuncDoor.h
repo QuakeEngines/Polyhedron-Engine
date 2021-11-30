@@ -29,12 +29,12 @@ public:
 	//void		SpawnKey( const std::string& key, const std::string& value ) override;
 
 protected:
-    void        DoorUse( ServerGameEntity* other, ServerGameEntity* activator );
-    void        DoorShotOpen( ServerGameEntity* inflictor, ServerGameEntity* attacker, int damage, const vec3_t& point );
-    void        DoorBlocked( ServerGameEntity* other );
-    void        DoorTouch( ServerGameEntity* self, ServerGameEntity* other, cplane_t* plane, csurface_t* surf );
+    void        DoorUse( SynchedEntityBase * other, SynchedEntityBase * activator );
+    void        DoorShotOpen( SynchedEntityBase * inflictor, SynchedEntityBase * attacker, int damage, const vec3_t& point );
+    void        DoorBlocked( SynchedEntityBase * other );
+    void        DoorTouch( SynchedEntityBase * self, SynchedEntityBase * other, cplane_t* plane, csurface_t* surf );
 
-    void        DoorGoUp( ServerGameEntity* activator );
+    void        DoorGoUp( SynchedEntityBase * activator );
     void        DoorGoDown();
    
     // These two are overridden by FuncDoorRotating

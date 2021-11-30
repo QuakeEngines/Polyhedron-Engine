@@ -20,7 +20,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef REFRESH_H
 #define REFRESH_H
 
-#include "common/cvar.h"
+#include "Common/cvar.h"
 #include "common/error.h"
 
 // WATISDEZE: Moved most to shared, since cgame needs to know about the structs and defines,

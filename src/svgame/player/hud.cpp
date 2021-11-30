@@ -17,7 +17,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 */
 #include "../g_local.h" // Include SVGame header.
 #include "../entities.h"
-#include "../entities/base/ServerGameEntity.h"
+#include "../Entities/Base/SynchedEntityBase.h"
 #include "../entities/base/PlayerEntity.h"
 
 #include "../gamemodes/IGameMode.h"
@@ -189,7 +189,7 @@ SVG_HUD_GenerateDMScoreboardLayout
 
 ==================
 */
-void SVG_HUD_GenerateDMScoreboardLayout(ServerGameEntity *ent, ServerGameEntity *killer)
+void SVG_HUD_GenerateDMScoreboardLayout(SynchedEntityBase*ent, SynchedEntityBase*killer)
 {
     char    entry[1024];
     char    string[1400];
@@ -279,7 +279,7 @@ HUD_SendDMScoreboardMessage
 Sends the deatchmatch scoreboard svc_layout message.
 ==================
 */
-void HUD_SendDMScoreboardMessage(ServerGameEntity *ent)
+void HUD_SendDMScoreboardMessage(SynchedEntityBase*ent)
 {
     // WID: Putting this check here for future issue preventing.
     // Truth is, this stuff has to go when we got RMLUI :)
@@ -298,7 +298,7 @@ SVG_Command_Score_f
 Display the scoreboard
 ==================
 */
-void SVG_Command_Score_f(ServerGameEntity*ent)
+void SVG_Command_Score_f(SynchedEntityBase *ent)
 {
     // ServerEntity. Make sure it is valid.
     if (!ent)

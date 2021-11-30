@@ -19,7 +19,7 @@ public:
     BodyCorpse(ServerEntity* svEntity);
     virtual ~BodyCorpse();
 
-    DefineClass(BodyCorpse, SynchedBasedEntity, ServerGameEntity);
+    DefineClass(BodyCorpse, SynchedBasedEntity, SynchedEntityBase.h);
 
     //
     // Interface functions. 
@@ -36,8 +36,8 @@ public:
     // Callback functions.
     //
     //
-    void BodyCorpseDie(ServerGameEntity* inflictor, ServerGameEntity* attacker, int damage, const vec3_t& point);
-    void BodyCorpseTouch(ServerGameEntity* self, ServerGameEntity* other, cplane_t* plane, csurface_t* surf);
+    void BodyCorpseDie(SynchedEntityBase * inflictor, SynchedEntityBase * attacker, int damage, const vec3_t& point);
+    void BodyCorpseTouch(SynchedEntityBase * self, SynchedEntityBase * other, cplane_t* plane, csurface_t* surf);
 
     //
     // Get/Set

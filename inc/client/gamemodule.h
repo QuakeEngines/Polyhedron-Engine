@@ -8,11 +8,10 @@
 // the client game module.
 //
 */
-#ifndef __CLIENT_CLGMODULE_H__
-#define __CLIENT_CLGMODULE_H__
+#pragma once
 
-#include "Shared/shared.h"
-#include "sharedgame/pmove.h" // PMOVE: Remove once the game modules init pmove themselves using CLG_ParseServerData.
+#include "Shared/Shared.h"
+#include "SharedGame/PlayerMove.h" // PMOVE: Remove once the game modules init pmove themselves using CLG_ParseServerData.
 //
 // cgmodule.c
 //
@@ -90,5 +89,3 @@ void		CL_GM_ClearScene(void);
 void		CL_GM_PreRenderView(void);
 void		CL_GM_RenderView(void);
 void		CL_GM_PostRenderView(void);
-
-#endif //  __CLIENT_CGMODULE_H__

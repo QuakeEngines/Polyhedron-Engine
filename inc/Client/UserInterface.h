@@ -55,5 +55,3 @@ qboolean    UI_IsTransparent(void);
 #define     UI_MouseEvent(x, y)     (void)0
 #define     UI_IsTransparent()      true
 #endif
-
-#endif // UI_H

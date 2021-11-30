@@ -2,7 +2,7 @@
 // LICENSE HERE.
 
 //
-// ServerGameEntity.h
+// SynchedEntityBase.h.h
 //
 // Base entity class, where the fun begins. All entities are inherited from this,
 // one way or the other :)
@@ -12,25 +12,25 @@
 
 #include "Shared/Entities/TypeInfo.h"
 
-// It makes sense to include TypeInfo in ServerGameEntity.h, 
+// It makes sense to include TypeInfo in SynchedEntityBase.h.h, 
 // because this class absolutely requires it
 struct ServerEntity;
+class EntityBase;
 class SynchedEntityBase;
-class ServerGameEntity;
 
-class ServerGameEntity abstract : public SynchedEntityBase {
+class SynchedEntityBase abstract : public SynchedEntityBase {
 public:
     //------------------------------------------------------------
     //
     // Dispatch Callback Function Pointers.
     //
     //------------------------------------------------------------
-    using ThinkCallbackPointer      = void(ServerGameEntity::*)(void);
-    using UseCallbackPointer        = void(ServerGameEntity::*)(ServerGameEntity* other, ServerGameEntity* activator);
-    using TouchCallbackPointer      = void(ServerGameEntity::*)(ServerGameEntity* self, ServerGameEntity* other, cplane_t* plane, csurface_t* surf);
-    using BlockedCallbackPointer    = void(ServerGameEntity::*)(ServerGameEntity* other);
-    using TakeDamageCallbackPointer = void(ServerGameEntity::*)(ServerGameEntity* other, float kick, int32_t damage);
-    using DieCallbackPointer        = void(ServerGameEntity::*)(ServerGameEntity* inflictor, ServerGameEntity* attacker, int damage, const vec3_t& point);
+    using ThinkCallbackPointer      = void(SynchedEntityBase::*)(void);
+    using UseCallbackPointer        = void(SynchedEntityBase::*)(SynchedEntityBase * other, SynchedEntityBase * activator);
+    using TouchCallbackPointer      = void(SynchedEntityBase::*)(SynchedEntityBase * self, SynchedEntityBase * other, cplane_t* plane, csurface_t* surf);
+    using BlockedCallbackPointer    = void(SynchedEntityBase::*)(SynchedEntityBase * other);
+    using TakeDamageCallbackPointer = void(SynchedEntityBase::*)(SynchedEntityBase * other, float kick, int32_t damage);
+    using DieCallbackPointer        = void(SynchedEntityBase::*)(SynchedEntityBase * inflictor, SynchedEntityBase * attacker, int damage, const vec3_t& point);
 
 protected:
     //------------------------------------------------------------
@@ -38,8 +38,8 @@ protected:
     // Construct/Destructor.
     //
     //------------------------------------------------------------
-    ServerGameEntity();
-    ServerGameEntity(ServerEntity* entity);
+    SynchedEntityBase();
+    SynchedEntityBase(ServerEntity* entity);
 
 public:
     //------------------------------------------------------------
@@ -47,17 +47,17 @@ public:
     // Runtime Type Information.
     //
     //------------------------------------------------------------
-    DefineTopAbstractClass( ServerGameEntity );
+    DefineTopAbstractClass( SynchedEntityBase );
 
     // Checks if this entity class is exactly the given class
-    // @param entityClass: an entity class which must inherint from ServerGameEntity
+    // @param entityClass: an entity class which must inherint from SynchedEntityBase.h
     template<typename entityClass>
     bool IsClass() const { // every entity has a ClassInfo, thanks to the DefineXYZ macro
         return GetTypeInfo()->IsClass( entityClass::ClassInfo );
     }
 
     // Checks if this entity class is a subclass of another, or is the same class
-    // @param entityClass: an entity class which must inherint from ServerGameEntity
+    // @param entityClass: an entity class which must inherint from SynchedEntityBase.h
     template<typename entityClass>
     bool IsSubclassOf() const {
         return GetTypeInfo()->IsSubclassOf( entityClass::ClassInfo );
@@ -82,11 +82,11 @@ public:
     //
     //------------------------------------------------------------
     // // Admer: these should all be prefixed with Dispatch
-    void Use(ServerGameEntity* other, ServerGameEntity* activator);
-    void Die(ServerGameEntity* inflictor, ServerGameEntity* attacker, int damage, const vec3_t& point);
-    void Blocked(ServerGameEntity* other);
-    void Touch(ServerGameEntity* self, ServerGameEntity* other, cplane_t* plane, csurface_t* surf);
-    void TakeDamage(ServerGameEntity* other, float kick, int32_t damage);
+    void Use(SynchedEntityBase * other, SynchedEntityBase * activator);
+    void Die(SynchedEntityBase * inflictor, SynchedEntityBase * attacker, int damage, const vec3_t& point);
+    void Blocked(SynchedEntityBase * other);
+    void Touch(SynchedEntityBase * self, SynchedEntityBase * other, cplane_t* plane, csurface_t* surf);
+    void TakeDamage(SynchedEntityBase * other, float kick, int32_t damage);
     
 
     //------------------------------------------------------------
@@ -96,7 +96,7 @@ public:
     //------------------------------------------------------------
     //  Calls Use on this entity's targets, and deletes its killtargets if any
     //  @param activatorOverride: if nullptr, the entity's own activator is used and if the entity's own activator is nullptr, then this entity itself is the activator
-    void UseTargets( ServerGameEntity* activatorOverride = nullptr );
+    void UseTargets( SynchedEntityBase * activatorOverride = nullptr );
 
 
     //------------------------------------------------------------
@@ -119,7 +119,7 @@ public:
     }
 
     // @returns The entity which activated this entity. (If any)
-    inline ServerGameEntity* GetActivator() {
+    inline SynchedEntityBase * GetActivator() {
         return activator;
     }
     
@@ -180,7 +180,7 @@ public:
     }
 
     // @returns The enemy entity pointer (if any.)
-    inline ServerGameEntity* GetEnemy() {
+    inline SynchedEntityBase * GetEnemy() {
         return enemyEntity;
     }
 
@@ -205,7 +205,7 @@ public:
     }
 
     // @returns The ground entity (if any).
-    inline ServerGameEntity* GetGroundEntity() {
+    inline SynchedEntityBase * GetGroundEntity() {
         return groundEntity;
     }
 
@@ -313,7 +313,7 @@ public:
     }
 
     // Return the 'oldEnemyPtr' entity pointer.
-    ServerGameEntity* GetOldEnemy() {
+    SynchedEntityBase * GetOldEnemy() {
         return oldEnemyEntity;
     }
 
@@ -328,7 +328,7 @@ public:
     }
 
     // Get the 'owner' value.
-    inline ServerGameEntity* GetOwner() {
+    inline SynchedEntityBase * GetOwner() {
         return this->ownerEntity;
     }
 
@@ -403,12 +403,12 @@ public:
     }
 
     // Return the 'teamChain' entity value.
-    inline ServerGameEntity* GetTeamChainEntity() {
+    inline SynchedEntityBase * GetTeamChainEntity() {
         return teamChainEntity;
     }
 
     // Return the 'teamMaster' entity value.
-    inline ServerGameEntity *GetTeamMasterEntity() {
+    inline SynchedEntityBase*GetTeamMasterEntity() {
         return teamMasterEntity;
     }
 
@@ -498,7 +498,7 @@ public:
     }
 
     // Set the 'enemyPtr' pointer.
-    inline void SetEnemy(ServerGameEntity* enemy) {
+    inline void SetEnemy(SynchedEntityBase * enemy) {
         this->enemyEntity = enemy;
     }
 
@@ -523,8 +523,8 @@ public:
     }
 
     // Set the 'groundEntitPtr' entity.
-    inline void SetGroundEntity(ServerGameEntity* groundEntity) {
-        // Set ServerGameEntity variant ground entity.
+    inline void SetGroundEntity(SynchedEntityBase * groundEntity) {
+        // Set SynchedEntityBasevariant ground entity.
         this->groundEntity = groundEntity;
     }
 
@@ -621,11 +621,11 @@ public:
     }
 
     // @set a pointer to the entity that triggered firstNoiseEntity
-    inline const ServerGameEntity* SetFirstNoiseEntity() {
+    inline const SynchedEntityBase * SetFirstNoiseEntity() {
         return firstNoiseEntity;
     }
     // @set a pointer to the entity that triggered secondNoiseEntity
-    inline const ServerGameEntity* SetSecondNoiseEntity() {
+    inline const SynchedEntityBase * SetSecondNoiseEntity() {
         return secondNoiseEntity;
     }
 
@@ -639,7 +639,7 @@ public:
     }
 
     // Set the 'oldEnemyPtr' pointer.
-    inline void SetOldEnemy(ServerGameEntity* oldEnemy) {
+    inline void SetOldEnemy(SynchedEntityBase * oldEnemy) {
         this->oldEnemyEntity = oldEnemy;
     }
 
@@ -675,12 +675,12 @@ public:
     }
 
     // Set the 'teamChain' entity value.
-    inline void SetTeamChainEntity(ServerGameEntity* entity) {
+    inline void SetTeamChainEntity(SynchedEntityBase * entity) {
         teamChainEntity = entity;
     }
 
     // Set the 'teamMaster' entity value.
-    inline void SetTeamMasterEntity(ServerGameEntity* entity) {
+    inline void SetTeamMasterEntity(SynchedEntityBase * entity) {
         teamMasterEntity = entity;
     }
 
@@ -841,11 +841,11 @@ protected:
     // Move Target ServerEntity.
     ServerEntity* moveTargetPtr;
     // The entity that activated this
-    ServerGameEntity* activator;
+    SynchedEntityBase * activator;
     // The entity that activated the noise.
-    ServerGameEntity* firstNoiseEntity;
+    SynchedEntityBase * firstNoiseEntity;
     // The entity that activated the second noise.
-    ServerGameEntity* secondNoiseEntity;
+    SynchedEntityBase * secondNoiseEntity;
 
 
     // Yaw Speed. (Should be for monsters...)
@@ -896,19 +896,19 @@ protected:
     // ServerEntity pointers.
     // 
     // Current active enemy, NULL if not any.    
-    ServerGameEntity *enemyEntity;
+    SynchedEntityBase*enemyEntity;
     // Ground entity we're standing on.
-    ServerGameEntity *groundEntity;
+    SynchedEntityBase*groundEntity;
     // Old enemy, NULL if not any.
-    ServerGameEntity *oldEnemyEntity;
+    SynchedEntityBase*oldEnemyEntity;
 
     // Owner pointer. (Such as, did the player fire a blaster bolt? If so, the owner is...)
-    ServerGameEntity* ownerEntity;
+    SynchedEntityBase * ownerEntity;
 
     // Team Chain Pointer.
-    ServerGameEntity* teamChainEntity;
+    SynchedEntityBase * teamChainEntity;
     // Master Pointer.
-    ServerGameEntity* teamMasterEntity;
+    SynchedEntityBase * teamMasterEntity;
     
 public:
     //
@@ -990,12 +990,5 @@ public:
     // Dictionary Functions.
     // 
     //------------------------------------------------------------
-    // Entity dictionary.
-    using EntityDictionary = std::map<std::string, std::string>;
-    EntityDictionary entityDictionary;
 
-    // @returns a reference to the 'entityDictionary'.
-    inline EntityDictionary &GetEntityDictionary() {
-        return entityDictionary;
-    }
 };

@@ -11,8 +11,8 @@
 #include "../../physics/stepmove.h"
 #include "../../brushfuncs.h"
 
-#include "../base/ServerGameEntity.h"
-#include "../base/SVGBaseTrigger.h"
+#include "../base/SynchedEntityBase.h.h"
+#include "../base/BaseTrigger.h"
 #include "../base/SVGBaseMover.h"
 
 #include "../trigger/TriggerAutoDoor.h"

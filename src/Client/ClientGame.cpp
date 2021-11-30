@@ -19,14 +19,14 @@
 // This way, we can remove the _wrp_ functions from this file and have 
 // the function pointers point to the actual functions.
 //
-#include "client.h"
-#include "server/server.h"
-#include "refresh/models.h"
+#include "Client.h"
+#include "Server/Server.h"
+#include "Refresh/Models.h"
 
 // (Client/Game) related.
-#include "client/gamemodule.h"   // TODO: How come it can find client.h??
-#include "Shared/cltypes.h"
-#include "Shared/clgame.h"
+#include "Client/GameModule.h"   // TODO: How come it can find client.h??
+#include "Shared/ClientGameTypes.h"
+#include "Shared/ClientGame.h"
 
 // Contains the functions being exported to client game dll.
 IClientGameExports *cge;

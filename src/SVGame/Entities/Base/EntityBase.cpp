@@ -2,8 +2,6 @@
 #include "../../g_local.h"
 #include "../../Entities.h"
 
-#include "Shared/Entities/TypeInfo.h"
-
 // Constructor(s)
 EntityBase::EntityBase(ServerEntity* serverEntityHandle) {
     if (serverEntityHandle->inUse) {
@@ -17,3 +15,4 @@ EntityBase::EntityBase(ServerEntity* serverEntityHandle) {
 EntityBase::~EntityBase() {
     this->entityHandle->inUse = false;
 }
+

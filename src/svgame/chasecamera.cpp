@@ -24,7 +24,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 void SVG_UpdateChaseCam(PlayerEntity *ent)
 {
-    ServerGameEntity* target;
+    SynchedEntityBase* target;
 
 
     // Fetch owner vector.
@@ -33,7 +33,7 @@ void SVG_UpdateChaseCam(PlayerEntity *ent)
     // is our chase target gone?
     if (!ent->GetClient()->chaseTarget->IsInUse()
         || ent->GetClient()->chaseTarget->GetClient()->respawn.isSpectator) {
-        ServerGameEntity *oldTarget = ent->GetClient()->chaseTarget;
+        SynchedEntityBase*oldTarget = ent->GetClient()->chaseTarget;
         SVG_ChaseNext(ent);
         if (ent->GetClient()->chaseTarget == oldTarget) {
             ent->GetClient()->chaseTarget = nullptr;
@@ -120,7 +120,7 @@ void SVG_ChaseNext(PlayerEntity *ent)
     //if (!client->chaseTarget)
     //    return;
 
-    //ServerGameEntity *nextChaseEntity = nullptr;
+    //SynchedEntityBase*nextChaseEntity = nullptr;
     //
     //int32_t startClientNumber = client->chaseTarget->GetNumber();
     //int32_t i = client->chaseTarget - serverGameEntities[client->chaseTarget->GetNumber()];
@@ -142,7 +142,7 @@ void SVG_ChaseNext(PlayerEntity *ent)
 void SVG_ChasePrev(PlayerEntity*ent)
 {
     //int i;
-    //ServerGameEntity *e;
+    //SynchedEntityBase*e;
     //ServerClient* client = ent->GetClient();
 
     //if (!client->chaseTarget)

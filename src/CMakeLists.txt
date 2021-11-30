@@ -83,8 +83,8 @@ SET( SRC_SVGAME
 	SVGame/AI/MonsterAI.cpp
 
 	## Source: SVGame - Entities - Base
-	#SVGame/Entities/Base/ServerGameEntity.cpp
-	SVGame/Entities/Base/SVGBaseTrigger.cpp
+	#SVGame/Entities/Base/SynchedEntityBase.h.cpp
+	SVGame/Entities/Base/BaseTrigger.cpp
 	SVGame/Entities/Base/SVGBaseMover.cpp
 	SVGame/Entities/Base/PlayerEntity.cpp
 
@@ -199,12 +199,12 @@ SET( SRC_SVGAME
 		SVGame/AI/MonsterAI.h
 
 		## Source: SVGame - Entities - Base
-		#SVGame/Entities/Base/ServerGameEntity.h
+		#SVGame/Entities/Base/SynchedEntityBase.h
 		SVGame/Entities/Base/EntityBase.h
 		SVGame/Entities/Base/PrivateEntityBase.cpp
 		SVGame/Entities/Base/SynchedEntityBase.cpp
 
-		SVGame/Entities/Base/SVGBaseTrigger.h
+		SVGame/Entities/Base/BaseTrigger.h
 		SVGame/Entities/Base/SVGBaseMover.h
 		SVGame/Entities/Base/PlayerEntity.h
 

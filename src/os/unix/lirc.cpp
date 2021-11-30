@@ -16,11 +16,11 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-#include "Shared/shared.h"
-#include "common/cmd.h"
-#include "common/common.h"
-#include "common/cvar.h"
-#include "common/net/net.h"
+#include "Shared/Shared.h"
+#include "Common/Command.h"
+#include "Common/Common.h"
+#include "Common/cvar.h"
+#include "Common/Net/Net.h"
 #include "client/input.h"
 #include "client/keys.h"
 #include "system/lirc.h"

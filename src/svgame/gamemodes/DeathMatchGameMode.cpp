@@ -12,7 +12,7 @@
 #include "../utils.h"       // Util funcs.
 
 // Server Game Base ServerEntity.
-#include "../entities/base/ServerGameEntity.h"
+#include "../Entities/Base/SynchedEntityBase.h"
 #include "../entities/base/PlayerEntity.h"
 
 // Weapons.h
@@ -46,7 +46,7 @@ DeathMatchGameMode::~DeathMatchGameMode() {
 // Template function serves as an example atm.
 //===============
 //
-qboolean DeathMatchGameMode::CanDamage(ServerGameEntity* target, ServerGameEntity* inflictor) {
+qboolean DeathMatchGameMode::CanDamage(SynchedEntityBase * target, SynchedEntityBase * inflictor) {
     // Let it be to DefaultGameMode. :)
     return DefaultGameMode::CanDamage(target, inflictor);
 }
@@ -322,7 +322,7 @@ void DeathMatchGameMode::ClientBeginServerFrame(ServerEntity* serverEntity) {
 // DeathMatchGameMode::ClientUpdateObituary.
 // 
 //===============
-void DeathMatchGameMode::ClientUpdateObituary(ServerGameEntity* self, ServerGameEntity* inflictor, ServerGameEntity* attacker) {
+void DeathMatchGameMode::ClientUpdateObituary(SynchedEntityBase * self, SynchedEntityBase * inflictor, SynchedEntityBase * attacker) {
     std::string message = ""; // String stating what happened to whichever entity. "suicides", "was squished" etc.
     std::string messageAddition = ""; // String stating what is additioned to it, "'s shrapnell" etc. Funny stuff.
 

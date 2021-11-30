@@ -18,11 +18,11 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-#include "Shared/shared.h"
-#include "Shared/list.h"
-#include "common/common.h"
-#include "common/files.h"
-#include "system/hunk.h"
+#include "Shared/Shared.h"
+#include "Shared/List.h"
+#include "Common/Common.h"
+#include "Common/Files.h"
+#include "System/Hunk.h"
 #include "format/md2.h"
 #if USE_MD3
 #include "format/md3.h"

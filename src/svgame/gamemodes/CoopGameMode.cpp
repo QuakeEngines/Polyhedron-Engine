@@ -7,12 +7,12 @@
 //
 */
 #include "../g_local.h"          // SVGame.
-#include "../effects.h"     // Effects.
-#include "../entities.h"    // Entities.
-#include "../utils.h"       // Util funcs.
+#include "../Effects.h"     // Effects.
+#include "../Entities.h"    // Entities.
+#include "../Utilities.h"       // Util funcs.
 
 // Server Game Base ServerEntity.
-#include "../entities/base/ServerGameEntity.h"
+#include "../Entities/Base/SynchedEntityBase.h"
 
 // Game Mode.
 #include "CoopGameMode.h"
@@ -39,7 +39,7 @@ CoopGameMode::~CoopGameMode() {
 // Template function serves as an example atm.
 //===============
 //
-qboolean CoopGameMode::CanDamage(ServerGameEntity* target, ServerGameEntity* inflictor) {
+qboolean CoopGameMode::CanDamage(SynchedEntityBase * target, SynchedEntityBase * inflictor) {
     // Let it be to DefaultGameMode. :)
     return DefaultGameMode::CanDamage(target, inflictor);
 }
@@ -48,7 +48,7 @@ qboolean CoopGameMode::CanDamage(ServerGameEntity* target, ServerGameEntity* inf
 // CoopGameMode::ClientUpdateObituary.
 // 
 //===============
-void CoopGameMode::ClientUpdateObituary(ServerGameEntity* self, ServerGameEntity* inflictor, ServerGameEntity* attacker) {
+void CoopGameMode::ClientUpdateObituary(SynchedEntityBase * self, SynchedEntityBase * inflictor, SynchedEntityBase * attacker) {
     std::string message; // String stating what happened to whichever entity. "suicides", "was squished" etc.
     std::string messageAddition; // String stating what is additioned to it, "'s shrapnell" etc. Funny stuff.
 

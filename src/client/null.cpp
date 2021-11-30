@@ -19,9 +19,9 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 // cl_null.c -- this file can stub out the entire client system
 // for pure dedicated servers
 
-#include "Shared/shared.h"
-#include "common/cvar.h"
-#include "common/bsp.h"
+#include "Shared/Shared.h"
+#include "Common/cvar.h"
+#include "Common/BSP.h"
 #include "client/client.h"
 void SetFogByMap(const char* name) 
 {

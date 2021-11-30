@@ -10,20 +10,20 @@
 #ifndef __SVGAME_ENTITIES_LIGHT_H__
 #define __SVGAME_ENTITIES_LIGHT_H__
 
-class SVGBaseTrigger;
+class BaseTrigger;
 
 enum LightState : uint32_t {
     Off = 1,
     On = 2,
 };
 
-class Light : public SVGBaseTrigger {
+class Light : public BaseTrigger {
 public:
     // Constructor/Deconstructor.
     Light(ServerEntity* svEntity);
     virtual ~Light();
 
-    DefineMapClass( "light", Light, SVGBaseTrigger );
+    DefineMapClass( "light", Light, BaseTrigger );
 
     //
     // Interface functions. 
@@ -49,7 +49,7 @@ public:
     //
     // Callback functions.
     //
-    void LightUse(ServerGameEntity* other, ServerGameEntity* activator);
+    void LightUse(SynchedEntityBase * other, SynchedEntityBase * activator);
     void LightThink(void);
 
 private:
@@ -63,14 +63,14 @@ private:
 
 #pragma once
 
-class ServerGameEntity;
+class SynchedEntityBase.h;
 
-class PathCorner : public ServerGameEntity {
+class PathCorner : public SynchedEntityBase{
 public:
     PathCorner(ServerEntity* entity);
     virtual ~PathCorner() = default;
 
-    DefineMapClass("path_corner", PathCorner, ServerGameEntity);
+    DefineMapClass("path_corner", PathCorner, SynchedEntityBase.h);
 
     const vec3_t	BboxSize = vec3_t(8.0f, 8.0f, 8.0f);
 
@@ -81,7 +81,7 @@ public:
     void			SpawnKey(const std::string& key, const std::string& value) override;
 
     // For AI
-    virtual void	OnReachedCorner(ServerGameEntity* traveler);
+    virtual void	OnReachedCorner(SynchedEntityBase * traveler);
 
     inline const char* GetPathTarget() override {
         return pathTarget.c_str();

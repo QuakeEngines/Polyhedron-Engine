@@ -20,7 +20,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "Common/Command.h"
 #include "Common/Net/Net.h"
-#include "Common/Utils.h"
+#include "Common/Utilities.h"
 
 #if USE_CLIENT
 

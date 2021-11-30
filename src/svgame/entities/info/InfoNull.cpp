@@ -11,11 +11,11 @@
 #include "../../physics/stepmove.h"
 #include "../../brushfuncs.h"
 
-#include "../base/ServerGameEntity.h"
+#include "../base/SynchedEntityBase.h.h"
 
 // This entity never spawns, and as such, no edicts will be wasted on it during spawn time
-class InfoNull : public ServerGameEntity
+class InfoNull : public SynchedEntityBase.h
 {
 public:
-	DefineDummyMapClass( "info_null", InfoNull, ServerGameEntity );
+	DefineDummyMapClass( "info_null", InfoNull, SynchedEntityBase);
 };

@@ -10,7 +10,7 @@
 #ifndef __SVGAME_ENTITIES_TRIGGER_TRIGGERALWAYS_H__
 #define __SVGAME_ENTITIES_TRIGGER_TRIGGERALWAYS_H__
 
-class TriggerAlways : public SVGBaseTrigger {
+class TriggerAlways : public BaseTrigger {
 public:
     //
     // Constructor/Deconstructor.
@@ -18,7 +18,7 @@ public:
     TriggerAlways(ServerEntity* svEntity);
     virtual ~TriggerAlways();
 
-    DefineMapClass( "trigger_always", TriggerAlways, SVGBaseTrigger );
+    DefineMapClass( "trigger_always", TriggerAlways, BaseTrigger );
 
     //
     // Interface functions. 
@@ -36,8 +36,8 @@ public:
     //
 
     // Callback functions.
-    void TriggerAlwaysTouch(ServerGameEntity* self, ServerGameEntity* other, cplane_t* plane, csurface_t* surf);
-    void TriggerAlwaysUse(ServerGameEntity* other, ServerGameEntity* activator);
+    void TriggerAlwaysTouch(SynchedEntityBase * self, SynchedEntityBase * other, cplane_t* plane, csurface_t* surf);
+    void TriggerAlwaysUse(SynchedEntityBase * other, SynchedEntityBase * activator);
 
     //
     // Get/Set

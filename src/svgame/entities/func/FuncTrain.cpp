@@ -8,7 +8,7 @@
 #include "../../entities.h"
 #include "../../effects.h"
 
-#include "../base/SVGBaseTrigger.h"
+#include "../base/BaseTrigger.h"
 #include "../base/SVGBaseMover.h"
 
 #include "../path/PathCorner.h"
@@ -62,7 +62,7 @@ void FuncTrain::PostSpawn() {
 		return;
 	}
 
-	ServerGameEntity* ent = SVG_FindEntityByKeyValue( "targetname", targetStr );
+	SynchedEntityBase * ent = SVG_FindEntityByKeyValue( "targetname", targetStr );
 	if ( nullptr == ent ) {
 		gi.DPrintf( "FuncTrain: target '%s' not found, maybe you made a typo?\n", targetStr.c_str() );
 		return;
@@ -106,7 +106,7 @@ void FuncTrain::SpawnKey( const std::string& key, const std::string& value ) {
 //===============
 // FuncTrain::TrainUse
 //===============
-void FuncTrain::TrainUse( ServerGameEntity* other, ServerGameEntity* activator ) {
+void FuncTrain::TrainUse( SynchedEntityBase * other, SynchedEntityBase * activator ) {
 	this->activator = activator;
 
 	if ( spawnFlags & SF_StartOn ) {
@@ -131,7 +131,7 @@ void FuncTrain::TrainUse( ServerGameEntity* other, ServerGameEntity* activator )
 // FuncTrain::NextCornerThink
 //===============
 void FuncTrain::NextCornerThink() {
-	ServerGameEntity* entity = nullptr;
+	SynchedEntityBase * entity = nullptr;
 	vec3_t destination;
 	bool first = true;
 	bool again = true;
@@ -245,9 +245,9 @@ void FuncTrain::WaitAtCorner() {
 //===============
 // FuncTrain::OnWaitAtCorner
 //===============
-void FuncTrain::OnWaitAtCorner( ServerGameEntity* serverGameEntity ) {
+void FuncTrain::OnWaitAtCorner( SynchedEntityBase * serverGameEntity ) {
 	if (!serverGameEntity)
-		Com_LPrintf(PRINT_WARNING, "Null entity caught at %s in class %s", __FUNCDNAME__, ServerGameEntity::ClassInfo.className);
+		Com_LPrintf(PRINT_WARNING, "Null entity caught at %s in class %s", __FUNCDNAME__, SynchedEntityBase.h::ClassInfo.className);
 	if ( serverGameEntity->IsSubclassOf<FuncTrain>() ) {
 		static_cast<FuncTrain*>( serverGameEntity )->WaitAtCorner();
 	}
@@ -256,7 +256,7 @@ void FuncTrain::OnWaitAtCorner( ServerGameEntity* serverGameEntity ) {
 //===============
 // FuncTrain::TrainBlocked
 //===============
-void FuncTrain::TrainBlocked( ServerGameEntity* other ) {
+void FuncTrain::TrainBlocked( SynchedEntityBase * other ) {
 	if ( !(other->GetServerFlags() & EntityServerFlags::Monster) && !other->GetClient() ) {
 		// Give it a chance to go away on its own terms (like gibs)
 		SVG_InflictDamage( other, this, this, vec3_zero(), other->GetOrigin(), vec3_zero(), 100000, 1, 0, MeansOfDeath::Crush );

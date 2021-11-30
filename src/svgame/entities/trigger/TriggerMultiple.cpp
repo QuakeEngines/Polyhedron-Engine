@@ -10,8 +10,8 @@
 #include "../../g_local.h"     // SVGame.
 #include "../../effects.h"     // Effects.
 #include "../../utils.h"       // Util funcs.
-#include "../base/ServerGameEntity.h"
-#include "../base/SVGBaseTrigger.h"
+#include "../base/SynchedEntityBase.h.h"
+#include "../base/BaseTrigger.h"
 #include "TriggerMultiple.h"
 
 //
@@ -19,7 +19,7 @@
 // 
 
 // Constructor/Deconstructor.
-TriggerMultiple::TriggerMultiple(ServerEntity* svEntity) : SVGBaseTrigger(svEntity) {
+TriggerMultiple::TriggerMultiple(ServerEntity* svEntity) : BaseTrigger(svEntity) {
 	//
 	// All callback functions best be nullptr.
 	//
@@ -127,7 +127,7 @@ void TriggerMultiple::SpawnKey(const std::string& key, const std::string& value)
 	Base::SpawnKey(key, value);
 }
 
-void TriggerMultiple::Trigger(ServerGameEntity *activator) {
+void TriggerMultiple::Trigger(SynchedEntityBase*activator) {
 	// We've already been triggered.
 	if (GetNextThinkTime())
 		return;
@@ -169,7 +169,7 @@ void TriggerMultiple::TriggerMultipleThinkWait() {
 // 'Touch' callback, to hurt the entities touching it.
 //===============
 //
-void TriggerMultiple::TriggerMultipleTouch(ServerGameEntity* self, ServerGameEntity* other, cplane_t* plane, csurface_t* surf) {
+void TriggerMultiple::TriggerMultipleTouch(SynchedEntityBase * self, SynchedEntityBase * other, cplane_t* plane, csurface_t* surf) {
 	if (this == other)
 		return;
 
@@ -205,7 +205,7 @@ void TriggerMultiple::TriggerMultipleTouch(ServerGameEntity* self, ServerGameEnt
 // 'Use' callback, whenever the trigger is activated.
 //===============
 //
-void TriggerMultiple::TriggerMultipleUse(ServerGameEntity* other, ServerGameEntity* activator) {
+void TriggerMultiple::TriggerMultipleUse(SynchedEntityBase * other, SynchedEntityBase * activator) {
 	// Trigger itself.
 	Trigger(activator);
 }
@@ -217,7 +217,7 @@ void TriggerMultiple::TriggerMultipleUse(ServerGameEntity* other, ServerGameEnti
 // 'Use' callback, whenever the trigger wasn't, but still has to be activated.
 //===============
 //
-void TriggerMultiple::TriggerMultipleEnable(ServerGameEntity* other, ServerGameEntity* activator) {
+void TriggerMultiple::TriggerMultipleEnable(SynchedEntityBase * other, SynchedEntityBase * activator) {
 	// Set the new solid, since it wasn't Solid::Trigger when disabled.
 	SetSolid(Solid::Trigger);
 

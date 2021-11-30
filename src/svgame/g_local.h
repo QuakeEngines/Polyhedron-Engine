@@ -37,7 +37,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 //-------------------
 // Forward Declaration.
 //-------------------
-class ServerGameEntity;
+class SynchedEntityBase;
 class PlayerEntity;
 class IGameMode;
 
@@ -274,7 +274,7 @@ typedef struct gitem_s {
     const char *className;
 
     // Function callbacks.
-    qboolean (*Pickup)(ServerGameEntity *ent, PlayerEntity *other);
+    qboolean (*Pickup)(SynchedEntityBase *ent, PlayerEntity *other);
     void (*Use)(PlayerEntity *ent, struct gitem_s *item);
     void (*Drop)(PlayerEntity *ent, struct gitem_s *item);
     void (*WeaponThink)(PlayerEntity *ent);
@@ -402,7 +402,7 @@ struct LevelLocals  {
     int32_t killedMonsters;
 
     // The current entity that is actively being ran from SVG_RunFrame.
-    ServerGameEntity *currentEntity;
+    SynchedEntityBase *currentEntity;
 
     // Index for the que pile of dead bodies.
     int32_t bodyQue;
@@ -486,7 +486,7 @@ struct MeansOfDeath {
 };
 
 // Once again, ugly.
-extern ServerGameEntity* serverGameEntities[MAX_EDICTS];
+extern SynchedEntityBase* serverGameEntities[MAX_EDICTS];
 
 
 //
@@ -591,7 +591,7 @@ extern  gitem_t itemlist[];
 //
 // g_cmds.c
 //
-void SVG_Command_Score_f(ServerGameEntity *ent);
+void SVG_Command_Score_f(SynchedEntityBase *ent);
 
 //
 // g_items.c
@@ -602,23 +602,23 @@ void SVG_SetItemNames(void);
 gitem_t *SVG_FindItemByPickupName(const char *pickup_name);
 gitem_t *SVG_FindItemByClassname(const char *className);
 #define ITEM_INDEX(x) ((x)-itemlist)
-ServerGameEntity *SVG_DropItem(PlayerEntity *ent, gitem_t *item);
+SynchedEntityBase *SVG_DropItem(PlayerEntity *ent, gitem_t *item);
 void SVG_SetRespawn(PlayerEntity *ent, float delay);
 void SVG_ChangeWeapon(PlayerEntity* ent);
 void SVG_SpawnItem(PlayerEntity *ent, gitem_t *item);
 //void SVG_ThinkWeapon(ServerEntity *ent);
-int32_t SVG_ArmorIndex(ServerGameEntity *ent);
+int32_t SVG_ArmorIndex(SynchedEntityBase *ent);
 gitem_t *SVG_GetItemByIndex(int32_t index);
 qboolean SVG_AddAmmo(PlayerEntity *ent, gitem_t *item, int32_t count);
-void SVG_TouchItem(ServerGameEntity* ent, ServerGameEntity* other, cplane_t *plane, csurface_t *surf);
+void SVG_TouchItem(SynchedEntityBase* ent, SynchedEntityBase* other, cplane_t *plane, csurface_t *surf);
 
 //
 // g_combat.c
 //
-qboolean SVG_OnSameTeam(ServerGameEntity *ent1, ServerGameEntity *ent2);
-qboolean SVG_CanDamage(ServerGameEntity *targ, ServerGameEntity *inflictor);
-void SVG_InflictDamage(ServerGameEntity *targ, ServerGameEntity *inflictor, ServerGameEntity *attacker, const vec3_t &dmgDir, const vec3_t &point, const vec3_t &normal, int32_t damage, int32_t knockback, int32_t dflags, int32_t mod);
-void SVG_InflictRadiusDamage(ServerGameEntity *inflictor, ServerGameEntity *attacker, float damage, ServerGameEntity *ignore, float radius, int32_t mod);
+qboolean SVG_OnSameTeam(SynchedEntityBase *ent1, SynchedEntityBase *ent2);
+qboolean SVG_CanDamage(SynchedEntityBase *targ, SynchedEntityBase *inflictor);
+void SVG_InflictDamage(SynchedEntityBase *targ, SynchedEntityBase *inflictor, SynchedEntityBase *attacker, const vec3_t &dmgDir, const vec3_t &point, const vec3_t &normal, int32_t damage, int32_t knockback, int32_t dflags, int32_t mod);
+void SVG_InflictRadiusDamage(SynchedEntityBase *inflictor, SynchedEntityBase *attacker, float damage, SynchedEntityBase *ignore, float radius, int32_t mod);
 
 // damage flags
 struct DamageFlags {
@@ -633,11 +633,11 @@ struct DamageFlags {
 //
 // g_weapon.c
 //
-void SVG_ThrowDebris(ServerGameEntity *self, const char *modelname, float speed, const vec3_t& origin);
-qboolean SVG_FireHit(ServerGameEntity *self, vec3_t &aim, int32_t damage, int32_t kick);
-void SVG_FireBullet(ServerGameEntity *self, const vec3_t& start, const vec3_t& aimdir, int32_t damage, int32_t kick, int32_t hspread, int32_t vspread, int32_t mod);
-void SVG_FireShotgun(ServerGameEntity *self, const vec3_t& start, const vec3_t& aimdir, int32_t damage, int32_t kick, int32_t hspread, int32_t vspread, int32_t count, int32_t mod);
-void SVG_FireBlaster(ServerGameEntity *self, const vec3_t& start, const vec3_t& aimdir, int32_t damage, int32_t speed, int32_t effect, qboolean hyper);
+void SVG_ThrowDebris(SynchedEntityBase *self, const char *modelname, float speed, const vec3_t& origin);
+qboolean SVG_FireHit(SynchedEntityBase *self, vec3_t &aim, int32_t damage, int32_t kick);
+void SVG_FireBullet(SynchedEntityBase *self, const vec3_t& start, const vec3_t& aimdir, int32_t damage, int32_t kick, int32_t hspread, int32_t vspread, int32_t mod);
+void SVG_FireShotgun(SynchedEntityBase *self, const vec3_t& start, const vec3_t& aimdir, int32_t damage, int32_t kick, int32_t hspread, int32_t vspread, int32_t count, int32_t mod);
+void SVG_FireBlaster(SynchedEntityBase *self, const vec3_t& start, const vec3_t& aimdir, int32_t damage, int32_t speed, int32_t effect, qboolean hyper);
 
 //
 // g_ptrail.c
@@ -669,7 +669,7 @@ void SVG_PlayerNoise(PlayerEntity *who, vec3_t where, int32_t type);
 //
 // g_phys.c
 //
-void SVG_RunEntity(ServerGameEntity *ent);
+void SVG_RunEntity(SynchedEntityBase *ent);
 
 //
 // g_main.c
@@ -684,7 +684,7 @@ ServerEntity* SVG_Spawn(void);
 void SVG_SetConfigString(const int32_t &configStringIndex, const std::string &configString);
 
 //
-// Custom server game trace struct, stores ServerGameEntity* instead.
+// Custom server game trace struct, stores SynchedEntityBase* instead.
 //
 struct SVGTrace {
     SVGTrace() {
@@ -727,22 +727,22 @@ struct SVGTrace {
     int         contents;
 
     // The impacted entity, or `NULL`.
-    ServerGameEntity *ent;   // Not set by CM_*() functions
+    SynchedEntityBase *ent;   // Not set by CM_*() functions
 
     // N&C: Custom added.
     vec3_t		offsets[8];	// [signbits][x] = either size[0][x] or size[1][x]
 };
 
-SVGTrace SVG_Trace(const vec3_t &start, const vec3_t &mins, const vec3_t &maxs, const vec3_t &end, ServerGameEntity* passent, const int32_t& contentMask);
+SVGTrace SVG_Trace(const vec3_t &start, const vec3_t &mins, const vec3_t &maxs, const vec3_t &end, SynchedEntityBase* passent, const int32_t& contentMask);
 
-std::vector<ServerGameEntity*> SVG_BoxEntities(const vec3_t& mins, const vec3_t& maxs, int32_t listCount = MAX_EDICTS, int32_t areaType = AREA_SOLID);
+std::vector<SynchedEntityBase*> SVG_BoxEntities(const vec3_t& mins, const vec3_t& maxs, int32_t listCount = MAX_EDICTS, int32_t areaType = AREA_SOLID);
 
 qhandle_t SVG_PrecacheModel(const std::string& filename);
 qhandle_t SVG_PrecacheImage(const std::string& filename);
 qhandle_t SVG_PrecacheSound(const std::string& filename);
 
-void SVG_CenterPrint(ServerGameEntity* ent, const std::string& str);
-void SVG_Sound(ServerGameEntity* ent, int32_t channel, int32_t soundIndex, float volume, float attenuation, float timeOffset);
+void SVG_CenterPrint(SynchedEntityBase* ent, const std::string& str);
+void SVG_Sound(SynchedEntityBase* ent, int32_t channel, int32_t soundIndex, float volume, float attenuation, float timeOffset);
 
 
 //-------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -916,7 +916,7 @@ struct gclient_s {
     float respawnTime;
 
     // The (client)player we are chasing
-    ServerGameEntity *chaseTarget;
+    SynchedEntityBase *chaseTarget;
 
     // Do we need to update chase info?
     qboolean updateChase;
@@ -926,7 +926,7 @@ struct gclient_s {
 // ServerEntity, the server side entity structure. If you know what an entity is,
 // then you know what this is.
 // 
-// The actual ServerGameEntity class is a member. It is where the magic happens.
+// The actual SynchedEntityBase class is a member. It is where the magic happens.
 // Entities can be linked to their "classname", this will in turn make sure that
 // the proper inheritance entity is allocated.
 //-------------------
@@ -970,7 +970,7 @@ struct gclient_s {
 //    // !!!!!!!!!!!!!!!!!
 //    //================================
 //    // Pointer to the actual game class entity belonging to this server entity.
-//    ServerGameEntity* classEntity;
+//    SynchedEntityBase* classEntity;
 //
 //    // Hashmap containing the key:value entity properties.
 //    EntityDictionary entityDictionary;

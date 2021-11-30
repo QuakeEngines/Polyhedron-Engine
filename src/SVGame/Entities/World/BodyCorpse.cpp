@@ -15,7 +15,7 @@
 #include "../../utils.h"                // Util funcs.
 
 // Class Entities.
-#include "../base/ServerGameEntity.h"
+#include "../base/SynchedEntityBase.h.h"
 #include "../base/SynchBasedEntity.h"
 #include "BodyCorpse.h"
 
@@ -96,7 +96,7 @@ void BodyCorpse::SpawnKey(const std::string& key, const std::string& value) {
 // 'Touch' callback, I am unsure what to use it for but I can imagine it being...
 // like picking up their items or something? I suppose we could do that...
 //===============
-void BodyCorpse::BodyCorpseTouch(ServerGameEntity* self, ServerGameEntity* other, cplane_t* plane, csurface_t* surf) {
+void BodyCorpse::BodyCorpseTouch(SynchedEntityBase * self, SynchedEntityBase * other, cplane_t* plane, csurface_t* surf) {
 
 }
 
@@ -105,7 +105,7 @@ void BodyCorpse::BodyCorpseTouch(ServerGameEntity* self, ServerGameEntity* other
 //
 // Spawn gibs to make things gore like :P
 //===============
-void BodyCorpse::BodyCorpseDie(ServerGameEntity* inflictor, ServerGameEntity* attacker, int damage, const vec3_t& point) {
+void BodyCorpse::BodyCorpseDie(SynchedEntityBase * inflictor, SynchedEntityBase * attacker, int damage, const vec3_t& point) {
     //int n;
 
     // In case health is low enough...
@@ -131,7 +131,7 @@ void BodyCorpse::BodyCorpseDie(ServerGameEntity* inflictor, ServerGameEntity* at
 
 
     // Set the ehrm.. think free thing.
-    //SetThinkCallback(&ServerGameEntity::SVGBaseEntityThinkRemove);
+    //SetThinkCallback(&SynchedEntityBase.h::SVGBaseEntityThinkRemove);
     //SetNextThinkTime(level.time + FRAMETIME);
     // Remove body.
     //SetModelIndex(0);

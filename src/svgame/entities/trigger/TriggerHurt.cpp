@@ -2,15 +2,15 @@
 // LICENSE HERE.
 
 //
-// SVGBaseTrigger.cpp
+// BaseTrigger.cpp
 //
 //
 */
 #include "../../g_local.h"     // SVGame.
 #include "../../effects.h"     // Effects.
 #include "../../utils.h"       // Util funcs.
-#include "../base/ServerGameEntity.h"
-#include "../base/SVGBaseTrigger.h"
+#include "../base/SynchedEntityBase.h.h"
+#include "../base/BaseTrigger.h"
 #include "TriggerHurt.h"
 
 //
@@ -23,7 +23,7 @@ static constexpr int32_t SPAWNFLAG_NO_PROTECTION	= 8;
 static constexpr int32_t SPAWNFLAG_SLOW_HURT		= 16;
 
 // Constructor/Deconstructor.
-TriggerHurt::TriggerHurt(ServerEntity* svEntity) : SVGBaseTrigger(svEntity) {
+TriggerHurt::TriggerHurt(ServerEntity* svEntity) : BaseTrigger(svEntity) {
 	//
 	// All callback functions best be nullptr.
 	//
@@ -136,7 +136,7 @@ void TriggerHurt::SpawnKey(const std::string& key, const std::string& value) {
 // 'Touch' callback, to hurt the entities touching it.
 //===============
 //
-void TriggerHurt::TriggerHurtTouch(ServerGameEntity* self, ServerGameEntity* other, cplane_t* plane, csurface_t* surf) {
+void TriggerHurt::TriggerHurtTouch(SynchedEntityBase * self, SynchedEntityBase * other, cplane_t* plane, csurface_t* surf) {
 	gi.DPrintf("TriggerHurtTouch!\n");
 
 	if (this == other)
@@ -174,7 +174,7 @@ void TriggerHurt::TriggerHurtTouch(ServerGameEntity* self, ServerGameEntity* oth
 // 'Use' callback, to trigger it on/off.
 //===============
 //
-void TriggerHurt::TriggerHurtUse(ServerGameEntity* other, ServerGameEntity* activator) {
+void TriggerHurt::TriggerHurtUse(SynchedEntityBase * other, SynchedEntityBase * activator) {
 	gi.DPrintf("TriggerHurtUse!\n");
 
 	// Switch states.
@@ -214,7 +214,7 @@ void TriggerHurt::TriggerHurtUse(ServerGameEntity* other, ServerGameEntity* acti
 // Execute the 'Use' callback in case we ran into any.
 //===============
 //
-//void Base::Use(ServerGameEntity* other, ServerGameEntity* activator) {
+//void Base::Use(SynchedEntityBase * other, SynchedEntityBase * activator) {
 //	// Safety check.
 //	if (useFunction == nullptr)
 //		return;

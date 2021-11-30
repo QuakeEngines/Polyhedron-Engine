@@ -16,8 +16,8 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-#include "Shared/shared.h"
-#include "system/hunk.h"
+#include "Shared/Shared.h"
+#include "System/Hunk.h"
 #include <sys/mman.h>
 #include <errno.h>
 

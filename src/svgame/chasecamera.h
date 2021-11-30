@@ -10,7 +10,7 @@
 */
 #pragma once
 
-class ServerGameEntity;
+class SynchedEntityBase;
 class PlayerEntity;
 
 void SVG_UpdateChaseCam(PlayerEntity* ent);

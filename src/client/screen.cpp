@@ -16,11 +16,11 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 // cl_scrn.c -- master for refresh, status bar, console, chat, notify, etc
-#include "rmlui/rmlui.h"
+#include "RMLUserInterface/RmlUserInterface.h"
 
-#include "client.h"
-#include "client/gamemodule.h"
-#include "refresh/images.h"
+#include "Client.h"
+#include "Client/GameModule.h"
+#include "Refresh/Images.h"
 
 #define STAT_PICS       11
 #define STAT_MINUS      (STAT_PICS - 1)  // num frame for '-' stats digit

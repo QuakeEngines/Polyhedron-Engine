@@ -8,7 +8,7 @@
 */
 #pragma once
 
-class ServerGameEntity;
+class SynchedEntityBase.h;
 class InfoPlayerStart;
 
 class InfoPlayerCoop : public InfoPlayerStart {

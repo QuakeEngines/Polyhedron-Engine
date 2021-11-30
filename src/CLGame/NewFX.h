@@ -6,8 +6,7 @@
 //
 */
 
-#ifndef __CLGAME_NEWFX_H__
-#define __CLGAME_NEWFX_H__
+#pragma once
 
 #if USE_DLIGHTS
 void CLG_Flashlight(int ent, vec3_t pos);
@@ -35,4 +34,3 @@ void CLG_BlasterTrail2(vec3_t start, vec3_t end);
 void CLG_IonripperTrail(vec3_t start, vec3_t ent);
 void CLG_TrapParticles(r_entity_t* ent);
 void CLG_ParticleEffect3(vec3_t org, vec3_t dir, int color, int count);
-#endif // __CLGAME_NEWFX_H__

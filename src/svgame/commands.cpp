@@ -51,7 +51,7 @@ char *ClientTeam(SynchedEntityBase *ent)
     return ++p;
 }
 
-qboolean SVG_OnSameTeam(ServerGameEntity *ent1, ServerGameEntity *ent2)
+qboolean SVG_OnSameTeam(SynchedEntityBase*ent1, SynchedEntityBase*ent2)
 {
     char    ent1Team [512];
     char    ent2Team [512];
@@ -864,7 +864,7 @@ void SVG_ClientCommand(PlayerEntity *playerEntity)
     }
     if (Q_stricmp(cmd, "score") == 0) {
             gi.DPrintf("YO YOU ARE DEBUGGING SCORES");
-        SVG_Command_Score_f(ent);
+        SVG_Command_Score_f(playerEntity);
         return;
     }
 
@@ -872,19 +872,19 @@ void SVG_ClientCommand(PlayerEntity *playerEntity)
         return;
 
     if (Q_stricmp(cmd, "use") == 0)
-        Cmd_Use_f(ent);
+        Cmd_Use_f(playerEntity);
     else if (Q_stricmp(cmd, "drop") == 0)
-        Cmd_Drop_f(ent);
+        Cmd_Drop_f(playerEntity);
     else if (Q_stricmp(cmd, "give") == 0)
-        Cmd_Give_f(ent->GetEntityServerHandle());
+        Cmd_Give_f(playerEntity);
     else if (Q_stricmp(cmd, "god") == 0)
-        Cmd_God_f(ent);
+        Cmd_God_f(playerEntity);
     else if (Q_stricmp(cmd, "notarget") == 0)
-        Cmd_Notarget_f(ent);
+        Cmd_Notarget_f(playerEntity);
     else if (Q_stricmp(cmd, "noclip") == 0)
-        Cmd_Noclip_f(ent);
+        Cmd_Noclip_f(playerEntity);
     else if (Q_stricmp(cmd, "inven") == 0)
-        Cmd_Inven_f(ent->GetEntityServerHandle());
+        Cmd_Inven_f(playerEntity);
     else if (Q_stricmp(cmd, "invnext") == 0)
         SelectNextItem(ent, -1);
     else if (Q_stricmp(cmd, "invprev") == 0)

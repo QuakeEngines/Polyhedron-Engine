@@ -2,7 +2,7 @@
 // LICENSE HERE.
 
 //
-// ServerGameEntity.cpp
+// SynchedEntityBase.h.cpp
 //
 //
 */
@@ -11,12 +11,12 @@
 #include "../../Entities.h"		// Entities.
 #include "../../Utilities.h"		// Util funcs.
 
-#include "ServerGameEntity.h"
-#include "SVGBaseTrigger.h"
+#include "SynchedEntityBase.h.h"
+#include "BaseTrigger.h"
 #include "../Trigger/TriggerDelayedUse.h"
 
 // Constructor/Deconstructor.
-ServerGameEntity::ServerGameEntity() {
+SynchedEntityBase.h::SynchedEntityBase.h() {
 	//
 	// All callback functions best be nullptr.
 	//
@@ -59,7 +59,7 @@ ServerGameEntity::ServerGameEntity() {
 	deadFlag = DEAD_NO;
 }
 
-ServerGameEntity::ServerGameEntity(ServerEntity* entity) :
+SynchedEntityBase.h::SynchedEntityBase.h(ServerEntity* entity) :
 	SynchedEntityBase(entity)
 {
 }
@@ -67,25 +67,25 @@ ServerGameEntity::ServerGameEntity(ServerEntity* entity) :
 // Interface functions. 
 //
 //===============
-// ServerGameEntity::Precache
+// SynchedEntityBase.h::Precache
 //
 // This function is used to load all entity data with.
 //===============
 //
-void ServerGameEntity::Precache() {
-	//gi.DPrintf("ServerGameEntity::Precache();");
+void SynchedEntityBase.h::Precache() {
+	//gi.DPrintf("SynchedEntityBase.h::Precache();");
 }
 
 //
 //===============
-// ServerGameEntity::Spawn
+// SynchedEntityBase.h::Spawn
 //
 // This function can be overrided, to allow for entity spawning.
 // Setup the basic entity properties here.
 //===============
 //
-void ServerGameEntity::Spawn() {
-	//gi.DPrintf("ServerGameEntity::Spawn();");
+void SynchedEntityBase.h::Spawn() {
+	//gi.DPrintf("SynchedEntityBase.h::Spawn();");
 
 	// Set default movetype to none.
 	//SetMoveType(MoveType::None);
@@ -93,38 +93,38 @@ void ServerGameEntity::Spawn() {
 
 //
 //===============
-// ServerGameEntity::Respawn
+// SynchedEntityBase.h::Respawn
 //
 // This function can be overrided, to allow for entity respawning.
 // Setup the basic entity properties here.
 //===============
 //
-void ServerGameEntity::Respawn() {
-	//gi.DPrintf("ServerGameEntity::Respawn();");
+void SynchedEntityBase.h::Respawn() {
+	//gi.DPrintf("SynchedEntityBase.h::Respawn();");
 }
 
 //
 //===============
-// ServerGameEntity::PostSpawn
+// SynchedEntityBase.h::PostSpawn
 //
 // This function can be overrided, to allow for entity post spawning.
 // An example of that could be finding targetnames for certain target
 // trigger settings, etc.
 //===============
 //
-void ServerGameEntity::PostSpawn() {
-	//gi.DPrintf("ServerGameEntity::PostSpawn();");
+void SynchedEntityBase.h::PostSpawn() {
+	//gi.DPrintf("SynchedEntityBase.h::PostSpawn();");
 }
 
 //
 //===============
-// ServerGameEntity::Think
+// SynchedEntityBase.h::Think
 //
 // This function can be overrided, to allow for custom entity thinking.
 // By default it only executes the 'Think' callback in case we have any set.
 //===============
 //
-void ServerGameEntity::Think() {
+void SynchedEntityBase.h::Think() {
 	// Safety check.
 	if (thinkFunction == nullptr)
 		return;
@@ -135,12 +135,12 @@ void ServerGameEntity::Think() {
 
 //
 //===============
-// ServerGameEntity::ParseFloatKeyValue
+// SynchedEntityBase.h::ParseFloatKeyValue
 //
 // PROTECTED function to help parsing float key:value string pairs with.
 //===============
 //
-qboolean ServerGameEntity::ParseFloatKeyValue(const std::string& key, const std::string& value, float &floatNumber) {
+qboolean SynchedEntityBase.h::ParseFloatKeyValue(const std::string& key, const std::string& value, float &floatNumber) {
 	floatNumber = std::stof(value);
 
 	return true;
@@ -148,12 +148,12 @@ qboolean ServerGameEntity::ParseFloatKeyValue(const std::string& key, const std:
 
 //
 //===============
-// ServerGameEntity::ParseIntegerKeyValue
+// SynchedEntityBase.h::ParseIntegerKeyValue
 //
 // PROTECTED function to help parsing int32_t key:value string pairs with.
 //===============
 //
-qboolean ServerGameEntity::ParseIntegerKeyValue(const std::string& key, const std::string& value, int32_t &integerNumber) {
+qboolean SynchedEntityBase.h::ParseIntegerKeyValue(const std::string& key, const std::string& value, int32_t &integerNumber) {
 	integerNumber = std::stoi(value);
 
 	return true;
@@ -161,12 +161,12 @@ qboolean ServerGameEntity::ParseIntegerKeyValue(const std::string& key, const st
 
 //
 //===============
-// ServerGameEntity::ParseUnsignedIntegerKeyValue
+// SynchedEntityBase.h::ParseUnsignedIntegerKeyValue
 //
 // PROTECTED function to help parsing uint32_t key:value string pairs with.
 //===============
 //
-qboolean ServerGameEntity::ParseUnsignedIntegerKeyValue(const std::string& key, const std::string& value, uint32_t& unsignedIntegerNumber) {
+qboolean SynchedEntityBase.h::ParseUnsignedIntegerKeyValue(const std::string& key, const std::string& value, uint32_t& unsignedIntegerNumber) {
 	unsignedIntegerNumber = std::stoul(value);
 
 	return true;
@@ -174,12 +174,12 @@ qboolean ServerGameEntity::ParseUnsignedIntegerKeyValue(const std::string& key, 
 
 //
 //===============
-// ServerGameEntity::ParseStringKeyValue
+// SynchedEntityBase.h::ParseStringKeyValue
 //
 // PROTECTED function to help parsing string key:value string pairs with.
 //===============
 //
-qboolean ServerGameEntity::ParseStringKeyValue(const std::string& key, const std::string& value, std::string& stringValue) {
+qboolean SynchedEntityBase.h::ParseStringKeyValue(const std::string& key, const std::string& value, std::string& stringValue) {
 	stringValue = value;
 
 	return true;
@@ -187,12 +187,12 @@ qboolean ServerGameEntity::ParseStringKeyValue(const std::string& key, const std
 
 //
 //===============
-// ServerGameEntity::ParseVector3KeyValue
+// SynchedEntityBase.h::ParseVector3KeyValue
 //
 // PROTECTED function to help parsing vector key:value string pairs with.
 //===============
 //
-qboolean ServerGameEntity::ParseVector3KeyValue(const std::string& key, const std::string &value, vec3_t &vectorValue) {
+qboolean SynchedEntityBase.h::ParseVector3KeyValue(const std::string& key, const std::string &value, vec3_t &vectorValue) {
 	// Stores vector fields fetched from string. (Might be corrupted, so we're parsing this nicely.)
 	std::vector<std::string> vectorFields;
 
@@ -215,12 +215,12 @@ qboolean ServerGameEntity::ParseVector3KeyValue(const std::string& key, const st
 
 //
 //===============
-// ServerGameEntity::SpawnKey
+// SynchedEntityBase.h::SpawnKey
 //
 // This function can be overrided, to allow for custom entity key:value parsing.
 //===============
 //
-void ServerGameEntity::SpawnKey(const std::string& key, const std::string& value) {
+void SynchedEntityBase.h::SpawnKey(const std::string& key, const std::string& value) {
 	//{"lip", STOFS(lip), F_INT},
 	//{ "distance", STOFS(distance), F_INT },
 	//{ "height", STOFS(height), F_INT },
@@ -356,12 +356,12 @@ void ServerGameEntity::SpawnKey(const std::string& key, const std::string& value
 
 //
 //===============
-// ServerGameEntity::Use
+// SynchedEntityBase.h::Use
 //
 // Execute the 'Use' callback in case we ran into any.
 //===============
 //
-void ServerGameEntity::Use(ServerGameEntity* other, ServerGameEntity* activator) {
+void SynchedEntityBase.h::Use(SynchedEntityBase * other, SynchedEntityBase * activator) {
 	// Safety check.
 	if (useFunction == nullptr)
 		return;
@@ -372,12 +372,12 @@ void ServerGameEntity::Use(ServerGameEntity* other, ServerGameEntity* activator)
 
 //
 //===============
-// ServerGameEntity::Blocked
+// SynchedEntityBase.h::Blocked
 //
 // Execute the 'Blocked' callback in case we ran into any.
 //===============
 //
-void ServerGameEntity::Blocked(ServerGameEntity* other) {
+void SynchedEntityBase.h::Blocked(SynchedEntityBase * other) {
 	// Safety check.
 	if (blockedFunction == nullptr)
 		return;
@@ -388,12 +388,12 @@ void ServerGameEntity::Blocked(ServerGameEntity* other) {
 
 //
 //===============
-// ServerGameEntity::TakeDamage
+// SynchedEntityBase.h::TakeDamage
 //
 // Execute the 'TakeDamage' callback in case we ran into any.
 //===============
 //
-void ServerGameEntity::TakeDamage(ServerGameEntity* other, float kick, int32_t damage) {
+void SynchedEntityBase.h::TakeDamage(SynchedEntityBase * other, float kick, int32_t damage) {
 	// Safety check.
 	if (takeDamageFunction == nullptr)
 		return;
@@ -404,12 +404,12 @@ void ServerGameEntity::TakeDamage(ServerGameEntity* other, float kick, int32_t d
 
 //
 //===============
-// ServerGameEntity::Die
+// SynchedEntityBase.h::Die
 //
 // Execute the 'Die' callback in case we ran into any.
 //===============
 //
-void ServerGameEntity::Die(ServerGameEntity* inflictor, ServerGameEntity* attacker, int damage, const vec3_t& point) {
+void SynchedEntityBase.h::Die(SynchedEntityBase * inflictor, SynchedEntityBase * attacker, int damage, const vec3_t& point) {
 	// Safety check.
 	if (dieFunction == nullptr)
 		return;
@@ -420,12 +420,12 @@ void ServerGameEntity::Die(ServerGameEntity* inflictor, ServerGameEntity* attack
 
 //
 //===============
-// ServerGameEntity::Touch
+// SynchedEntityBase.h::Touch
 //
 // Execute the 'Touch' callback in case we ran into any.
 //===============
 //
-void ServerGameEntity::Touch(ServerGameEntity* self, ServerGameEntity* other, cplane_t* plane, csurface_t* surf) {
+void SynchedEntityBase.h::Touch(SynchedEntityBase * self, SynchedEntityBase * other, cplane_t* plane, csurface_t* surf) {
 	// Safety check.
 	if (touchFunction == nullptr)
 		return;
@@ -435,11 +435,11 @@ void ServerGameEntity::Touch(ServerGameEntity* self, ServerGameEntity* other, cp
 }
 
 //===============
-// ServerGameEntity::UseTargets
+// SynchedEntityBase.h::UseTargets
 // 
 // Calls Use on this entity's targets, as well as killtargets
 //===============
-void ServerGameEntity::UseTargets( ServerGameEntity* activatorOverride )
+void SynchedEntityBase.h::UseTargets( SynchedEntityBase * activatorOverride )
 {
 	if ( nullptr == activatorOverride )
 	{
@@ -457,7 +457,7 @@ void ServerGameEntity::UseTargets( ServerGameEntity* activatorOverride )
 		// This is all very lengthy. I'd rather have a static method in TriggerDelayedUse that
 		// allocates one such entity and accepts activator, message, target etc. as parameters
 		// Something like 'TriggerDelayedUse::Schedule( GetTarget(), GetKillTarget(), activatorOverride, GetMessage(), GetDelayTime() );'
-		SVGBaseTrigger* triggerDelay = SVG_CreateClassEntity<TriggerDelayedUse>();
+		BaseTrigger* triggerDelay = SVG_CreateClassEntity<TriggerDelayedUse>();
 		triggerDelay->SetActivator( activatorOverride );
 		triggerDelay->SetMessage( GetMessage() );
 		triggerDelay->SetTarget( GetTarget() );
@@ -491,7 +491,7 @@ void ServerGameEntity::UseTargets( ServerGameEntity* activatorOverride )
 	// Remove all entities that qualify as our killtargets
 	if ( GetKillTarget().length() )
 	{
-		ServerGameEntity* victim = nullptr;
+		SynchedEntityBase * victim = nullptr;
 		while ( victim = SVG_FindEntityByKeyValue( "targetname", GetKillTarget(), victim ) )
 		{	// It is going to die, free it.
 			SVG_FreeEntity( victim->GetEntityServerHandle() );
@@ -507,7 +507,7 @@ void ServerGameEntity::UseTargets( ServerGameEntity* activatorOverride )
 	// Actually fire the targets
 	if ( GetTarget().length() ) 
 	{
-		ServerGameEntity* targetEntity = nullptr;
+		SynchedEntityBase * targetEntity = nullptr;
 		while ( (targetEntity = SVG_FindEntityByKeyValue( "targetname", GetTarget(), targetEntity )) )
 		{
 			// Doors fire area portals in a special way, so skip those
@@ -538,28 +538,28 @@ void ServerGameEntity::UseTargets( ServerGameEntity* activatorOverride )
 
 //
 //===============
-// ServerGameEntity::LinkEntity
+// SynchedEntityBase.h::LinkEntity
 //
 // Link entity to world for collision testing using gi.LinkEntity.
 //===============
 //
-void ServerGameEntity::LinkEntity() {
+void SynchedEntityBase.h::LinkEntity() {
 	//gi.LinkEntity(GetEntityServerHandle());
 }
 
 //===============
-// ServerGameEntity::UnlinkEntity
+// SynchedEntityBase.h::UnlinkEntity
 //
 // 
 //===============
-void ServerGameEntity::UnlinkEntity() {
+void SynchedEntityBase.h::UnlinkEntity() {
 	//gi.UnlinkEntity(GetEntityServerHandle());
 }
 
 //===============
-// ServerGameEntity::Remove
+// SynchedEntityBase.h::Remove
 //===============
-void ServerGameEntity::Remove()
+void SynchedEntityBase.h::Remove()
 {
 	//GetEntityServerHandle()->serverFlags |= EntityServerFlags::Remove;
 }
@@ -567,7 +567,7 @@ void ServerGameEntity::Remove()
 //
 //
 //
-void ServerGameEntity::SVGBaseEntityThinkRemove(void) {
+void SynchedEntityBase.h::SVGBaseEntityThinkRemove(void) {
 	//SVG_FreeEntity(serverEntity);
 	//Remove();
 }

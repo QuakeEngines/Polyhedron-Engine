@@ -2,24 +2,24 @@
 // LICENSE HERE.
 
 //
-// SVGBaseTrigger.cpp
+// BaseTrigger.cpp
 //
 //
 */
 #include "../../g_local.h"		// SVGame.
-#include "../../effects.h"		// Effects.
-#include "../../entities.h"		// Entities.
-#include "../../utils.h"		// Util funcs.
+#include "../../Effects.h"		// Effects.
+#include "../../Entities.h"		// Entities.
+#include "../../Utilities.h"		// Util funcs.
 
 // Class Entities.
-#include "ServerGameEntity.h"
-#include "SVGBaseTrigger.h"
+#include "SynchedEntityBase.h"
+#include "BaseTrigger.h"
 
 // Included for delayed use.
 #include "../trigger/TriggerDelayedUse.h"
 
 // Constructor/Deconstructor.
-SVGBaseTrigger::SVGBaseTrigger() : ServerGameEntity() {
+BaseTrigger::BaseTrigger() : SynchedEntityBase() {
 	//
 	// All callback functions best be nullptr.
 	//
@@ -57,61 +57,61 @@ SVGBaseTrigger::SVGBaseTrigger() : ServerGameEntity() {
 // Interface functions. 
 //
 //===============
-// SVGBaseTrigger::Precache
+// BaseTrigger::Precache
 //
 //===============
 //
-void SVGBaseTrigger::Precache() {
+void BaseTrigger::Precache() {
 	Base::Precache();
 }
 
 //
 //===============
-// SVGBaseTrigger::Spawn
+// BaseTrigger::Spawn
 //
 //===============
 //
-void SVGBaseTrigger::Spawn() {
+void BaseTrigger::Spawn() {
 	Base::Spawn();
 }
 
 //
 //===============
-// SVGBaseTrigger::Respawn
+// BaseTrigger::Respawn
 // 
 //===============
 //
-void SVGBaseTrigger::Respawn() {
+void BaseTrigger::Respawn() {
 	Base::Respawn();
 }
 
 //
 //===============
-// SVGBaseTrigger::PostSpawn
+// BaseTrigger::PostSpawn
 // 
 //===============
 //
-void SVGBaseTrigger::PostSpawn() {
+void BaseTrigger::PostSpawn() {
 	Base::PostSpawn();
 }
 
 //
 //===============
-// SVGBaseTrigger::Think
+// BaseTrigger::Think
 //
 //===============
 //
-void SVGBaseTrigger::Think() {
+void BaseTrigger::Think() {
 	Base::Think();
 }
 
 //
 //===============
-// SVGBaseTrigger::InitBrushTrigger
+// BaseTrigger::InitBrushTrigger
 //
 //===============
 //
-void SVGBaseTrigger::InitBrushTrigger() {
+void BaseTrigger::InitBrushTrigger() {
 	SetModel(GetModel());
 	SetMoveType(MoveType::None);
 	SetSolid(Solid::Trigger);
@@ -121,11 +121,11 @@ void SVGBaseTrigger::InitBrushTrigger() {
 
 //
 //===============
-// SVGBaseTrigger::InitPointTrigger
+// BaseTrigger::InitPointTrigger
 //
 //===============
 //
-void SVGBaseTrigger::InitPointTrigger() {
+void BaseTrigger::InitPointTrigger() {
 	const vec3_t HULL_MINS = { -16.f, -16.f, -36.f };
 	const vec3_t HULL_MAXS = { 16.f,  16.f,  36.f };
 
@@ -139,11 +139,11 @@ void SVGBaseTrigger::InitPointTrigger() {
 
 //
 //===============
-// SVGBaseTrigger::SpawnKey
+// BaseTrigger::SpawnKey
 //
 //===============
 //
-void SVGBaseTrigger::SpawnKey(const std::string& key, const std::string& value) {
+void BaseTrigger::SpawnKey(const std::string& key, const std::string& value) {
 	// Wait.
 	if (key == "wait") {
 		// Parsed float.
@@ -163,7 +163,7 @@ void SVGBaseTrigger::SpawnKey(const std::string& key, const std::string& value) 
 
 //
 //===============
-// SVGBaseTrigger::UseTargets
+// BaseTrigger::UseTargets
 //
 // The activator is the entity who is initiating the firing. If not set as
 // a function argument, it will use whichever is set in the entity itself.
@@ -177,13 +177,13 @@ void SVGBaseTrigger::SpawnKey(const std::string& key, const std::string& value) 
 // calls their Use function.
 //===============
 //
-void SVGBaseTrigger::UseTargets(ServerGameEntity* activator) {
+void BaseTrigger::UseTargets(SynchedEntityBase * activator) {
 	//
 	// Check for a delay
 	//
     if (GetDelayTime()) {
 		// Create a temporary DelayedTrigger entity, to fire at a latter time.
-	    SVGBaseTrigger *triggerDelay = SVG_CreateClassEntity<TriggerDelayedUse>();
+	    BaseTrigger *triggerDelay = SVG_CreateClassEntity<TriggerDelayedUse>();
 		if (!activator)
 			gi.DPrintf("TriggerDelayThink with no activator\n");
 		triggerDelay->SetActivator(activator);
@@ -219,7 +219,7 @@ void SVGBaseTrigger::UseTargets(ServerGameEntity* activator) {
 	// Kill killtargets
 	//
 	if (GetKillTarget().length()) {
-		ServerGameEntity* triggerEntity = nullptr;
+		SynchedEntityBase * triggerEntity = nullptr;
 
 		//while (triggerEntity = SVG_FindEntityByKeyValue("targetname", GetKillTarget(), triggerEntity))
 		// Loop over the total entity range, ensure that we're checking for the right filters.

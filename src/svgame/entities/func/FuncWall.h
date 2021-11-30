@@ -1,12 +1,12 @@
 
 #pragma once
 
-class FuncWall : public ServerGameEntity {
+class FuncWall : public SynchedEntityBase{
 public:
 	FuncWall( ServerEntity* entity );
 	virtual ~FuncWall() = default;
 
-	DefineMapClass( "func_wall", FuncWall, ServerGameEntity );
+	DefineMapClass( "func_wall", FuncWall, SynchedEntityBase);
 
 	// Spawn flags
 	static constexpr int32_t SF_TriggerSpawn = 1 << 0;
@@ -17,5 +17,5 @@ public:
 
 	void Spawn() override;
 
-	void WallUse( ServerGameEntity* other, ServerGameEntity* activator );
+	void WallUse( SynchedEntityBase * other, SynchedEntityBase * activator );
 };

@@ -21,11 +21,11 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 // video.c
 //
 
-#include "Shared/shared.h"
-#include "common/cvar.h"
-#include "common/common.h"
-#include "common/files.h"
-#include "common/zone.h"
+#include "Shared/Shared.h"
+#include "Common/cvar.h"
+#include "Common/Common.h"
+#include "Common/Files.h"
+#include "Common/Zone.h"
 #include "client/client.h"
 #include "client/input.h"
 #include "client/keys.h"

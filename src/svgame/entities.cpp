@@ -16,8 +16,8 @@
 // SVG_SpawnClassEntity
 //
 //
-#include "entities/base/ServerGameEntity.h"
-#include "entities/base/SVGBaseTrigger.h"
+#include "Entities/Base/SynchedEntityBase.h"
+#include "entities/base/BaseTrigger.h"
 #include "entities/base/SVGBaseMover.h"
 #include "entities/base/PlayerEntity.h"
 #include "entities/info/InfoPlayerStart.h"
@@ -31,14 +31,14 @@
 // TODO: Explain shit, lol.
 //-----------------
 // BaseEntity array, matches similarly index wise.
-ServerGameEntity* serverGameEntities[MAX_EDICTS];
+SynchedEntityBase * serverGameEntities[MAX_EDICTS];
 
 //
 // This is the old method, or at least, where we started off with.
 //
 //auto FetchModernMethod(std::size_t start, std::size_t end) {
 //    return BaseEntityRange(&serverGameEntities[start], &serverGameEntities[end]) |
-//        std::views::filter([](ServerGameEntity* ent) {
+//        std::views::filter([](SynchedEntityBase * ent) {
 //            return ent != nullptr && ent->GetEntityServerHandle() && ent->IsInUse();
 //        }
 //    );
@@ -97,9 +97,9 @@ void DebugShitForEntitiesLulz() {
 // SVG_SpawnClassEntity
 //
 //=================
-ServerGameEntity* SVG_SpawnClassEntity(ServerEntity* ent, const std::string& className) {
+SynchedEntityBase * SVG_SpawnClassEntity(ServerEntity* ent, const std::string& className) {
     // Start with a nice nullptr.
-    ServerGameEntity* spawnEntity = nullptr;
+    SynchedEntityBase * spawnEntity = nullptr;
     if ( !ent ) {
         return nullptr;
     }
@@ -154,7 +154,7 @@ void SVG_FreeClassEntity(ServerEntity* ent) {
     // Fetch entity number.
     int32_t entityNumber = ent->state.number;
 
-    // In case it exists in our base entitys, get rid of it, assign nullptr.
+    // In case it exists in our game entities, get rid of it, assign nullptr.
     if (serverGameEntities[entityNumber]) {
         delete serverGameEntities[entityNumber];
         serverGameEntities[entityNumber] = nullptr;
@@ -225,8 +225,8 @@ ServerEntity* SVG_PickTarget(char* targetName)
         return NULL;
     }
 
-    ServerGameEntity* ent = nullptr;
-    ServerGameEntity* choice[MAXCHOICES];
+    SynchedEntityBase * ent = nullptr;
+    SynchedEntityBase * choice[MAXCHOICES];
 
     // Try and find the given entity that matches this targetName.
     uint32_t numberOfChoices = 0;
@@ -287,7 +287,7 @@ ServerEntity* SVG_Find(ServerEntity* from, int fieldofs, const char* match)
 // Returns an entity that matches the given fieldKey and fieldValue in its 
 // entity dictionary.
 //===============
-ServerGameEntity* SVG_FindEntityByKeyValue(const std::string& fieldKey, const std::string& fieldValue, ServerGameEntity* lastEntity) {
+SynchedEntityBase * SVG_FindEntityByKeyValue(const std::string& fieldKey, const std::string& fieldValue, SynchedEntityBase * lastEntity) {
     //ServerEntity* serverEnt = (lastEntity ? lastEntity->GetEntityServerHandle() : nullptr);
 
     //if (!lastEntity)
@@ -297,7 +297,7 @@ ServerGameEntity* SVG_FindEntityByKeyValue(const std::string& fieldKey, const st
 
     //for (; serverEnt < &g_entities[globals.serverEntityPool->numberOfEntities]; serverEnt++) {
     //    // Fetch serverEntity its ClassEntity.
-    //    ServerGameEntity* classEntity = serverEnt->classEntity;
+    //    SynchedEntityBase * classEntity = serverEnt->classEntity;
 
     //    // Ensure it has a class entity.
     //    if (!serverEnt->classEntity)
@@ -377,7 +377,7 @@ void SVG_InitEntity(ServerEntity* e)
 //===============
 ServerEntity* SVG_Spawn(void)
 {
-    ServerGameEntity *serverGameEntity = nullptr;
+    SynchedEntityBase*serverGameEntity = nullptr;
     int32_t i = 0;
     // Acquire a pointer to the entity we'll check for.
     serverGameEntity = &serverGameEntities[game.maximumClients + 1];
@@ -430,6 +430,6 @@ ServerEntity* SVG_GetWorldServerEntity() {
 // 
 // Returns a pointer to the 'Worldspawn' ClassEntity.
 //===============
-ServerGameEntity* SVG_GetWorlEntity() {
+SynchedEntityBase * SVG_GetWorlEntity() {
     return serverGameEntities[0];
 };

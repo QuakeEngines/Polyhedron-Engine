@@ -17,12 +17,12 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 // cl_main.c  -- client main loop
-#include "rmlui/rmlui.h"
+#include "RMLUserInterface/RmlUserInterface.h"
 
-#include "client.h"
-#include "client/ui/ui.h"
-#include "client/SoundDrivers/vorbis.h"
-#include "client/gamemodule.h"
+#include "Client.h"
+#include "Client/UserInterface/Management.h"
+#include "Client/SoundDrivers/vorbis.h"
+#include "Client/GameModule.h"
 
 cvar_t  *rcon_address;
 

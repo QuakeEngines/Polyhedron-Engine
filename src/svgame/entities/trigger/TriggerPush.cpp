@@ -9,8 +9,8 @@
 #include "../../entities.h"
 #include "../../utils.h"
 
-#include "../base/ServerGameEntity.h"
-#include "../base/SVGBaseTrigger.h"
+#include "../base/SynchedEntityBase.h.h"
+#include "../base/BaseTrigger.h"
 #include "../base/PlayerEntity.h"
 
 #include "TriggerPush.h"
@@ -52,7 +52,7 @@ void TriggerPush::SpawnKey( const std::string& key, const std::string& value ) {
 //===============
 // TriggerPush::PushTouch
 //===============
-void TriggerPush::PushTouch( ServerGameEntity* self, ServerGameEntity* other, cplane_t* plane, csurface_t* surf ) {
+void TriggerPush::PushTouch( SynchedEntityBase * self, SynchedEntityBase * other, cplane_t* plane, csurface_t* surf ) {
     vec3_t newVelocity = vec3_scale( pushDirection, pushForce * 10.0f);
     
     /* TODO:
