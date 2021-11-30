@@ -218,11 +218,11 @@ constexpr int32_t PNOISE_IMPACT = 2;
 //-------------------
 // ServerEntity moveType values
 struct MoveType {
-    static constexpr int32_t None = 0;      // Never moves
-    static constexpr int32_t Spectator = 1; // Special movetype for spectators to not go through walls
-    static constexpr int32_t NoClip = 2;    // Origin and angles change with no interaction
-    static constexpr int32_t Push = 3;      // No clip to world, push on box contact
-    static constexpr int32_t Stop = 4;      // No clip to world, stops on box contact
+    static constexpr int32_t None           = 0;    // Never moves
+    static constexpr int32_t Spectator      = 1;    // Special movetype for spectators to not go through walls
+    static constexpr int32_t NoClip         = 2;    // Origin and angles change with no interaction
+    static constexpr int32_t Push           = 3;    // No clip to world, push on box contact
+    static constexpr int32_t Stop           = 4;    // No clip to world, stops on box contact
 
     static constexpr int32_t Walk          = 10;    // Gravity. (Player Movement entities use this.)
     static constexpr int32_t Step          = 11;    // Gravity, fixed distance, and special edge handling if wished for.
@@ -237,11 +237,11 @@ struct MoveType {
 // Armor item description.
 //-------------------
 struct gitem_armor_t {
-    int32_t     baseCount;
-    int32_t     maxCount;
+    int32_t baseCount;
+    int32_t maxCount;
     float   normalProtection;
     float   energyProtection;
-    int32_t     armor;
+    int32_t armor;
 };
 
 
@@ -289,7 +289,7 @@ typedef struct gitem_s {
     int32_t worldModelFlags;
 
     // Item view model. (Used for weapons, weapons are items.)
-    const char        *viewModel;
+    const char  *viewModel;
 
     // Client side infe.
     const char  *icon;

@@ -5,17 +5,16 @@
 */
 
 #include "../../g_local.h"
-#include "../../effects.h"
-#include "../../entities.h"
-#include "../../utils.h"
-#include "../../physics/stepmove.h"
-#include "../../brushfuncs.h"
+#include "../../Effects.h"
+#include "../../Entities.h"
+#include "../../Utilities.h"
+#include "../../Physics/Stepmove.h"
 
-#include "../base/SynchedEntityBase.h.h"
+#include "../base/PrivateEntityBase.h"
 
 // This entity never spawns, and as such, no edicts will be wasted on it during spawn time
-class InfoNull : public SynchedEntityBase.h
+class InfoNull : public PrivateEntityBase
 {
 public:
-	DefineDummyMapClass( "info_null", InfoNull, SynchedEntityBase);
+	DefineDummyMapClass( "info_null", InfoNull, PrivateEntityBase);
 };

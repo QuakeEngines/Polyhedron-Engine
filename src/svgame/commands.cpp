@@ -839,7 +839,7 @@ void Cmd_PlayerList_f(ServerEntity *ent)
 ClientCommand
 =================
 */
-void SVG_ClientCommand(PlayerEntity *playerEntity)
+void SVG_ClientCommand(ServerEntity *clientEntity)
 {
     // Ensure it is an entity with active client.
     ServerClient* client = playerEntity->GetClient();

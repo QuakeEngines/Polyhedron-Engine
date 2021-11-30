@@ -41,7 +41,7 @@ typedef struct m_player_s {
 	menuSpinControl_t   view;
 
     refdef_t    refdef;
-    r_entity_t    entities[2];
+    r_entity_t  entities[2];
 
     int        time;
     int        oldTime;
@@ -90,8 +90,34 @@ static const char *viewmodes[] = {
 //    }
 //};
 static rdlight_t dlights[] = {
-	{.origin = { -120.f, -80.f, 80.f },.color = {1.f, 1.f, 1.f},.intensity = 200.f,.radius = 20.f },
-	{.origin = { 100.f, 80.f, 20.f },.color = {0.5f, 0.5f, 1.f},.intensity = 200.f,.radius = 20.f }
+	{
+        .origin = { 
+            -120.f, 
+            -80.f, 
+            80.f 
+        },
+        .color = {
+            1.f, 
+            1.f, 
+            1.f
+        },
+        .intensity = 200.f,
+        .radius = 20.f 
+    },
+	{
+        .origin = { 
+            100.f, 
+            80.f, 
+            20.f 
+        },
+        .color = {
+            0.5f, 
+            0.5f, 
+            1.f
+        },
+        .intensity = 200.f,
+        .radius = 20.f 
+    }
 };
 
 static void ReloadMedia(void)

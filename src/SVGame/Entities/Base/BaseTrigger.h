@@ -34,13 +34,13 @@ public:
     //
     // Trigger functions.
     //
-    void UseTargets(EntityBase * activator);
+    void UseTargets(SynchedEntityBase * activator);
 
     //
     // Get/Set
     // 
     // Return the 'activatorEntity' entity pointer.
-    EntityBase * GetActivator() {
+    SynchedEntityBase *GetActivator() {
         return activatorEntity;
     }
 

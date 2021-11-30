@@ -30,8 +30,8 @@ unsigned SV_Frame(unsigned msec);
 void SV_SetConsoleTitle(void);
 #endif
 //void SV_ConsoleOutput(const char *msg);
-uint32_t		SV_GetServerState (void);                 // WATISDEZE: Added for client game dll
-void            SV_SetServerState (uint32_t serverSate); // WATISDEZE: Added for client game dll
+uint32_t		SV_GetServerState (void);					// WATISDEZE: Added for client game dll
+void            SV_SetServerState (uint32_t serverSate);	// WATISDEZE: Added for client game dll
 
 #if USE_CLIENT
 char *SV_GetSaveInfo(const char *dir);

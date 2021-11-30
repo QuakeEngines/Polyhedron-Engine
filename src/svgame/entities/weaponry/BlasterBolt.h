@@ -9,7 +9,7 @@
 #pragma once
 
 struct ServerEntity;
-class EntityBaseh;
+class EntityBase;
 class SynchedEntityBase;
 
 class BlasterBolt : public SynchedEntityBase{
@@ -18,7 +18,7 @@ public:
     BlasterBolt();
     virtual ~BlasterBolt();
 
-    DefineClass( BlasterBolt, SynchedEntityBase);
+    DefineClass( BlasterBolt, SynchedEntityBase );
 
     //
     // Interface functions. 

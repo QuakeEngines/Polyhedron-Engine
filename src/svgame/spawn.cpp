@@ -443,7 +443,8 @@ void SVG_SpawnEntities(const char *mapName, const char *entities, const char *sp
             serverGameEntities[i] = NULL;
         }
 
-        g_entities[i] = {};
+        // Clear out memory.
+        serverGameEntities[i] = {};
     }
 
     strncpy(level.mapName, mapName, sizeof(level.mapName) - 1);

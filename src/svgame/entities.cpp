@@ -377,8 +377,9 @@ void SVG_InitEntity(ServerEntity* e)
 //===============
 ServerEntity* SVG_Spawn(void)
 {
-    SynchedEntityBase*serverGameEntity = nullptr;
+    SynchedEntityBase   *serverGameEntity = nullptr;
     int32_t i = 0;
+
     // Acquire a pointer to the entity we'll check for.
     serverGameEntity = &serverGameEntities[game.maximumClients + 1];
     for (i = game.maximumClients + 1; i <.numberOfEntities; i++, serverGameEntity++) {
