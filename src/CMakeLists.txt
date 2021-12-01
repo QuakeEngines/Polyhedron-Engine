@@ -164,9 +164,9 @@ SET( SRC_SVGAME
 	SVGame/Entities/World/WorldSpawn.cpp
 
 	## Source: SVGame - GameModes
-	SVGame/Gamemodes/DefaultGameMode.cpp
-	SVGame/Gamemodes/CoopGameMode.cpp
-	SVGame/Gamemodes/DeathMatchGameMode.cpp
+	SVGame/GameModes/DefaultGameMode.cpp
+	SVGame/GameModes/CoopGameMode.cpp
+	SVGame/GameModes/DeathMatchGameMode.cpp
 
 	## Source: SVGame - Physics
 	SVGame/Physics/Physics.cpp
