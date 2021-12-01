@@ -418,9 +418,9 @@ SET(HEADERS_COMMON
 
 ###################### Refresh.
 SET(SRC_REFRESH
-	Refresh/images.cpp
-	Refresh/models.cpp
-	Refresh/model_iqm.cpp
+	Refresh/Images.cpp
+	Refresh/Models.cpp
+	Refresh/Model_IQM.cpp
 	Refresh/stb/stb.cpp
 )
 
@@ -515,7 +515,7 @@ SET(SRC_SHARED
 SET(SRC_UNIX
 	OS/Unix/Hunk.cpp
 	OS/Unix/System.cpp
-	OS/Unix/tty.cpp
+	OS/Unix/TTY.cpp
 )
 SET(SRC_UNIX_CLIENT
 	OS/SDL2/Sound.cpp
@@ -538,7 +538,7 @@ SET(SRC_WINDOWS_CLIENT
 )
 SET(HEADERS_WINDOWS
 	OS/Windows/wgl.h
-	OS/Windows/glimp.h
+	OS/Windows/GLImp.h
 	OS/Windows/Client.h
 	OS/Windows/Threads/Threads.h
 )
