@@ -401,7 +401,7 @@ SET(HEADERS_COMMON
 	Common/Net/inet_pton.h
 	Common/Net/win.h
 	
-	Common/Hashes/crc32.h
+	Common/Hashes/CRC32.h
 )
 
 ###################### Format.
@@ -513,14 +513,14 @@ SET(SRC_SHARED
 ##### Unix - Client Specific.
 ##
 SET(SRC_UNIX
-	OS/unix/Hunk.cpp
-	OS/unix/System.cpp
-	OS/unix/tty.cpp
+	OS/Unix/Hunk.cpp
+	OS/Unix/System.cpp
+	OS/Unix/tty.cpp
 )
 SET(SRC_UNIX_CLIENT
-	OS/sdl2/sound.cpp
-	OS/sdl2/video.cpp
-	OS/sdl2/time.cpp
+	OS/SDL2/Sound.cpp
+	OS/SDL2/Video.cpp
+	OS/SDL2/Time.cpp
 )
 
 ##
@@ -532,15 +532,15 @@ SET(SRC_WINDOWS
 	OS/Windows/System.cpp
 )
 SET(SRC_WINDOWS_CLIENT
-	OS/Windows/wave.cpp
-	OS/sdl2/video.cpp
-	OS/sdl2/time.cpp
+	OS/Windows/Wave.cpp
+	OS/SDL2/Video.cpp
+	OS/SDL2/Time.cpp
 )
 SET(HEADERS_WINDOWS
 	OS/Windows/wgl.h
 	OS/Windows/glimp.h
-	OS/Windows/client.h
-	OS/Windows/threads/threads.h
+	OS/Windows/Client.h
+	OS/Windows/Threads/Threads.h
 )
 
 ##
@@ -727,7 +727,7 @@ ADD_EXECUTABLE(server
 	${SRC_WINDOWS} ${HEADERS_WINDOWS}
 	${SRC_SERVER} ${HEADERS_SERVER}
 	Client/null.cpp
-	#OS/sdl2/time.cpp
+	#OS/SDL2/time.cpp
 	OS/res/polyhedron_dedicated.rc
 )
 ELSE()
