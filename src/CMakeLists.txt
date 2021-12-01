@@ -371,26 +371,26 @@ SET(HEADERS_SERVER
 
 ###################### Common.
 SET(SRC_COMMON
-	Common/bsp.cpp
-	Common/cmd.cpp
-	Common/cmodel.cpp
+	Common/BSP.cpp
+	Common/Command.cpp
+	Common/CollisionModel.cpp
 	Common/Common.cpp
-	Common/cvar.cpp
-	Common/error.cpp
-	Common/field.cpp
-	Common/fifo.cpp
-	Common/files.cpp
-	Common/mdfour.cpp
-	Common/msg.cpp
-	Common/prompt.cpp
-	Common/sizebuf.cpp
-	Common/utils.cpp
-	Common/zone.cpp
+	Common/CVar.cpp
+	Common/Error.cpp
+	Common/InputField.cpp
+	Common/FIFO.cpp
+	Common/Files.cpp
+	Common/MDFour.cpp
+	Common/Messaging.cpp
+	Common/CommandPrompt.cpp
+	Common/SizeBuffer.cpp
+	Common/Utilities.cpp
+	Common/Zone.cpp
 
 	Common/Hashes/crc32.cpp
 
-	Common/Net/netchan.cpp
-	Common/Net/net.cpp
+	Common/Net/NetChannel.cpp
+	Common/Net/Net.cpp
 
 	# These might have to go some day.
 	#Common/netq3/netchan.cpp

@@ -721,15 +721,15 @@ void SVG_SpawnItem(ServerEntity *serverGameEntity, gitem_t *item)
 
     //if (coop->value && (strcmp(serverGameEntity->GetClassName(), "key_power_cube") == 0)) {
 //        ent->spawnFlags |= (1 << (8 + level.powerCubes));
-        level.powerCubes++;
-    }
+      //  level.powerCubes++;
+    //}
 
     // don't let them drop items that stay in a coop game
     if ((coop->value) && (item->flags & ItemFlags::StayInCoop)) {
         item->Drop = NULL;
     }
 
-    ent->item = item;
+   // ent->item = item;
 //    ent->nextThinkTime = level.time + 2 * FRAMETIME;    // items start after other solids
 //    ent->Think = droptofloor;
     //ent->state.effects = item->worldModelFlags;
@@ -955,9 +955,9 @@ void SP_item_health(SynchedEntityBase *self)
     }
 
 //    self->model = "models/items/healing/medium/tris.md2";
-    self->count = 10;
-    SVG_SpawnItem(self, SVG_FindItemByPickupName("Health"));
-    gi.SoundIndex("items/n_health.wav");
+    //self->count = 10;
+    //SVG_SpawnItem(self, SVG_FindItemByPickupName("Health"));
+    //gi.SoundIndex("items/n_health.wav");
 }
 
 /*QUAKED item_health_small (.3 .3 1) (-16 -16 -16) (16 16 16)
