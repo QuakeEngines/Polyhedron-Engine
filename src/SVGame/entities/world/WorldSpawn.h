@@ -10,15 +10,15 @@
 #ifndef __SVGAME_ENTITIES_WORLDSPAWN_H__
 #define __SVGAME_ENTITIES_WORLDSPAWN_H__
 
-class SynchedEntityBase.h;
+class PrivateEntityBase;
 
-class WorldSpawn : public SynchedEntityBase{
+class WorldSpawn : public PrivateEntityBase {
 public:
     // Constructor/Deconstructor.
     WorldSpawn(ServerEntity* svEntity);
     virtual ~WorldSpawn();
 
-    DefineMapClass( "worldspawn", WorldSpawn, SynchedEntityBase);
+    DefineMapClass( "worldspawn", WorldSpawn, PrivateEntityBase);
 
     //
     // Interface functions. 

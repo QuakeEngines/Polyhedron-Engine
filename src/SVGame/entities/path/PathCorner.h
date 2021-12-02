@@ -1,6 +1,6 @@
 #pragma once
 
-class SynchedEntityBase.h;
+class SynchedEntityBase;
 
 class PathCorner : public SynchedEntityBase{
 public:

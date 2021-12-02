@@ -7,7 +7,7 @@
 // Contains misc definitions.
 //
 
-#include "g_local.h"         // Include SVGame funcs.
+#include "ServerGameLocal.h"         // Include SVGame funcs.
 #include "Entities.h"
 #include "Utilities.h"           // Include Utilities funcs.
 #include "Effects.h"
@@ -29,81 +29,81 @@
 //=================
 void SVG_ThrowGib(SynchedEntityBase * self, const char *gibname, int damage, int type)
 {
-    // Create a gib entity.
-    GibEntity* gibClassEntity = SVG_CreateClassEntity<GibEntity>();
+    //// Create a gib entity.
+    //GibEntity* gibClassEntity = SVG_CreateClassEntity<GibEntity>(gi.GetEntityServerHandle());
 
-    // Set size.
-    vec3_t size = vec3_scale(self->GetSize(), 0.5f);
-    gibClassEntity->SetSize(size);
-    
-    // Generate the origin to start from.
-    vec3_t origin = self->GetAbsoluteMin() + self->GetSize();
+    //// Set size.
+    //vec3_t size = vec3_scale(self->GetSize(), 0.5f);
+    //gibClassEntity->SetSize(size);
+    //
+    //// Generate the origin to start from.
+    //vec3_t origin = self->GetAbsoluteMin() + self->GetSize();
 
-    // Add some random values to it, so they all differ.
-    origin.x += crandom() * size.x;
-    origin.y += crandom() * size.y;
-    origin.z += crandom() * size.z;
+    //// Add some random values to it, so they all differ.
+    //origin.x += crandom() * size.x;
+    //origin.y += crandom() * size.y;
+    //origin.z += crandom() * size.z;
 
-    // Set the origin.
-    gibClassEntity->SetOrigin(origin);
+    //// Set the origin.
+    //gibClassEntity->SetOrigin(origin);
 
-    // Set the model.
-    gibClassEntity->SetModel(gibname);
+    //// Set the model.
+    //gibClassEntity->SetModel(gibname);
 
-    // Set solid and other properties.
-    gibClassEntity->SetSolid(Solid::Not);
-    gibClassEntity->SetEffects(gibClassEntity->GetEffects() | EntityEffectType::Gib);
-    gibClassEntity->SetFlags(gibClassEntity->GetFlags() | EntityFlags::NoKnockBack);
-    gibClassEntity->SetTakeDamage(TakeDamage::Yes);
-    gibClassEntity->SetDieCallback(&GibEntity::GibEntityDie);
+    //// Set solid and other properties.
+    //gibClassEntity->SetSolid(Solid::Not);
+    //gibClassEntity->SetEffects(gibClassEntity->GetEffects() | EntityEffectType::Gib);
+    //gibClassEntity->SetFlags(gibClassEntity->GetFlags() | EntityFlags::NoKnockBack);
+    //gibClassEntity->SetTakeDamage(TakeDamage::Yes);
+    //gibClassEntity->SetDieCallback(&GibEntity::GibEntityDie);
 
-    // Default velocity scale for non organic materials.
-    float velocityScale = 1.f;
+    //// Default velocity scale for non organic materials.
+    //float velocityScale = 1.f;
 
-    // Is it an organic gib type?
-    if (type == GIB_ORGANIC) {
-        // Then we pick a different movetype ;-)
-        gibClassEntity->SetMoveType(MoveType::Toss);
+    //// Is it an organic gib type?
+    //if (type == GIB_ORGANIC) {
+    //    // Then we pick a different movetype ;-)
+    //    gibClassEntity->SetMoveType(MoveType::Toss);
 
-        // Most of all, we setup a touch callback too ofc.
-        gibClassEntity->SetTouchCallback(&GibEntity::GibEntityTouch);
+    //    // Most of all, we setup a touch callback too ofc.
+    //    gibClassEntity->SetTouchCallback(&GibEntity::GibEntityTouch);
 
-        // Adjust the velocity scale.
-        velocityScale = 0.5f;
-    } else {
-        // Pick a different movetype, bouncing. No touch callback :)
-        gibClassEntity->SetMoveType(MoveType::Bounce);
-    }
+    //    // Adjust the velocity scale.
+    //    velocityScale = 0.5f;
+    //} else {
+    //    // Pick a different movetype, bouncing. No touch callback :)
+    //    gibClassEntity->SetMoveType(MoveType::Bounce);
+    //}
 
-    // Comment later...
-    vec3_t velocityDamage = game.gameMode->CalculateDamageVelocity(damage);
+    //// Comment later...
+    //vec3_t velocityDamage = game.gameMode->CalculateDamageVelocity(damage);
 
-    // Reassign 'velocityDamage' and multiply 'self->GetVelocity' to scale, and then 
-    // adding it on to 'velocityDamage' its old value.
-    vec3_t gibVelocity = vec3_fmaf(self->GetVelocity(), velocityScale, velocityDamage);
+    //// Reassign 'velocityDamage' and multiply 'self->GetVelocity' to scale, and then 
+    //// adding it on to 'velocityDamage' its old value.
+    //vec3_t gibVelocity = vec3_fmaf(self->GetVelocity(), velocityScale, velocityDamage);
 
-    // Be sure to clip our velocity, just in case.
-    gibClassEntity->ClipGibVelocity(velocityDamage);
+    //// Be sure to clip our velocity, just in case.
+    //gibClassEntity->ClipGibVelocity(velocityDamage);
 
-    // Last but not least, set our velocity.
-    gibClassEntity->SetVelocity(velocityDamage);
+    //// Last but not least, set our velocity.
+    //gibClassEntity->SetVelocity(velocityDamage);
 
-    // Generate angular velocity.
-    vec3_t angularVelocity = {
-        random() * 600.f,
-        random() * 600.f,
-        random() * 600.f
-    };
+    //// Generate angular velocity.
+    //vec3_t angularVelocity = {
+    //    random() * 600.f,
+    //    random() * 600.f,
+    //    random() * 600.f
+    //};
 
-    // Set angular velocity.
-    gibClassEntity->SetAngularVelocity(angularVelocity);
+    //// Set angular velocity.
+    //gibClassEntity->SetAngularVelocity(angularVelocity);
 
-    // Setup the Gib think function and its think time.
-    gibClassEntity->SetThinkCallback(&SynchedEntityBase::SVGBaseEntityThinkRemove);
-    gibClassEntity->SetNextThinkTime(level.time + 10 + random() * 10);
+    //// Setup the Gib think function and its think time.
+    //gibClassEntity->SetThinkCallback(&SynchedEntityBase::SVGBaseEntityThinkRemove);
+    //gibClassEntity->SetNextThinkTime(level.time + 10 + random() * 10);
 
-    // Link entity into the world.
-    gibClassEntity->LinkEntity();
+    //// Link entity into the world.
+    //gibClassEntity->LinkEntity();
 }
 
 //=================

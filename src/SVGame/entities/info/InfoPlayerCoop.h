@@ -8,7 +8,9 @@
 */
 #pragma once
 
-class SynchedEntityBase.h;
+struct ServerEntity;
+class EntityBase;
+class SynchedEntityBase;
 class InfoPlayerStart;
 
 class InfoPlayerCoop : public InfoPlayerStart {
@@ -17,7 +19,7 @@ public:
     InfoPlayerCoop(ServerEntity* svEntity);
     virtual ~InfoPlayerCoop();
 
-    DefineMapClass( "info_player_coop", InfoPlayerCoop, InfoPlayerStart );
+    DefineMapClassSelfConstruct( "info_player_coop", InfoPlayerCoop, InfoPlayerStart );
 
     // Interface functions. 
     void Precache();    // Precaches data.

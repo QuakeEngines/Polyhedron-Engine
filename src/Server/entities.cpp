@@ -17,7 +17,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-#include "server.h"
+#include "Server.h"
 
 //=============================================================================
 //
@@ -37,12 +37,24 @@ ServerEntity* GetEntityServerHandle(ServerEntityID id) {
     return &serverEntityPool.entities[id];
 }
 
-void SetNumberOfEntities(ServerEntityID num) {
-    if (num > MAX_EDICTS) {
-        Com_Error(ERR_DROP, "Invalid NumberOfEntities: '%i' passed to %s.", num, __func__);
+// Free the server entity pool for a free entity (aka inUse = false), and returns
+// a pointer to it.
+ServerEntity* GetEntityServerHandle(ServerEntityID id) {
+    // Ensure our ID is in range.
+    if (id < 0 || id >= MAX_EDICTS) {
+        Com_Error(ERR_DROP, "Invalid ServerEntityID: '%i' passed to %s.", id, __func__);
     }
 
-    serverEntityPool.currentNumberOfEntities = num;
+    return &serverEntityPool.entities[id];
+}
+
+// Sets the number of entities that are currently active in our pool.
+void SetNumberOfEntities(ServerEntityID idNumber) {
+    if (idNumber < 0 || idNumber > MAX_EDICTS) {
+        Com_Error(ERR_DROP, "Invalid NumberOfEntities: '%i' passed to %s.", idNumber, __func__);
+    }
+
+    serverEntityPool.currentNumberOfEntities = idNumber;
 }
 
 ServerEntityID GetNumberOfEntities() {

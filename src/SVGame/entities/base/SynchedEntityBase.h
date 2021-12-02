@@ -422,19 +422,9 @@ public:
         this->delayTime = delayTime;
     }
 
-    // Set the 'effects' value.
-    inline void SetEffects(const uint32_t &effects) {
-        entityHandle->state.effects = effects;
-    }
-
     // Set the 'enemyPtr' pointer.
     inline void SetEnemy(SynchedEntityBase * enemy) {
         this->enemyEntity = enemy;
-    }
-
-    // Return the 'eventID' value.
-    inline void SetEventID(const uint8_t &eventID) {
-        entityHandle->state.eventID = eventID;
     }
 
     // Set the 'flags' value.
@@ -474,19 +464,10 @@ public:
         this->idealYawAngle = idealYawAngle;
     }
 
-    // Set the 'inuse' value.
-    inline void SetInUse(const qboolean& inUse) {
-        entityHandle->inUse = inUse;
-    }
 
     // Set the 'killTargetSTr' value.
     inline void SetKillTarget(const std::string& killTarget) {
         this->killTargetStr = killTarget;
-    }
-
-    // Set the 'linkCount' value.
-    inline void SetLinkCount(const int32_t &linkCount) {
-        entityHandle->linkCount = linkCount;
     }
 
     // Set the 'mass' value.
@@ -499,33 +480,9 @@ public:
         this->maxHealth = maxHealth;
     }
 
-    // Set the 'maxs' value.
-    inline void SetMaxs(const vec3_t& maxs) {
-        entityHandle->maxs = maxs;
-    }
-
     // Set the 'messageStr' value.
     inline void SetMessage(const std::string& message) {
         this->messageStr = message;
-    }
-
-    // Set the 'mins' value.
-    inline void SetMins(const vec3_t& mins) {
-        entityHandle->mins = mins;
-    }
-
-    // Set the 'modelIndex, modelIndex1, modelIndex2, modelIndex3' values.
-    inline void SetModelIndex(const int32_t& index) {
-        entityHandle->state.modelIndex = index;
-    }
-    inline void SetModelIndex2(const int32_t& index) {
-        entityHandle->state.modelIndex2 = index;
-    }
-    inline void SetModelIndex3(const int32_t& index) {
-        entityHandle->state.modelIndex3 = index;
-    }
-    inline void SetModelIndex4(const int32_t& index) {
-        entityHandle->state.modelIndex4 = index;
     }
 
     // Set the 'model' value.
@@ -573,16 +530,6 @@ public:
         this->oldEnemyEntity = oldEnemy;
     }
 
-    // Set the 'origin' value.
-    inline void SetOldOrigin(const vec3_t& oldOrigin) {
-        entityHandle->state.oldOrigin = oldOrigin;
-    }
-
-    // Set the 'origin' value.
-    inline void SetOrigin(const vec3_t& origin) {
-        entityHandle->state.origin = origin;
-    }
-
     // Set the 'owner' value.
     inline void SetOwner(SynchedEntityBase * owner) {
         this->ownerEntity = owner;
@@ -591,16 +538,6 @@ public:
     // Set the 'renderEffects' value.
     inline void SetRenderEffects(const int32_t& renderEffects) {
         entityHandle->state.renderEffects = renderEffects;
-    }
-
-    // Set the 'serverFlags' value.
-    inline void SetServerFlags(const int32_t &serverFlags) {
-        entityHandle->serverFlags = serverFlags;
-    }
-
-    // Set the 'skinNumber' value.
-    inline void SetSkinNumber(const int32_t& skinNumber) {
-        entityHandle->state.skinNumber = skinNumber;
     }
 
     // Sest the 'size' value.
@@ -623,10 +560,6 @@ public:
         this->spawnFlags = spawnFlags;
     }
 
-    // Set another copy of a serverEntity its state.
-    inline void SetState(const EntityState &state) {
-        entityHandle->state = state;
-    }
 
     // Set the 'style' value.
     inline void SetStyle(const int32_t &style) {

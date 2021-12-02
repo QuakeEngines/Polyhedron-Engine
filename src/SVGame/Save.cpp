@@ -16,7 +16,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-#include "g_local.h"
+#include "ServerGameLocal.h"
 
 //#define _DEBUG
 typedef struct {
@@ -741,20 +741,20 @@ void SVG_WriteGame(const char *filename, qboolean autosave)
     if (!autosave)
         SVG_SaveClientData();
 
-    f = fopen(filename, "wb");
-    if (!f)
-        gi.Error("Couldn't open %s", filename);
+    //f = fopen(filename, "wb");
+    //if (!f)
+    //    gi.Error("Couldn't open %s", filename);
 
-    write_int(f, SAVE_MAGIC1);
-    write_int(f, SAVE_VERSION);
+    //write_int(f, SAVE_MAGIC1);
+    //write_int(f, SAVE_VERSION);
 
-    game.autoSaved = autosave;
-    write_fields(f, gamefields, &game);
-    game.autoSaved = false;
+    //game.autoSaved = autosave;
+    //write_fields(f, gamefields, &game);
+    //game.autoSaved = false;
 
-    for (i = 0; i < game.maximumClients; i++) {
-        write_fields(f, clientfields, &game.clients[i]);
-    }
+    //for (i = 0; i < game.maximumClients; i++) {
+    //    write_fields(f, clientfields, &game.clients[i]);
+    //}
 
     fclose(f);
 }

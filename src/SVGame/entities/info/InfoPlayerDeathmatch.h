@@ -8,7 +8,9 @@
 */
 #pragma once
 
-class SynchedEntityBase.h;
+struct ServerEntity;
+class EntityBase;
+class SynchedEntityBase;
 class InfoPlayerStart;
 
 class InfoPlayerDeathmatch : public InfoPlayerStart {
@@ -17,7 +19,7 @@ public:
     InfoPlayerDeathmatch(ServerEntity* svEntity);
     virtual ~InfoPlayerDeathmatch();
 
-    DefineMapClass( "info_player_deathmatch", InfoPlayerDeathmatch, InfoPlayerStart );
+    DefineMapClassSelfConstruct( "info_player_deathmatch", InfoPlayerDeathmatch, InfoPlayerStart );
 
     // Interface functions. 
     void Precache();    // Precaches data.

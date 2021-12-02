@@ -6,7 +6,7 @@
 //
 //
 */
-#include "../../g_local.h"              // SVGame.
+#include "../../ServerGameLocal.h"              // SVGame.
 #include "../../Effects.h"              // Effects.
 #include "../../Entities.h"             // Entities.
 #include "../../Player/client.h"        // Player Client functions.
@@ -538,11 +538,11 @@ void PlayerEntity::CheckWorldEffects()
     if (oldWaterLevel == 3 && waterLevel != 3) {
         if (GetAirFinishedTime() < level.time) {
             // gasp for air
-            SVG_Sound(GetEntityServerHandle(), CHAN_VOICE, gi.SoundIndex("player/gasp1.wav"), 1, ATTN_NORM, 0);
+            SVG_Sound(this, CHAN_VOICE, gi.SoundIndex("player/gasp1.wav"), 1, ATTN_NORM, 0);
             SVG_PlayerNoise(this, GetOrigin(), PNOISE_SELF);
         } else  if (GetAirFinishedTime() < level.time + 11) {
             // just break surface
-            SVG_Sound(GetEntityServerHandle(), CHAN_VOICE, gi.SoundIndex("player/gasp2.wav"), 1, ATTN_NORM, 0);
+            SVG_Sound(this, CHAN_VOICE, gi.SoundIndex("player/gasp2.wav"), 1, ATTN_NORM, 0);
         }
     }
 
@@ -564,15 +564,15 @@ void PlayerEntity::CheckWorldEffects()
 
                 // play a gurp sound instead of a normal pain sound
                 if (GetHealth() <= GetDamage())
-                    SVG_Sound(GetEntityServerHandle(), CHAN_VOICE, gi.SoundIndex("player/drown1.wav"), 1, ATTN_NORM, 0);
+                    SVG_Sound(this, CHAN_VOICE, gi.SoundIndex("player/drown1.wav"), 1, ATTN_NORM, 0);
                 else if (rand() & 1)
-                    SVG_Sound(GetEntityServerHandle(), CHAN_VOICE, gi.SoundIndex("*gurp1.wav"), 1, ATTN_NORM, 0);
+                    SVG_Sound(this, CHAN_VOICE, gi.SoundIndex("*gurp1.wav"), 1, ATTN_NORM, 0);
                 else
-                    SVG_Sound(GetEntityServerHandle(), CHAN_VOICE, gi.SoundIndex("*gurp2.wav"), 1, ATTN_NORM, 0);
+                    SVG_Sound(this, CHAN_VOICE, gi.SoundIndex("*gurp2.wav"), 1, ATTN_NORM, 0);
 
                 SetDebouncePainTime(level.time);
 
-                SVG_InflictDamage(GetEntityServerHandle(), SVG_GetWorldSpawnEntity(), SVG_GetWorldSpawnEntity(), vec3_zero(),   GetOrigin(), vec3_zero(), GetDamage(), 0, DamageFlags::NoArmorProtection, MeansOfDeath::Water);
+                SVG_InflictDamage(this, SVG_GetWorldSpawnEntity(), SVG_GetWorldSpawnEntity(), vec3_zero(),   GetOrigin(), vec3_zero(), GetDamage(), 0, DamageFlags::NoArmorProtection, MeansOfDeath::Water);
             }
         }
     } else {

@@ -4,14 +4,13 @@
 // FuncAreaportal.cpp
 */
 
-#include "../../g_local.h"
-#include "../../effects.h"
-#include "../../entities.h"
-#include "../../utils.h"
-#include "../../physics/stepmove.h"
-#include "../../brushfuncs.h"
+#include "../../ServerGameLocal.h"
+#include "../../Effects.h"
+#include "../../Entities.h"
+#include "../../Utilities.h"
+#include "../../Physics/Stepmove.h"
 
-#include "../base/SynchedEntityBase.h.h"
+#include "../Base/SynchedEntityBase.h"
 
 #include "FuncAreaportal.h"
 
@@ -19,7 +18,7 @@
 // FuncAreaportal::ctor
 //===============
 FuncAreaportal::FuncAreaportal( ServerEntity* entity )
-	: Base( entity ) {
+	: SynchedEntityBase( entity ) {
 
 }
 

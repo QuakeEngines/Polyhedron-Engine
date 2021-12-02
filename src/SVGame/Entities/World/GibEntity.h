@@ -11,7 +11,7 @@
 
 
 struct ServerEntity;
-class SynchedEntityBase.h;
+class EntityBase;
 class SynchedEntityBase;
 
 class GibEntity : public SynchedEntityBase {
@@ -20,7 +20,7 @@ public:
     GibEntity(SynchedEntityBase* svEntity);
     virtual ~GibEntity();
 
-    DefineMapClassSelfConstruct("GibEntity", SynchedEntityBase, SynchedEntityBase);
+    DefineMapClassSelfConstruct("GibEntity", SynchedEntityBase, EntityBase);
 
     //
     // Interface functions. 

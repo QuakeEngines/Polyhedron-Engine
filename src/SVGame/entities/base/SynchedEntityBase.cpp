@@ -15,7 +15,7 @@
 //
 //
 */
-#include "../../g_local.h"		// SVGame.
+#include "../../ServerGameLocal.h"		// SVGame.
 #include "../../Effects.h"		// Effects.
 #include "../../Entities.h"		// Entities.
 #include "../../Utilities.h"		// Util funcs.
@@ -35,6 +35,13 @@ SynchedEntityBase::SynchedEntityBase() :
 SynchedEntityBase::SynchedEntityBase(ServerEntity* serverEntity) :
 	EntityBase(serverEntity) {
 };
+
+//
+// Destructor.
+//
+SynchedEntityBase::SynchedEntityBase() {
+
+}
 
 /*static*/ ServerEntity* SynchedEntityBase::QueryFreeServerEntity()
 {

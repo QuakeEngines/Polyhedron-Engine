@@ -4,12 +4,12 @@
 // TriggerCounter.cpp
 */
 
-#include "../../g_local.h"
-#include "../../effects.h"
-#include "../../entities.h"
-#include "../../utils.h"
+#include "../../ServerGameLocal.h"
+#include "../../Effects.h"
+#include "../../Entities.h"
+#include "../../Utilities.h"
 
-#include "../base/SynchedEntityBase.h.h"
+#include "../base/SynchedEntityBase.h"
 #include "../base/BaseTrigger.h"
 
 #include "TriggerCounter.h"

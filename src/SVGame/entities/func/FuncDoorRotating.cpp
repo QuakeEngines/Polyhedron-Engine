@@ -4,18 +4,17 @@
 // FuncDoorRotating.cpp
 */
 
-#include "../../g_local.h"
-#include "../../effects.h"
-#include "../../entities.h"
-#include "../../utils.h"
-#include "../../physics/stepmove.h"
-#include "../../brushfuncs.h"
+#include "../../ServerGameLocal.h"
+#include "../../Effects.h"
+#include "../../Entities.h"
+#include "../../Utilities.h"
+#include "../../Physics/Stepmove.h"
 
-#include "../base/SynchedEntityBase.h.h"
-#include "../base/BaseTrigger.h"
-#include "../base/SVGBaseMover.h"
+#include "../Base/SynchedEntityBase.h"
+#include "../Base/BaseTrigger.h"
+#include "../Base/SVGBaseMover.h"
 
-#include "../trigger/TriggerAutoDoor.h"
+#include "../Trigger/TriggerAutoDoor.h"
 
 #include "FuncDoor.h"
 #include "FuncDoorRotating.h"

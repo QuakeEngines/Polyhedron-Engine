@@ -1,5 +1,5 @@
 // SVGame Core.
-#include "../../g_local.h"
+#include "../../ServerGameLocal.h"
 #include "../../Entities.h"
 #include "../../Utilities.h"   // Util funcs.
 
@@ -12,7 +12,6 @@
 
 // Constructor.
 PrivateEntityBase::PrivateEntityBase() :
-    handleMemory{ .state = { .number = -1 } },
-    EntityBase(&handleMemory) {
-
+    handleMemory{ .state = {.number = -1, },
+    }, EntityBase(&handleMemory) {
 }

@@ -45,7 +45,6 @@
 // Predeclare
 #include "Shared/Entities/TypeInfo.h"
 
-
 //
 // Filter function namespace that actually contains the entity filter implementations.
 // 
@@ -222,7 +221,6 @@ SynchedEntityBase * SVG_FindEntityByKeyValue(const std::string& fieldKey, const 
 void    SVG_InitEntity(ServerEntity* e);
 void    SVG_FreeEntity(ServerEntity* e);
 
-ServerEntity* SVG_GetWorldServerEntity();
 ServerEntity* SVG_Spawn(void);
 
 ServerEntity* SVG_CreateTargetChangeLevel(char* map);
@@ -238,5 +236,5 @@ inline entityClass* SVG_CreateClassEntity(Args&& ...args) {
 // ClassEntity handling.
 //
 SynchedEntityBase * SVG_GetWorldSpawnEntity();
-SynchedEntityBase * SVG_SpawnClassEntity(ServerEntity* ent, const std::string& className);
+SynchedEntityBase * SVG_SpawnSynchedGameEntity(ServerEntity* ent, const std::string& className);
 void SVG_FreeClassEntity(ServerEntity* ent);

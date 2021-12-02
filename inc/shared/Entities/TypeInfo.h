@@ -4,6 +4,9 @@
 
 struct ServerEntity;
 class EntityBase;
+class PrivateEntityBase;
+class SynchedEntityBase;
+
 
 //===============
 // A static counter, used by TypeInfo to get compile-time IDs
@@ -40,7 +43,9 @@ public:
 		// Cannot be allocated
 		TypeFlag_Abstract = 1 << 0,
 		// Can be spawned in the map
-		TypeFlag_MapSpawn = 1 << 1
+		TypeFlag_MapSpawn = 1 << 1,
+		// Can be spawned in-game
+		TypeFlag_GameSpawn = 1 << 2
 	};
 
 public:
@@ -73,9 +78,13 @@ public:
 
 		return super->IsSubclassOf( eci );
 	}
-
+	
 	bool IsMapSpawnable() const {
 		return !IsAbstract() && typeFlags & TypeFlag_MapSpawn;
+	}
+	
+	bool IsGameSpawnable() const {
+		return !IsAbstract() && typeFlags & TypeFlag_GameSpawn;
 	}
 
 	bool IsAbstract() const {
@@ -188,7 +197,7 @@ __DeclareTypeInfo( mapClassName, #className, #superClass, TypeInfo::TypeFlag_Map
 // @param superClass (symbol) - the class this entity class inherits from
 #define DefineMapClassSelfConstruct( mapClassName, className, superClass )	\
 using Base = superClass;										\
-__DeclareTypeInfo( mapClassName, #className, #superClass, TypeInfo::TypeFlag_MapSpawn, nullptr );
+__DeclareTypeInfo( mapClassName, #className, #superClass, TypeInfo::TypeFlag_GameSpawn, nullptr );
 
 // Declares type information the same as DefineMapClass, however, it doesn't allocate anything. 
 // Used by InfoNull. Cannot be instantiated. 
@@ -207,4 +216,4 @@ using Base = superClass;										\
 static EntityBase* AllocateInstance( ) {		\
 	return new className( );				\
 }												\
-__DeclareTypeInfo( #className, #className, #superClass, TypeInfo::TypeFlag_None, &className::AllocateInstance );
+__DeclareTypeInfo( #className, #className, #superClass, TypeInfo::TypeFlag_GameSpawn, &className::AllocateInstance );

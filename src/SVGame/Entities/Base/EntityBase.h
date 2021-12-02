@@ -44,6 +44,45 @@ public:
         return GetTypeInfo()->IsSubclassOf( entityClass::ClassInfo );
     }
 
+    //------------------------------------------------------------
+    //
+    // Interface Functions.
+    //
+    //------------------------------------------------------------
+    virtual void Precache();    // Precaches data.
+    virtual void Spawn();       // Spawns the entity.
+    virtual void Respawn();     // Respawns the entity.
+    virtual void PostSpawn();   // PostSpawning is for handling entity references, since they may not exist yet during a spawn period.
+    virtual void Think();       // General entity thinking routine.
+
+    virtual void SpawnKey(const std::string& key, const std::string& value); // Called for each key:value when parsing the entity dictionary.
+
+    //------------------------------------------------------------
+    //
+    // Dispatch Callback Functions.
+    //
+    //------------------------------------------------------------
+    // // Admer: these should all be prefixed with Dispatch
+    void Use(SynchedEntityBase * other, SynchedEntityBase * activator);
+    void Die(SynchedEntityBase * inflictor, SynchedEntityBase * attacker, int damage, const vec3_t& point);
+    void Blocked(SynchedEntityBase * other);
+    void Touch(SynchedEntityBase * self, SynchedEntityBase * other, cplane_t* plane, csurface_t* surf);
+    void TakeDamage(SynchedEntityBase * other, float kick, int32_t damage);
+
+    //------------------------------------------------------------
+    //
+    // ServerEntity interaction functions.
+    //
+    //------------------------------------------------------------
+    //  Calls Use on this entity's targets, and deletes its killtargets if any
+    //  @param activatorOverride: if nullptr, the entity's own activator is used and if the entity's own activator is nullptr, then this entity itself is the activator
+    void UseTargets( SynchedEntityBase * activatorOverride = nullptr );
+
+    //------------------------------------------------------------
+    //
+    // Getters.
+    //
+    //------------------------------------------------------------
     // Return the 'renderEffects' value.
     inline const int32_t GetRenderEffects() {
         return entityHandle->state.renderEffects;
@@ -85,6 +124,22 @@ public:
     inline const int32_t GetSound() {
         return entityHandle->state.sound;
     }
+
+    // Set the 'effects' value.
+    inline void SetEffects(const uint32_t &effects) {
+        entityHandle->state.effects = effects;
+    }
+
+    // Return the 'eventID' value.
+    inline void SetEventID(const uint8_t &eventID) {
+        entityHandle->state.eventID = eventID;
+    }
+
+    // Set the 'inuse' value.
+    inline void SetInUse(const qboolean& inUse) {
+        entityHandle->inUse = inUse;
+    }
+
     // Set the 'linkCount' value.
     inline void SetLinkCount(const int32_t &linkCount) {
         entityHandle->linkCount = linkCount;
@@ -93,6 +148,11 @@ public:
     // Set the 'mins' value.
     inline void SetMins(const vec3_t& mins) {
         entityHandle->mins = mins;
+    }
+
+    // Set the 'maxs' value.
+    inline void SetMaxs(const vec3_t& maxs) {
+        entityHandle->maxs = maxs;
     }
 
     // Set the 'modelIndex, modelIndex1, modelIndex2, modelIndex3' values.
@@ -147,5 +207,10 @@ public:
     // Sets the 'sound' value.
     inline void SetSound(const int32_t& sound) {
         entityHandle->state.sound = sound;
+    }
+
+    // Set another copy of a serverEntity its state.
+    inline void SetState(const EntityState &state) {
+        entityHandle->state = state;
     }
 };

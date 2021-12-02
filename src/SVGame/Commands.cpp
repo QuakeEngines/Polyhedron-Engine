@@ -15,7 +15,7 @@ You should have received a copy of the GNU General Public License along
 with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
-#include "g_local.h"
+#include "ServerGameLocal.h"
 #include "ChaseCamera.h"
 #include "Entities.h"
 #include "Player/Animations.h"
@@ -253,7 +253,7 @@ void Cmd_Give_f(PlayerEntity *playerEntity)
     } else {
         it_ent = SVG_Spawn();
         it_ent->className = it->className;
-        SVG_SpawnItem(it_ent, it);
+        SVG_SpawnItem(playerEntity, it);
 //        SVG_TouchItem(it_ent, ent, NULL, NULL); Items..
         if (it_ent->inUse)
             SVG_FreeEntity(it_ent);
@@ -270,18 +270,18 @@ Sets client to godmode
 argv(0) god
 ==================
 */
-void Cmd_God_f(ServerEntity *serverEntity)
+void Cmd_God_f(SynchedEntityBase *serverEntity)
 {
     if (deathmatch->value && !sv_cheats->value) {
         gi.CPrintf(serverEntity->GetEntityServerHandle(), PRINT_HIGH, "You must run the server with '+set cheats 1' to enable this command.\n");
         return;
     }
 
-    ent->SetFlags(serverEntity->GetFlags() ^ EntityFlags::GodMode);
-    if (!(ent->GetFlags() & EntityFlags::GodMode))
-        gi.CPrintf(serverEntity, PRINT_HIGH, "godmode OFF\n");
+    serverEntity->SetFlags(serverEntity->GetFlags() ^ EntityFlags::GodMode);
+    if (!(serverEntity->GetFlags() & EntityFlags::GodMode))
+        gi.CPrintf(serverEntity->GetEntityServerHandle(), PRINT_HIGH, "godmode OFF\n");
     else
-        gi.CPrintf(serverEntity, PRINT_HIGH, "godmode ON\n");
+        gi.CPrintf(serverEntity->GetEntityServerHandle(), PRINT_HIGH, "godmode ON\n");
 }
 
 
@@ -294,7 +294,7 @@ Sets client to notarget
 argv(0) notarget
 ==================
 */
-void Cmd_Notarget_f(ServerEntity *serverEntity)
+void Cmd_Notarget_f(SynchedEntityBase *serverEntity)
 {
     if (deathmatch->value && !sv_cheats->value) {
         gi.CPrintf(serverEntity->GetEntityServerHandle(), PRINT_HIGH, "You must run the server with '+set cheats 1' to enable this command.\n");
@@ -316,7 +316,7 @@ Cmd_Noclip_f
 argv(0) noclip
 ==================
 */
-void Cmd_Noclip_f(ServerEntity *serverEntity)
+void Cmd_Noclip_f(SynchedEntityBase *serverEntity)
 {
     if (deathmatch->value && !sv_cheats->value) {
         gi.CPrintf(serverEntity->GetEntityServerHandle(), PRINT_HIGH, "You must run the server with '+set cheats 1' to enable this command.\n");
@@ -723,9 +723,9 @@ void Cmd_Say_f(PlayerEntity* playerEntity, qboolean team, qboolean arg0) {
         return;
 
     // Fetch client.
-    ServerClient* client = playerEntity->GetClient();
+    ServerClient* cl = playerEntity->GetClient();
 
-    if (!client)
+    if (!cl)
         return;
 
     if (gi.argc() < 2 && !arg0)
@@ -735,9 +735,9 @@ void Cmd_Say_f(PlayerEntity* playerEntity, qboolean team, qboolean arg0) {
         team = false;
 
     if (team)
-        message = "(" + std::string(client->persistent.netname) + "): ";
+        message = "(" + std::string(cl->persistent.netname) + "): ";
     else
-        message = "" + std::string(client->persistent.netname) + ": ";
+        message = "" + std::string(cl->persistent.netname) + ": ";
 
     if (arg0) {
         message += gi.argv(0);
@@ -761,29 +761,29 @@ void Cmd_Say_f(PlayerEntity* playerEntity, qboolean team, qboolean arg0) {
     message += "\n";
 
     if (flood_msgs->value) {
-        client = playerEntity->GetClient();
+        cl = playerEntity->GetClient();
 
-        if (!client)
+        if (!cl)
             return;
 
-        if (level.time < client->flood.lockTill) {
+        if (level.time < cl->flood.lockTill) {
             gi.CPrintf(playerEntity->GetEntityServerHandle(), PRINT_HIGH, "You can't talk for %d more seconds\n",
-                       (int)(client->flood.lockTill - level.time));
+                       (int)(cl->flood.lockTill - level.time));
             return;
         }
-        i = client->flood.whenHead - flood_msgs->value + 1;
+        i = cl->flood.whenHead - flood_msgs->value + 1;
         if (i < 0)
-            i = (sizeof(client->flood.when) / sizeof(client->flood.when[0])) + i;
+            i = (sizeof(cl->flood.when) / sizeof(cl->flood.when[0])) + i;
         if (cl->flood.when[i] &&
-            level.time - client->flood.when[i] < flood_persecond->value) {
-            client->flood.lockTill = level.time + flood_waitdelay->value;
-            gi.CPrintf(ent, PRINT_CHAT, "Flood protection:  You can't talk for %d seconds.\n",
+            level.time - cl->flood.when[i] < flood_persecond->value) {
+            cl->flood.lockTill = level.time + flood_waitdelay->value;
+            gi.CPrintf(playerEntity->GetEntityServerHandle(), PRINT_CHAT, "Flood protection:  You can't talk for %d seconds.\n",
                        (int)flood_waitdelay->value);
             return;
         }
-        client->flood.whenHead = (cl->flood.whenHead + 1) %
-                             (sizeof(cl->flood.when) / sizeof(client->flood.when[0]));
-        client->flood.when[client->flood.whenHead] = level.time;
+        cl->flood.whenHead = (cl->flood.whenHead + 1) %
+                             (sizeof(cl->flood.when) / sizeof(cl->flood.when[0]));
+        cl->flood.when[cl->flood.whenHead] = level.time;
     }
 
     if (dedicated->value)
@@ -805,32 +805,32 @@ void Cmd_Say_f(PlayerEntity* playerEntity, qboolean team, qboolean arg0) {
 
 void Cmd_PlayerList_f(ServerEntity *ent)
 {
-    int i;
-    char st[80];
-    char text[1400];
-    ServerEntity *e2;
+    //int i;
+    //char st[80];
+    //char text[1400];
+    //ServerEntity *e2;
 
-    // connect time, ping, score, name
-    *text = 0;
-    for (i = 0, e2 = g_entities + 1; i < maximumClients->value; i++, e2++) {
-        if (!e2->inUse)
-            continue;
+    //// connect time, ping, score, name
+    //*text = 0;
+    //for (i = 0, e2 = g_entities + 1; i < maximumClients->value; i++, e2++) {
+    //    if (!e2->inUse)
+    //        continue;
 
-        Q_snprintf(st, sizeof(st), "%02d:%02d %4d %3d %s%s\n",
-                   (level.frameNumber - e2->client->respawn.enterGameFrameNumber) / 600,
-                   ((level.frameNumber - e2->client->respawn.enterGameFrameNumber) % 600) / 10,
-                   e2->client->ping,
-                   e2->client->respawn.score,
-                   e2->client->persistent.netname,
-                   e2->client->respawn.isSpectator ? " (isSpectator)" : "");
-        if (strlen(text) + strlen(st) > sizeof(text) - 50) {
-            sprintf(text + strlen(text), "And more...\n");
-            gi.CPrintf(ent, PRINT_HIGH, "%s", text);
-            return;
-        }
-        strcat(text, st);
-    }
-    gi.CPrintf(ent, PRINT_HIGH, "%s", text);
+    //    Q_snprintf(st, sizeof(st), "%02d:%02d %4d %3d %s%s\n",
+    //               (level.frameNumber - e2->client->respawn.enterGameFrameNumber) / 600,
+    //               ((level.frameNumber - e2->client->respawn.enterGameFrameNumber) % 600) / 10,
+    //               e2->client->ping,
+    //               e2->client->respawn.score,
+    //               e2->client->persistent.netname,
+    //               e2->client->respawn.isSpectator ? " (isSpectator)" : "");
+    //    if (strlen(text) + strlen(st) > sizeof(text) - 50) {
+    //        sprintf(text + strlen(text), "And more...\n");
+    //        gi.CPrintf(ent, PRINT_HIGH, "%s", text);
+    //        return;
+    //    }
+    //    strcat(text, st);
+    //}
+    //gi.CPrintf(ent, PRINT_HIGH, "%s", text);
 }
 
 
@@ -841,6 +841,7 @@ ClientCommand
 */
 void SVG_ClientCommand(ServerEntity *clientEntity)
 {
+    PlayerEntity* playerEntity = dynamic_cast<PlayerEntity*>(serverGameEntities[clientEntity->state.number]);
     // Ensure it is an entity with active client.
     ServerClient* client = playerEntity->GetClient();
     
@@ -884,37 +885,37 @@ void SVG_ClientCommand(ServerEntity *clientEntity)
     else if (Q_stricmp(cmd, "noclip") == 0)
         Cmd_Noclip_f(playerEntity);
     else if (Q_stricmp(cmd, "inven") == 0)
-        Cmd_Inven_f(playerEntity);
+        Cmd_Inven_f(clientEntity);
     else if (Q_stricmp(cmd, "invnext") == 0)
-        SelectNextItem(ent, -1);
+        SelectNextItem(playerEntity, -1);
     else if (Q_stricmp(cmd, "invprev") == 0)
-        SelectPrevItem(playerEntity, -1);
+        SelectPrevItem(clientEntity, -1);
     else if (Q_stricmp(cmd, "invnextw") == 0)
-        SelectNextItem(ent, ItemFlags::IsWeapon);
+        SelectNextItem(playerEntity, ItemFlags::IsWeapon);
     else if (Q_stricmp(cmd, "invprevw") == 0)
-        SelectPrevItem(playerEntity, ItemFlags::IsWeapon);
+        SelectPrevItem(clientEntity, ItemFlags::IsWeapon);
     else if (Q_stricmp(cmd, "invnextp") == 0)
-        SelectNextItem(ent, ItemFlags::IsPowerUp);
+        SelectNextItem(playerEntity, ItemFlags::IsPowerUp);
     else if (Q_stricmp(cmd, "invprevp") == 0)
-        SelectPrevItem(playerEntity, ItemFlags::IsPowerUp);
+        SelectPrevItem(clientEntity, ItemFlags::IsPowerUp);
     else if (Q_stricmp(cmd, "invuse") == 0)
-        Cmd_InvUse_f(ent);
+        Cmd_InvUse_f(playerEntity);
     else if (Q_stricmp(cmd, "invdrop") == 0)
-        Cmd_InvDrop_f(ent);
+        Cmd_InvDrop_f(playerEntity);
     else if (Q_stricmp(cmd, "weapprev") == 0)
-        Cmd_WeapPrev_f(ent);
+        Cmd_WeapPrev_f(playerEntity);
     else if (Q_stricmp(cmd, "weapnext") == 0)
-        Cmd_WeapNext_f(ent);
+        Cmd_WeapNext_f(playerEntity);
     else if (Q_stricmp(cmd, "weaplast") == 0)
-        Cmd_WeapLast_f(ent);
+        Cmd_WeapLast_f(playerEntity);
     else if (Q_stricmp(cmd, "kill") == 0)
-        Cmd_Kill_f(ent);
+        Cmd_Kill_f(playerEntity);
     else if (Q_stricmp(cmd, "putaway") == 0)
-        Cmd_PutAway_f(playerEntity);
+        Cmd_PutAway_f(clientEntity);
     else if (Q_stricmp(cmd, "wave") == 0)
         Cmd_Wave_f(playerEntity);
     else if (Q_stricmp(cmd, "playerlist") == 0)
-        Cmd_PlayerList_f(playerEntity);
+        Cmd_PlayerList_f(clientEntity);
     else    // anything that doesn't match a command will be a chat
         Cmd_Say_f(playerEntity, false, true);
 }

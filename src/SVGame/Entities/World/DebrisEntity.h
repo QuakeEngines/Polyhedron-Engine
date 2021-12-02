@@ -18,7 +18,7 @@ public:
     DebrisEntity(ServerEntity* svEntity);
     virtual ~DebrisEntity();
 
-    DefineClass(DebrisEntity, SynchedEntityBase);
+    DefineMapClassSelfConstruct("DebrisEntity", DebrisEntity, SynchedEntityBase);
 
     //
     // Interface functions. 

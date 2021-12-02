@@ -4,7 +4,7 @@
 // InfoNull.cpp
 */
 
-#include "../../g_local.h"
+#include "../../ServerGameLocal.h"
 #include "../../Effects.h"
 #include "../../Entities.h"
 #include "../../Utilities.h"

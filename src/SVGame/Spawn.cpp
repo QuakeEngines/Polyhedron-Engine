@@ -17,7 +17,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-#include "g_local.h"          // Include SVGame header.
+#include "ServerGameLocal.h"          // Include SVGame header.
 #include "entities.h"         // Entities.
 #include "player/client.h"    // Include Player Client header.
 
@@ -164,7 +164,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 //};
 
 //
-// SVG_SpawnClassEntity
+// SVG_SpawnSynchedGameEntity
 //
 //
 #include "Entities/Base/SynchedEntityBase.h"
@@ -207,24 +207,40 @@ Allocates the proper server game entity class. Then spawns the entity.
 */
 void ED_CallSpawn(ServerEntity *serverEntity)
 {
-    // Fetch its classname.
-    auto entityDictionary = serverEntity->entityDictionary;
-    serverEntity->className = ED_NewString( entityDictionary["classname"].c_str() );
-    
-    // Fetch/allocate game entity based on that.
-    SynchedEntityBase *serverGameEntity = SVG_SpawnClassEntity( serverEntity, serverEntity->className );
-    // If we did not find the classname, then give up
-    if ( !serverGameEntity ) {
-        SVG_FreeEntity(serverEntity);
+    // Ensure it is a valid server entity.
+    if (!serverEntity)
+        return;
+
+    // Fetch dictionary of the server entity.
+    auto keyValueDictionary = serverEntity->keyValueDictionary;
+
+    // Determine whether to enact on a valid classname, or not.
+    bool hasClassName = keyValueDictionary.contains("classname");
+
+    if (!hasClassName) {
+        Com_WPrintf("WARNING: ServerEntity #%i has no classname assigned to it.\n");
         return;
     }
+
+    // Fetch classname.
+    std::string className = keyValueDictionary["classname"];
+    
+    // Fetch/allocate game entity based on that.
+    SynchedEntityBase *gameEntity = SVG_SpawnSynchedGameEntity( serverEntity, className );
+    
+    // If we did not find the classname, then give up
+    if ( !gameEntity ) {
+        //SVG_FreeEntity(gameEntity);
+        return;
+    }
+
     // Initialise the entity with its respected keyvalue properties
-    for ( const auto& keyValueEntry : serverEntity->entityDictionary ) {
-        serverGameEntity->SpawnKey(keyValueEntry.first, keyValueEntry.second );
+    for ( const auto& keyValueEntry : serverEntity->keyValueDictionary) {
+        gameEntity->SpawnKey(keyValueEntry.first, keyValueEntry.second );
     }
     // Precache and spawn, to set the entity up
-    serverGameEntity->Precache();
-    serverGameEntity->Spawn();
+    gameEntity->Precache();
+    gameEntity->Spawn();
 }
 
 /*
@@ -266,7 +282,7 @@ void ED_ParseEntity(const char** data, ServerEntity* ent) {
         if (key[0] == '_')
             continue;
 
-        ent->entityDictionary[key] = value;
+        ent->keyValueDictionary[key] = value;
         //if (!ED_ParseField(spawn_fields, key, value, (byte *)ent)) {
         //    if (!ED_ParseField(temp_fields, key, value, (byte *)&st)) {
         //        gi.DPrintf("%s: %s is not a field\n", __func__, key);
@@ -344,58 +360,58 @@ All but the last will have the teamchain field set to the next one
 */
 void SVG_FindTeams(void)
 {
-    ServerEntity* e, * e2;
-    SynchedEntityBase * chain = nullptr;;
-    int     i, j;
-    int     c, c2;
+    //ServerEntity* e, * e2;
+    //SynchedEntityBase * chain = nullptr;;
+    //int     i, j;
+    //int     c, c2;
 
-    c = 0;
-    c2 = 0;
+    //c = 0;
+    //c2 = 0;
 
-    //or (i = 1, e = g_entities + i; i < globals.numberOfEntities; i++, e++) {
-    for (auto &playerEntityA : serverGameEntities | SvgEF::IsSubclassOf<PlayerEntity>() | SvgEF::HasClient) {
-        if (playerEntityA == NULL)
-            continue;
+    ////or (i = 1, e = g_entities + i; i < globals.numberOfEntities; i++, e++) {
+    //for (auto &playerEntityA : serverGameEntities | SvgEF::IsSubclassOf<PlayerEntity>() | SvgEF::HasClient) {
+    //    if (playerEntityA == NULL)
+    //        continue;
 
-        if (!playerEntityA->IsInUse())
-            continue;
-        if (playerEntityA->GetTeam().empty())
-            continue;
-        if (playerEntityA->GetFlags() & EntityFlags::TeamSlave)
-            continue;
-        
-        // Start the chain.
-        chain = playerEntityA;
+    //    if (!playerEntityA->IsInUse())
+    //        continue;
+    //    if (playerEntityA->GetTeam().empty())
+    //        continue;
+    //    if (playerEntityA->GetFlags() & EntityFlags::TeamSlave)
+    //        continue;
+    //    
+    //    // Start the chain.
+    //    chain = playerEntityA;
 
-        // Set its master.
-        playerEntityA->SetTeamMasterEntity(playerEntityA);
+    //    // Set its master.
+    //    playerEntityA->SetTeamMasterEntity(playerEntityA);
 
-        c++;
-        c2++;
-        for (j = i + 1, e2 = e + 1 ; j < globals.numberOfEntities ; j++, e2++) {
-            // Fetch class entity.
-            SynchedEntityBase * classEntity2 = serverGameEntities[e->state.number];
+    //    c++;
+    //    c2++;
+    //    for (j = i + 1, e2 = e + 1 ; j < globals.numberOfEntities ; j++, e2++) {
+    //        // Fetch class entity.
+    //        SynchedEntityBase * classEntity2 = serverGameEntities[e->state.number];
 
-            if (classEntity2 == NULL)
-                continue;
+    //        if (classEntity2 == NULL)
+    //            continue;
 
-            if (!classEntity2->IsInUse())
-                continue;
-            if (!classEntity2->GetTeam())
-                continue;
-            if (classEntity2->GetFlags() & EntityFlags::TeamSlave)
-                continue;
-            if (!strcmp(classEntity->GetTeam(), classEntity2->GetTeam())) {
-                c2++;
-                chain->SetTeamChainEntity(classEntity2);
-                classEntity2->SetTeamMasterEntity(classEntity);
-                chain = classEntity2;
-                classEntity2->SetFlags(classEntity2->GetFlags() | EntityFlags::TeamSlave);
-            }
-        }
-    }
+    //        if (!classEntity2->IsInUse())
+    //            continue;
+    //        if (!classEntity2->GetTeam())
+    //            continue;
+    //        if (classEntity2->GetFlags() & EntityFlags::TeamSlave)
+    //            continue;
+    //        if (!strcmp(classEntity->GetTeam(), classEntity2->GetTeam())) {
+    //            c2++;
+    //            chain->SetTeamChainEntity(classEntity2);
+    //            classEntity2->SetTeamMasterEntity(classEntity);
+    //            chain = classEntity2;
+    //            classEntity2->SetFlags(classEntity2->GetFlags() | EntityFlags::TeamSlave);
+    //        }
+    //    }
+    //}
 
-    gi.DPrintf("%i teams with %i entities\n", c, c2);
+//    gi.DPrintf("%i teams with %i entities\n", c, c2);
 }
 
 
@@ -444,15 +460,17 @@ void SVG_SpawnEntities(const char *mapName, const char *entities, const char *sp
         }
 
         // Clear out memory.
-        serverGameEntities[i] = {};
+        //..serverGameEntities[i] = {};
     }
 
     strncpy(level.mapName, mapName, sizeof(level.mapName) - 1);
     strncpy(game.spawnpoint, spawnpoint, sizeof(game.spawnpoint) - 1);
 
     // Set client fields on player ents
-    for (i = 0 ; i < game.maximumClients ; i++)
-        gameEntities[i + 1].client = game.clients + i;
+    for (i = 0; i < game.maximumClients; i++) {
+        ServerEntity* clientEntity = gi.GetEntityServerHandle(i);
+        clientEntity->client = game.clients + i;
+    }
 
     ent = NULL;
     inhibit = 0;
@@ -466,10 +484,14 @@ void SVG_SpawnEntities(const char *mapName, const char *entities, const char *sp
         if (com_token[0] != '{')
             gi.Error("ED_LoadFromFile: found %s when expecting {", com_token);
 
-        if (!ent)
-            ent = g_entities;
-        else
-            ent = SVG_Spawn();
+        //if (!ent)
+        //    ent = g_entities;
+        //else
+        //    ent = SVG_Spawn();
+        static int id = 0;
+        id++;
+        ServerEntity* ent = gi.GetEntityServerHandle(id);
+
         ED_ParseEntity(&entities, ent);
 
         //// yet another map hack

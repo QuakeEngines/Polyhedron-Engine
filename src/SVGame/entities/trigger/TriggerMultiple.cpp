@@ -7,10 +7,10 @@
 // This trigger will always fire.  It is activated by the world.
 //
 */
-#include "../../g_local.h"     // SVGame.
-#include "../../effects.h"     // Effects.
-#include "../../utils.h"       // Util funcs.
-#include "../base/SynchedEntityBase.h.h"
+#include "../../ServerGameLocal.h"     // SVGame.
+#include "../../Effects.h"     // Effects.
+#include "../../Utilities.h"       // Util funcs.
+#include "../base/SynchedEntityBase.h"
 #include "../base/BaseTrigger.h"
 #include "TriggerMultiple.h"
 

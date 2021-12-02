@@ -40,19 +40,19 @@ Monsters that don't directly see the player can move
 to a noise in hopes of seeing the player from there.
 ===============
 */
-void SVG_PlayerNoise(SynchedEntityBase*who, vec3_t where, int type)
+void SVG_PlayerNoise(PlayerEntity *who, vec3_t where, int type)
 {
     ServerEntity     *noise;
 
-    if (deathmatch->value)
-        return;
+    //if (deathmatch->value)
+    //    return;
 
     if (who->GetFlags() & EntityFlags::NoTarget)
         return;
 
 
     if (!who->firstNoiseEntity) {
-        SynchedEntityBasenoise = SVG_C
+        SynchedEntityBase *noise = SVG_C
         noise->className = "player_noise";
         noise->mins = vec3_t { - 8, -8, -8 );
         noise->maxs = vec3_t {   8,  8,  8 );

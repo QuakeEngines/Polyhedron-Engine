@@ -6,13 +6,13 @@
 //
 //
 */
-#include "../../g_local.h"		// SVGame.
+#include "../../ServerGameLocal.h"		// SVGame.
 #include "../../Effects.h"		// Effects.
 #include "../../Entities.h"		// Entities.
 #include "../../Utilities.h"	// Util funcs.
 
 // Class Entities.
-#include "SynchedEntityBase.h.h"
+#include "SynchedEntityBase.h"
 #include "BaseTrigger.h"
 #include "SVGBaseMover.h"
 
@@ -157,7 +157,7 @@ void SVGBaseMover::SwapPositions() {
 // =========================
 void SVGBaseMover::BrushMoveDone() {
 	SetVelocity( vec3_zero() );
-	moveInfo.OnEndFunction( GetEntityServerHandle() );
+	moveInfo.OnEndFunction( this );
 }
 
 //===============
@@ -238,7 +238,7 @@ void SVGBaseMover::BrushMoveCalc( const vec3_t& destination, PushMoveEndFunction
 //===============
 void SVGBaseMover::BrushAngleMoveDone() {
 	SetAngularVelocity( vec3_zero() );
-	moveInfo.OnEndFunction( entityHandle );
+	moveInfo.OnEndFunction( this );
 }
 
 //===============

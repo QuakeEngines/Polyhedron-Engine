@@ -7,13 +7,13 @@
 // This trigger will always fire.  It is activated by the world.
 //
 */
-#include "../../g_local.h"     // SVGame.
-#include "../../effects.h"     // Effects.
-#include "../../entities.h"    // Entities.
-#include "../../utils.h"       // Util funcs.
+#include "../../ServerGameLocal.h"     // SVGame.
+#include "../../Effects.h"     // Effects.
+#include "../../Entities.h"    // Entities.
+#include "../../Utilities.h"       // Util funcs.
 
 // Class entities.
-#include "../base/SynchedEntityBase.h.h"
+#include "../base/SynchedEntityBase.h"
 #include "../base/BaseTrigger.h"
 
 // Delayed use.

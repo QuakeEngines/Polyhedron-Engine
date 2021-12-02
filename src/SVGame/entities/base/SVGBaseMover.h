@@ -12,7 +12,7 @@
 
 class BaseTrigger;
 
-using PushMoveEndFunction = void(SynchedEntityBase *);
+using PushMoveEndFunction = void(EntityBase *);
 
 
 constexpr uint32_t PlatLowTrigger = 1U;

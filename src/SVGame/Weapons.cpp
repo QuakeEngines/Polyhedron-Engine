@@ -15,7 +15,7 @@ You should have received a copy of the GNU General Public License along
 with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
-#include "g_local.h"
+#include "ServerGameLocal.h"
 #include "Entities.h"
 #include "Utilities.h"
 
@@ -132,7 +132,7 @@ fire_lead
 This is an internal support routine used for bullet/pellet based weapons.
 =================
 */
-static void fire_lead(SynchedEntityBase*self, const vec3_t& start, const vec3_t& aimdir, int damage, int kick, int te_impact, int hspread, int vspread, int mod)
+static void fire_lead(SynchedEntityBase *self, const vec3_t& start, const vec3_t& aimdir, int damage, int kick, int te_impact, int hspread, int vspread, int mod)
 {
     SVGTrace     tr;
     vec3_t      dir;
@@ -337,7 +337,7 @@ void SVG_FireBlaster(SynchedEntityBase*self, const vec3_t& start, const vec3_t &
 
     // Set think.
     boltEntity->SetNextThinkTime(level.time + 2); // Admer: should this really be a thing?
-    boltEntity->SetThinkCallback(&SynchedEntityBase.h::SVGBaseEntityThinkRemove);
+    boltEntity->SetThinkCallback(&SynchedEntityBase::SVGBaseEntityThinkRemove);
 
     // Link Bolt into world.
     boltEntity->LinkEntity();

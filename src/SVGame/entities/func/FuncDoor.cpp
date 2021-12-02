@@ -4,18 +4,17 @@
 // FuncDoor.cpp
 */
 
-#include "../../g_local.h"
-#include "../../effects.h"
-#include "../../entities.h"
-#include "../../utils.h"
-#include "../../physics/stepmove.h"
-#include "../../brushfuncs.h"
+#include "../../ServerGameLocal.h"
+#include "../../Effects.h"
+#include "../../Entities.h"
+#include "../../Utilities.h"
+#include "../../Physics/Stepmove.h"
 
-#include "../base/SynchedEntityBase.h"
-#include "../base/BaseTrigger.h"
-#include "../base/SVGBaseMover.h"
+#include "../Base/SynchedEntityBase.h"
+#include "../Base/BaseTrigger.h"
+#include "../Base/SVGBaseMover.h"
 
-#include "../trigger/TriggerAutoDoor.h"
+#include "../Trigger/TriggerAutoDoor.h"
 
 #include "FuncAreaportal.h"
 #include "FuncDoor.h"
@@ -101,7 +100,7 @@ void FuncDoor::Spawn() {
         SetTakeDamage( TakeDamage::Yes );
         SetDieCallback( &FuncDoor::DoorShotOpen );
         SetMaxHealth( GetHealth() );
-    } else if ( nullptr == serverEntity->targetName ) {
+    } else if ( GetTargetName().empty() ) {
         gi.SoundIndex( MessageSoundPath );
         SetTouchCallback( &FuncDoor::DoorTouch );
     }
@@ -116,10 +115,10 @@ void FuncDoor::Spawn() {
     moveInfo.endAngles = GetAngles();
 
     if ( GetSpawnFlags() & SF_Toggle ) {
-        serverEntity->state.effects |= EntityEffectType::AnimCycleAll2hz;
+        GetEntityServerHandle()->state.effects |= EntityEffectType::AnimCycleAll2hz;
     }
     if ( GetSpawnFlags() & SF_YAxis ) {
-        serverEntity->state.effects |= EntityEffectType::AnimCycleAll30hz;
+        GetEntityServerHandle()->state.effects |= EntityEffectType::AnimCycleAll30hz;
     }
 
     // To simplify logic elsewhere, make non-teamed doors into a team of one
@@ -363,8 +362,8 @@ void FuncDoor::HitBottom() {
 // FuncDoor::OnDoorHitTop
 //===============
 void FuncDoor::OnDoorHitTop( ServerEntity* self ) {
-    if ( self->classEntity->IsSubclassOf<FuncDoor>() ) {
-        static_cast<FuncDoor*>( self->classEntity )->HitTop();
+    if ( serverGameEntities[self->state.number]->IsSubclassOf<FuncDoor>()) {
+        static_cast<FuncDoor*>( serverGameEntities[self->state.number] )->HitTop();
     }
 }
 
@@ -372,8 +371,8 @@ void FuncDoor::OnDoorHitTop( ServerEntity* self ) {
 // FuncDoor::OnDoorHitBottom
 //===============
 void FuncDoor::OnDoorHitBottom( ServerEntity* self ) {
-    if ( self->classEntity->IsSubclassOf<FuncDoor>() ) {
-        static_cast<FuncDoor*>(self->classEntity)->HitBottom();
+    if ( serverGameEntities[self->state.number]->IsSubclassOf<FuncDoor>() ) {
+        static_cast<FuncDoor*>(serverGameEntities[self->state.number])->HitBottom();
     }
 }
 

@@ -7,21 +7,20 @@
 //
 */
 // Common Includes.
-#include "../../g_local.h"
-#include "../../effects.h"
-#include "../../entities.h"
-#include "../../utils.h"
-#include "../../brushfuncs.h"
+#include "../../ServerGameLocal.h"
+#include "../../Effects.h"
+#include "../../Entities.h"
+#include "../../Utilities.h"
 
 // Class Entities.
-#include "../base/SynchedEntityBase.h.h"
+#include "../Base/SynchedEntityBase.h"
 
 #include "InfoPlayerStart.h"
 
 
 // Constructor/Deconstructor.
-InfoPlayerStart::InfoPlayerStart() 
-    : SynchedEntityBase.h() {
+InfoPlayerStart::InfoPlayerStart(ServerEntity *serverEntity) 
+    : SynchedEntityBase(serverEntity) {
 
 }
 InfoPlayerStart::~InfoPlayerStart() {

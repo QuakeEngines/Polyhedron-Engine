@@ -17,7 +17,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 */
 // g_combat.c
 
-#include "g_local.h"
+#include "ServerGameLocal.h"
 #include "Entities.h"
 #include "Entities/Base/SynchedEntityBase.h"
 #include "Entities/Base/PlayerEntity.h"

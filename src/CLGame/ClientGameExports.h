@@ -6,9 +6,6 @@
 
 #include "Shared/Interfaces/IClientGameExports.h"
 
-
-struct ServerEntity* synchedEntity;
-
 //---------------------------------------------------------------------
 // MAIN interface to implement. It holds pointers to actual sub interfaces,
 // which one of course has to implement as well.

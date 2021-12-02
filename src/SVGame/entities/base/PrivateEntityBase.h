@@ -8,7 +8,7 @@
 */
 #pragma once
 
-#include "Shared/Entities/Base/EntityBase.h"
+#include "EntityBase.h"
 #include "Shared/Entities/Base/ServerEntity.h"
 
 //---------------------------------------------------------

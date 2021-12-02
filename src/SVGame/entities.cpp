@@ -6,16 +6,18 @@
 //
 //
 */
-#include "g_local.h"			// Include SVGame header.
-#include "entities.h"			// Entities header.
-#include "player/client.h"		// Include Player Client header.
+#include "ServerGameLocal.h"			// Include SVGame header.
+#include "Entities.h"			// Entities header.
+#include "Player/Client.h"		// Include Player Client header.
 
 
 
 //
-// SVG_SpawnClassEntity
+// SVG_SpawnSynchedGameEntity
 //
 //
+#include "Entities/Base/EntityBase.h"
+#include "Entities/Base/PrivateEntityBase.h"
 #include "Entities/Base/SynchedEntityBase.h"
 #include "entities/base/BaseTrigger.h"
 #include "entities/base/SVGBaseMover.h"
@@ -94,10 +96,10 @@ void DebugShitForEntitiesLulz() {
 #endif
 
 //===============
-// SVG_SpawnClassEntity
+// SVG_SpawnSynchedGameEntity
 //
 //=================
-SynchedEntityBase * SVG_SpawnClassEntity(ServerEntity* ent, const std::string& className) {
+SynchedEntityBase * SVG_SpawnSynchedGameEntity(ServerEntity* ent, const std::string& className) {
     // Start with a nice nullptr.
     SynchedEntityBase * spawnEntity = nullptr;
     if ( !ent ) {
@@ -119,7 +121,7 @@ SynchedEntityBase * SVG_SpawnClassEntity(ServerEntity* ent, const std::string& c
 
     // Don't freak out if the entity cannot be allocated, but do warn us about it, it's good to know
     // ServerEntity classes with 'DefineDummyMapClass' won't be reported here
-    if ( nullptr != info->AllocateInstance && info->IsMapSpawnable() ) {
+    if ( !info->AllocateInstance && info->IsMapSpawnable() ) {
         return (serverGameEntities[entityNumber] = info->AllocateInstance( ));
     } else {
         if ( info->IsAbstract() ) {
@@ -327,16 +329,13 @@ SynchedEntityBase * SVG_FindEntityByKeyValue(const std::string& fieldKey, const 
 // 
 // SVG_FindEntitiesWithinRadius (origin, radius)
 //===============
-ServerGameEntityVector SVG_FindEntitiesWithinRadius(vec3_t origin, float radius, uint32_t excludeSolidFlags)
+GameEntityVector SVG_FindGameEntitiesWithinRadius(vec3_t origin, float radius, uint32_t excludeSolidFlags)
 {
-    BaseEntityVector entityList;
+    GameEntityVector entityList;
 
     // Iterate over all entities, see who is nearby, and who is not.
     for (auto* radiusEntity : GetGameEntityRange<0, MAX_EDICTS>()
-        | bef::IsValidPointer
-        | bef::HasServerEntity
-        | bef::InUse
-        | bef::WithinRadius(origin, radius, excludeSolidFlags)) {
+        | SvgEF::WithinRadius(origin, radius, excludeSolidFlags)) {
 
         // Push radiusEntity result item to the list.
         entityList.push_back(radiusEntity);
@@ -345,6 +344,29 @@ ServerGameEntityVector SVG_FindEntitiesWithinRadius(vec3_t origin, float radius,
     // The list might be empty, ensure to check for that ;-)
     return entityList;
 }
+
+//===============
+// SVG_FindEntitiesWithinRadius
+// 
+// Returns entities that have origins within a spherical area
+// 
+// SVG_FindEntitiesWithinRadius (origin, radius)
+//===============
+//GameEntityVector SVG_FindGameEntitiesWithinRadius(vec3_t origin, float radius, uint32_t excludeSolidFlags)
+//{
+//    GameEntityVector entityList;
+//
+//    // Iterate over all entities, see who is nearby, and who is not.
+//    for (auto* radiusEntity : GetGameEntityRange<0, MAX_EDICTS>()
+//         | SvgEF::WithinRadius(origin, radius, excludeSolidFlags)) {
+//
+//        // Push radiusEntity result item to the list.
+//        entityList.push_back(radiusEntity);
+//    }
+//
+//    // The list might be empty, ensure to check for that ;-)
+//    return entityList;
+//}
 
 //===============
 // SVG_InitEntity
@@ -377,29 +399,30 @@ void SVG_InitEntity(ServerEntity* e)
 //===============
 ServerEntity* SVG_Spawn(void)
 {
-    SynchedEntityBase   *serverGameEntity = nullptr;
-    int32_t i = 0;
+    
+    //SynchedEntityBase   *serverGameEntity = nullptr;
+    //int32_t i = 0;
 
-    // Acquire a pointer to the entity we'll check for.
-    serverGameEntity = serverGameEntities[game.maximumClients + 1];
-    for (i = game.maximumClients + 1; i < game.maxEntities; i++, serverGameEntity++) {
-        // The first couple seconds of server time can involve a lot of
-        // freeing and allocating, so relax the replacement policy
-        if (!serverGameEntity->IsInUse() && (serverEntity->freeTime < 2 || level.time - serverEntity->freeTime > 0.5)) {
-            SVG_InitEntity(serverEntity);
-            return serverEntity;
-        }
-    }
+    //// Acquire a pointer to the entity we'll check for.
+    //serverGameEntity = serverGameEntities[game.maximumClients + 1];
+    //for (i = game.maximumClients + 1; i < game.maxEntities; i++, serverGameEntity++) {
+    //    // The first couple seconds of server time can involve a lot of
+    //    // freeing and allocating, so relax the replacement policy
+    //    if (!serverGameEntity->IsInUse() && (serverEntity->freeTime < 2 || level.time - serverEntity->freeTime > 0.5)) {
+    //        SVG_InitEntity(serverEntity);
+    //        return serverEntity;
+    //    }
+    //}
 
 
-    if (i == game.maxEntities)
-        gi.Error("ED_Alloc: no free edicts");
+    //if (i == game.maxEntities)
+    //    gi.Error("ED_Alloc: no free edicts");
 
-    // If we've gotten past the gi.Error, it means we can safely increase the number of entities.
-    //globals.serverEntityPoolnumberOfEntities++;
-    SVG_InitEntity(serverEntity);
+    //// If we've gotten past the gi.Error, it means we can safely increase the number of entities.
+    ////globals.serverEntityPoolnumberOfEntities++;
+    //SVG_InitEntity(serverEntity);
 
-    return serverEntity;
+    //return serverEntity;
 }
 
 //=====================
@@ -416,15 +439,6 @@ ServerEntity* SVG_CreateTargetChangeLevel(char* map) {
     ent->map = level.nextMap;
     return ent;
 }
-
-//===============
-// SVG_GetWorldServerEntity
-// 
-// Returns a pointer to the 'Worldspawn' ServerEntity.
-//===============
-ServerEntity* SVG_GetWorldServerEntity() {
-    return NULL;// &g_entities[0];
-};
 
 //===============
 // SVG_GetWorldSpawnEntity

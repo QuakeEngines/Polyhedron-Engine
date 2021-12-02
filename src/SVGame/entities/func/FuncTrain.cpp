@@ -4,9 +4,9 @@
 // FuncTrain.cpp
 */
 
-#include "../../g_local.h"
-#include "../../entities.h"
-#include "../../effects.h"
+#include "../../ServerGameLocal.h"
+#include "../../Entities.h"
+#include "../../Effects.h"
 
 #include "../base/BaseTrigger.h"
 #include "../base/SVGBaseMover.h"

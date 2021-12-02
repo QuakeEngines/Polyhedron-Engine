@@ -6,7 +6,7 @@ public:
 	FuncExplosive( ServerEntity* entity );
 	virtual ~FuncExplosive() = default;
 
-	DefineMapClass( "func_explosive", FuncExplosive, SynchedEntityBase);
+	DefineMapClassSelfConstruct( "func_explosive", FuncExplosive, SynchedEntityBase);
 
 	// Spawn flags
 	static constexpr int32_t SF_StartDeactivated = 1 << 0;

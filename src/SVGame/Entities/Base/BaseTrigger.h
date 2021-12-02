@@ -40,7 +40,7 @@ public:
     // Get/Set
     // 
     // Return the 'activatorEntity' entity pointer.
-    SynchedEntityBase *GetActivator() {
+    EntityBase *GetActivator() {
         return activatorEntity;
     }
 

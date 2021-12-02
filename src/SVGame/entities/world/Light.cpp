@@ -6,9 +6,9 @@
 //
 //
 */
-#include "../../g_local.h"              // SVGame.
+#include "../../ServerGameLocal.h"              // SVGame.
 
-#include "../base/SynchedEntityBase.h.h"
+#include "../base/SynchedEntityBase.h"
 #include "../base/BaseTrigger.h"
 #include "Light.h"
 

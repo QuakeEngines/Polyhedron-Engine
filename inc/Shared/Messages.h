@@ -7,7 +7,8 @@
 // Contains messaging related structures.
 //
 */
-#pragma once
+#ifndef MESSAGING_H
+#define MESSAGING_H
 
 //
 //=============================================================================
@@ -128,3 +129,5 @@ struct PlayerState {
 
     short       stats[MAX_STATS]; // Fast status bar updates
 }; 
+
+#endif

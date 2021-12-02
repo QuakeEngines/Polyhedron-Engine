@@ -19,6 +19,7 @@ namespace ServerEntityFilters {
     inline auto InUse = std::views::filter( &ServerEntityFilterFunctions::EntityInUse );
     inline auto HasClient = std::views::filter( &ServerEntityFilterFunctions::EntityHasClient );
     inline auto HasClassEntity = std::views::filter( &ServerEntityFilterFunctions::EntityHasClassEntity );
+    
     // WID: TODO: This one actually has to move into EntityFilterFunctions, and then
     // be referred to from here. However, I am unsure how to do that as of yet.
     inline auto HasClassName(const std::string& classname) {

@@ -382,16 +382,16 @@ struct LevelLocals  {
     } intermission;
 
     // The actual client the AI has sight on for this current frame.
-    ServerEntity *sightClient;  // Changed once each frame for coop games
+    SynchedEntityBase *sightClient;  // Changed once each frame for coop games
 
     // ServerEntity which the AI has sight on.
-    ServerEntity *sightEntity;
+    SynchedEntityBase *sightEntity;
     int32_t sightEntityFrameNumber;
 
     // Sound entities are set to the entity that caused the AI to be triggered.
-    ServerEntity *soundEntity;            // In case of a footstep, jumping sound, etc.
+    SynchedEntityBase *soundEntity;            // In case of a footstep, jumping sound, etc.
     int32_t soundEntityFrameNumber;
-    ServerEntity *sound2Entity;           // In case of a weapon action.
+    SynchedEntityBase *sound2Entity;           // In case of a weapon action.
     int32_t sound2EntityFrameNumber;
 
     // Not renaming this one, it has to go in the future.
@@ -605,11 +605,11 @@ gitem_t *SVG_FindItemByClassname(const char *className);
 SynchedEntityBase *SVG_DropItem(PlayerEntity *ent, gitem_t *item);
 void SVG_SetRespawn(PlayerEntity *ent, float delay);
 void SVG_ChangeWeapon(PlayerEntity* ent);
-void SVG_SpawnItem(PlayerEntity *ent, gitem_t *item);
+void SVG_SpawnItem(SynchedEntityBase *ent, gitem_t *item);
 //void SVG_ThinkWeapon(ServerEntity *ent);
 int32_t SVG_ArmorIndex(SynchedEntityBase *ent);
 gitem_t *SVG_GetItemByIndex(int32_t index);
-qboolean SVG_AddAmmo(PlayerEntity *ent, gitem_t *item, int32_t count);
+qboolean SVG_AddAmmo(SynchedEntityBase *ent, gitem_t *item, int32_t count);
 void SVG_TouchItem(SynchedEntityBase* ent, SynchedEntityBase* other, cplane_t *plane, csurface_t *surf);
 
 //

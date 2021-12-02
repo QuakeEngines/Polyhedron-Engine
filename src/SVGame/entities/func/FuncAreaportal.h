@@ -1,6 +1,6 @@
 #pragma once
 
-class SynchedEntityBase.h;
+class SynchedEntityBase;
 
 //=============================================
 // FuncAreaportal
@@ -9,7 +9,7 @@ class SynchedEntityBase.h;
 // areas that are seperated when this portal is not activated.
 // Usually enclosed in the middle of a door.
 //=============================================
-class FuncAreaportal : public SynchedEntityBase{
+class FuncAreaportal : public SynchedEntityBase {
 public:
 	FuncAreaportal( ServerEntity* entity );
 	virtual ~FuncAreaportal() = default;

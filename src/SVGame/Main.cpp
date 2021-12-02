@@ -17,7 +17,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 */
 
 // Core.
-#include "g_local.h"          // Include SVGame header.
+#include "ServerGameLocal.h"          // Include SVGame header.
 
 // Entities.
 #include "Entities.h"
@@ -31,8 +31,8 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "Gamemodes/DeathMatchGameMode.h"
 
 // Player related.
-#include "Player/client.h"      // Include Player Client header.
-#include "Player/view.h"        // Include Player View header.
+#include "Player/Client.h"      // Include Player Client header.
+#include "Player/View.h"        // Include Player View header.
 
 // Physics related.
 #include "Physics/Stepmove.h"
@@ -362,25 +362,35 @@ void SVG_AllocateGamePlayerClientEntities() {
     int32_t maximumClients = game.maximumClients;
 
     // Allocate a classentity for each client in existence.
-    for (int32_t i = 1; i < maximumClients + 1; i++) {
-        // Fetch server entity.
-        PlayerEntity* serverEntity = serverGameEntities[i];
+    for (auto& serverEntity : GetServerEntityRange(1, game.maximumClients)) {
+        // Allocate.
+        serverGameEntities[serverEntity->GetNumber()] = *SVG_CreateClassEntity<PlayerEntity*>(serverEntity, false);
 
-        // Initialize entity.
-        SVG_InitEntity(serverEntity);
-
-        // Allocate their class entities appropriately.
-        serverEntity = SVG_CreateClassEntity<PlayerEntity*>(serverEntity, false); //SVG_SpawnClassEntity(serverEntity, serverEntity->className);
-        
-        // Be sure to reset their inuse, after all, they aren't in use.
+        // Ensure they aren't in use, cuz they aren't.
         serverEntity->SetInUse(false);
 
-        // Fetch client index.
-        const int32_t clientIndex = i - 1; // Same as the older: serverEntity - g_entities - 1;
-
-        // Assign the designated client to this PlayerEntity entity.
-        ((PlayerEntity*)serverEntity)->SetClient(&game.clients[clientIndex]);
+        // Setup the client belonging to this entity.
+        
     }
+    //for (int32_t i = 1; i < maximumClients + 1; i++) {
+    //    // Fetch server entity.
+    //    PlayerEntity* serverEntity = serverGameEntities[i];
+
+    //    // Initialize entity.
+    //    SVG_InitEntity(serverEntity);
+
+    //    // Allocate their class entities appropriately.
+    //    serverEntity = SVG_CreateClassEntity<PlayerEntity*>(serverEntity, false); //SVG_SpawnSynchedGameEntity(serverEntity, serverEntity->className);
+    //    
+    //    // Be sure to reset their inuse, after all, they aren't in use.
+    //    serverEntity->SetInUse(false);
+
+    //    // Fetch client index.
+    //    const int32_t clientIndex = i - 1; // Same as the older: serverEntity - g_entities - 1;
+
+    //    // Assign the designated client to this PlayerEntity entity.
+    //    ((PlayerEntity*)serverEntity)->SetClient(&game.clients[clientIndex]);
+    //}
 }
 
 
@@ -441,11 +451,11 @@ void SVG_ClientEndServerFrames(void)
     // (This happens here, so we can take into consideration objects that have
     // pushed the player. And of course, because damage has been added.)
     for (int32_t i = 0; i < maximumClients->value; i++) {
-        // First, fetch entity state number.
-        int32_t stateNumber = g_entities[1 + i].state.number;
+        //// First, fetch entity state number.
+        //int32_t stateNumber = serve[1 + i].state.number;
 
         // Now, let's go wild. (Purposely, do not assume the pointer is a PlayerEntity.)
-        ServerEntity *entity = &g_entities[stateNumber]; // WID: 1 +, because 0 == WorldSpawn.
+        ServerEntity *entity = gi.GetEntityServerHandle(i); // WID: 1 +, because 0 == WorldSpawn.
 
         // See if we're gooszsd to go, if not, continue for the next. 
         if (!entity || !entity->inUse || !entity->client)
@@ -453,7 +463,7 @@ void SVG_ClientEndServerFrames(void)
 
         // Ugly cast, yes, but at this point we know we can do this. And that, to do it, matters more than
         // ethics, because our morals say otherwise :D
-        game.gameMode->ClientEndServerFrame(&g_entities[stateNumber]);
+        game.gameMode->ClientEndServerFrame(entity);
     }
 
 }
@@ -570,7 +580,10 @@ void SVG_CheckDMRules(void)
     if (fraglimit->value) {
         for (i = 0 ; i < maximumClients->value ; i++) {
             cl = game.clients + i;
-            if (!g_entities[i + 1].inUse)
+
+            //if (!g_entities[i + 1].inUse)
+            ServerEntity* entity = gi.GetEntityServerHandle(i + 1);
+            if (entity->inUse)
                 continue;
 
             if (cl->respawn.score >= fraglimit->value) {
@@ -616,12 +629,12 @@ void SVG_RunFrame(void)
     //SynchedEntityBase * entity = serverGameEntities[stateNumber];
 
     // Loop through the server entities, and run the base entity frame if any exists.
-    for (int32_t i = 0; i < globals.numberOfEntities; i++) {
+    for (int32_t i = 0; i < gi.GetNumberOfEntities(); i++) {
         // Acquire state number.
-        stateNumber = g_entities[i].state.number;
+        //stateNumber = g_entities[i].state.number;
 
         // Fetch the corresponding base entity.
-        SynchedEntityBase * entity = serverGameEntities[stateNumber];
+        SynchedEntityBase * entity = serverGameEntities[i];
 
         // Is it even valid?
         if (entity == nullptr)

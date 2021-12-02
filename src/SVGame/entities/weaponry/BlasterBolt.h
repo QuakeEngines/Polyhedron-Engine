@@ -12,7 +12,7 @@ struct ServerEntity;
 class EntityBase;
 class SynchedEntityBase;
 
-class BlasterBolt : public SynchedEntityBase{
+class BlasterBolt : public SynchedEntityBase {
 public:
     // Constructor/Deconstructor.
     BlasterBolt();

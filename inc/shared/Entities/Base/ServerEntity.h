@@ -57,6 +57,9 @@ public:
     // Entities can have owners, yes.
     ServerEntity    *owner;
 
-    // Entity
-    EntityDictionary entityDictionary;
+    // Entity key value dictionary.
+    EntityDictionary keyValueDictionary;
+
+    // Classname.
+    std::string className;
 };

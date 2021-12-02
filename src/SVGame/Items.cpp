@@ -15,7 +15,7 @@ You should have received a copy of the GNU General Public License along
 with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
-#include "g_local.h"         // Include SVGame funcs.
+#include "ServerGameLocal.h"         // Include SVGame funcs.
 #include "Entities.h"        // Entities.
 #include "Utilities.h"           // Include Utilities funcs.
 #include "player/hud.h"      // Include HUD funcs.
